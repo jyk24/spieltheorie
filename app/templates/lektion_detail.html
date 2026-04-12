@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}{{ lesson.title }} – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+    <!-- Breadcrumb -->
+    <div class="text-sm text-slate-400 mb-6">
+        <a href="/lektionen" class="hover:text-indigo-600">Lektionen</a>
+        <span class="mx-2">›</span>
+        <span class="text-slate-600">{{ lesson.category }}</span>
+    </div>
+
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center gap-3 mb-2">
+            {% set difficulty_colors = {"einfach": "bg-emerald-100 text-emerald-700", "mittel": "bg-amber-100 text-amber-700", "schwer": "bg-red-100 text-red-700"} %}
+            <span class="text-xs font-semibold px-2 py-1 rounded-full {{ difficulty_colors.get(lesson.difficulty, 'bg-slate-100 text-slate-600') }}">
+                {{ lesson.difficulty }}
+            </span>
+            <span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-full">{{ lesson.category }}</span>
+        </div>
+        <h1 class="text-3xl font-bold text-slate-800">{{ lesson.title }}</h1>
+    </div>
+
+    <!-- Content -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-8 prose mb-6">
+        {{ content_html|safe }}
+    </div>
+
+    <!-- Quellen -->
+    {% if sources %}
+    <div class="bg-slate-50 rounded-xl border border-slate-200 p-6 mb-6">
+        <h3 class="font-semibold text-slate-700 mb-3 text-sm uppercase tracking-wide">📚 Quellen & Weiterführendes</h3>
+        <ul class="space-y-2">
+            {% for src in sources %}
+            <li class="text-sm text-slate-600">
+                <span class="font-medium">{{ src.autoren if src.autoren is defined else src.autor }}</span>
+                {% if src.werk is defined %} – <em>{{ src.werk }}</em>{% endif %}
+                {% if src.journal is defined %} – {{ src.journal }}{% endif %}
+                {% if src.jahr is defined %} ({{ src.jahr }}){% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Link zum Spiel -->
+    {% if lesson.related_game %}
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-5 mb-6 flex items-center justify-between">
+        <div>
+            <div class="font-semibold text-indigo-800">🎮 Jetzt ausprobieren</div>
+            <div class="text-sm text-indigo-600 mt-0.5">Teste dieses Konzept direkt im passenden Spiel.</div>
+        </div>
+        <a href="/spiele/{{ lesson.related_game }}"
+           class="bg-indigo-600 text-white px-5 py-2 rounded-lg font-medium text-sm hover:bg-indigo-700 transition-colors whitespace-nowrap">
+            Zum Spiel →
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Navigation -->
+    <div class="flex justify-between text-sm mt-6">
+        {% if prev_slug %}
+        <a href="/lektionen/{{ prev_slug }}" class="flex items-center gap-1 text-indigo-600 hover:text-indigo-800">
+            ← Vorherige Lektion
+        </a>
+        {% else %}<span></span>{% endif %}
+        {% if next_slug %}
+        <a href="/lektionen/{{ next_slug }}" class="flex items-center gap-1 text-indigo-600 hover:text-indigo-800">
+            Nächste Lektion →
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

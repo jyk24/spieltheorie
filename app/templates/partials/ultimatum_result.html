@@ -1,0 +1,65 @@
+<!-- Daten-Nodes für JS -->
+<span id="history-data" data-value="{{ history_json }}" class="hidden"></span>
+<span id="round-data" data-value="{{ history|length + 1 }}" class="hidden"></span>
+<span id="is-proposer-data" data-value="{{ 'true' if next_is_proposer else 'false' }}" class="hidden"></span>
+<span id="next-ai-offer-data" data-value="{{ next_ai_offer or '' }}" class="hidden"></span>
+<span id="player-total-data" data-value="{{ total_player }}" class="hidden"></span>
+<span id="ai-total-data" data-value="{{ total_ai }}" class="hidden"></span>
+
+{% if not is_final %}
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-3">
+    <div class="font-semibold text-slate-600 text-sm mb-3">Runde {{ entry.round }} – Ergebnis</div>
+    {% if entry.role == 'proposer' %}
+        <div class="flex items-center gap-3 mb-2">
+            <span class="text-slate-600 text-sm">Du botst <strong>{{ entry.offer }}</strong> Punkte an</span>
+            <span class="px-3 py-1 rounded-full text-sm font-medium {% if entry.accepted %}bg-emerald-100 text-emerald-700{% else %}bg-red-100 text-red-700{% endif %}">
+                {% if entry.accepted %}✓ Akzeptiert{% else %}✗ Abgelehnt{% endif %}
+            </span>
+        </div>
+        <p class="text-sm text-slate-500 italic">"{{ entry.reason }}"</p>
+        <div class="mt-2 text-sm">
+            Du: <strong>{{ entry.player_score }}</strong> | KI: <strong>{{ entry.ai_score }}</strong>
+        </div>
+    {% else %}
+        <div class="flex items-center gap-3 mb-2">
+            <span class="text-slate-600 text-sm">KI bot <strong>{{ entry.offer }}</strong> Punkte an</span>
+            <span class="px-3 py-1 rounded-full text-sm font-medium {% if entry.accepted %}bg-emerald-100 text-emerald-700{% else %}bg-red-100 text-red-700{% endif %}">
+                {% if entry.accepted %}Du: Akzeptiert{% else %}Du: Abgelehnt{% endif %}
+            </span>
+        </div>
+        <div class="mt-2 text-sm">
+            Du: <strong>{{ entry.player_score }}</strong> | KI: <strong>{{ entry.ai_score }}</strong>
+        </div>
+    {% endif %}
+</div>
+
+{% else %}
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <h3 class="text-xl font-bold text-slate-800 mb-4">
+        {% if result == 'win' %}🏆 Du hast gewonnen!
+        {% elif result == 'loss' %}😔 KI hat gewonnen
+        {% else %}🤝 Unentschieden{% endif %}
+    </h3>
+    <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="text-center p-4 bg-slate-50 rounded-xl">
+            <div class="text-3xl font-bold text-indigo-600">{{ total_player }}</div>
+            <div class="text-sm text-slate-500 mt-1">Deine Gesamtpunkte</div>
+        </div>
+        <div class="text-center p-4 bg-slate-50 rounded-xl">
+            <div class="text-3xl font-bold text-slate-600">{{ total_ai }}</div>
+            <div class="text-sm text-slate-500 mt-1">KI-Punkte</div>
+        </div>
+    </div>
+    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800 mb-4">
+        💡 <strong>Lerneffekt:</strong> Angebote unter 40% wurden regelmäßig abgelehnt. Fairness ist kein Luxus – sie ist strategisch notwendig.
+    </div>
+    <div class="flex gap-3">
+        <a href="/spiele/ultimatum" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal spielen
+        </a>
+        <a href="/lektionen/fairness-effekte" class="border border-indigo-300 text-indigo-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50">
+            Fairness-Theorie lesen
+        </a>
+    </div>
+</div>
+{% endif %}

@@ -1,0 +1,68 @@
+<!-- Daten-Nodes -->
+<span id="history-data" data-value="{{ history_json }}" class="hidden"></span>
+<span id="round-data" data-value="{{ history|length + 1 }}" class="hidden"></span>
+<span id="player-total-data" data-value="{{ cumulative_player }}" class="hidden"></span>
+<span id="ai-total-data" data-value="{{ cumulative_ai }}" class="hidden"></span>
+
+{% if not is_final %}
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-3">
+    <div class="font-semibold text-slate-600 text-sm mb-3">Runde {{ history|length }} – Ergebnis</div>
+    <div class="grid grid-cols-3 gap-3 text-center text-sm mb-3">
+        <div class="p-3 bg-blue-50 rounded-lg">
+            <div class="text-xs text-slate-400">Investiert</div>
+            <div class="font-bold text-blue-600">{{ round_result.invested }}</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-lg">
+            <div class="text-xs text-slate-400">Topf (×3)</div>
+            <div class="font-bold text-slate-600">{{ round_result.pot }}</div>
+        </div>
+        <div class="p-3 bg-indigo-50 rounded-lg">
+            <div class="text-xs text-slate-400">KI gibt zurück</div>
+            <div class="font-bold text-indigo-600">{{ round_result.returned }}</div>
+        </div>
+    </div>
+    <div class="flex items-center justify-between text-sm">
+        <span class="{% if round_result.player_net >= 0 %}text-emerald-600{% else %}text-red-500{% endif %} font-medium">
+            Dein Gewinn: {{ '+' if round_result.player_net >= 0 else '' }}{{ round_result.player_net }}
+        </span>
+        <span class="text-slate-500 italic text-xs">"{{ round_result.reason }}"</span>
+    </div>
+</div>
+{% else %}
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <h3 class="text-xl font-bold text-slate-800 mb-4">
+        {% if final.result == 'win' %}🏆 Positiver Gewinn!
+        {% elif final.result == 'draw' %}⚖️ Break Even
+        {% else %}📉 Nettoverlust{% endif %}
+    </h3>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6 text-center">
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <div class="text-xl font-bold text-blue-600">{{ final.total_invested }}</div>
+            <div class="text-xs text-slate-500 mt-1">Investiert</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <div class="text-xl font-bold text-indigo-600">{{ final.total_returned }}</div>
+            <div class="text-xs text-slate-500 mt-1">Zurückbekommen</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <div class="text-xl font-bold {% if final.player_net >= 0 %}text-emerald-600{% else %}text-red-500{% endif %}">
+                {{ '+' if final.player_net >= 0 else '' }}{{ final.player_net }}
+            </div>
+            <div class="text-xs text-slate-500 mt-1">Dein Nettogewinn</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <div class="text-xl font-bold text-amber-600">{{ final.trust_rate }}%</div>
+            <div class="text-xs text-slate-500 mt-1">Vertrauensrate</div>
+        </div>
+    </div>
+    {% if final.trust_rate >= 50 %}
+    <div class="bg-teal-50 border border-teal-200 rounded-lg p-4 text-sm text-teal-800 mb-4">
+        💡 Hohe Vertrauensrate. Kooperation schafft Wert für beide Seiten – ein zentrales Prinzip in langfristigen Verhandlungsbeziehungen.
+    </div>
+    {% endif %}
+    <div class="flex gap-3">
+        <a href="/spiele/vertrauen" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal</a>
+        <a href="/lektionen/wiederholte-spiele-reputation" class="border border-indigo-300 text-indigo-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50">Theorie lesen</a>
+    </div>
+</div>
+{% endif %}

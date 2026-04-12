@@ -1,0 +1,71 @@
+<!-- Daten-Nodes -->
+<span id="history-data" data-value="{{ history_json }}" class="hidden"></span>
+<span id="round-data" data-value="{{ history|length + 1 }}" class="hidden"></span>
+
+{% if not is_final %}
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-3">
+    <div class="font-semibold text-slate-600 text-sm mb-3">Runde {{ entry.round }}</div>
+    <div class="grid grid-cols-2 gap-4 text-center mb-3">
+        <div class="p-3 bg-indigo-50 rounded-lg">
+            <div class="text-xs text-slate-400">Dein Angebot</div>
+            <div class="font-bold text-indigo-700 text-lg">{{ "{:,}".format(entry.player_offer) }} {{ scenario.unit }}</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-lg">
+            <div class="text-xs text-slate-400">KI-Angebot</div>
+            <div class="font-bold text-slate-700 text-lg">{{ "{:,}".format(entry.ai_offer) }} {{ scenario.unit }}</div>
+        </div>
+    </div>
+    <div class="text-sm text-slate-500 text-center">
+        Differenz: {{ "{:,}".format((entry.player_offer - entry.ai_offer)|abs) }} {{ scenario.unit }}
+        – noch {{ scenario.max_rounds - history|length }} Runde(n) verfügbar
+    </div>
+</div>
+
+{% else %}
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    {% if score_data %}
+    <div class="flex items-center gap-3 mb-4">
+        <div class="text-4xl font-black {% if score_data.grade == 'A' %}text-emerald-500
+            {% elif score_data.grade == 'B' %}text-blue-500
+            {% elif score_data.grade == 'C' %}text-amber-500
+            {% else %}text-red-500{% endif %}">{{ score_data.grade }}</div>
+        <div>
+            <h3 class="text-xl font-bold text-slate-800">Einigung erzielt!</h3>
+            <p class="text-sm text-slate-500">{{ score_data.feedback }}</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6 text-center">
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <div class="font-bold text-indigo-600">{{ "{:,}".format(score_data.final_price) }}</div>
+            <div class="text-xs text-slate-500 mt-1">Einigungspreis ({{ scenario.unit }})</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <div class="font-bold text-emerald-600">{{ "{:,}".format(score_data.player_batna) }}</div>
+            <div class="text-xs text-slate-500 mt-1">Deine BATNA</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <div class="font-bold text-violet-600">{{ "{:,}".format(score_data.nash_point) }}</div>
+            <div class="text-xs text-slate-500 mt-1">Nash-Punkt</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <div class="font-bold text-amber-600">{{ score_data.score }}</div>
+            <div class="text-xs text-slate-500 mt-1">Score (von 100)</div>
+        </div>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-lg p-4 text-sm text-violet-800 mb-4">
+        💡 <strong>ZOPA war:</strong> {{ "{:,}".format(score_data.ai_batna) }} – {{ "{:,}".format(score_data.effective_value) }} {{ scenario.unit }}.
+        Der Nash-Punkt bei {{ "{:,}".format(score_data.nash_point) }} {{ scenario.unit }} war die faire Mitte.
+    </div>
+    {% else %}
+    <h3 class="text-xl font-bold text-red-600 mb-2">Keine Einigung</h3>
+    <p class="text-sm text-slate-500 mb-4">Die Verhandlung ist gescheitert. Beide Parteien müssen auf ihre BATNA zurückgreifen.</p>
+    {% endif %}
+
+    <div class="flex gap-3">
+        <a href="/spiele/verhandlung" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal</a>
+        <a href="/lektionen/batna" class="border border-indigo-300 text-indigo-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50">BATNA-Theorie</a>
+    </div>
+</div>
+{% endif %}

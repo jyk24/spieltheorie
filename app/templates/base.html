@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Spieltheorie & Verhandlung{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        [htmx-indicator] { display: none; }
+        .htmx-request [htmx-indicator] { display: inline; }
+        .htmx-request.htmx-indicator { display: inline; }
+        .prose h2 { font-size: 1.5rem; font-weight: 700; margin: 1.5rem 0 0.75rem; }
+        .prose h3 { font-size: 1.125rem; font-weight: 600; margin: 1.25rem 0 0.5rem; }
+        .prose p { margin: 0.75rem 0; line-height: 1.7; }
+        .prose ul, .prose ol { margin: 0.75rem 0 0.75rem 1.5rem; }
+        .prose li { margin: 0.25rem 0; }
+        .prose table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        .prose th { background: #f1f5f9; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; border: 1px solid #e2e8f0; }
+        .prose td { padding: 0.5rem 0.75rem; border: 1px solid #e2e8f0; }
+        .prose blockquote { border-left: 4px solid #6366f1; padding: 0.5rem 1rem; background: #f0f0ff; margin: 1rem 0; font-style: italic; }
+        .prose code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
+        .prose pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 1rem 0; }
+        .prose strong { font-weight: 700; }
+    </style>
+</head>
+<body class="h-full bg-slate-50">
+    <div class="min-h-full">
+        <nav class="bg-indigo-700 shadow-lg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center space-x-1 sm:space-x-4">
+                        <a href="/" class="text-white font-bold text-lg mr-2 sm:mr-4 whitespace-nowrap">🎯 VerhandlungsTrainer</a>
+                        <a href="/" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'dashboard' %}bg-indigo-800 text-white{% endif %}">Dashboard</a>
+                        <a href="/lektionen" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'lektionen' %}bg-indigo-800 text-white{% endif %}">Lektionen</a>
+                        <a href="/spiele" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'spiele' %}bg-indigo-800 text-white{% endif %}">Spiele</a>
+                        <a href="/fortschritt" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'fortschritt' %}bg-indigo-800 text-white{% endif %}">Fortschritt</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Vertrauensspiel – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🤝 Vertrauensspiel</h1>
+        <p class="text-slate-500 mt-1">8 Runden – Investiere Punkte (0–10), die KI erhält das Dreifache und entscheidet, wie viel sie zurückgibt.</p>
+    </div>
+
+    <div class="bg-teal-50 border border-teal-100 rounded-xl p-5 mb-6 text-sm text-teal-800">
+        <strong>Kern-Erkenntnis:</strong> Vertrauen ist keine Schwäche – es verdoppelt den Gesamtgewinn für beide Seiten. &nbsp;·&nbsp;
+        <a href="/lektionen/wiederholte-spiele-reputation" class="underline hover:no-underline">Theorie lesen →</a>
+    </div>
+
+    <div id="start-form" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+        <h2 class="font-semibold text-slate-700 mb-4">KI-Strategie wählen</h2>
+        <div class="space-y-3 mb-6">
+            {% for s in strategies %}
+            <label class="flex items-start gap-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 border border-transparent has-[:checked]:border-indigo-300 has-[:checked]:bg-indigo-50">
+                <input type="radio" name="strategy_choice" value="{{ s.id }}" class="mt-1" {% if loop.first %}checked{% endif %}>
+                <div>
+                    <div class="font-medium text-slate-800 text-sm">{{ s.name }}</div>
+                    <div class="text-xs text-slate-500">{{ s.desc }}</div>
+                </div>
+            </label>
+            {% endfor %}
+        </div>
+        <button type="button" onclick="startGame()"
+                class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700">
+            Spiel starten
+        </button>
+    </div>
+
+    <div id="play-area" class="hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-sm text-slate-500">Runde</span>
+                    <span id="round-display" class="text-xl font-bold text-indigo-600 ml-1">1</span>
+                    <span class="text-sm text-slate-500"> / {{ max_rounds }}</span>
+                </div>
+                <div class="flex gap-6 text-sm">
+                    <div class="text-center">
+                        <div class="text-xs text-slate-400">Dein Gewinn</div>
+                        <div id="player-total" class="text-lg font-bold text-emerald-600">0</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs text-slate-400">KI-Gewinn</div>
+                        <div id="ai-total" class="text-lg font-bold text-slate-500">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-sm text-slate-600 mb-3 font-medium">Wie viel investierst du? (Wird verdreifacht)</div>
+            <form hx-post="/spiele/vertrauen/zug"
+                  hx-target="#result-area"
+                  hx-swap="innerHTML"
+                  class="space-y-4">
+                <input type="hidden" name="strategy" id="strategy-hidden">
+                <input type="hidden" name="history_json" id="history-hidden" value="[]">
+                <div class="flex items-center gap-4">
+                    <input type="range" name="invested" id="invest-slider" min="0" max="10" value="5"
+                           oninput="updateInvest(this.value)"
+                           class="flex-1 accent-indigo-600">
+                    <span class="font-bold text-2xl text-indigo-600 w-12 text-center" id="invest-display">5</span>
+                    <span class="text-sm text-slate-500">Punkte</span>
+                </div>
+                <div class="text-xs text-slate-400">KI erhält: <span id="pot-display">15</span> Punkte (×3)</div>
+                <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700">
+                    Investieren
+                </button>
+            </form>
+        </div>
+
+        <div id="result-area"></div>
+    </div>
+</div>
+
+<script>
+function startGame() {
+    const strategy = document.querySelector('input[name="strategy_choice"]:checked').value;
+    document.getElementById('strategy-hidden').value = strategy;
+    document.getElementById('start-form').classList.add('hidden');
+    document.getElementById('play-area').classList.remove('hidden');
+}
+
+function updateInvest(val) {
+    document.getElementById('invest-display').textContent = val;
+    document.getElementById('pot-display').textContent = val * 3;
+}
+
+document.body.addEventListener('htmx:afterSwap', function() {
+    const historyEl = document.getElementById('history-data');
+    const roundEl = document.getElementById('round-data');
+    const playerTotalEl = document.getElementById('player-total-data');
+    const aiTotalEl = document.getElementById('ai-total-data');
+
+    if (historyEl) document.getElementById('history-hidden').value = historyEl.dataset.value;
+    if (roundEl) document.getElementById('round-display').textContent = roundEl.dataset.value;
+    if (playerTotalEl) document.getElementById('player-total').textContent = playerTotalEl.dataset.value;
+    if (aiTotalEl) document.getElementById('ai-total').textContent = aiTotalEl.dataset.value;
+});
+</script>
+
+{% endblock %}

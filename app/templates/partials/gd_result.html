@@ -1,0 +1,88 @@
+<!-- Daten-Nodes für JS -->
+<span id="history-data" data-value="{{ history_json }}" class="hidden"></span>
+<span id="round-data" data-value="{{ history|length + 1 }}" class="hidden"></span>
+<span id="player-total-data" data-value="{{ history|sum(attribute='player_score') }}" class="hidden"></span>
+<span id="ai-total-data" data-value="{{ history|sum(attribute='ai_score') }}" class="hidden"></span>
+
+{% if not is_final %}
+<!-- Letztes Rundenresultat -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-3">
+    <div class="font-semibold text-slate-600 text-sm mb-3">Runde {{ round_result.round }} – Ergebnis</div>
+    <div class="grid grid-cols-2 gap-4">
+        <div class="text-center p-3 rounded-lg {% if round_result.player == 'C' %}bg-emerald-50 border border-emerald-200{% else %}bg-red-50 border border-red-200{% endif %}">
+            <div class="text-xs text-slate-500 mb-1">Du</div>
+            <div class="font-bold {% if round_result.player == 'C' %}text-emerald-700{% else %}text-red-600{% endif %}">
+                {{ round_result.player_label }}
+            </div>
+            <div class="text-xl font-bold mt-1">+{{ round_result.player_score }}</div>
+        </div>
+        <div class="text-center p-3 rounded-lg {% if round_result.ai == 'C' %}bg-emerald-50 border border-emerald-200{% else %}bg-red-50 border border-red-200{% endif %}">
+            <div class="text-xs text-slate-500 mb-1">KI</div>
+            <div class="font-bold {% if round_result.ai == 'C' %}text-emerald-700{% else %}text-red-600{% endif %}">
+                {{ round_result.ai_label }}
+            </div>
+            <div class="text-xl font-bold mt-1">+{{ round_result.ai_score }}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Rundenverlauf -->
+{% if history|length > 1 %}
+<div class="bg-slate-50 rounded-xl p-4 text-xs">
+    <div class="font-medium text-slate-500 mb-2 uppercase tracking-wide">Verlauf</div>
+    <div class="flex flex-wrap gap-1">
+        {% for r in history %}
+        <span class="px-2 py-1 rounded {% if r.player == 'C' and r.ai == 'C' %}bg-emerald-200 text-emerald-800
+            {% elif r.player == 'D' and r.ai == 'D' %}bg-red-200 text-red-800
+            {% elif r.player == 'C' %}bg-blue-200 text-blue-800
+            {% else %}bg-orange-200 text-orange-800{% endif %}">
+            R{{ r.round }}: {{ 'K' if r.player == 'C' else 'V' }}/{{ 'K' if r.ai == 'C' else 'V' }}
+        </span>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% else %}
+<!-- Finales Ergebnis -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <h3 class="text-xl font-bold text-slate-800 mb-4">
+        {% if final.result == 'win' %}🏆 Du hast gewonnen!
+        {% elif final.result == 'loss' %}😔 KI hat gewonnen
+        {% else %}🤝 Unentschieden{% endif %}
+    </h3>
+    <div class="grid grid-cols-3 gap-4 mb-6">
+        <div class="text-center p-4 bg-slate-50 rounded-xl">
+            <div class="text-2xl font-bold text-indigo-600">{{ final.player_total }}</div>
+            <div class="text-xs text-slate-500 mt-1">Deine Punkte</div>
+        </div>
+        <div class="text-center p-4 bg-slate-50 rounded-xl">
+            <div class="text-2xl font-bold text-slate-600">{{ final.ai_total }}</div>
+            <div class="text-xs text-slate-500 mt-1">KI-Punkte</div>
+        </div>
+        <div class="text-center p-4 bg-slate-50 rounded-xl">
+            <div class="text-2xl font-bold text-emerald-600">{{ final.cooperation_rate }}%</div>
+            <div class="text-xs text-slate-500 mt-1">Kooperationsrate</div>
+        </div>
+    </div>
+
+    {% if final.cooperation_rate >= 70 %}
+    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-sm text-emerald-800 mb-4">
+        💡 <strong>Tit-for-Tat-Muster erkannt!</strong> Hohe Kooperation führt langfristig zu besseren Ergebnissen für beide – genau wie in Axelrods Turnier.
+    </div>
+    {% elif final.cooperation_rate <= 30 %}
+    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800 mb-4">
+        ⚠️ Niedrige Kooperation. Im echten Gefangenendilemma-Turnier verlieren rein defensive Strategien langfristig.
+    </div>
+    {% endif %}
+
+    <div class="flex gap-3">
+        <a href="/spiele/gefangenendilemma" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal spielen
+        </a>
+        <a href="/lektionen/tit-for-tat" class="border border-indigo-300 text-indigo-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50">
+            Tit-for-Tat lesen
+        </a>
+    </div>
+</div>
+{% endif %}

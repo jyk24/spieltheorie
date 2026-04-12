@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block title %}Ultimatumspiel – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">⚖️ Ultimatumspiel</h1>
+        <p class="text-slate-500 mt-1">10 Runden – Runden 1-5: Du machst Angebote. Runden 6-10: Die KI macht Angebote.</p>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-100 rounded-xl p-5 mb-6 text-sm text-amber-800">
+        <strong>Experimentell belegt (Güth et al., 1982):</strong> Angebote unter ~30% werden regelmäßig abgelehnt – auch wenn das irrational ist. &nbsp;·&nbsp;
+        <a href="/lektionen/fairness-effekte" class="underline hover:no-underline">Theorie lesen →</a>
+    </div>
+
+    <!-- Startbereich -->
+    <div id="start-form" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+        <h2 class="font-semibold text-slate-700 mb-4">KI-Strategie wählen</h2>
+        <div class="space-y-3 mb-6">
+            {% for s in strategies %}
+            <label class="flex items-start gap-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 border border-transparent has-[:checked]:border-indigo-300 has-[:checked]:bg-indigo-50">
+                <input type="radio" name="strategy_choice" value="{{ s.id }}" class="mt-1" {% if loop.first %}checked{% endif %}>
+                <div>
+                    <div class="font-medium text-slate-800 text-sm">{{ s.name }}</div>
+                    <div class="text-xs text-slate-500">{{ s.desc }}</div>
+                </div>
+            </label>
+            {% endfor %}
+        </div>
+        <button type="button" onclick="startGame()"
+                class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+            Spiel starten
+        </button>
+    </div>
+
+    <!-- Spielfeld -->
+    <div id="play-area" class="hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-sm text-slate-500">Runde</span>
+                    <span id="round-display" class="text-xl font-bold text-indigo-600 ml-1">1</span>
+                    <span class="text-sm text-slate-500"> / {{ max_rounds }}</span>
+                </div>
+                <div class="flex gap-6 text-sm">
+                    <div class="text-center">
+                        <div class="text-xs text-slate-400">Du</div>
+                        <div id="player-total" class="text-lg font-bold text-emerald-600">0</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs text-slate-400">KI</div>
+                        <div id="ai-total" class="text-lg font-bold text-red-500">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Proposer-Modus (Runden 1-5) -->
+            <div id="proposer-form">
+                <div class="text-sm text-slate-600 mb-3 font-medium">Du bist der Proposer – mache der KI ein Angebot (0–100 Punkte):</div>
+                <form hx-post="/spiele/ultimatum/zug"
+                      hx-target="#result-area"
+                      hx-swap="innerHTML"
+                      class="space-y-4">
+                    <input type="hidden" name="strategy" id="strategy-hidden">
+                    <input type="hidden" name="history_json" id="history-hidden" value="[]">
+                    <div class="flex items-center gap-4">
+                        <input type="range" name="player_offer" id="offer-slider" min="0" max="100" value="50"
+                               oninput="document.getElementById('offer-display').textContent = this.value"
+                               class="flex-1 accent-indigo-600">
+                        <span class="font-bold text-2xl text-indigo-600 w-12 text-center" id="offer-display">50</span>
+                        <span class="text-sm text-slate-500">Punkte</span>
+                    </div>
+                    <div class="text-xs text-slate-400">Für dich: <span id="keep-display">50</span> Punkte</div>
+                    <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700">
+                        Angebot machen
+                    </button>
+                </form>
+            </div>
+
+            <!-- Responder-Modus (Runden 6-10) -->
+            <div id="responder-form" class="hidden">
+                <div class="text-sm text-slate-600 mb-3 font-medium">Du bist der Responder – die KI macht ein Angebot:</div>
+                <div class="bg-indigo-50 rounded-xl p-5 mb-4 text-center">
+                    <div class="text-xs text-slate-500 mb-1">KI bietet dir</div>
+                    <div id="ai-offer-display" class="text-4xl font-bold text-indigo-600 mb-1">–</div>
+                    <div class="text-xs text-slate-500">von 100 Punkten</div>
+                </div>
+                <form hx-post="/spiele/ultimatum/zug"
+                      hx-target="#result-area"
+                      hx-swap="innerHTML"
+                      class="flex gap-3">
+                    <input type="hidden" name="strategy" id="strategy-hidden-r">
+                    <input type="hidden" name="history_json" id="history-hidden-r" value="[]">
+                    <input type="hidden" name="ai_offer_amount" id="ai-offer-hidden">
+                    <button type="submit" name="player_response" value="accept"
+                            class="flex-1 bg-emerald-500 text-white py-3 rounded-xl font-bold hover:bg-emerald-600">
+                        ✓ Akzeptieren
+                    </button>
+                    <button type="submit" name="player_response" value="reject"
+                            class="flex-1 bg-red-500 text-white py-3 rounded-xl font-bold hover:bg-red-600">
+                        ✗ Ablehnen
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="result-area"></div>
+    </div>
+</div>
+
+<script>
+function startGame() {
+    const strategy = document.querySelector('input[name="strategy_choice"]:checked').value;
+    document.getElementById('strategy-hidden').value = strategy;
+    document.getElementById('strategy-hidden-r').value = strategy;
+    document.getElementById('start-form').classList.add('hidden');
+    document.getElementById('play-area').classList.remove('hidden');
+}
+
+document.getElementById('offer-slider')?.addEventListener('input', function() {
+    document.getElementById('keep-display').textContent = 100 - this.value;
+});
+
+document.body.addEventListener('htmx:afterSwap', function() {
+    const historyEl = document.getElementById('history-data');
+    const roundEl = document.getElementById('round-data');
+    const isProposerEl = document.getElementById('is-proposer-data');
+    const aiOfferEl = document.getElementById('next-ai-offer-data');
+    const playerTotalEl = document.getElementById('player-total-data');
+    const aiTotalEl = document.getElementById('ai-total-data');
+
+    if (historyEl) {
+        const val = historyEl.dataset.value;
+        document.getElementById('history-hidden').value = val;
+        document.getElementById('history-hidden-r').value = val;
+    }
+    if (roundEl) document.getElementById('round-display').textContent = roundEl.dataset.value;
+    if (playerTotalEl) document.getElementById('player-total').textContent = playerTotalEl.dataset.value;
+    if (aiTotalEl) document.getElementById('ai-total').textContent = aiTotalEl.dataset.value;
+    if (isProposerEl) {
+        const isProposer = isProposerEl.dataset.value === 'true';
+        document.getElementById('proposer-form').classList.toggle('hidden', !isProposer);
+        document.getElementById('responder-form').classList.toggle('hidden', isProposer);
+    }
+    if (aiOfferEl && aiOfferEl.dataset.value) {
+        document.getElementById('ai-offer-display').textContent = aiOfferEl.dataset.value;
+        document.getElementById('ai-offer-hidden').value = aiOfferEl.dataset.value;
+    }
+});
+</script>
+
+{% endblock %}

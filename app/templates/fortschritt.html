@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block title %}Fortschritt – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-800">Dein Fortschritt</h1>
+    <p class="text-slate-500 mt-1">Überblick über Spielstatistiken und Lernfortschritt.</p>
+</div>
+
+<!-- Gesamt-Stats -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-xl shadow-sm p-5 border border-slate-100 text-center">
+        <div class="text-3xl font-bold text-indigo-600">{{ stats.total_games }}</div>
+        <div class="text-sm text-slate-500 mt-1">Spiele gesamt</div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm p-5 border border-slate-100 text-center">
+        <div class="text-3xl font-bold text-emerald-600">{{ stats.total_score }}</div>
+        <div class="text-sm text-slate-500 mt-1">Gesamtpunkte</div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm p-5 border border-slate-100 text-center">
+        <div class="text-3xl font-bold text-violet-600">{{ stats.lessons_viewed }}</div>
+        <div class="text-sm text-slate-500 mt-1">Lektionen gelesen</div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm p-5 border border-slate-100 text-center">
+        <div class="text-3xl font-bold text-amber-600">
+            {% if stats.total_games > 0 %}{{ (stats.total_score / stats.total_games)|round|int }}{% else %}–{% endif %}
+        </div>
+        <div class="text-sm text-slate-500 mt-1">Ø Punkte/Spiel</div>
+    </div>
+</div>
+
+<!-- Score-Verlauf Chart -->
+{% if stats.total_games > 0 %}
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-8">
+    <h2 class="font-semibold text-slate-700 mb-4">Score-Verlauf</h2>
+    <canvas id="scoreChart" height="80"></canvas>
+</div>
+{% endif %}
+
+<!-- Pro-Spiel Statistiken -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+    {% set icons = {"gefangenendilemma": "🔒", "ultimatum": "⚖️", "vertrauen": "🤝", "verhandlung": "💼"} %}
+    {% for game_type, data in stats.per_game.items() %}
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+        <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+                <span class="text-xl">{{ icons.get(game_type, "🎮") }}</span>
+                <span class="font-semibold text-slate-800">{{ game_labels.get(game_type, game_type) }}</span>
+            </div>
+            <a href="/spiele/{{ game_type }}" class="text-xs text-indigo-600 hover:underline">Spielen →</a>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-center text-sm">
+            <div>
+                <div class="font-bold text-slate-800">{{ data.games_played }}</div>
+                <div class="text-xs text-slate-400">Spiele</div>
+            </div>
+            <div>
+                <div class="font-bold text-indigo-600">{{ data.best_score }}</div>
+                <div class="text-xs text-slate-400">Bestes</div>
+            </div>
+            <div>
+                <div class="font-bold text-emerald-600">
+                    {% if data.games_played > 0 %}{{ (data.total_score / data.games_played)|round|int }}{% else %}–{% endif %}
+                </div>
+                <div class="text-xs text-slate-400">Durchschnitt</div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Lektionsfortschritt -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <h2 class="font-semibold text-slate-700 mb-4">
+        Lektionsfortschritt
+        <span class="text-sm font-normal text-slate-400 ml-2">
+            {{ stats.lessons_viewed }} / {{ stats.total_lessons }} gelesen
+        </span>
+    </h2>
+    <div class="mb-4">
+        <div class="bg-slate-100 rounded-full h-2">
+            <div class="bg-indigo-500 h-2 rounded-full transition-all"
+                 style="width: {{ (stats.lessons_viewed / stats.total_lessons * 100)|round|int if stats.total_lessons > 0 else 0 }}%">
+            </div>
+        </div>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        {% for item in lessons_with_status %}
+        <a href="/lektionen/{{ item.lesson.slug }}"
+           class="flex items-center gap-2 text-sm p-2 rounded-lg hover:bg-slate-50 transition-colors">
+            <span class="{% if item.viewed %}text-emerald-500{% else %}text-slate-300{% endif %} text-base">
+                {% if item.viewed %}✓{% else %}○{% endif %}
+            </span>
+            <span class="{% if item.viewed %}text-slate-700{% else %}text-slate-400{% endif %} truncate">
+                {{ item.lesson.title }}
+            </span>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% if stats.total_games > 0 %}
+<script>
+const ctx = document.getElementById('scoreChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ chart_labels|safe }},
+        datasets: [{
+            label: 'Score',
+            data: {{ chart_scores|safe }},
+            borderColor: '#6366f1',
+            backgroundColor: 'rgba(99,102,241,0.08)',
+            borderWidth: 2,
+            tension: 0.3,
+            pointBackgroundColor: '#6366f1',
+            fill: true,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    title: (items) => {{ chart_games|safe }}[items[0].dataIndex],
+                }
+            }
+        },
+        scales: {
+            y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+            x: { grid: { display: false } }
+        }
+    }
+});
+</script>
+{% endif %}
+
+{% endblock %}

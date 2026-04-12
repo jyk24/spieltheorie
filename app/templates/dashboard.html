@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-800">Willkommen zurück</h1>
+    <p class="text-slate-500 mt-1">Werde besser in Verhandlungen – durch Spieltheorie und Praxis.</p>
+</div>
+
+<!-- Statistik-Kacheln -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-xl shadow-sm p-5 border border-slate-100">
+        <div class="text-3xl font-bold text-indigo-600">{{ stats.total_games }}</div>
+        <div class="text-sm text-slate-500 mt-1">Spiele gespielt</div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm p-5 border border-slate-100">
+        <div class="text-3xl font-bold text-emerald-600">{{ stats.total_score }}</div>
+        <div class="text-sm text-slate-500 mt-1">Gesamtpunkte</div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm p-5 border border-slate-100">
+        <div class="text-3xl font-bold text-violet-600">{{ stats.lessons_viewed }}</div>
+        <div class="text-sm text-slate-500 mt-1">von {{ stats.total_lessons }} Lektionen</div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm p-5 border border-slate-100">
+        <div class="text-3xl font-bold text-amber-600">
+            {% if stats.total_games > 0 %}
+                {{ (stats.total_score / stats.total_games)|round|int }}
+            {% else %}–{% endif %}
+        </div>
+        <div class="text-sm text-slate-500 mt-1">Ø Punkte/Spiel</div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Empfohlene Lektion -->
+    {% if next_lesson %}
+    <div class="lg:col-span-1">
+        <div class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-xl shadow-md p-6 text-white">
+            <div class="text-xs font-semibold uppercase tracking-wide opacity-75 mb-1">📚 Empfohlene Lektion</div>
+            <h2 class="text-xl font-bold mb-2">{{ next_lesson.title }}</h2>
+            <div class="flex items-center gap-2 mb-4">
+                <span class="text-xs bg-white/20 rounded-full px-3 py-1">{{ next_lesson.category }}</span>
+                <span class="text-xs bg-white/20 rounded-full px-3 py-1">{{ next_lesson.difficulty }}</span>
+            </div>
+            <a href="/lektionen/{{ next_lesson.slug }}"
+               class="inline-block bg-white text-indigo-700 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-indigo-50 transition-colors">
+                Jetzt lesen →
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Spiele-Schnellzugriff -->
+    <div class="lg:col-span-2">
+        <h2 class="text-lg font-semibold text-slate-700 mb-3">Spiele starten</h2>
+        <div class="grid grid-cols-2 gap-3">
+            {% for game in [
+                ("gefangenendilemma", "🔒", "Gefangenendilemma", "Kooperieren oder Verraten?"),
+                ("ultimatum", "⚖️", "Ultimatumspiel", "Faire Angebote machen"),
+                ("vertrauen", "🤝", "Vertrauensspiel", "Investiere in Vertrauen"),
+                ("verhandlung", "💼", "Verhandlung", "Echte Szenarien meistern")
+            ] %}
+            <a href="/spiele/{{ game[0] }}"
+               class="bg-white border border-slate-100 rounded-xl p-4 hover:border-indigo-300 hover:shadow-md transition-all group">
+                <div class="text-2xl mb-1">{{ game[1] }}</div>
+                <div class="font-semibold text-slate-800 text-sm group-hover:text-indigo-600">{{ game[2] }}</div>
+                <div class="text-xs text-slate-400 mt-0.5">{{ game[3] }}</div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Letzte Spiele -->
+{% if stats.recent_sessions %}
+<div class="mt-8">
+    <h2 class="text-lg font-semibold text-slate-700 mb-3">Zuletzt gespielt</h2>
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wide">
+                <tr>
+                    <th class="px-4 py-3 text-left">Spiel</th>
+                    <th class="px-4 py-3 text-left">KI-Strategie</th>
+                    <th class="px-4 py-3 text-center">Ergebnis</th>
+                    <th class="px-4 py-3 text-right">Punkte</th>
+                    <th class="px-4 py-3 text-right">Datum</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                {% for s in stats.recent_sessions %}
+                <tr class="hover:bg-slate-50">
+                    <td class="px-4 py-3 font-medium text-slate-700">{{ s.game_type|title }}</td>
+                    <td class="px-4 py-3 text-slate-500">{{ s.ai_strategy }}</td>
+                    <td class="px-4 py-3 text-center">
+                        {% if s.result == 'win' %}<span class="text-emerald-600 font-medium">Gewonnen</span>
+                        {% elif s.result == 'loss' %}<span class="text-red-500 font-medium">Verloren</span>
+                        {% else %}<span class="text-slate-400">Unentschieden</span>{% endif %}
+                    </td>
+                    <td class="px-4 py-3 text-right font-semibold text-indigo-600">{{ s.score }}</td>
+                    <td class="px-4 py-3 text-right text-slate-400">{{ s.created_at.strftime('%d.%m.%Y') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
