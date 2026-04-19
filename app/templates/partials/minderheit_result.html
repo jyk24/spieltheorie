@@ -1,0 +1,188 @@
+{% set r = round_result %}
+
+<!-- Rundenauswertung -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-3">
+    <div class="flex justify-between items-start mb-3">
+        <div>
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Runde {{ r.round }} von {{ max_rounds }}</span>
+            <p class="font-semibold text-slate-800 mt-0.5">
+                Du hast Gruppe {% if r.player == 0 %}A{% else %}B{% endif %} gewählt
+            </p>
+        </div>
+        <div class="text-right">
+            <div class="text-xs text-slate-500">Gesamt</div>
+            <div class="text-lg font-bold text-indigo-700">{{ r.player_total }} Punkte</div>
+        </div>
+    </div>
+
+    <!-- Ergebnis Banner -->
+    {% if r.in_minority %}
+    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 mb-3 text-center">
+        <span class="text-emerald-800 font-bold">🏆 In der Minderheit! +3 Punkte</span>
+    </div>
+    {% elif r.in_tie %}
+    <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3 text-center">
+        <span class="text-amber-800 font-bold">🤝 Gleichstand! +1 Punkt</span>
+    </div>
+    {% else %}
+    <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 mb-3 text-center">
+        <span class="text-slate-700 font-bold">😔 In der Mehrheit. 0 Punkte</span>
+    </div>
+    {% endif %}
+
+    <!-- Verteilung -->
+    <div class="grid grid-cols-2 gap-3 text-sm">
+        <div class="{% if r.player == 0 %}bg-blue-100 border-2 border-blue-400{% else %}bg-blue-50{% endif %} rounded-lg p-3 text-center">
+            <div class="text-xs text-blue-600 mb-1">Gruppe A</div>
+            <div class="text-2xl font-black text-blue-800">{{ r.count_0 }}</div>
+            <div class="text-xs text-blue-600">Spieler</div>
+            {% if r.player == 0 %}<div class="text-xs text-blue-700 font-medium mt-1">← Du</div>{% endif %}
+        </div>
+        <div class="{% if r.player == 1 %}bg-amber-100 border-2 border-amber-400{% else %}bg-amber-50{% endif %} rounded-lg p-3 text-center">
+            <div class="text-xs text-amber-600 mb-1">Gruppe B</div>
+            <div class="text-2xl font-black text-amber-800">{{ r.count_1 }}</div>
+            <div class="text-xs text-amber-600">Spieler</div>
+            {% if r.player == 1 %}<div class="text-xs text-amber-700 font-medium mt-1">← Du</div>{% endif %}
+        </div>
+    </div>
+
+    <!-- KI-Entscheidungen -->
+    <div class="mt-3 text-xs text-slate-500">
+        KI-Bots:
+        {% for c in r.ai_choices %}
+        <span class="inline-block px-1.5 py-0.5 rounded {% if c == 0 %}bg-blue-100 text-blue-700{% else %}bg-amber-100 text-amber-700{% endif %} mr-1">
+            {% if c == 0 %}A{% else %}B{% endif %}
+        </span>
+        {% endfor %}
+    </div>
+</div>
+
+{% if not is_final %}
+
+<!-- Nächste Runde -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+    <p class="font-semibold text-slate-800 mb-2">Runde {{ r.round + 1 }} von {{ max_rounds }}</p>
+    <p class="text-sm text-slate-500 mb-4">Wähle wieder A oder B. Die Bots treffen ihre Entscheidung gleichzeitig.</p>
+
+    <form hx-post="/spiele/minderheit/zug"
+          hx-target="#spiel-area"
+          hx-swap="innerHTML"
+          class="grid grid-cols-2 gap-4">
+        <input type="hidden" name="strategy" value="{{ strategy }}">
+        <input type="hidden" name="history_json" value="{{ history_json }}">
+
+        <button type="submit" name="choice" value="0"
+                class="p-4 rounded-xl border-2 border-blue-200 bg-blue-50 hover:border-blue-400 hover:bg-blue-100 transition-all text-center">
+            <div class="text-2xl mb-1">🅰️</div>
+            <div class="font-bold text-blue-800">Gruppe A</div>
+        </button>
+
+        <button type="submit" name="choice" value="1"
+                class="p-4 rounded-xl border-2 border-amber-200 bg-amber-50 hover:border-amber-400 hover:bg-amber-100 transition-all text-center">
+            <div class="text-2xl mb-1">🅱️</div>
+            <div class="font-bold text-amber-800">Gruppe B</div>
+        </button>
+    </form>
+</div>
+
+{% else %}
+
+<!-- Endauswertung -->
+<span id="game-over" class="hidden"></span>
+
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    {% if final.result == "win" %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">Hervorragend! {{ final.minority_wins }}x in der Minderheit.</h3>
+        <p class="text-sm text-emerald-700">Du hast die Mehrheit der Runden das Minderheitsproblem gelöst. Das ist nicht einfach ohne Kommunikation.</p>
+    </div>
+    {% elif final.result == "draw" %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-xl font-bold text-amber-800 mb-1">Solide. {{ final.minority_wins }}x Minderheit.</h3>
+        <p class="text-sm text-amber-700">Du warst manchmal in der Minderheit, manchmal nicht. Das El Farol-Problem ist schwer zu lösen.</p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-slate-50 border-2 border-slate-300">
+        <h3 class="text-xl font-bold text-slate-800 mb-1">Schwierig. Nur {{ final.minority_wins }}x Minderheit.</h3>
+        <p class="text-sm text-slate-600">Das ist das Kernproblem des Minderheitsspiels – ohne Kommunikation ist Koordination auf die Minderheit sehr schwer.</p>
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-3 gap-3 mb-5">
+        <div class="bg-indigo-50 rounded-xl p-4 text-center">
+            <div class="text-xs text-indigo-600 mb-1">Gesamtpunkte</div>
+            <div class="text-3xl font-black text-indigo-800">{{ final.player_total }}</div>
+        </div>
+        <div class="bg-emerald-50 rounded-xl p-4 text-center">
+            <div class="text-xs text-emerald-600 mb-1">Minderheitsrunden</div>
+            <div class="text-3xl font-black text-emerald-800">{{ final.minority_wins }}/{{ final.total_rounds }}</div>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-4 text-center">
+            <div class="text-xs text-slate-500 mb-1">Effizienz</div>
+            <div class="text-3xl font-black text-slate-700">{{ final.efficiency }}%</div>
+        </div>
+    </div>
+
+    <!-- Rundenhistorie -->
+    <div class="mb-5 overflow-x-auto">
+        <table class="w-full text-xs">
+            <thead>
+                <tr class="text-slate-500 border-b border-slate-100">
+                    <th class="text-left pb-2">Runde</th>
+                    <th class="text-center pb-2">Du</th>
+                    <th class="text-center pb-2">A</th>
+                    <th class="text-center pb-2">B</th>
+                    <th class="text-center pb-2">Ergebnis</th>
+                    <th class="text-right pb-2">Punkte</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in history %}
+                <tr class="border-b border-slate-50">
+                    <td class="py-1 text-slate-600">{{ h.round }}</td>
+                    <td class="py-1 text-center font-bold {% if h.player == 0 %}text-blue-700{% else %}text-amber-700{% endif %}">
+                        {% if h.player == 0 %}A{% else %}B{% endif %}
+                    </td>
+                    <td class="py-1 text-center text-slate-600">{{ h.count_0 }}</td>
+                    <td class="py-1 text-center text-slate-600">{{ h.count_1 }}</td>
+                    <td class="py-1 text-center">
+                        {% if h.in_minority %}<span class="text-emerald-700 font-bold">Minderheit</span>
+                        {% elif h.in_tie %}<span class="text-amber-600">Gleichstand</span>
+                        {% else %}<span class="text-slate-400">Mehrheit</span>{% endif %}
+                    </td>
+                    <td class="py-1 text-right font-bold {% if h.player_score > 0 %}text-emerald-700{% else %}text-slate-400{% endif %}">
+                        +{{ h.player_score }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-800">
+        <p class="font-semibold mb-2">El Farol Problem & Minderheitsspiel:</p>
+        <p class="mb-1">Das Minderheitsspiel modelliert echte Koordinationsdilemmas: Straßennutzung, Markteintrittsentscheidungen, Ressourcennutzung. Wenn alle dieselbe "rationale" Strategie verfolgen, wird die Minderheit zur Mehrheit.</p>
+        <p class="text-xs">Das Nash-Gleichgewicht: Alle spielen zufällig mit p=0.5. In Simulationen konvergieren echte Populationen gegen dieses Gleichgewicht – auch ohne zentrale Koordination (Emergenz).</p>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+        <p class="font-semibold mb-1">Verhandlungsrelevanz:</p>
+        <p>Das Minderheitsspiel zeigt, warum Kontrarisierung und Antizyklizität strategisch wertvoll sind. Wer immer das tut, was alle anderen tun, landet in der Mehrheit und verliert. <strong>In Verhandlungen:</strong> Wer auf die übliche Strategie setzt, findet sich im Wettbewerb – wer die Minderheitsstrategie findet, schafft Alleinstellung.</p>
+    </div>
+
+    {% if strategy_info %}
+    {% include "partials/strategy_debrief.html" %}
+    {% endif %}
+
+    <div class="flex gap-3">
+        <a href="/spiele/minderheit" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/spiele" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Spiele
+        </a>
+    </div>
+</div>
+
+{% endif %}

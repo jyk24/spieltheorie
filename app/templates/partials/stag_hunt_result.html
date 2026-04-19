@@ -1,0 +1,116 @@
+<!-- Daten-Nodes für JS -->
+<span id="history-data" data-value="{{ history_json }}" class="hidden"></span>
+<span id="round-data" data-value="{{ history|length + 1 }}" class="hidden"></span>
+<span id="player-total-data" data-value="{{ history|sum(attribute='player_score') }}" class="hidden"></span>
+<span id="ai-total-data" data-value="{{ history|sum(attribute='ai_score') }}" class="hidden"></span>
+
+{% if not is_final %}
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-3">
+    <div class="font-semibold text-slate-600 text-sm mb-3">Runde {{ round_result.round }} – Ergebnis</div>
+
+    {% if round_result.player == 'S' and round_result.ai == 'S' %}
+    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-center mb-3">
+        <div class="text-2xl mb-1">🦌🦌</div>
+        <div class="font-bold text-emerald-700">Perfekte Koordination! Beide jagten den Hirsch.</div>
+    </div>
+    {% elif round_result.player == 'S' and round_result.ai == 'H' %}
+    <div class="bg-red-50 border border-red-200 rounded-lg p-3 text-center mb-3">
+        <div class="text-2xl mb-1">😞</div>
+        <div class="font-bold text-red-700">Du hast den Hirsch gejagt – die KI nicht. Du gehst leer aus.</div>
+    </div>
+    {% elif round_result.player == 'H' and round_result.ai == 'S' %}
+    <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-center mb-3">
+        <div class="text-2xl mb-1">🐇</div>
+        <div class="font-bold text-amber-700">Du hast den Hasen gewählt – die KI jagte den Hirsch allein.</div>
+    </div>
+    {% else %}
+    <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center mb-3">
+        <div class="text-2xl mb-1">🐇🐇</div>
+        <div class="font-bold text-slate-700">Beide sicher: Hase gejagt. Solide, aber nicht optimal.</div>
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-2 gap-4">
+        <div class="text-center p-3 rounded-lg {% if round_result.player == 'S' %}bg-emerald-50 border border-emerald-200{% else %}bg-amber-50 border border-amber-200{% endif %}">
+            <div class="text-xs text-slate-500 mb-1">Du</div>
+            <div class="font-bold {% if round_result.player == 'S' %}text-emerald-700{% else %}text-amber-700{% endif %}">
+                {{ round_result.player_label }}
+            </div>
+            <div class="text-xl font-bold mt-1 {% if round_result.player_score > 0 %}text-emerald-600{% else %}text-red-500{% endif %}">
+                {{ '+' + round_result.player_score|string if round_result.player_score >= 0 else round_result.player_score }}
+            </div>
+        </div>
+        <div class="text-center p-3 rounded-lg {% if round_result.ai == 'S' %}bg-emerald-50 border border-emerald-200{% else %}bg-amber-50 border border-amber-200{% endif %}">
+            <div class="text-xs text-slate-500 mb-1">KI</div>
+            <div class="font-bold {% if round_result.ai == 'S' %}text-emerald-700{% else %}text-amber-700{% endif %}">
+                {{ round_result.ai_label }}
+            </div>
+            <div class="text-xl font-bold mt-1 text-slate-600">
+                {{ '+' + round_result.ai_score|string if round_result.ai_score >= 0 else round_result.ai_score }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Beobachtungshinweis nach Runde 4 -->
+{% if history|length == 4 %}
+<div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 mb-3">
+    🔍 <strong>Beobachtung:</strong> Jagte die KI bisher den Hirsch oder den Hasen? Reagiert sie auf dich? Wenn du konsequent Hirsch jagst – zieht sie mit?
+</div>
+{% endif %}
+
+{% if history|length > 1 %}
+<div class="bg-slate-50 rounded-xl p-4 text-xs">
+    <div class="font-medium text-slate-500 mb-2 uppercase tracking-wide">Verlauf (Du / KI)</div>
+    <div class="flex flex-wrap gap-1">
+        {% for r in history %}
+        <span class="px-2 py-1 rounded
+            {% if r.player == 'S' and r.ai == 'S' %}bg-emerald-200 text-emerald-800
+            {% elif r.player == 'S' %}bg-red-200 text-red-800
+            {% elif r.ai == 'S' %}bg-orange-200 text-orange-800
+            {% else %}bg-slate-200 text-slate-700{% endif %}">
+            R{{ r.round }}: {{ '🦌' if r.player == 'S' else '🐇' }}/{{ '🦌' if r.ai == 'S' else '🐇' }}
+        </span>
+        {% endfor %}
+    </div>
+    <div class="text-slate-400 mt-1">🦌 = Hirsch, 🐇 = Hase (Du / KI)</div>
+</div>
+{% endif %}
+
+{% else %}
+<span id="game-over" class="hidden"></span>
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <h3 class="text-xl font-bold text-slate-800 mb-4">
+        {% if final.result == 'win' %}🏆 Du hast mehr Punkte!
+        {% elif final.result == 'loss' %}📊 KI hat mehr Punkte
+        {% else %}⚖️ Gleichstand{% endif %}
+    </h3>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5 text-center">
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <div class="text-2xl font-bold text-emerald-600">{{ final.player_total }}</div>
+            <div class="text-xs text-slate-500 mt-1">Deine Punkte</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <div class="text-2xl font-bold text-slate-600">{{ final.ai_total }}</div>
+            <div class="text-xs text-slate-500 mt-1">KI-Punkte</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <div class="text-xl font-bold text-indigo-600">{{ final.stag_rate }}%</div>
+            <div class="text-xs text-slate-500 mt-1">Deine Hirsch-Rate</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <div class="text-xl font-bold text-amber-600">{{ final.coord_rate }}%</div>
+            <div class="text-xs text-slate-500 mt-1">Koordinationsrate</div>
+        </div>
+    </div>
+
+    <div class="flex gap-3 mb-2">
+        <a href="/spiele/stag-hunt" class="bg-emerald-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-emerald-700">
+            Nochmal spielen
+        </a>
+    </div>
+
+    {% include "partials/strategy_debrief.html" %}
+</div>
+{% endif %}

@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .database import Base, engine, SessionLocal
 from .seed import seed_lessons, seed_progress
-from .routers import dashboard, lektionen, spiele, fortschritt
+from .routers import dashboard, lektionen, spiele, fortschritt, raetsel, grundlagen
 
 
 @asynccontextmanager
@@ -27,3 +27,5 @@ app.include_router(dashboard.router)
 app.include_router(lektionen.router)
 app.include_router(spiele.router)
 app.include_router(fortschritt.router)
+app.include_router(raetsel.router)
+app.include_router(grundlagen.router)

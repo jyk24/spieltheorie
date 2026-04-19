@@ -7,8 +7,17 @@
     "order_index": 1,
     "related_game": "gefangenendilemma",
     "sources": [
-      {"autor": "Dixit & Nalebuff", "werk": "Thinking Strategically", "jahr": 1991},
-      {"autor": "John F. Nash", "werk": "Non-Cooperative Games", "jahr": 1951, "journal": "Annals of Mathematics"}
+      {
+        "autor": "Dixit & Nalebuff",
+        "werk": "Thinking Strategically",
+        "jahr": 1991
+      },
+      {
+        "autor": "John F. Nash",
+        "werk": "Non-Cooperative Games",
+        "jahr": 1951,
+        "journal": "Annals of Mathematics"
+      }
     ],
     "content_md": "## Nash-Gleichgewicht\n\nEin **Nash-Gleichgewicht** ist eine Situation, in der kein Spieler seine Strategie einseitig verbessern kann – gegeben die Strategie des anderen.\n\n### Die Kernidee\n\nStell dir vor, du und dein Verhandlungspartner haben beide Ihre Strategien gewählt. Es liegt ein Nash-Gleichgewicht vor, wenn gilt:\n\n> *Wenn du die Strategie deines Gegners kennst, möchtest du deine eigene nicht mehr ändern.*\n\n### Praktisches Beispiel: Gehaltsverhandlung\n\nArbeitgeber und Arbeitnehmer verhandeln. Der Arbeitgeber bietet ein Gehalt an, der Arbeitnehmer akzeptiert oder lehnt ab. Das Gleichgewicht entsteht dort, wo keiner der beiden durch einseitiges Abweichen besser dasteht.\n\n### Was bedeutet das für Verhandlungen?\n\n- **Erkenne das Gleichgewicht**: Wenn dein Angebot das beste ist, was der andere akzeptieren wird, ohne dass du etwas verlierst – bist du im Gleichgewicht.\n- **Verändere die Spielregeln**: Verhandlungsexperten versuchen, das Gleichgewicht zu verschieben, indem sie neue Optionen einführen oder die BATNA des Gegenübers verändern.\n- **Mehrere Gleichgewichte**: Oft gibt es mehrere Nash-Gleichgewichte. Hier entscheiden Vertrauen, Kommunikation und Normen, welches entsteht.\n\n### Wissenschaftlicher Hintergrund\n\nNash bewies 1951 mathematisch, dass jedes endliche Spiel mindestens ein Gleichgewicht hat (ggf. in gemischten Strategien). Dixit & Nalebuff machen diese Theorie zugänglich und zeigen ihre Anwendung in Alltags- und Geschäftssituationen."
   },
@@ -20,7 +29,11 @@
     "order_index": 2,
     "related_game": "gefangenendilemma",
     "sources": [
-      {"autor": "Dixit & Nalebuff", "werk": "Thinking Strategically", "jahr": 1991}
+      {
+        "autor": "Dixit & Nalebuff",
+        "werk": "Thinking Strategically",
+        "jahr": 1991
+      }
     ],
     "content_md": "## Dominante Strategien\n\nEine Strategie heißt **dominant**, wenn sie unabhängig davon, was der andere tut, die beste Wahl ist.\n\n### Das klassische Beispiel: Gefangenendilemma\n\nZwei Verdächtige werden separat verhört. Jeder kann schweigen (kooperieren) oder den anderen verraten (defektieren):\n\n| | B schweigt | B verrät |\n|---|---|---|\n| **A schweigt** | Beide 1 Jahr | A: 5 Jahre, B: frei |\n| **A verrät** | A: frei, B: 5 Jahre | Beide 3 Jahre |\n\nFür A ist Verraten dominant: egal was B tut, A kommt besser weg.\n\n### Das Paradox\n\nObwohl Verraten für beide die dominante Strategie ist, endet das Spiel schlechter als wenn beide geschwiegen hätten. Dies ist das Kernproblem vieler realer Verhandlungen.\n\n### Verhandlungsrelevanz\n\n- **Erkenne eigene dominante Strategien**: Was ist für dich immer gut, egal was der andere tut?\n- **Eliminiere schwächste Optionen**: Streich zuerst alle dominierten Strategien – was übrig bleibt, ist dein Verhandlungsraum.\n- **Durchbrich das Dilemma**: In wiederholten Interaktionen (z.B. Geschäftsbeziehungen) verschwindet die dominante Strategie oft – Kooperation wird rational."
   },
@@ -32,7 +45,11 @@
     "order_index": 3,
     "related_game": null,
     "sources": [
-      {"autor": "Vilfredo Pareto", "werk": "Manual of Political Economy", "jahr": 1906}
+      {
+        "autor": "Vilfredo Pareto",
+        "werk": "Manual of Political Economy",
+        "jahr": 1906
+      }
     ],
     "content_md": "## Pareto-Effizienz\n\nEin Ergebnis ist **Pareto-effizient**, wenn es keine Möglichkeit gibt, eine Partei besser zu stellen, ohne eine andere schlechter zu stellen.\n\n### Das Ziel jeder Verhandlung\n\nGute Verhandler streben Pareto-Verbesserungen an: Lösungen, bei denen **beide** Seiten gewinnen oder zumindest niemand verliert.\n\n### Praktisches Beispiel\n\nArbeitgeber bietet 50.000€. Arbeitnehmer will 55.000€. Statt Stillstand:\n- Arbeitgeber bietet flexibles Arbeiten (kostet ihn wenig, ist dem Arbeitnehmer viel wert)\n- Arbeitnehmer akzeptiert 52.000€\n\n→ Beide stehen besser da als ohne Einigung. **Pareto-Verbesserung.**\n\n### Warum scheitern Verhandlungen?\n\nOft liegt es am sogenannten **Fixkuchen-Trugschluss** (Fixed-Pie Fallacy): Beide denken, der Gesamtgewinn sei fest, und feilschen nur um Anteile. Tatsächlich gibt es fast immer Wege, den Kuchen zu vergrößern.\n\n### Werkzeuge zur Pareto-Verbesserung\n- Interessen statt Positionen offenlegen (Fisher & Ury)\n- Mehrere Themen gleichzeitig verhandeln\n- Kreative Paketlösungen schnüren"
   },
@@ -44,8 +61,16 @@
     "order_index": 4,
     "related_game": "gefangenendilemma",
     "sources": [
-      {"autor": "Robert Axelrod", "werk": "The Evolution of Cooperation", "jahr": 1984},
-      {"autor": "Robert Axelrod", "werk": "The Complexity of Cooperation", "jahr": 1997}
+      {
+        "autor": "Robert Axelrod",
+        "werk": "The Evolution of Cooperation",
+        "jahr": 1984
+      },
+      {
+        "autor": "Robert Axelrod",
+        "werk": "The Complexity of Cooperation",
+        "jahr": 1997
+      }
     ],
     "content_md": "## Wiederholte Spiele & Reputation\n\nIn einem einmaligen Gefangenendilemma ist Verrat rational. Aber was, wenn ihr euch wieder begegnet?\n\n### Der Schatten der Zukunft\n\nAxelrod zeigte: Wenn Spieler wissen, dass sie einander wieder begegnen, wird Kooperation rational. Die Erwartung zukünftiger Interaktionen – der **Schatten der Zukunft** – verändert alles.\n\n### Reputation als Kapital\n\nDein Ruf ist dein wertvollstes Verhandlungskapital:\n- Wer als fair gilt, bekommt bessere Angebote\n- Wer als unzuverlässig gilt, muss mehr zugestehen\n- Einmal aufgebaut, wirkt Reputation wie eine unsichtbare Garantie\n\n### Axelrods Computer-Turnier\n\nAxelrod lud Wissenschaftler ein, Strategien für das wiederholte Gefangenendilemma einzureichen. Das überraschende Ergebnis:\n\n> Die einfachste Strategie gewann: **Tit-for-Tat** – kooperiere beim ersten Zug, danach mache immer das, was der andere zuletzt tat.\n\n### Verhandlungsrelevanz\n\n- **Baue langfristige Beziehungen auf** – sie sind profitabler als einmalige Deals\n- **Zeige Verlässlichkeit** – halte Zusagen, auch wenn es kurzfristig kostet\n- **Reagiere auf Vertrauensbruch** – aber vergib schnell und kehre zur Kooperation zurück"
   },
@@ -57,7 +82,11 @@
     "order_index": 5,
     "related_game": "gefangenendilemma",
     "sources": [
-      {"autor": "Robert Axelrod", "werk": "The Evolution of Cooperation", "jahr": 1984}
+      {
+        "autor": "Robert Axelrod",
+        "werk": "The Evolution of Cooperation",
+        "jahr": 1984
+      }
     ],
     "content_md": "## Tit-for-Tat\n\nAxelrods bekannteste Entdeckung: Eine denkbar einfache Strategie schlägt alle komplexen Alternativen.\n\n### Die Regel\n\n1. **Beginne mit Kooperation** (keine Vorwürfe, kein Misstrauen)\n2. **Spiegle danach den letzten Zug des Gegners** – kooperiert er, kooperierst du; verrät er, verrätst du\n\n### Warum sie so gut funktioniert\n\n- **Nett**: Sie startet freundlich – kein unnötiger Konflikt\n- **Rachsüchtig**: Sie bestraft Verrat sofort – kein Ausnutzen möglich\n- **Vergebend**: Sie vergisst sofort – kein Aufschaukeln\n- **Klar**: Der Gegner versteht das Muster schnell\n\n### Eigenschaften einer starken Verhandlungsstrategie\n\nTit-for-Tat lehrt uns die vier Qualitäten:\n\n| Qualität | Bedeutung in der Verhandlung |\n|---|---|\n| Nett sein | Offen starten, Kooperation signalisieren |\n| Provokation bestrafen | Klare Grenzen setzen, Konsequenzen zeigen |\n| Vergeben | Konflikt beenden, sobald der andere einlenkt |\n| Transparent sein | Deine Strategie klar kommunizieren |\n\n### Grenzen\n\nTit-for-Tat kann in einer Welt mit Kommunikationsrauschen (Missverständnisse) zu Eskalationsspiralen führen. Verbesserte Versionen wie **Generous Tit-for-Tat** vergeben gelegentlich auch unverdienten Verrat."
   },
@@ -69,8 +98,17 @@
     "order_index": 6,
     "related_game": "vertrauen",
     "sources": [
-      {"autor": "Thomas Schelling", "werk": "The Strategy of Conflict", "jahr": 1960},
-      {"autor": "Michael Spence", "werk": "Job Market Signaling", "jahr": 1973, "journal": "Quarterly Journal of Economics"}
+      {
+        "autor": "Thomas Schelling",
+        "werk": "The Strategy of Conflict",
+        "jahr": 1960
+      },
+      {
+        "autor": "Michael Spence",
+        "werk": "Job Market Signaling",
+        "jahr": 1973,
+        "journal": "Quarterly Journal of Economics"
+      }
     ],
     "content_md": "## Signaling & Glaubwürdigkeit\n\nIn Verhandlungen sind Worte billig. Was zählt, sind **glaubwürdige Signale** – Handlungen, die Absichten beweisen.\n\n### Das Credibility-Problem\n\nJeder kann sagen: \"Das ist mein letztes Angebot.\" Kaum jemand glaubt es. Glaubwürdigkeit entsteht durch:\n\n1. **Kosten**: Signale müssen teuer sein, um glaubwürdig zu sein (Spence's Signaling-Theorie)\n2. **Bindung**: Öffentliche Commitment reduziert Rückzugsmöglichkeiten\n3. **Reputation**: Wer frühere Versprechen hielt, wird geglaubt\n\n### Schelling's \"Burning Bridges\"\n\nSchelling beschrieb eine paradoxe Strategie: Wer seine Rückzugsmöglichkeiten öffentlich vernichtet, gewinnt Verhandlungsmacht. Beispiel: Ein Gewerkschaftsführer, der öffentlich Streik ankündigt, kann nicht mehr ohne Gesichtsverlust nachgeben.\n\n### Praktische Anwendung\n\n- **Mache deine Grenzen sichtbar**: Setze Deadlines öffentlich, teile sie mit Dritten\n- **Nutze externe Bindungen**: \"Mein Vorstand hat mir ein Limit gegeben\" ist ein glaubwürdiges Commitment\n- **Hüte dich vor falschen Signalen**: Unglaubwürdige Drohungen zerstören deinen Ruf dauerhaft"
   },
@@ -82,8 +120,17 @@
     "order_index": 7,
     "related_game": "verhandlung",
     "sources": [
-      {"autor": "Roger Fisher & William Ury", "werk": "Getting to Yes (Das Harvard-Konzept)", "jahr": 1981},
-      {"autor": "Roger Fisher & William Ury", "werk": "Getting to Yes", "jahr": 1981, "verlag": "Penguin Books"}
+      {
+        "autor": "Roger Fisher & William Ury",
+        "werk": "Getting to Yes (Das Harvard-Konzept)",
+        "jahr": 1981
+      },
+      {
+        "autor": "Roger Fisher & William Ury",
+        "werk": "Getting to Yes",
+        "jahr": 1981,
+        "verlag": "Penguin Books"
+      }
     ],
     "content_md": "## BATNA – Best Alternative to a Negotiated Agreement\n\nDein **BATNA** ist das, was du tust, wenn die aktuelle Verhandlung scheitert. Es ist die mächtigste Waffe in jeder Verhandlung.\n\n### Warum BATNA alles ändert\n\n> \"Die Verhandlungsmacht liegt bei demjenigen, der die bessere Alternative hat.\"\n> — Roger Fisher & William Ury\n\nWer ein starkes BATNA hat, verhandelt entspannt. Wer keines hat, ist erpressbar.\n\n### BATNA berechnen\n\n1. **Liste alle Alternativen auf**: Was kannst du tun, wenn dieser Deal platzt?\n2. **Verbessere die besten**: Investiere vorab in deine Alternativen\n3. **Bestimme deinen Reservationspreis**: Das schlechteste Ergebnis, das besser ist als dein BATNA\n\n### Praxisbeispiel: Gehaltsverhandlung\n\n- Schwaches BATNA: Du hast keine anderen Angebote → du bist unter Druck\n- Starkes BATNA: Du hast ein Gegenangebot von einem Wettbewerber → du verhandelst aus einer Position der Stärke\n\n### Was du über die BATNA des Gegners wissen musst\n\nVerstehe auch die Alternativen deines Gegenübers. Ist sein BATNA schlecht, hat er Druck, sich zu einigen. Ist es gut, musst du attraktiver werden als seine Alternative.\n\n### Die drei Schritte\n\n1. Analysiere dein eigenes BATNA genau\n2. Versuche das BATNA des Gegners einzuschätzen\n3. Suche nach Wegen, die relative BATNA-Stärke zu verändern"
   },
@@ -95,8 +142,17 @@
     "order_index": 8,
     "related_game": "ultimatum",
     "sources": [
-      {"autor": "Chris Voss", "werk": "Never Split the Difference", "jahr": 2016},
-      {"autor": "Adam Galinsky & Thomas Mussweiler", "werk": "First Offers as Anchors", "jahr": 2001, "journal": "Journal of Personality and Social Psychology"}
+      {
+        "autor": "Chris Voss",
+        "werk": "Never Split the Difference",
+        "jahr": 2016
+      },
+      {
+        "autor": "Adam Galinsky & Thomas Mussweiler",
+        "werk": "First Offers as Anchors",
+        "jahr": 2001,
+        "journal": "Journal of Personality and Social Psychology"
+      }
     ],
     "content_md": "## Ankern & Erste Angebote\n\nDas **erste Angebot** in einer Verhandlung setzt den Anker – einen psychologischen Ausgangspunkt, um den alle weiteren Zahlen kreisen.\n\n### Die Wissenschaft dahinter\n\nGalinsky & Mussweiler (2001) zeigten: Wer zuerst ein Angebot macht, erzielt systematisch bessere Ergebnisse. Das Gehirn des Gegenübers justiert sich an diesem Anker – auch wenn er irrational hoch oder niedrig ist.\n\n### Voss's Technik: Extremes Verankern\n\nChris Voss, ehemaliger FBI-Verhandlungsführer, empfiehlt:\n\n> Ankere extrem – dann sage explizit, dass du weißt, dass es extrem ist.\n\nBeispiel: \"Ich weiß, das klingt verrückt, aber ich könnte mir vorstellen, dass wir bei 80.000€ landen.\" → Der Anker sitzt, ohne dass du arrogant wirkst.\n\n### Wie du mit fremden Ankern umgehst\n\n1. **Akzeptiere den Anker nicht stillschweigend** – eine Reaktion ohne Gegenangebot validiert ihn\n2. **Setze einen starken Gegenanker** – nicht klein justieren, groß zurückankern\n3. **Nutze Informationen**: Galinsky & Mussweiler zeigten, dass Fokus auf die Schwachstellen des Ankern ihn entkräftet\n\n### Erste Angebote: Ja oder Nein?\n\n| Situation | Empfehlung |\n|---|---|\n| Du weißt mehr als der andere | Mache das erste Angebot |\n| Du weißt wenig über den Markt | Lass den anderen zuerst ankern |\n| Emotionale Verhandlung | Lass den anderen entlüften, dann ankere |\n"
   },
@@ -108,8 +164,16 @@
     "order_index": 9,
     "related_game": "verhandlung",
     "sources": [
-      {"autor": "Roger Fisher & William Ury", "werk": "Getting to Yes", "jahr": 1981},
-      {"autor": "Howard Raiffa", "werk": "The Art and Science of Negotiation", "jahr": 1982}
+      {
+        "autor": "Roger Fisher & William Ury",
+        "werk": "Getting to Yes",
+        "jahr": 1981
+      },
+      {
+        "autor": "Howard Raiffa",
+        "werk": "The Art and Science of Negotiation",
+        "jahr": 1982
+      }
     ],
     "content_md": "## ZOPA – Zone of Possible Agreement\n\nDie **ZOPA** ist der Bereich zwischen dem Mindestpreis des Verkäufers und dem Höchstpreis des Käufers. Nur innerhalb dieser Zone ist eine Einigung möglich.\n\n### Visualisierung\n\n```\nVerkäufer-Minimum: 80.000€         Käufer-Maximum: 100.000€\n         |←————— ZOPA ————————→|\n      80.000€               100.000€\n```\n\n### Wenn keine ZOPA existiert\n\nManche Verhandlungen scheitern nicht an Sturheit, sondern weil schlicht keine Überschneidung existiert. Gute Verhandler erkennen dies früh und beenden die Verhandlung – oder schaffen eine ZOPA durch kreative Lösungen.\n\n### ZOPA vergrößern\n\nDie klassische Technik von Fisher & Ury: Statt über **Positionen** zu verhandeln, verhandle über **Interessen**.\n\n- Position: \"Ich will 95.000€\"\n- Interesse: \"Ich brauche Sicherheit und will in 3 Jahren das Haus kaufen\"\n\n→ Vielleicht lässt sich die ZOPA durch Boni, Aktien, flexible Arbeitszeiten oder andere Komponenten erweitern.\n\n### Praktischer Tipp\n\nSchätze die ZOPA vor jeder wichtigen Verhandlung ab:\n1. Was ist dein Reservationspreis?\n2. Was ist wahrscheinlich der Reservationspreis des Anderen?\n3. Gibt es eine Zone? Wenn ja: Wo liegt die Mitte?"
   },
@@ -121,8 +185,17 @@
     "order_index": 10,
     "related_game": "verhandlung",
     "sources": [
-      {"autor": "Ariel Rubinstein", "werk": "Perfect Equilibrium in a Bargaining Model", "jahr": 1982, "journal": "Econometrica"},
-      {"autor": "Ken Binmore", "werk": "Playing for Real", "jahr": 2007}
+      {
+        "autor": "Ariel Rubinstein",
+        "werk": "Perfect Equilibrium in a Bargaining Model",
+        "jahr": 1982,
+        "journal": "Econometrica"
+      },
+      {
+        "autor": "Ken Binmore",
+        "werk": "Playing for Real",
+        "jahr": 2007
+      }
     ],
     "content_md": "## Rubinstein Bargaining & Zeitdruck\n\nAriel Rubinstein zeigte 1982: In einer Verhandlung mit Wechselangeboten und Zeitdruck gibt es genau **eine** rationale Lösung.\n\n### Das Modell\n\n- Zwei Spieler teilen €1 auf\n- Spieler A macht ein Angebot, B akzeptiert oder macht Gegenangebot\n- Jede Runde verliert der Gesamtwert an Wert (Diskontierung: δ)\n- Spieler mit niedrigerem δ (ungeduldiger) bekommt weniger\n\n### Die Kernaussage\n\n> **Geduld ist Verhandlungsmacht.**\n\nWer den Verlust durch Zeitverzögerung besser erträgt, bekommt systemisch ein besseres Ergebnis.\n\n### Praktische Anwendung\n\n| Situation | Strategie |\n|---|---|\n| Du hast Zeit | Lass Fristen des Gegners laufen, ohne zu zucken |\n| Du hast keinen Zeitdruck | Kommuniziere subtil deine Geduld |\n| Der Gegner hat Zeitdruck | Warte – er wird Zugeständnisse machen |\n| Beide haben Zeitdruck | Einige dich schnell – ihr verliert beide |\n\n### Echte Deadlines vs. künstliche Deadlines\n\nVoss warnt: Deadlines sind oft gespielt. Frage dich immer:\n- Was passiert wirklich, wenn die Deadline verstreicht?\n- Ist die Deadline eine externe Tatsache oder eine Verhandlungstaktik?\n\n### Strategischer Tipp\n\nNachforschungen zeigen: Viele bedeutende Einigungen passieren kurz vor oder nach einer Deadline. Der erste, der unter Zeitdruck einlenkt, verliert."
   },
@@ -134,7 +207,11 @@
     "order_index": 11,
     "related_game": "verhandlung",
     "sources": [
-      {"autor": "Chris Voss", "werk": "Never Split the Difference", "jahr": 2016}
+      {
+        "autor": "Chris Voss",
+        "werk": "Never Split the Difference",
+        "jahr": 2016
+      }
     ],
     "content_md": "## Taktische Empathie\n\nChris Voss' wichtigstes Werkzeug: **Taktische Empathie** bedeutet, die Perspektive des Gegenübers so tief zu verstehen, dass du seine Reaktionen vorhersehen und lenken kannst.\n\n### Was es NICHT ist\n\nTaktische Empathie ist keine Schwäche. Es bedeutet nicht, nett zu sein oder Zugeständnisse zu machen. Es bedeutet:\n\n> \"Ich verstehe, wie du dich fühlst – und ich nutze dieses Verständnis strategisch.\"\n\n### Die drei Werkzeuge\n\n#### 1. Labeling (Benennen)\nBenenne die Emotionen des anderen explizit:\n- \"Es scheint, als wären Sie frustriert über...\"  \n- \"Es klingt so, als ob Ihnen X besonders wichtig ist.\"\n\nEffekt: Der andere fühlt sich verstanden, öffnet sich, liefert mehr Information.\n\n#### 2. Mirroring (Spiegeln)\nWiederhole die letzten 1-3 Wörter des Gegenübers als Frage:\n- Gegner: \"Das Projekt hat uns 3 Monate Arbeit gekostet.\"\n- Du: \"3 Monate?\"\n\nEffekt: Er erklärt mehr, du lernst seine echten Interessen kennen.\n\n#### 3. Akkalibrierte Fragen\nStatt Ja/Nein-Fragen: Offene Wie/Was-Fragen:\n- \"Wie soll das funktionieren?\"\n- \"Was soll ich tun, wenn das Budget nicht reicht?\"\n\nEffekt: Der Gegner löst deine Probleme, fühlt sich gleichzeitig in Kontrolle.\n\n### Die Wissenschaft\n\nNeurobiologisch verringert das Gefühl, gehört zu werden, die Amygdala-Aktivierung (Fight-or-Flight). Verhandler, die sich sicher fühlen, machen kreativere und großzügigere Zugeständnisse."
   },
@@ -146,8 +223,17 @@
     "order_index": 12,
     "related_game": "ultimatum",
     "sources": [
-      {"autor": "Daniel Kahneman & Amos Tversky", "werk": "Prospect Theory: An Analysis of Decision under Risk", "jahr": 1979, "journal": "Econometrica"},
-      {"autor": "Daniel Kahneman", "werk": "Schnelles Denken, langsames Denken", "jahr": 2011}
+      {
+        "autor": "Daniel Kahneman & Amos Tversky",
+        "werk": "Prospect Theory: An Analysis of Decision under Risk",
+        "jahr": 1979,
+        "journal": "Econometrica"
+      },
+      {
+        "autor": "Daniel Kahneman",
+        "werk": "Schnelles Denken, langsames Denken",
+        "jahr": 2011
+      }
     ],
     "content_md": "## Prospect Theory & Verlustangst\n\nKahneman & Tversky revolutionierten die Ökonomie: Menschen bewerten Verluste und Gewinne asymmetrisch.\n\n### Der Kernbefund\n\n> **Verluste schmerzen doppelt so stark wie gleich große Gewinne erfreuen.**\n\nEin Verlust von 100€ fühlt sich psychologisch schlimmer an als ein Gewinn von 200€ gut fühlt.\n\n### Die Wertfunktion\n\nKahnemans S-Kurve zeigt:\n- Im Gewinnbereich: **Risikoavers** (lieber sicherer kleiner Gewinn als unsicherer großer)\n- Im Verlustbereich: **Risikofreudig** (lieber das Risiko eingehen, als sicher zu verlieren)\n\n### Anwendung in Verhandlungen\n\n#### Framing als Verlust statt Gewinn\n- Statt: \"Mit unserem Produkt sparen Sie 10.000€\" (Gewinn)\n- Besser: \"Ohne unser Produkt verlieren Sie jedes Jahr 10.000€\" (Verlust)\n\n#### Den Endowment-Effekt nutzen\nMenschen überbewerten, was sie bereits besitzen. Lass den Gegner etwas \"besitzen\", bevor du forderst:\n- Probezeit, Trial-Versionen, kostenlose erste Lieferung\n\n#### Verlustangst des Gegners adressieren\n- \"Was riskieren Sie, wenn diese Partnerschaft nicht zustande kommt?\"\n- \"Welche Opportunitätskosten entstehen Ihnen ohne diese Lösung?\"\n\n### Warnung: Beide Seiten sind betroffen\n\nAuch du bist verlustscheu. Überprüfe deine Entscheidungen: Hältst du an einem schlechten Deal fest, weil du den \"Verlust\" des Aufgebens fürchtest?"
   },
@@ -159,8 +245,18 @@
     "order_index": 13,
     "related_game": "ultimatum",
     "sources": [
-      {"autor": "Werner Güth, Rolf Schmittberger & Bernd Schwarze", "werk": "An Experimental Analysis of Ultimatum Bargaining", "jahr": 1982, "journal": "Journal of Economic Behavior & Organization"},
-      {"autor": "Ernst Fehr & Simon Gächter", "werk": "Altruistic punishment in humans", "jahr": 2002, "journal": "Nature"}
+      {
+        "autor": "Werner Güth, Rolf Schmittberger & Bernd Schwarze",
+        "werk": "An Experimental Analysis of Ultimatum Bargaining",
+        "jahr": 1982,
+        "journal": "Journal of Economic Behavior & Organization"
+      },
+      {
+        "autor": "Ernst Fehr & Simon Gächter",
+        "werk": "Altruistic punishment in humans",
+        "jahr": 2002,
+        "journal": "Nature"
+      }
     ],
     "content_md": "## Fairness-Effekte in Verhandlungen\n\nDas Ultimatumspiel zerstörte den Mythos des rein rationalen Menschen.\n\n### Das Experiment (Güth et al., 1982)\n\nSpieler A erhält 10€ und macht Spieler B ein Angebot. B kann akzeptieren (beide bekommen den genannten Betrag) oder ablehnen (beide bekommen nichts).\n\n**Rationale Vorhersage**: B sollte jeden positiven Betrag akzeptieren – 1 Cent ist besser als nichts.\n\n**Tatsächliches Ergebnis**: Angebote unter ~30% werden regelmäßig abgelehnt. Menschen bestrafen Unfairness, auch auf eigene Kosten.\n\n### Was das bedeutet\n\n> Menschen sind bereit, echtes Geld zu zahlen, um Ungerechtigkeit zu bestrafen.\n\n### Praktische Konsequenzen\n\n| Situation | Empfehlung |\n|---|---|\n| Mache Angebote | Bleibe über der Fairness-Schwelle (~40-50%) |\n| Nutze Rechtfertigungen | Erkläre, warum ein niedriges Angebot fair ist |\n| Vermeide Demütigung | Wie du ein Angebot machst, ist wichtiger als was |\n| Verhandlungsmacht | Auch ein schlechtes Angebot wird akzeptiert, wenn es begründet wird |\n\n### Fehr & Gächters Erkenntnis\n\nMenschen bestrafen nicht nur in bilateralen Verhandlungen – sie bestrafen auch in anonymen Gruppen (Public Goods Games). Fairnessnormen sind tief im menschlichen Sozialverhalten verankert.\n\n### Für Verhandlungsprofis\n\nNutze Fairness als Werkzeug: Wenn dein Angebot objektiv begründet ist (Marktpreise, Precedents, Standards), kann es trotz niedriger Zahlen akzeptiert werden. Chris Voss nennt dies \"Calibrated Anchoring with Justification\"."
   },
@@ -172,8 +268,17 @@
     "order_index": 14,
     "related_game": null,
     "sources": [
-      {"autor": "Daniel Kahneman & Amos Tversky", "werk": "The Framing of Decisions and the Psychology of Choice", "jahr": 1981, "journal": "Science"},
-      {"autor": "Daniel Kahneman", "werk": "Schnelles Denken, langsames Denken", "jahr": 2011}
+      {
+        "autor": "Daniel Kahneman & Amos Tversky",
+        "werk": "The Framing of Decisions and the Psychology of Choice",
+        "jahr": 1981,
+        "journal": "Science"
+      },
+      {
+        "autor": "Daniel Kahneman",
+        "werk": "Schnelles Denken, langsames Denken",
+        "jahr": 2011
+      }
     ],
     "content_md": "## Framing in Verhandlungen\n\nWie eine Information präsentiert wird, verändert die Entscheidung – auch wenn der Inhalt identisch ist.\n\n### Das klassische Experiment\n\nKahneman & Tversky präsentierten denselben Sachverhalt in zwei Frames:\n\n- **Positiv**: \"Programm A rettet sicher 200 von 600 Leben\"\n- **Negativ**: \"Programm B hat 1/3 Wahrscheinlichkeit, alle zu retten, aber 2/3, dass niemand überlebt\"\n\nDie meisten wählen Programm A. Doch dann:\n\n- **Negativ umformuliert**: \"Programm C: 400 Menschen sterben sicher\"\n- **Gamble**: \"Programm D: 1/3 Wahrscheinlichkeit niemand stirbt, 2/3 alle sterben\"\n\nNun wählen die meisten Programm D – obwohl A und C identisch und B und D identisch sind!\n\n### Frames in der Verhandlungspraxis\n\n#### Gewinne vs. Verluste\n- \"Sie bekommen 5% Rabatt\" → Gewinn-Frame (weniger motivierend)\n- \"Sonst zahlen Sie 5% mehr\" → Verlust-Frame (stärker motivierend)\n\n#### Referenzpunkt setzen\n- Dein Angebot als Ausgangspunkt setzen, nicht das des Gegners\n- \"Wir gehen von 100.000€ aus und schauen, was wir reduzieren können\"\n\n#### Legitimität durch Labels\n- \"Branchenstandard\", \"Marktpreis\", \"Übliches Vorgehen\" legitimieren Angebote\n- Entkräfte gegnerische Labels durch eigene Gegenframes\n\n### Meta-Tipp\n\nSei dir bewusst, in welchem Frame du dich befindest. Wenn du dich unter Druck fühlst, frage: *Wie würde ich diese Situation beschreiben, wenn ich außenstehender Beobachter wäre?*"
   },
@@ -185,8 +290,17 @@
     "order_index": 15,
     "related_game": "verhandlung",
     "sources": [
-      {"autor": "Chris Voss", "werk": "Never Split the Difference", "jahr": 2016},
-      {"autor": "Alison Wood Brooks", "werk": "Emotion and the Art of Negotiation", "jahr": 2015, "journal": "Harvard Business Review"}
+      {
+        "autor": "Chris Voss",
+        "werk": "Never Split the Difference",
+        "jahr": 2016
+      },
+      {
+        "autor": "Alison Wood Brooks",
+        "werk": "Emotion and the Art of Negotiation",
+        "jahr": 2015,
+        "journal": "Harvard Business Review"
+      }
     ],
     "content_md": "## Emotionen als Verhandlungsinstrument\n\nDer Mythos der \"rationalen Verhandlung\" ist tot. Emotionen sind nicht das Gegenteil von Strategie – sie sind ein zentrales strategisches Werkzeug.\n\n### Anger: Wann Ärger hilft und wann er schadet\n\nBrooks (2015, HBR) zeigt:\n- Strategisch eingesetzter Ärger kann **Zugeständnisse provozieren** – der Gegner will den Konflikt lösen\n- Unkontrollierter Ärger **zerstört Beziehungen** und schließt kreative Lösungsräume\n\n**Faustregel**: Kommuniziere Ärger über das Verhalten, nicht über die Person.\n\n### Enthusiasm: Das unterschätzte Werkzeug\n\nPositive Emotionen erhöhen die Kreativität beider Seiten. Eine entspannte, optimistische Atmosphäre führt zu mehr Pareto-Verbesserungen.\n\nVoss' Technik: **Die Late-Night-FM-DJ-Stimme** – eine tiefe, ruhige, positive Stimme signalisiert Selbstsicherheit und reduziert Spannungen.\n\n### Silence als Werkzeug\n\nNach einem Angebot: Schweige. Die meisten Menschen füllen Stille mit Zugeständnissen.\n\nVoss: \"Die Stille nach einem Angebot ist goldener als jedes Gegenargument.\"\n\n### Emotionen des Gegenübers lesen\n\n- **Frustration**: Der andere fühlt sich nicht gehört → Labeling einsetzen\n- **Angst**: Er hat viel zu verlieren → Betonung von Sicherheit und Risikoreduktion\n- **Begeisterung**: Er will den Deal → Verlangsame, nutze seine Ungeduld\n- **Scham**: Sein Angebot war unfair → Biete einen Ausweg ohne Gesichtsverlust"
   },
@@ -198,9 +312,236 @@
     "order_index": 16,
     "related_game": null,
     "sources": [
-      {"autor": "Thomas Schelling", "werk": "The Strategy of Conflict", "jahr": 1960},
-      {"autor": "Howard Raiffa", "werk": "The Art and Science of Negotiation", "jahr": 1982}
+      {
+        "autor": "Thomas Schelling",
+        "werk": "The Strategy of Conflict",
+        "jahr": 1960
+      },
+      {
+        "autor": "Howard Raiffa",
+        "werk": "The Art and Science of Negotiation",
+        "jahr": 1982
+      }
     ],
     "content_md": "## Koalitionen & mehrseitige Verhandlungen\n\nSobald mehr als zwei Parteien am Tisch sitzen, gelten neue Regeln.\n\n### Das Koalitionsproblem\n\nIn multilateralen Verhandlungen können sich zwei Parteien verbünden, um eine dritte zu isolieren oder zu überstimmen. Dies schafft völlig neue Machtdynamiken.\n\n**Schelling's Einsicht**: In einer Dreier-Verhandlung hat oft die Partei die meiste Macht, die am wenigsten auf eine Einigung angewiesen ist – weil die anderen beiden fürchten, dass sie sich anderweitig verbündet.\n\n### Strategien für mehrseitige Verhandlungen\n\n#### 1. Koalitionen bilden\n- Identifiziere potenzielle Verbündete mit ähnlichen Interessen\n- Bilde Vorab-Allianzen außerhalb der Hauptverhandlung\n- Gemeinsame Positionen stärken die Verhandlungsmacht enorm\n\n#### 2. Koalitionen aufbrechen\n- Finde die Schwachstelle innerhalb des Bündnisses (unterschiedliche Interessen)\n- Mache ein Side-Deal mit dem schwächsten Koalitionsglied\n- Nutze den Schatten der Zukunft: Bedrohe die Koalitionspartner getrennt\n\n#### 3. Agenda-Setting\n- Wer die Tagesordnung kontrolliert, kontrolliert die Verhandlung\n- Setze Themen in eine Reihenfolge, die dir nützt\n- Verknüpfe Themen strategisch (Package Deals)\n\n### Raiffa's Ratschlag\n\nIn komplexen Mehrparteienverhandlungen: Investiere in **Informationsasymmetrie**. Wer am meisten über die Präferenzen aller Parteien weiß, hat den größten Spielraum für kreative Gesamtlösungen."
+  },
+  {
+    "slug": "gemischte-strategien",
+    "title": "Gemischte Strategien & Gleichgewichte",
+    "category": "Grundlagen",
+    "difficulty": "mittel",
+    "order_index": 17,
+    "related_game": "chicken",
+    "sources": [
+      {
+        "autor": "John F. Nash",
+        "werk": "Non-Cooperative Games",
+        "jahr": 1951,
+        "journal": "Annals of Mathematics"
+      },
+      {
+        "autor": "Avinash Dixit & Barry Nalebuff",
+        "werk": "Thinking Strategically",
+        "jahr": 1991
+      }
+    ],
+    "content_md": "## Gemischte Strategien & Gleichgewichte\n\nNicht alle Spiele haben ein klares Nash-Gleichgewicht in reinen Strategien. Manchmal ist die beste Strategie **Unberechenbarkeit**.\n\n### Was ist eine gemischte Strategie?\n\nEine gemischte Strategie bedeutet, verschiedene Züge mit bestimmten Wahrscheinlichkeiten zu spielen, anstatt immer dieselbe Wahl zu treffen.\n\n**Beispiel Feiglingsspiel:**\n- Wenn du immer hältst, weicht dein Gegner immer aus – aber dann hältst du bald auch aus, weil er aufgehört hat auszuweichen.\n- Das Nash-Gleichgewicht liegt bei einer gemischten Strategie: manchmal halten, manchmal ausweichen.\n\n### Das klassische Beispiel: Elfmeterschießen\n\nEin Torwart kann nicht immer in die gleiche Ecke springen. Der Schütze kann nicht immer in die gleiche Ecke schießen. Die optimale Strategie ist **randomisiert** – so wird man unlesbar.\n\n### Mathematische Grundlage\n\nNash bewies: Jedes endliche Spiel hat mindestens ein Nash-Gleichgewicht – möglicherweise in gemischten Strategien. Das Gleichgewicht entsteht, wenn jede Strategie im Mix dieselbe erwartete Auszahlung hat.\n\n**Im Feiglingsspiel:** Die Gleichgewichtswahrscheinlichkeit für \"Halten\" ist so, dass der Gegner indifferent zwischen Halten und Ausweichen ist.\n\n### Anwendung in Verhandlungen\n\n- **Unberechenbarkeit als Waffe**: Wer manchmal überraschend hart verhandelt und manchmal weich, ist schwerer zu lesen\n- **Vorsicht vor Mustern**: Wenn du immer auf extreme Angebote reagierst, wird dein Gegner das ausnutzen\n- **In Wiederholungen**: Ein Mix aus harten und kooperativen Zügen hält den Gegner im Gleichgewicht\n\n### Grenzen\n\nGemischte Strategien setzen voraus, dass du wirklich randomisierst – nicht nur so tust als ob. Menschen sind schlechte Zufallsgeneratoren und fallen oft in Muster."
+  },
+  {
+    "slug": "rueckwaertsinduktion",
+    "title": "Rückwärtsinduktion & Teilspielperfekte Gleichgewichte",
+    "category": "Grundlagen",
+    "difficulty": "schwer",
+    "order_index": 18,
+    "related_game": "verhandlung",
+    "sources": [
+      {
+        "autor": "Reinhard Selten",
+        "werk": "Spieltheoretische Behandlung eines Oligopolmodells mit Nachfrageträgheit",
+        "jahr": 1965
+      },
+      {
+        "autor": "Ariel Rubinstein",
+        "werk": "Perfect Equilibrium in a Bargaining Model",
+        "jahr": 1982,
+        "journal": "Econometrica"
+      }
+    ],
+    "content_md": "## Rückwärtsinduktion\n\nEine der mächtigsten Methoden der Spieltheorie: Löse das Spiel vom Ende her.\n\n### Die Kernidee\n\nIn sequenziellen Spielen – wo Spieler nacheinander ziehen – löst man das Spiel rückwärts:\n\n1. Bestimme, was der letzte Spieler rational tun würde\n2. Gehe einen Schritt zurück: Was tut der vorletzte Spieler, wenn er weiß, was der Letzte tut?\n3. Wiederhole, bis zum ersten Zug\n\n### Das Kettengeschäft-Paradoxon\n\nEin Unternehmenskette hat 100 Filialen. Ein Newcomer erwägt, in Markt 1 einzutreten.\n\n- Soll die Kette kämpfen, um Markteintritt abzuschrecken?\n- Rückwärtsinduktion: In Markt 100 kämpfen lohnt sich nicht. Damit in Markt 99 auch nicht. Und so weiter...\n- **Ergebnis**: Rationaler Akteur würde nie kämpfen. Newcomers sollten immer eintreten.\n\nBut empirisch: Firmen kämpfen trotzdem – wegen Reputation.\n\n### Warum Menschen oft nicht rückwärts denken\n\nKahneman's Forschung: Menschen denken vorwärts (\"Was passiert als nächstes?\"), nicht rückwärts (\"Was führt zum optimalen Endergebnis?\"). Das ist kognitiv einfacher, aber strategisch schwächer.\n\n### Anwendung: Verhandlungsendspiele\n\nWenn du weißt, dass in Runde 5 Schluss ist:\n- Runde 5: Der Gegner nimmt alles was er kann\n- Runde 4: Du weißt das – also verhandelst du heute härter\n- Runde 3: Er weiß, dass du das weißt...\n\n> **Fazit**: Wer das Ende klarer sieht, verhandelt früher besser.\n\n### Strategischer Tipp\n\nNumanipuliere das Ende: Verlängere den Zeithorizont, um Kooperation zu ermöglichen. Verkürze ihn, um Entscheidungen zu erzwingen. Deadlines sind spieltheoretische Werkzeuge, keine neutralen Fakten."
+  },
+  {
+    "slug": "evolutionaere-spieltheorie",
+    "title": "Evolutionäre Spieltheorie",
+    "category": "Kooperation",
+    "difficulty": "mittel",
+    "order_index": 19,
+    "related_game": "gefangenendilemma",
+    "sources": [
+      {
+        "autor": "John Maynard Smith & George Price",
+        "werk": "The Logic of Animal Conflict",
+        "jahr": 1973,
+        "journal": "Nature"
+      },
+      {
+        "autor": "Robert Axelrod",
+        "werk": "The Evolution of Cooperation",
+        "jahr": 1984
+      },
+      {
+        "autor": "Martin Nowak",
+        "werk": "Five Rules for the Evolution of Cooperation",
+        "jahr": 2006,
+        "journal": "Science"
+      }
+    ],
+    "content_md": "## Evolutionäre Spieltheorie\n\nWas passiert, wenn Strategien nicht einmal bewusst gewählt werden, sondern sich durch natürliche Selektion entwickeln?\n\n### Der evolutionär stabile Zustand (ESS)\n\nJohn Maynard Smith führte 1973 das Konzept der **evolutionär stabilen Strategie (ESS)** ein: Eine Strategie ist stabil, wenn eine Population, die sie spielt, nicht von einer mutierenden Minderheit unterwandert werden kann.\n\n**Beispiel Tauben und Falken:**\n- Falken eskalieren immer (riskant, aber potenziell sehr profitabel)\n- Tauben weichen bei Konflikten aus (sicher, aber bescheidener Gewinn)\n\nWeder eine reine Falken- noch eine reine Tauben-Population ist ESS. Das stabile Gleichgewicht ist ein **Mix** – genau wie das Nash-Gleichgewicht in gemischten Strategien.\n\n### Nowaks fünf Mechanismen der Kooperation\n\n1. **Verwandtenselektion**: Wir helfen Verwandten (gemeinsame Gene)\n2. **Direkte Gegenseitigkeit**: Wir kooperieren mit denen, denen wir wieder begegnen (Tit-for-Tat)\n3. **Indirekte Gegenseitigkeit**: Guter Ruf führt zu Hilfe von Dritten\n4. **Netzwerk-Reziprozität**: Räumliche Struktur schützt Kooperatoren vor Ausbeutung\n5. **Gruppenauswahl**: Kooperative Gruppen überleben besser als unkooperative\n\n### Relevanz für Verhandlungen\n\nDiese Mechanismen erklären, **warum** Menschen kooperieren – auch ohne rationale Kalkulation:\n\n- **Ruf (Indirekte Gegenseitigkeit)**: Einmal als fairer Verhandler bekannt, bekommst du bessere Deals von Fremden\n- **Wiederholung (Direkte Gegenseitigkeit)**: Langfristige Geschäftsbeziehungen sind wertvoller als einmalige Deals\n- **Normen (Gruppenauswahl)**: Branchen-Normen entstehen, weil Kooperation kollektiv besser funktioniert\n\n### Das Moran-Prozess-Phänomen\n\nIn kleinen Populationen können kooperative Strategien durch Zufall dominieren – auch wenn sie in großen Populationen unterlegen wären. **Kleine, enge Netzwerke** fördern Kooperation überproportional."
+  },
+  {
+    "slug": "feiglingsspiel-chicken-game",
+    "title": "Feiglingsspiel & Brinkmanship",
+    "category": "Fortgeschritten",
+    "difficulty": "mittel",
+    "order_index": 20,
+    "related_game": "chicken",
+    "sources": [
+      {
+        "autor": "Thomas Schelling",
+        "werk": "The Strategy of Conflict",
+        "jahr": 1960
+      },
+      {
+        "autor": "Bertrand Russell",
+        "werk": "Common Sense and Nuclear Warfare",
+        "jahr": 1959
+      },
+      {
+        "autor": "Avinash Dixit & Barry Nalebuff",
+        "werk": "Thinking Strategically",
+        "jahr": 1991
+      }
+    ],
+    "content_md": "## Feiglingsspiel & Brinkmanship\n\nDas Feiglingsspiel ist eines der bekanntesten Modelle für Konflikte, in denen beide Seiten Stärke demonstrieren wollen, aber ein Crash das schlechteste Ergebnis wäre.\n\n### Die Grundstruktur\n\nZwei Autos fahren aufeinander zu. Wer ausweicht, verliert Ansehen (\"Feigling\"), wer hält, gewinnt – aber wenn beide halten, gibt es einen Crash.\n\n| | KI hält | KI weicht |\n|---|---|---|\n| **Du hältst** | Crash (−8/−8) | Du gewinnst (+5/−3) |\n| **Du weichst** | KI gewinnt (−3/+5) | Kleines Plus (+1/+1) |\n\n### Brinkmanship – an den Rand des Abgrunds\n\nSchelling beschrieb **Brinkmanship** als die Kunst, die andere Seite glauben zu lassen, man sei bereit bis zum Äußersten zu gehen:\n\n> \"The threat that leaves something to chance.\" – Schelling\n\nDie Drohung muss nicht sicher sein – sie muss nur glaubwürdig genug sein, um den Gegner abzuschrecken.\n\n### Commitment als Schlüssel\n\nDas Paradox: Wer seine Steuerung öffentlich demonstrativ zerstört, gewinnt Verhandlungsmacht. **Gebundene Hände** sind manchmal ein Vorteil:\n\n- \"Mein Vorstand hat mir ein absolutes Limit gegeben – ich kann nicht anders.\"\n- Öffentliche Ankündigungen, die Rückzug ohne Gesichtsverlust unmöglich machen\n- Externe Schiedsrichter oder Verträge, die Einhaltung garantieren\n\n### Das Nash-Gleichgewicht im Chicken Game\n\nEs gibt zwei Nash-Gleichgewichte in reinen Strategien: (H,S) und (S,H) – einer hält, einer weicht. Wer \"gewinnt\", hängt davon ab, wer zuerst commitment signalisiert.\n\nDas Nash-Gleichgewicht in gemischten Strategien liegt ungefähr bei:\n- Halten: ~38%\n- Ausweichen: ~62%\n\n### Reale Beispiele\n\n- **Kalter Krieg**: Kubakrise als perfektes Chicken Game – Kennedy vs. Chruschtschow\n- **Gewerkschaftsverhandlungen**: Streikdrohungen als Commitment\n- **Handelsverhandlungen**: Zolldrohungen als Brinkmanship\n- **Unternehmensübernahmen**: \"Ich kaufe euch, egal was es kostet\" – glaubwürdig oder Bluff?\n\n### Strategische Empfehlung\n\nNutze Commitment, aber dosiert: Wer zu früh und zu oft committet, verliert Flexibilität. Wer nie committet, wird nicht ernst genommen. Die Kunst ist die Dosis."
+  },
+  {
+    "slug": "oeffentliche-gueter-kollektivgut",
+    "title": "Öffentliche Güter & das Trittbrettfahrerproblem",
+    "category": "Kooperation",
+    "difficulty": "mittel",
+    "order_index": 21,
+    "related_game": "public-goods",
+    "sources": [
+      {
+        "autor": "Mancur Olson",
+        "werk": "The Logic of Collective Action",
+        "jahr": 1965
+      },
+      {
+        "autor": "Ernst Fehr & Simon Gächter",
+        "werk": "Altruistic punishment in humans",
+        "jahr": 2002,
+        "journal": "Nature"
+      },
+      {
+        "autor": "Elinor Ostrom",
+        "werk": "Governing the Commons",
+        "jahr": 1990
+      }
+    ],
+    "content_md": "## Öffentliche Güter & das Trittbrettfahrerproblem\n\nWie entstehen Gemeinwohl und Kooperation – und warum sind sie so fragil?\n\n### Was ist ein öffentliches Gut?\n\nÖffentliche Güter haben zwei Eigenschaften:\n1. **Nicht-ausschließbar**: Niemand kann von der Nutzung ausgeschlossen werden\n2. **Nicht-rival**: Eine Person nutzt das Gut, ohne anderen etwas wegzunehmen\n\nBeispiele: saubere Luft, öffentliche Sicherheit, open-source Software, Vertrauen in einer Geschäftsbeziehung.\n\n### Das Trittbrettfahrerproblem\n\nWeil niemand ausgeschlossen werden kann, ist es rational, **nichts beizutragen** und von den Beiträgen anderer zu profitieren.\n\nMancur Olson (1965): In großen Gruppen tendiert jeder Einzelne zum Trittbrettfahren – das führt zur systematischen **Unterversorgung öffentlicher Güter**.\n\n### Das Experiment von Fehr & Gächter (2002)\n\nIn Laborexperimenten zeigte sich:\n- Ohne Bestrafungsmöglichkeit: Beiträge sinken von Runde zu Runde gegen null\n- Mit Bestrafungsmöglichkeit: Beiträge bleiben hoch – auch wenn Bestrafen Kosten verursacht\n\n**Altruistische Bestrafung**: Menschen bestrafen Trittbrettfahrer auf eigene Kosten. Das ist evolutionär stabilisierend.\n\n### Ostroms Commons-Lösung\n\nNobelpreisträgerin Elinor Ostrom zeigte: Gemeinschaften können öffentliche Güter selbst managen – ohne Staat und ohne Privatisierung – wenn sie folgende Bedingungen erfüllen:\n\n1. Klare Grenzen der Gruppe\n2. Regeln passen zur lokalen Situation\n3. Teilnehmer können Regeln mitgestalten\n4. Einhaltung wird überwacht\n5. Sanktionen für Regelbrecher\n6. Konfliktlösungsmechanismen\n7. Externe Anerkennung der Selbstverwaltung\n\n### Relevanz für Verhandlungen\n\n- **Vertrauen als öffentliches Gut**: In einer Geschäftsbeziehung ist Vertrauen kollektiv produziert und fragil\n- **Gruppenverhandlungen**: Wenn mehrere Parteien gemeinsam mit einem Gegner verhandeln, entsteht ein Trittbrettfahrerproblem – wer setzt sich wirklich durch?\n- **Transparenz als Lösung**: Wenn Beiträge sichtbar sind, steigt die Bereitschaft zu kooperieren"
+  },
+  {
+    "slug": "informationsasymmetrie-signaling",
+    "title": "Informationsasymmetrie, Moral Hazard & Adverse Selektion",
+    "category": "Fortgeschritten",
+    "difficulty": "schwer",
+    "order_index": 22,
+    "related_game": "vertrauen",
+    "sources": [
+      {
+        "autor": "George Akerlof",
+        "werk": "The Market for Lemons",
+        "jahr": 1970,
+        "journal": "Quarterly Journal of Economics"
+      },
+      {
+        "autor": "Michael Spence",
+        "werk": "Job Market Signaling",
+        "jahr": 1973,
+        "journal": "Quarterly Journal of Economics"
+      },
+      {
+        "autor": "Joseph Stiglitz & Michael Rothschild",
+        "werk": "Equilibrium in Competitive Insurance Markets",
+        "jahr": 1976,
+        "journal": "Quarterly Journal of Economics"
+      }
+    ],
+    "content_md": "## Informationsasymmetrie\n\nEiner weiß mehr als der andere – und das verändert alles.\n\n### Akerlofs Zitronen-Modell\n\nGeorge Akerlof zeigte 1970 am Gebrauchtwagenmarkt, wie Informationsasymmetrie ganze Märkte zerstören kann:\n\n- Verkäufer kennt die Qualität seines Autos (\"Zitrone\" oder gut)\n- Käufer kann Qualität nicht beurteilen – zahlt Durchschnittspreis\n- Ergebnis: Gute Autos werden zurückgehalten (Preis zu niedrig), schlechte überwiegen\n- Marktversagen durch **Adverse Selektion**\n\n### Adverse Selektion in Verhandlungen\n\nIn jeder Verhandlung weiß eine Seite mehr:\n- Verkäufer kennt die Mängel besser\n- Bewerber kennt seine eigene Motivation besser\n- Serviceanbieter kennt seine wahren Kosten\n\n> **Konsequenz**: Wer weniger weiß, zahlt eine Informationsprämie oder weicht ab.\n\n### Moral Hazard – Risiko nach Vertragsabschluss\n\nWenn jemand nach Vertragsabschluss sein Verhalten ändert, weil er die Konsequenzen nicht mehr trägt:\n\n- Versicherte fahren risikoreicher, weil die Versicherung zahlt\n- Manager in Großunternehmen gehen mehr Risiken ein, weil Aktionäre verlieren\n- Delegierte verhandeln anders, wenn ihre Partei nicht mitschaut\n\n### Spences Signaling-Lösung\n\nWie überbrückt man Informationsasymmetrie? Durch **glaubwürdige Signale**:\n\n- Signal muss kostenintensiv für den sein, der es nicht hat (sonst wird es imitiert)\n- Hochschulabschluss als Signal für Produktivität – nicht unbedingt wegen des Gelernten\n- In Verhandlungen: Referenzen, Zertifikate, Track Record, Transparenz-Garantien\n\n### Praktische Verhandlungstaktiken\n\n| Problem | Lösung |\n|---|---|\n| Gegner kennt deine BATNA nicht | Verschleiere sie – oder übertreibe sie glaubwürdig |\n| Du kennst die Qualität nicht | Fordere Garantien, Probezeiten, Due Diligence |\n| Adverse Selektion befürchtet | Setze auf Screening – Fragen, Tests, Referenzen |\n| Moral Hazard nach Vertragsschluss | Monitoring, Leistungsboni, Reputationsanreize |\n\n### Screening vs. Signaling\n\n- **Signaling**: Die informierte Seite sendet Signale (Spence)\n- **Screening**: Die uninformierte Seite entwirft Mechanismen, die Selbstselektion erzwingen (Versicherungsverträge mit Selbstbeteiligung)"
+  },
+  {
+    "slug": "koordinationsspiele",
+    "title": "Koordinationsspiele & Gleichgewichtsauswahl",
+    "category": "Kooperation",
+    "difficulty": "mittel",
+    "order_index": 23,
+    "related_game": "stag_hunt",
+    "sources": [
+      {
+        "autor": "Thomas Schelling",
+        "werk": "The Strategy of Conflict",
+        "jahr": 1960
+      },
+      {
+        "autor": "Brian Skyrms",
+        "werk": "The Stag Hunt and the Evolution of Social Structure",
+        "jahr": 2004
+      }
+    ],
+    "content_md": "## Koordinationsspiele & Gleichgewichtsauswahl\n\nIn Koordinationsspielen wollen beide Spieler dasselbe – aber es gibt mehrere Gleichgewichte, und das Problem ist, das *richtige* auszuwählen.\n\n### Die Hirschjagd (Stag Hunt)\n\nRousseau beschrieb 1755 das Grundproblem: Zwei Jäger können zusammen einen Hirsch erlegen (hohe Beute) oder getrennt Hasen jagen (sichere Kleinbeute). Für den Hirsch brauchen sie einander – für den Hasen nicht.\n\n**Payoff-Matrix:**\n\n| | Hirsch | Hase |\n|---|---|---|\n| **Hirsch** | 8 / 8 ⭐ | 0 / 3 |\n| **Hase** | 3 / 0 | 3 / 3 |\n\nEs gibt **zwei reine Nash-Gleichgewichte**:\n- (Hirsch, Hirsch) – Pareto-optimal, aber riskant\n- (Hase, Hase) – sicher, aber suboptimal\n\n### Risikodominanz vs. Pareto-Dominanz\n\n**Pareto-dominantes Gleichgewicht:** (Hirsch, Hirsch) – beide erhalten das Maximum (8).\n\n**Risikodominantes Gleichgewicht:** (Hase, Hase) – sicherer, weil Hase immer 3 bringt, egal was der andere tut.\n\nHarsanyi und Selten (1988) argumentierten, dass risikodominante Gleichgewichte häufiger gespielt werden, weil Spieler Risikovermeidung bevorzugen.\n\n### Schelling-Punkte (Focal Points)\n\nThomas Schelling beobachtete: Wenn Spieler kommunizieren dürfen (oder eine gemeinsame Erwartung haben), koordinieren sie sich auf **herausragende** Lösungen – sogenannte *focal points* oder *Schelling-Punkte*.\n\nBeispiel: \"Wo treffen sich zwei Fremde in New York ohne vorherige Absprache?\" – Empirisch: Grand Central Station, mittags.\n\n### Verhandlungsrelevanz\n\n- **Vertrauen signalisieren**: Wer zeigt, dass er kooperiert, lädt andere ein mitzumachen\n- **Normen schaffen**: Wiederholte Koordination auf gute Gleichgewichte schafft soziale Normen\n- **Erwartungsmanagement**: Sage klar, was du tun wirst – das erleichtert Koordination\n- **Risiken reduzieren**: Kleine erste Schritte der Kooperation bauen Vertrauen auf"
+  },
+  {
+    "slug": "k-level-thinking",
+    "title": "K-Level Thinking & rationale Erwartungen",
+    "category": "Fortgeschritten",
+    "difficulty": "schwer",
+    "order_index": 24,
+    "related_game": "beauty_contest",
+    "sources": [
+      {
+        "autor": "Rosemarie Nagel",
+        "werk": "Unraveling in Guessing Games: An Experimental Study",
+        "jahr": 1995,
+        "journal": "American Economic Review"
+      },
+      {
+        "autor": "Colin Camerer",
+        "werk": "Behavioral Game Theory",
+        "jahr": 2003
+      }
+    ],
+    "content_md": "## K-Level Thinking & rationale Erwartungen\n\n### Das Schönheitswettbewerb-Experiment\n\nJohn Maynard Keynes beschrieb 1936 Aktienmärkte als Schönheitswettbewerb: Es geht nicht darum, was *du* schön findest, sondern was die *anderen* schön finden werden.\n\nRosemarie Nagel testete 1995 das spieltheoretische Pendant: Alle Teilnehmer raten eine Zahl von 0–100. Gewinner ist, wer am nächsten zur **2/3 des Durchschnitts** aller Zahlen liegt.\n\n### K-Level Reasoning\n\n**Level 0 (L0):** Kein strategisches Denken – rät zufällig oder wählt 50.\n\n**Level 1 (L1):** Denkt: \"Die anderen spielen L0 (Durchschnitt ≈ 50). Also rathe ich 2/3 × 50 ≈ 33.\"\n\n**Level 2 (L2):** Denkt: \"Die anderen spielen L1 (≈33). Also rathe ich 2/3 × 33 ≈ 22.\"\n\n**Level 3 (L3):** Denkt: \"Die anderen spielen L2 (≈22). Also rathe ich 2/3 × 22 ≈ 15.\"\n\n**Nash-Gleichgewicht:** Wenn alle perfekt rational wären → alle raten 0. Denn: 2/3 × 0 = 0.\n\n### Warum niemand wirklich 0 rät\n\nIn Experimenten raten die meisten Menschen 33 (L1) oder 22 (L2). Das Nash-Gleichgewicht (0) wird fast nie gespielt, weil es:\n1. Extrem tiefes Nachdenken erfordert\n2. Voraussetzt, dass ALLE anderen auch so tief denken\n3. Im realen Leben nicht lohnt, wenn andere irrational spielen\n\n### Verhandlungsrelevanz\n\n**Gegenangebot kalkulieren:** Wenn du weißt, dass dein Gegenüber L1-Denker ist (reagiert auf Anker), setze deinen Anker entsprechend höher.\n\n**Marktpreise antizipieren:** Aktien- und Immobilienmärkte sind Schönheitswettbewerbe – der Preis spiegelt Erwartungen über Erwartungen.\n\n**Verhandlungsanker:** Wer einen hohen Anker setzt, beeinflusst den Durchschnitt aller Erwartungen – und damit das Ergebnis.\n\n### Das praktische Level: Zwei Ebenen über dem Gegner\n\nIn der Praxis reicht es oft, **eine Ebene** höher zu denken als dein Gegenüber. Wenn du weißt, dass er L1 denkt, sei L2 – du musst nicht bis L∞ gehen."
+  },
+  {
+    "slug": "centipede-paradoxon",
+    "title": "Centipede-Spiel & Rückwärtsinduktions-Paradox",
+    "category": "Fortgeschritten",
+    "difficulty": "schwer",
+    "order_index": 25,
+    "related_game": "centipede",
+    "sources": [
+      {
+        "autor": "Robert Rosenthal",
+        "werk": "Games of Perfect Information, Predatory Pricing and the Chain-Store Paradox",
+        "jahr": 1981,
+        "journal": "Journal of Economic Theory"
+      },
+      {
+        "autor": "Ken Binmore",
+        "werk": "Natural Justice",
+        "jahr": 2005
+      }
+    ],
+    "content_md": "## Centipede-Spiel & Rückwärtsinduktions-Paradox\n\n### Das Spiel\n\nRosenthal (1981) erfand das Centipede-Spiel: Zwei Spieler wechseln sich ab. In jeder Runde kann der aktuelle Spieler *nehmen* (Spiel endet) oder *weitergeben* (Topf wächst).\n\nDer Topf wächst mit jedem Weitergeben fast doppelt so groß – aber wer zuerst nimmt, bekommt den größeren Anteil.\n\n### Rückwärtsinduktion: Die logische Antwort\n\nBetrachte das Spiel von hinten:\n\n1. **Letzter Knoten (KI):** KI erhält mehr wenn sie nimmt (64 statt 32). → KI nimmt.\n2. **Vorletzter Knoten (Spieler):** Weiß, dass KI am nächsten Knoten nimmt. Nimmt jetzt (32) statt später (16 durch KI). → Spieler nimmt.\n3. **Knoten davor (KI):** Weiß, dass Spieler nehmen wird. Nimmt jetzt. → KI nimmt.\n4. **...und so weiter zurück bis Knoten 1.**\n\n**Ergebnis der Rückwärtsinduktion:** Beide nehmen sofort an Knoten 1. Spieler bekommt 4, KI bekommt 1.\n\n### Das Paradox\n\nWenn beide sofort nehmen, ist das suboptimal! Das gemeinsame Optimum wäre, bis zum Ende zu passen: (64, 32).\n\nExperimentell: **Fast niemand nimmt sofort.** Spieler warten oft bis Knoten 5–7, bevor sie nehmen – und beide profitieren davon.\n\n### Warum die Theorie versagt\n\n**Common Knowledge of Rationality (CKR):** Rückwärtsinduktion setzt voraus, dass beide Spieler vollständig rational sind *und* wissen, dass der andere vollständig rational ist *und* wissen, dass der andere weiß, dass... – eine unendliche Kette.\n\nIn der Realität:\n- Spieler zweifeln an der Rationalität des Gegenübers\n- Ein kleines Vertrauenssignal ändert den Anreiz komplett\n- Menschen schätzen Kooperation intrinsisch\n\n### Verhandlungsrelevanz\n\n**Sofortige Einigung vs. Kooperation:** In vielen Verhandlungen empfiehlt die Rückwärtsinduktion sofort abzuschließen – aber Geduld und Vertrauensaufbau können beide Seiten besser stellen.\n\n**Chain-Store Paradox:** Ähnlich: Ein monopolistisches Unternehmen sollte laut Theorie niemals kämpfen – aber in der Praxis kämpfen Firmen, um Reputation aufzubauen.\n\n**Lesson:** Rückwärtsinduktion ist ein nützliches Analysetool, aber kein universell gültiges Verhaltensmodell. Menschliches Verhalten weicht systematisch ab – und das schafft Raum für kooperative Verhandlungsstrategien."
   }
 ]

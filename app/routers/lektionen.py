@@ -25,9 +25,9 @@ def lektionen_list(request: Request, db: Session = Depends(get_db)):
         grouped.setdefault(lesson.category, []).append(lesson)
 
     return templates.TemplateResponse(
+        request,
         "lektionen.html",
         {
-            "request": request,
             "active_page": "lektionen",
             "grouped": grouped,
             "category_order": CATEGORY_ORDER,
@@ -56,9 +56,9 @@ def lektion_detail(slug: str, request: Request, db: Session = Depends(get_db)):
     next_slug = all_slugs[idx + 1] if idx < len(all_slugs) - 1 else None
 
     return templates.TemplateResponse(
+        request,
         "lektion_detail.html",
         {
-            "request": request,
             "active_page": "lektionen",
             "lesson": lesson,
             "content_html": content_html,

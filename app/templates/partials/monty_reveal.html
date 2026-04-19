@@ -1,0 +1,56 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <p class="text-center font-semibold text-slate-700 mb-2">Schritt 2: Der Moderator öffnet eine Tür</p>
+
+    <div class="grid grid-cols-3 gap-4 mb-6">
+        {% for door in [1, 2, 3] %}
+        <div class="rounded-xl py-8 flex flex-col items-center gap-2 font-bold text-lg border-2
+            {% if door == chosen %}border-indigo-400 bg-indigo-50
+            {% elif door == revealed %}border-slate-200 bg-slate-50 opacity-60
+            {% else %}border-slate-200 bg-white{% endif %}">
+            {% if door == revealed %}
+            <span class="text-4xl">🐐</span>
+            <span class="text-slate-500">Tür {{ door }}</span>
+            <span class="text-xs text-red-500 font-medium">Ziege!</span>
+            {% elif door == chosen %}
+            <span class="text-4xl">🚪</span>
+            <span class="text-indigo-700">Tür {{ door }}</span>
+            <span class="text-xs text-indigo-500 font-medium">Deine Wahl</span>
+            {% else %}
+            <span class="text-4xl">🚪</span>
+            <span class="text-slate-700">Tür {{ door }}</span>
+            <span class="text-xs text-emerald-600 font-medium">Wechseloption</span>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800 mb-6 text-center">
+        Der Moderator hat <strong>Tür {{ revealed }}</strong> geöffnet – dahinter war eine Ziege.
+        <br>Möchtest du bei <strong>Tür {{ chosen }}</strong> bleiben oder zu <strong>Tür {{ switch_door }}</strong> wechseln?
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+        <form hx-post="/raetsel/monty-hall/result" hx-target="#game-area" hx-swap="innerHTML">
+            <input type="hidden" name="chosen" value="{{ chosen }}">
+            <input type="hidden" name="winning" value="{{ winning }}">
+            <input type="hidden" name="decision" value="stay">
+            <input type="hidden" name="switch_door" value="{{ switch_door }}">
+            <button type="submit"
+                    class="w-full bg-slate-600 hover:bg-slate-700 text-white py-4 rounded-xl font-bold transition-colors">
+                🔒 Bleiben
+                <div class="text-xs font-normal mt-1 opacity-80">Bei Tür {{ chosen }}</div>
+            </button>
+        </form>
+        <form hx-post="/raetsel/monty-hall/result" hx-target="#game-area" hx-swap="innerHTML">
+            <input type="hidden" name="chosen" value="{{ chosen }}">
+            <input type="hidden" name="winning" value="{{ winning }}">
+            <input type="hidden" name="decision" value="switch">
+            <input type="hidden" name="switch_door" value="{{ switch_door }}">
+            <button type="submit"
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-xl font-bold transition-colors">
+                🔀 Wechseln
+                <div class="text-xs font-normal mt-1 opacity-80">Zu Tür {{ switch_door }}</div>
+            </button>
+        </form>
+    </div>
+</div>

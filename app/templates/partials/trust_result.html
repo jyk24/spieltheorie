@@ -28,14 +28,23 @@
         <span class="text-slate-500 italic text-xs">"{{ round_result.reason }}"</span>
     </div>
 </div>
+
+<!-- Beobachtungshinweis nach Runde 3 -->
+{% if history|length == 3 %}
+<div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 mb-3">
+    🔍 <strong>Beobachtung:</strong> Wie viel gibt die KI zurück? Berechne die Rückgaberate (zurück ÷ Topf). Über 50%? Sie ist großzügig. Unter 30%? Egoistisch. Passt sie sich an dich an?
+</div>
+{% endif %}
+
 {% else %}
+<span id="game-over" class="hidden"></span>
 <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
     <h3 class="text-xl font-bold text-slate-800 mb-4">
         {% if final.result == 'win' %}🏆 Positiver Gewinn!
         {% elif final.result == 'draw' %}⚖️ Break Even
         {% else %}📉 Nettoverlust{% endif %}
     </h3>
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6 text-center">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5 text-center">
         <div class="p-3 bg-slate-50 rounded-xl">
             <div class="text-xl font-bold text-blue-600">{{ final.total_invested }}</div>
             <div class="text-xs text-slate-500 mt-1">Investiert</div>
@@ -55,14 +64,11 @@
             <div class="text-xs text-slate-500 mt-1">Vertrauensrate</div>
         </div>
     </div>
-    {% if final.trust_rate >= 50 %}
-    <div class="bg-teal-50 border border-teal-200 rounded-lg p-4 text-sm text-teal-800 mb-4">
-        💡 Hohe Vertrauensrate. Kooperation schafft Wert für beide Seiten – ein zentrales Prinzip in langfristigen Verhandlungsbeziehungen.
+
+    <div class="flex gap-3 mb-2">
+        <a href="/spiele/vertrauen" class="bg-teal-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-teal-700">Nochmal spielen</a>
     </div>
-    {% endif %}
-    <div class="flex gap-3">
-        <a href="/spiele/vertrauen" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal</a>
-        <a href="/lektionen/wiederholte-spiele-reputation" class="border border-indigo-300 text-indigo-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50">Theorie lesen</a>
-    </div>
+
+    {% include "partials/strategy_debrief.html" %}
 </div>
 {% endif %}

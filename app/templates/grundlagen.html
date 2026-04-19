@@ -1,0 +1,390 @@
+{% extends "base.html" %}
+{% block title %}Grundlagen – Spieltheorie & Rationales Denken{% endblock %}
+{% block content %}
+
+<div class="max-w-4xl mx-auto">
+
+    <!-- Hero -->
+    <div class="mb-10">
+        <h1 class="text-4xl font-black text-slate-800 mb-3">Spieltheorie: Eine Einführung</h1>
+        <p class="text-lg text-slate-500 max-w-2xl">Die Wissenschaft rationaler Entscheidungen in Situationen, in denen das Ergebnis von mehreren Akteuren abhängt. Von Pokertischen bis zu Staatsverträgen.</p>
+        <div class="flex gap-3 mt-5 flex-wrap">
+            <a href="/spiele" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Direkt spielen →</a>
+            <a href="/raetsel" class="border border-indigo-200 text-indigo-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50">Rätsel erkunden →</a>
+            <a href="/lektionen" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">Alle Lektionen →</a>
+        </div>
+    </div>
+
+    <!-- Inhaltsübersicht -->
+    <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-5 mb-10 text-sm">
+        <div class="font-semibold text-indigo-800 mb-3">Auf dieser Seite:</div>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+            {% for num, label in [
+                ('1', 'Was ist Spieltheorie?'),
+                ('2', 'Rationales Denken'),
+                ('3', 'Die drei Kernkonzepte'),
+                ('4', 'Spieltypen'),
+                ('5', 'Beschränkte Rationalität'),
+                ('6', 'Verhandlung & Spieltheorie'),
+            ] %}
+            <a href="#section-{{ num }}" class="flex items-center gap-2 text-indigo-700 hover:text-indigo-900">
+                <span class="bg-indigo-200 text-indigo-800 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">{{ num }}</span>
+                {{ label }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- ── 1. Was ist Spieltheorie? ──────────────────────────────────── -->
+    <section id="section-1" class="mb-12">
+        <h2 class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-3">
+            <span class="bg-indigo-100 text-indigo-700 text-sm font-bold w-8 h-8 rounded-full flex items-center justify-center">1</span>
+            Was ist Spieltheorie?
+        </h2>
+
+        <p class="text-slate-600 mb-4 leading-relaxed">
+            Spieltheorie ist die mathematische Untersuchung strategischer Entscheidungen: Situationen, in denen das Ergebnis für jeden Beteiligten nicht nur von der eigenen Wahl abhängt, sondern auch von den Entscheidungen der anderen.
+        </p>
+        <p class="text-slate-600 mb-6 leading-relaxed">
+            Der Begriff "Spiel" ist hier weit gefasst – Schach, aber auch Preisverhandlungen, Rüstungswettläufe, biologische Evolution oder Auktionsdesign folgen denselben Grundprinzipien.
+        </p>
+
+        <!-- Timeline -->
+        <div class="space-y-3 mb-6">
+            {% for year, event, person in [
+                ('1944', 'John von Neumann & Oskar Morgenstern veröffentlichen „Theory of Games and Economic Behavior" – die Geburtsstunde der modernen Spieltheorie.', 'von Neumann'),
+                ('1950', 'John Nash beweist die Existenz von Gleichgewichtspunkten in endlichen Spielen. Das Nash-Gleichgewicht wird zum zentralen Konzept der Disziplin.', 'Nash'),
+                ('1994', 'Nash, Harsanyi und Selten erhalten den Wirtschafts-Nobelpreis. Spieltheorie ist in Volkswirtschaft, Biologie und Politikwissenschaft etabliert.', 'Nobel'),
+                ('2002', 'Daniel Kahneman erhält den Nobelpreis für Behavioral Economics – die Erweiterung der klassischen Spieltheorie um psychologische Realismus.', 'Kahneman'),
+            ] %}
+            <div class="flex gap-4 items-start">
+                <span class="bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded whitespace-nowrap shrink-0">{{ year }}</span>
+                <p class="text-sm text-slate-600 leading-relaxed">{{ event }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="bg-slate-50 rounded-xl p-5 text-sm">
+            <p class="font-semibold text-slate-700 mb-3">Die drei Bausteine jedes Spiels:</p>
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <div class="text-2xl mb-1">👤</div>
+                    <div class="font-semibold text-slate-700 mb-1">Akteure</div>
+                    <p class="text-slate-500 text-xs">Die Entscheider im Spiel. Können Personen, Firmen, Staaten oder Algorithmen sein.</p>
+                </div>
+                <div>
+                    <div class="text-2xl mb-1">🗺️</div>
+                    <div class="font-semibold text-slate-700 mb-1">Strategien</div>
+                    <p class="text-slate-500 text-xs">Der vollständige Plan: was tue ich in jeder möglichen Situation? Reine vs. gemischte Strategien.</p>
+                </div>
+                <div>
+                    <div class="text-2xl mb-1">🏆</div>
+                    <div class="font-semibold text-slate-700 mb-1">Auszahlungen</div>
+                    <p class="text-slate-500 text-xs">Der Nutzen, den jeder Akteur für jede Strategiekombination erhält. Die Triebfeder aller Entscheidungen.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── 2. Rationales Denken ──────────────────────────────────────── -->
+    <section id="section-2" class="mb-12">
+        <h2 class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-3">
+            <span class="bg-indigo-100 text-indigo-700 text-sm font-bold w-8 h-8 rounded-full flex items-center justify-center">2</span>
+            Was bedeutet "rational"?
+        </h2>
+
+        <p class="text-slate-600 mb-4 leading-relaxed">
+            In der klassischen Spieltheorie ist ein Akteur rational, wenn er stets die Handlung wählt, die seinen Nutzen maximiert – gegeben seine Überzeugungen über die anderen Akteure. Das klingt simpel, hat aber weitreichende Implikationen.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                <div class="font-semibold text-emerald-800 mb-2">✓ Was Rationalität bedeutet:</div>
+                <ul class="text-sm text-emerald-700 space-y-1.5">
+                    <li>→ Vollständige und transitive Präferenzen</li>
+                    <li>→ Maximierung des erwarteten Nutzens</li>
+                    <li>→ Konsistenz über verschiedene Entscheidungen</li>
+                    <li>→ Lernen aus Erfahrung (Bayes'sches Update)</li>
+                </ul>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <div class="font-semibold text-amber-800 mb-2">✗ Was Rationalität nicht bedeutet:</div>
+                <ul class="text-sm text-amber-700 space-y-1.5">
+                    <li>→ Keine Emotionen oder soziale Präferenzen</li>
+                    <li>→ Kein Altruismus oder Fairness-Sinn</li>
+                    <li>→ Keine moralischen Überzeugungen</li>
+                    <li>→ Nicht zwingend das gesellschaftlich Beste</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-5 text-sm">
+            <p class="font-semibold text-indigo-800 mb-2">Gemeinsames Wissen der Rationalität (Common Knowledge of Rationality, CKR):</p>
+            <p class="text-indigo-700 mb-2">Viele spieltheoretische Lösungen setzen voraus, dass:</p>
+            <div class="space-y-1 text-indigo-700">
+                <p>1. Alle Akteure rational sind.</p>
+                <p>2. Alle wissen, dass alle rational sind.</p>
+                <p>3. Alle wissen, dass alle wissen, dass alle rational sind. (Und so weiter, unendlich.)</p>
+            </div>
+            <p class="text-indigo-600 mt-2 text-xs">Diese Annahme ist in der Praxis oft verletzt – und genau da entstehen interessante Abweichungen vom Gleichgewicht.</p>
+        </div>
+    </section>
+
+    <!-- ── 3. Die drei Kernkonzepte ─────────────────────────────────── -->
+    <section id="section-3" class="mb-12">
+        <h2 class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-3">
+            <span class="bg-indigo-100 text-indigo-700 text-sm font-bold w-8 h-8 rounded-full flex items-center justify-center">3</span>
+            Die drei Kernkonzepte
+        </h2>
+
+        <!-- Dominante Strategien -->
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden mb-4">
+            <div class="bg-violet-50 border-b border-violet-100 px-5 py-3 flex items-center gap-3">
+                <span class="text-2xl">♟️</span>
+                <h3 class="font-bold text-violet-800">Dominante Strategien</h3>
+            </div>
+            <div class="p-5 text-sm text-slate-600">
+                <p class="mb-3">Eine Strategie ist <strong>dominant</strong>, wenn sie unabhängig von allen Entscheidungen der anderen Spieler mindestens so gut ist wie jede andere eigene Strategie – und in mindestens einem Fall besser.</p>
+                <div class="bg-slate-50 rounded-lg p-4 mb-3">
+                    <p class="font-semibold text-slate-700 mb-2">Beispiel: Gefangenendilemma</p>
+                    <div class="grid grid-cols-3 gap-1 text-xs max-w-xs">
+                        <div class="bg-slate-100 rounded p-1 text-center font-medium"></div>
+                        <div class="bg-slate-100 rounded p-1 text-center font-medium">Gegner: C</div>
+                        <div class="bg-slate-100 rounded p-1 text-center font-medium">Gegner: D</div>
+                        <div class="bg-slate-100 rounded p-1 text-center font-medium">Du: C</div>
+                        <div class="bg-emerald-100 rounded p-1 text-center">3 / 3</div>
+                        <div class="bg-red-100 rounded p-1 text-center">0 / 5</div>
+                        <div class="bg-slate-100 rounded p-1 text-center font-medium">Du: D</div>
+                        <div class="bg-amber-100 rounded p-1 text-center text-amber-700 font-bold">5 / 0</div>
+                        <div class="bg-amber-100 rounded p-1 text-center text-amber-700 font-bold">1 / 1</div>
+                    </div>
+                    <p class="text-slate-500 mt-2 text-xs">D dominiert C: Wenn der Gegner C spielt, ist D besser (5 > 3). Wenn der Gegner D spielt, ist D besser (1 > 0). Also ist D immer besser – obwohl (C,C) beiden nützen würde.</p>
+                </div>
+                <a href="/spiele/gefangenendilemma" class="text-indigo-600 text-xs hover:underline">→ Im Gefangenendilemma spielen</a>
+            </div>
+        </div>
+
+        <!-- Nash-Gleichgewicht -->
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden mb-4">
+            <div class="bg-emerald-50 border-b border-emerald-100 px-5 py-3 flex items-center gap-3">
+                <span class="text-2xl">⚖️</span>
+                <h3 class="font-bold text-emerald-800">Nash-Gleichgewicht</h3>
+            </div>
+            <div class="p-5 text-sm text-slate-600">
+                <p class="mb-3">Ein Strategieprofil (eine Strategie pro Spieler) ist ein <strong>Nash-Gleichgewicht</strong>, wenn kein Spieler durch einseitiges Abweichen seinen Nutzen verbessern kann – gegeben, dass alle anderen bei ihrer Strategie bleiben.</p>
+                <div class="bg-slate-50 rounded-lg p-4 mb-3">
+                    <p class="font-semibold text-slate-700 mb-2">Wichtige Eigenschaften:</p>
+                    <ul class="space-y-1 text-slate-600 text-xs">
+                        <li>→ <strong>Existenz:</strong> Jedes endliche Spiel hat mindestens ein Nash-Gleichgewicht (Nash 1950) – möglicherweise in gemischten Strategien.</li>
+                        <li>→ <strong>Stabilität:</strong> Kein Spieler bereut seine Entscheidung, wenn er die anderen Züge kennt.</li>
+                        <li>→ <strong>Nicht zwingend optimal:</strong> Das Dilemma ist, dass Nash-GG oft ineffizient sind (Gefangenendilemma: (D,D) statt (C,C)).</li>
+                        <li>→ <strong>Mehrfachheit:</strong> Spiele können viele Nash-GG haben – die Auswahl ist ein eigenes Problem (Koordinationsspiele).</li>
+                    </ul>
+                </div>
+                <a href="/spiele/koordination" class="text-indigo-600 text-xs hover:underline">→ Im Koordinationsspiel erleben</a>
+            </div>
+        </div>
+
+        <!-- Rückwärtsinduktion -->
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+            <div class="bg-amber-50 border-b border-amber-100 px-5 py-3 flex items-center gap-3">
+                <span class="text-2xl">🔄</span>
+                <h3 class="font-bold text-amber-800">Rückwärtsinduktion</h3>
+            </div>
+            <div class="p-5 text-sm text-slate-600">
+                <p class="mb-3">In sequentiellen Spielen löst man von hinten: Was ist die optimale Entscheidung im letzten Schritt? Damit ist die vorletzte Entscheidung bestimmt. Und so weiter bis zum Anfang.</p>
+                <div class="bg-slate-50 rounded-lg p-4 mb-3">
+                    <p class="font-semibold text-slate-700 mb-2">Anwendungen:</p>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="bg-white rounded p-2 border border-slate-100">
+                            <div class="font-medium text-slate-700">Piratenproblem</div>
+                            <p class="text-slate-500">5 Piraten, Rückwärtsinduktion ergibt [98,0,1,0,1] – scheinbar unfair, aber logisch zwingend.</p>
+                        </div>
+                        <div class="bg-white rounded p-2 border border-slate-100">
+                            <div class="font-medium text-slate-700">Centipede-Spiel</div>
+                            <p class="text-slate-500">Rückwärtsinduktion sagt: sofort nehmen. Aber Kooperation zahlt sich experimentell oft aus.</p>
+                        </div>
+                        <div class="bg-white rounded p-2 border border-slate-100">
+                            <div class="font-medium text-slate-700">Schach</div>
+                            <p class="text-slate-500">Theoretisch lösbar durch vollständige Rückwärtsinduktion – praktisch unmöglich (~10¹²³ Stellungen).</p>
+                        </div>
+                        <div class="bg-white rounded p-2 border border-slate-100">
+                            <div class="font-medium text-slate-700">Verhandlungen</div>
+                            <p class="text-slate-500">Rubinstein-Modell: Wer die BATNA der Gegenseite kennt, weiß schon beim ersten Angebot das Ergebnis.</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="/raetsel/piraten" class="text-indigo-600 text-xs hover:underline">→ Im Piratenspiel selbst erleben</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── 4. Spieltypen ────────────────────────────────────────────── -->
+    <section id="section-4" class="mb-12">
+        <h2 class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-3">
+            <span class="bg-indigo-100 text-indigo-700 text-sm font-bold w-8 h-8 rounded-full flex items-center justify-center">4</span>
+            Wichtige Spieltypen
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% for icon, titel, beschr, link, link_label in [
+                ('⚔️', 'Nullsummenspiele', 'Was einer gewinnt, verliert der andere. Die Gesamtauszahlung ist immer null. Klare Konkurrenz, keine Kooperationsmöglichkeit. Beispiel: Schere-Stein-Papier, Poker.', '/spiele/rps', 'Schere-Stein-Papier spielen'),
+                ('🤲', 'Positivsummenspiele', 'Beide können gewinnen – oder beide verlieren. Kooperation schafft Wert. Das Dilemma liegt in der Verteilung. Beispiel: Handel, Verhandlungen, Kooperationsprojekte.', '/spiele/vertrauen', 'Vertrauensspiel spielen'),
+                ('⏱️', 'Einmalige vs. Wiederholte Spiele', 'Einmalig: Rationalität führt oft zu Defekt. Wiederholt: Kooperation kann entstehen (Folk-Theorem). Reputation und Reziprozität werden möglich.', '/spiele/gefangenendilemma', 'GD wiederholt spielen'),
+                ('👁️', 'Vollständige vs. Unvollständige Information', 'Vollständig: alle kennen Auszahlungen und Strategien. Unvollständig: private Information (z.B. eigener Typ). Führt zu Signaling-Spielen und bayesianischen Gleichgewichten.', '/spiele/auktion', 'Vickrey-Auktion spielen'),
+                ('🔢', 'Simultane vs. Sequentielle Spiele', 'Simultan: alle entscheiden gleichzeitig, Normalform-Darstellung, Nash-GG. Sequentiell: Züge abwechselnd, Extensive Form, Rückwärtsinduktion. Timing ändert alles.', '/spiele/centipede', 'Centipede spielen'),
+                ('🔁', 'Koordinationsspiele', 'Mehrere Nash-Gleichgewichte. Alle wollen dasselbe Ergebnis, aber welches? Schelling-Punkte, Konventionen und Kommunikation entscheiden.', '/spiele/koordination', 'Koordinationsspiel spielen'),
+            ] %}
+            <div class="bg-white border border-slate-200 rounded-xl p-4">
+                <div class="flex items-start gap-3 mb-2">
+                    <span class="text-2xl">{{ icon }}</span>
+                    <h4 class="font-bold text-slate-700">{{ titel }}</h4>
+                </div>
+                <p class="text-sm text-slate-500 mb-3">{{ beschr }}</p>
+                <a href="{{ link }}" class="text-xs text-indigo-600 hover:underline">→ {{ link_label }}</a>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ── 5. Beschränkte Rationalität ──────────────────────────────── -->
+    <section id="section-5" class="mb-12">
+        <h2 class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-3">
+            <span class="bg-indigo-100 text-indigo-700 text-sm font-bold w-8 h-8 rounded-full flex items-center justify-center">5</span>
+            Grenzen der Rationalität
+        </h2>
+
+        <p class="text-slate-600 mb-5 leading-relaxed">
+            Echte Menschen sind keine perfekten Nutzenmaximierer. Experimentelle Befunde zeigen systematische Abweichungen – und Spieltheorie ist ohne dieses Wissen unvollständig.
+        </p>
+
+        <div class="space-y-4">
+            <div class="bg-white border border-slate-200 rounded-xl p-5">
+                <div class="flex items-start gap-4">
+                    <span class="text-3xl">🧠</span>
+                    <div class="text-sm">
+                        <p class="font-bold text-slate-700 mb-1">Beschränkte Rationalität (Herbert Simon, 1955)</p>
+                        <p class="text-slate-500">Menschen haben begrenzte kognitive Ressourcen. Statt Optimierung: <em>Satisficing</em> – die erste hinreichend gute Option wird gewählt. Heuristiken sparen Zeit, führen aber zu systematischen Fehlern.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-5">
+                <div class="flex items-start gap-4">
+                    <span class="text-3xl">📉</span>
+                    <div class="text-sm">
+                        <p class="font-bold text-slate-700 mb-1">Prospect Theory (Kahneman & Tversky, 1979)</p>
+                        <p class="text-slate-500 mb-2">Menschen bewerten Gewinne und Verluste relativ zu einem Referenzpunkt, nicht absolut. Drei Kernbefunde:</p>
+                        <ul class="text-slate-500 space-y-0.5">
+                            <li>→ <strong>Verlustaversion:</strong> Verluste schmerzen ~2× mehr als gleich große Gewinne freuen.</li>
+                            <li>→ <strong>Diminishing Sensitivity:</strong> Der Unterschied 0€→1.000€ fühlt sich größer an als 10.000€→11.000€.</li>
+                            <li>→ <strong>Wahrscheinlichkeitsgewichtung:</strong> Kleine Wahrscheinlichkeiten werden überschätzt, mittlere unterschätzt.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-5">
+                <div class="flex items-start gap-4">
+                    <span class="text-3xl">🤝</span>
+                    <div class="text-sm">
+                        <p class="font-bold text-slate-700 mb-1">Soziale Präferenzen</p>
+                        <p class="text-slate-500">Menschen lehnen unfaire Angebote ab, obwohl das rational gesehen Geld auf dem Tisch lässt (Ultimatumspiel). Sie bestrafen Defekteure auf eigene Kosten (starke Reziprozität). Fairness, Neid und Großzügigkeit sind reale Nutzenkomponenten.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-5">
+                <div class="flex items-start gap-4">
+                    <span class="text-3xl">🔢</span>
+                    <div class="text-sm">
+                        <p class="font-bold text-slate-700 mb-1">K-Level Thinking</p>
+                        <p class="text-slate-500">Menschen denken nicht unendlich viele Schritte voraus, sondern nur k Schritte. Level-0: Zufallswahl. Level-1: beste Antwort auf Level-0. Level-2: beste Antwort auf Level-1. Experimentell dominiert Level-1 und Level-2. Das Nash-Gleichgewicht (unendliches K-Level) ist die Ausnahme.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 flex gap-3 flex-wrap">
+            <a href="/raetsel/allais" class="text-xs border border-slate-200 px-3 py-1.5 rounded-full text-slate-600 hover:border-indigo-400 hover:text-indigo-600">→ Allais-Paradoxon erleben</a>
+            <a href="/spiele/beauty-contest" class="text-xs border border-slate-200 px-3 py-1.5 rounded-full text-slate-600 hover:border-indigo-400 hover:text-indigo-600">→ K-Level Thinking spielen</a>
+            <a href="/raetsel/st-petersburg" class="text-xs border border-slate-200 px-3 py-1.5 rounded-full text-slate-600 hover:border-indigo-400 hover:text-indigo-600">→ St. Petersburger Paradoxon</a>
+        </div>
+    </section>
+
+    <!-- ── 6. Verhandlung & Spieltheorie ────────────────────────────── -->
+    <section id="section-6" class="mb-12">
+        <h2 class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-3">
+            <span class="bg-indigo-100 text-indigo-700 text-sm font-bold w-8 h-8 rounded-full flex items-center justify-center">6</span>
+            Verhandlung & Spieltheorie
+        </h2>
+
+        <p class="text-slate-600 mb-5 leading-relaxed">
+            Verhandlungen sind sequentielle Positivsummenspiele mit unvollständiger Information. Die Spieltheorie liefert präzise Werkzeuge, die intuitives Verhandeln systematisieren.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+            {% for icon, term, erkl in [
+                ('🚪', 'BATNA', 'Best Alternative to a Negotiated Agreement. Deine beste Option, falls kein Deal zustande kommt. Wer eine starke BATNA hat, muss keine schlechten Deals akzeptieren – und die andere Seite weiß das.'),
+                ('📏', 'ZOPA', 'Zone of Possible Agreement. Der Bereich zwischen den BATNAs beider Seiten. Wenn deine BATNA die seiner überschneidet, gibt es keinen Deal. Wenn ZOPA groß ist, geht es um Verteilung.'),
+                ('📣', 'Commitment', 'Glaubhafte, unwiderrufliche Selbstbindung an eine Strategie. Wer überzeugend drohen kann, braucht die Drohung nie umzusetzen. Schlüssel: die Drohung muss selbst bei Eskalation rational sein.'),
+                ('🔍', 'Signaling', 'Informationsübermittlung durch teure Handlungen. Ein Diplom ist teuer – genau deshalb glaubwürdig. Angebote, die die Gegenseite teuer abzulehnen macht, sind stärker als reine Behauptungen.'),
+                ('⏰', 'Zeitpräferenz', 'Wer weniger warten will (oder muss), gibt in Verhandlungen nach. Rubinsteins Modell: mit Diskontrate δ konvergiert das GG sofort zu δ/(1+δ). Geduld ist Verhandlungsmacht.'),
+                ('🎭', 'Informationsasymmetrie', 'Die Gegenseite weiß mehr als du – oder du mehr als sie. Wie viel zeigst du? Screening und Signaling sind Antworten darauf. Bayesian Nash-GG ist die Lösung bei privater Information.'),
+            ] %}
+            <div class="bg-white border border-slate-200 rounded-xl p-4">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xl">{{ icon }}</span>
+                    <span class="font-bold text-slate-700">{{ term }}</span>
+                </div>
+                <p class="text-sm text-slate-500">{{ erkl }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-5 text-sm">
+            <p class="font-semibold text-indigo-800 mb-2">Das Rubinstein-Verhandlungsmodell:</p>
+            <p class="text-indigo-700 mb-2">Zwei Spieler teilen 1€. Spieler 1 macht ein Angebot. Wenn Spieler 2 ablehnt, machen sie in der nächsten Runde weiter – aber beide diskontieren die Zukunft. Das Gleichgewicht ist sofortige Einigung bei:</p>
+            <div class="bg-white rounded-lg p-3 font-mono text-xs text-center mb-2">
+                Spieler 1: 1/(1+δ) · · · Spieler 2: δ/(1+δ)
+            </div>
+            <p class="text-indigo-700 text-xs">Mit gleicher Diskontrate (δ = 0.9): 1 erhält 52.6%, 2 erhält 47.4%. Wer zuerst fragt, hat einen kleinen Vorteil – aber nur wenn δ &lt; 1.</p>
+        </div>
+    </section>
+
+    <!-- ── Lernpfad ───────────────────────────────────────────────── -->
+    <section class="mb-8">
+        <h2 class="text-2xl font-bold text-slate-800 mb-5">Empfohlener Lernpfad</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
+                <div class="text-sm font-bold text-emerald-700 uppercase tracking-wide mb-3">Einsteiger</div>
+                <ol class="space-y-2 text-sm text-emerald-800">
+                    <li class="flex gap-2"><span class="font-bold">1.</span><a href="/raetsel/monty-hall" class="hover:underline">Monty Hall Problem</a></li>
+                    <li class="flex gap-2"><span class="font-bold">2.</span><a href="/spiele/gefangenendilemma" class="hover:underline">Gefangenendilemma spielen</a></li>
+                    <li class="flex gap-2"><span class="font-bold">3.</span><a href="/spiele/ultimatum" class="hover:underline">Ultimatumspiel</a></li>
+                    <li class="flex gap-2"><span class="font-bold">4.</span><a href="/spiele/vertrauen" class="hover:underline">Vertrauensspiel</a></li>
+                    <li class="flex gap-2"><span class="font-bold">5.</span><a href="/spiele/rps" class="hover:underline">Schere-Stein-Papier</a></li>
+                </ol>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-5">
+                <div class="text-sm font-bold text-amber-700 uppercase tracking-wide mb-3">Aufbau</div>
+                <ol class="space-y-2 text-sm text-amber-800">
+                    <li class="flex gap-2"><span class="font-bold">1.</span><a href="/raetsel/allais" class="hover:underline">Allais-Paradoxon</a></li>
+                    <li class="flex gap-2"><span class="font-bold">2.</span><a href="/spiele/chicken" class="hover:underline">Feiglingsspiel</a></li>
+                    <li class="flex gap-2"><span class="font-bold">3.</span><a href="/spiele/stag-hunt" class="hover:underline">Hirschjagd</a></li>
+                    <li class="flex gap-2"><span class="font-bold">4.</span><a href="/raetsel/newcomb" class="hover:underline">Newcomb-Paradoxon</a></li>
+                    <li class="flex gap-2"><span class="font-bold">5.</span><a href="/spiele/koordination" class="hover:underline">Koordinationsspiel</a></li>
+                </ol>
+            </div>
+            <div class="bg-violet-50 border border-violet-200 rounded-xl p-5">
+                <div class="text-sm font-bold text-violet-700 uppercase tracking-wide mb-3">Fortgeschritten</div>
+                <ol class="space-y-2 text-sm text-violet-800">
+                    <li class="flex gap-2"><span class="font-bold">1.</span><a href="/spiele/beauty-contest" class="hover:underline">Schönheitswettbewerb</a></li>
+                    <li class="flex gap-2"><span class="font-bold">2.</span><a href="/spiele/centipede" class="hover:underline">Centipede-Spiel</a></li>
+                    <li class="flex gap-2"><span class="font-bold">3.</span><a href="/spiele/auktion" class="hover:underline">Vickrey-Auktion</a></li>
+                    <li class="flex gap-2"><span class="font-bold">4.</span><a href="/raetsel/piraten" class="hover:underline">Piratenspiel</a></li>
+                    <li class="flex gap-2"><span class="font-bold">5.</span><a href="/raetsel/condorcet" class="hover:underline">Condorcet-Paradoxon</a></li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}

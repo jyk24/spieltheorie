@@ -1,0 +1,93 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    <!-- Deine Wahl vs Nash -->
+    {% if claim == 2 %}
+    <div class="mb-5 p-4 rounded-xl bg-indigo-50 border-2 border-indigo-300">
+        <h3 class="text-xl font-bold text-indigo-800 mb-1">Du hast das Nash-Gleichgewicht gespielt: 2.</h3>
+        <p class="text-sm text-indigo-700">Theoretisch korrekt – aber gegen echte Menschen wärst du damit fast immer schlechter dran.</p>
+    </div>
+    {% elif claim >= 90 %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">{{ claim }} – typisch menschlich, und gegen Menschen die richtige Wahl.</h3>
+        <p class="text-sm text-emerald-700">Nash sagt 2, aber fast alle echten Spieler wählen 90–100. Genau deshalb lohnt es sich <em>nicht</em>, das Nash-Gleichgewicht zu spielen.</p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-xl font-bold text-amber-800 mb-1">{{ claim }} – ein Kompromiss zwischen Nash und Intuition.</h3>
+        <p class="text-sm text-amber-700">Interessant! Schau dir unten an, wann diese Wahl wie abschneidet.</p>
+    </div>
+    {% endif %}
+
+    <!-- Payoff-Vergleich -->
+    <div class="grid grid-cols-2 gap-3 mb-5">
+        <div class="bg-slate-50 rounded-xl p-4">
+            <div class="text-xs font-semibold text-slate-500 mb-2">🤖 Gegen Nash-Spieler (Claim = 2)</div>
+            <div class="flex justify-between items-center">
+                <div class="text-center">
+                    <div class="text-xs text-slate-400">Du ({{ claim }})</div>
+                    <div class="text-2xl font-black {% if your_payoff_vs_nash >= nash_payoff %}text-emerald-600{% else %}text-red-500{% endif %}">
+                        {{ your_payoff_vs_nash }}€
+                    </div>
+                </div>
+                <div class="text-slate-400 text-sm">vs</div>
+                <div class="text-center">
+                    <div class="text-xs text-slate-400">Nash (2)</div>
+                    <div class="text-2xl font-black text-slate-600">{{ nash_payoff }}€</div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-4">
+            <div class="text-xs font-semibold text-slate-500 mb-2">👥 Gegen typischen Mitspieler (≈ {{ human_avg }})</div>
+            <div class="flex justify-between items-center">
+                <div class="text-center">
+                    <div class="text-xs text-slate-400">Du ({{ claim }})</div>
+                    <div class="text-2xl font-black {% if vs_human_you >= vs_human_other %}text-emerald-600{% else %}text-red-500{% endif %}">
+                        {{ vs_human_you }}€
+                    </div>
+                </div>
+                <div class="text-slate-400 text-sm">vs</div>
+                <div class="text-center">
+                    <div class="text-xs text-slate-400">Human ({{ human_avg }})</div>
+                    <div class="text-2xl font-black text-slate-600">{{ vs_human_other }}€</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Das Nash-Argument -->
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+        <p class="font-semibold mb-2">Warum sagt Nash: 2?</p>
+        <div class="space-y-1.5 text-xs mb-3">
+            {% for step in dominance_steps %}
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-400 mt-0.5">→</span>
+                <span>
+                    <strong>{{ step.from }} → {{ step.to }}:</strong> {{ step.reason }}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+        <p class="text-xs">Durch <strong>iterierte Dominanzreduktion</strong> fällt jede Wahl &gt; 2 weg. Das Nash-Gleichgewicht ist 2.</p>
+    </div>
+
+    <!-- Das Paradox -->
+    <div class="bg-slate-50 rounded-xl p-4 mb-4 text-sm text-slate-600">
+        <p class="font-semibold text-slate-700 mb-2">Das Paradox:</p>
+        <p class="mb-2">In Experimenten spielen <strong>über 80%</strong> der Teilnehmer Werte zwischen 90 und 100 – und verdienen im Schnitt deutlich mehr als Nash-Spieler (die 2 spielen und gegen andere Nash-Spieler genau 2 bekommen).</p>
+        <p>Das Dilemma: Die Nash-Logik ist lokal perfekt rational, führt aber global zu schlechten Ergebnissen. Kaushik Basu (1994) nannte es einen Fall, wo <em>„mehr Rationalität zu weniger Gewinn führt"</em>.</p>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+        <p class="font-semibold mb-1">Verhandlungsrelevanz:</p>
+        <p>Das Reisenden-Dilemma zeigt: <strong>Hyperrationalität kann im echten Leben schaden</strong>. In Verhandlungen mit Menschen, die nicht streng rational agieren, ist ein kooperativer Ansatz (hohes Angebot) oft besser als das Nash-Gleichgewicht – weil die andere Seite gar nicht rational spielt.</p>
+    </div>
+
+    <div class="flex gap-3">
+        <a href="/raetsel/reisenden-dilemma" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>

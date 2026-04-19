@@ -1,0 +1,116 @@
+<!-- State für JS -->
+<span id="history-data" class="hidden" data-value="{{ history_json }}"></span>
+<span id="round-data" class="hidden" data-value="{{ next_round_num }}"></span>
+{% if next_value is not none %}
+<span id="next-value-data" class="hidden" data-value="{{ next_value }}"></span>
+{% endif %}
+<span id="total-profit-data" class="hidden" data-value="{{ history | sum(attribute='profit') }}"></span>
+
+<!-- Rundenresultat -->
+<div class="bg-white rounded-xl border border-slate-100 p-5 mb-3">
+    <div class="flex items-center justify-between mb-4">
+        <div class="text-sm font-semibold text-slate-600">Runde {{ round_result.round }}</div>
+        {% if round_result.player_wins %}
+        <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full">🏆 Gewonnen!</span>
+        {% else %}
+        <span class="bg-slate-100 text-slate-500 text-xs font-bold px-3 py-1 rounded-full">Nicht gewonnen</span>
+        {% endif %}
+    </div>
+
+    <!-- Gebote -->
+    <div class="grid grid-cols-4 gap-2 mb-4 text-center text-sm">
+        <div class="bg-amber-50 rounded-lg p-2">
+            <div class="text-xs text-amber-600 font-medium mb-0.5">Dein Wert</div>
+            <div class="text-xl font-black text-amber-700">{{ round_result.player_value }}€</div>
+        </div>
+        <div class="{% if round_result.player_wins %}bg-emerald-50 border-2 border-emerald-300{% else %}bg-slate-50{% endif %} rounded-lg p-2">
+            <div class="text-xs text-slate-500 font-medium mb-0.5">Dein Gebot</div>
+            <div class="text-xl font-black text-slate-700">{{ round_result.player_bid }}€</div>
+            {% set dev = round_result.bid_deviation %}
+            <div class="text-xs {% if dev == 0 %}text-emerald-600{% elif dev <= 15 %}text-amber-600{% else %}text-red-500{% endif %}">
+                {% if dev == 0 %}= Wert ✓{% elif round_result.player_bid > round_result.player_value %}+{{ dev }}€{% else %}-{{ dev }}€{% endif %}
+            </div>
+        </div>
+        <div class="bg-slate-50 rounded-lg p-2">
+            <div class="text-xs text-slate-500 font-medium mb-0.5">KI-Gebote</div>
+            <div class="text-xs font-bold text-slate-600">
+                {% for b in round_result.ai_bids %}{{ b }}€{% if not loop.last %}, {% endif %}{% endfor %}
+            </div>
+            <div class="text-xs text-slate-400 mt-0.5">Max: {{ round_result.ai_bids | max }}€</div>
+        </div>
+        <div class="{% if round_result.player_wins %}bg-emerald-50{% else %}bg-slate-50{% endif %} rounded-lg p-2">
+            <div class="text-xs text-slate-500 font-medium mb-0.5">Gewinn</div>
+            <div class="text-xl font-black {% if round_result.profit > 0 %}text-emerald-600{% elif round_result.profit < 0 %}text-red-500{% else %}text-slate-400{% endif %}">
+                {% if round_result.profit >= 0 %}+{% endif %}{{ round_result.profit }}€
+            </div>
+            {% if round_result.player_wins %}
+            <div class="text-xs text-slate-400">Preis: {{ round_result.second_price }}€</div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if round_result.player_wins and round_result.profit < 0 %}
+    <div class="bg-red-50 rounded-lg p-2 text-xs text-red-700">
+        <strong>Winner's Curse:</strong> Du hast gewonnen, aber zu viel geboten – Verlust von {{ round_result.profit | abs }}€.
+    </div>
+    {% endif %}
+</div>
+
+{% if is_final %}
+<span id="game-over" class="hidden"></span>
+
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <div class="mb-5 p-4 rounded-xl border-2
+        {% if final.result == 'win' %}bg-emerald-50 border-emerald-300
+        {% elif final.result == 'loss' %}bg-red-50 border-red-300
+        {% else %}bg-amber-50 border-amber-300{% endif %}">
+        <h3 class="text-xl font-bold mb-1
+            {% if final.result == 'win' %}text-emerald-800
+            {% elif final.result == 'loss' %}text-red-700
+            {% else %}text-amber-800{% endif %}">
+            {% if final.result == 'win' %}Gut geboten! Positiver Gesamtgewinn.
+            {% elif final.result == 'loss' %}Zu aggressiv oder zu vorsichtig – Verlust insgesamt.
+            {% else %}Break-even – solide, aber Optimierungspotenzial.{% endif %}
+        </h3>
+        <p class="text-sm">
+            Gesamtgewinn: <strong>{% if final.total_profit >= 0 %}+{% endif %}{{ final.total_profit }}€</strong> ·
+            {{ final.wins }}/{{ final.total_rounds }} Auktionen gewonnen ·
+            Ø Abweichung vom Wert: {{ final.avg_deviation }}€
+        </p>
+    </div>
+
+    <!-- Wahrheitsrate -->
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm">
+        <div class="flex items-center justify-between mb-2">
+            <span class="font-semibold text-indigo-800">Wahrheitsgetreue Gebote (±10€):</span>
+            <span class="text-xl font-black text-indigo-700">{{ final.truthful_rate }}%</span>
+        </div>
+        <div class="w-full bg-indigo-100 rounded-full h-2 mb-2">
+            <div class="bg-indigo-500 h-2 rounded-full" style="width:{{ final.truthful_rate }}%"></div>
+        </div>
+        <p class="text-xs text-indigo-700">
+            {% if final.truthful_rate >= 80 %}Sehr gut – du hast die dominante Strategie erkannt und angewendet.
+            {% elif final.truthful_rate >= 50 %}Teilweise. Bei der Vickrey-Auktion ist wahrheitsgetreues Bieten immer optimal – unabhängig von der Konkurrenz.
+            {% else %}Du hast stark über- oder unterboten. Das schadet dir: Überboten → möglicher Winner's Curse; Unterboten → du verlierst Auktionen, die du profitabel gewonnen hättest.{% endif %}
+        </p>
+    </div>
+
+    <div class="bg-slate-50 rounded-xl p-4 mb-4 text-sm text-slate-600">
+        <p class="font-semibold text-slate-700 mb-1">Warum ist Wahrheitsaussage dominant?</p>
+        <p class="mb-2">Wenn du deinen echten Wert V bietest und gewinnst, zahlst du den zweithöchsten Preis P₂ &lt; V → Gewinn garantiert. Bietest du mehr als V und gewinnst, zahlst du vielleicht mehr als V → Verlust. Bietest du weniger als V und verlierst, hättest du mit wahrheitsgetreuem Gebot gewonnen.</p>
+        <p><strong>Fazit:</strong> In welchem Szenario auch immer – Abweichungen vom wahren Wert können nur schaden, nie helfen.</p>
+    </div>
+
+    {% include "partials/strategy_debrief.html" %}
+
+    <div class="flex gap-3 mt-4">
+        <a href="/spiele/auktion" class="bg-emerald-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-emerald-700">
+            Nochmal
+        </a>
+        <a href="/spiele" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Alle Spiele
+        </a>
+    </div>
+</div>
+
+{% endif %}

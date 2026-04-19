@@ -14,21 +14,27 @@
         <a href="/lektionen/wiederholte-spiele-reputation" class="underline hover:no-underline">Theorie lesen →</a>
     </div>
 
+    <!-- Mystery-Start -->
     <div id="start-form" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
-        <h2 class="font-semibold text-slate-700 mb-4">KI-Strategie wählen</h2>
-        <div class="space-y-3 mb-6">
-            {% for s in strategies %}
-            <label class="flex items-start gap-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 border border-transparent has-[:checked]:border-indigo-300 has-[:checked]:bg-indigo-50">
-                <input type="radio" name="strategy_choice" value="{{ s.id }}" class="mt-1" {% if loop.first %}checked{% endif %}>
-                <div>
-                    <div class="font-medium text-slate-800 text-sm">{{ s.name }}</div>
-                    <div class="text-xs text-slate-500">{{ s.desc }}</div>
-                </div>
-            </label>
-            {% endfor %}
+        <input type="hidden" id="strategy-preset" value="{{ hidden_strategy }}">
+
+        <div class="flex items-start gap-4 mb-5">
+            <div class="text-5xl">🤖</div>
+            <div>
+                <h2 class="font-bold text-slate-800 text-lg">Unbekannte Gegenpartei</h2>
+                <p class="text-slate-500 text-sm mt-1">Wie viel gibt die KI zurück? Ist sie großzügig, egoistisch oder kalkulierend? Du musst es durch Investieren herausfinden.</p>
+                <p class="text-slate-400 text-xs mt-2">Nach dem Spiel wird das Verhalten analysiert und erklärt.</p>
+            </div>
         </div>
+
+        <div class="bg-slate-50 rounded-lg p-3 text-xs text-slate-500 mb-5 flex gap-4">
+            <span>🔍 Teste die Großzügigkeit</span>
+            <span>💰 Passe deine Investitionen an</span>
+            <span>📊 Lerne im Debrief</span>
+        </div>
+
         <button type="button" onclick="startGame()"
-                class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700">
+                class="bg-teal-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-teal-700 transition-colors">
             Spiel starten
         </button>
     </div>
@@ -63,12 +69,12 @@
                 <div class="flex items-center gap-4">
                     <input type="range" name="invested" id="invest-slider" min="0" max="10" value="5"
                            oninput="updateInvest(this.value)"
-                           class="flex-1 accent-indigo-600">
-                    <span class="font-bold text-2xl text-indigo-600 w-12 text-center" id="invest-display">5</span>
+                           class="flex-1 accent-teal-600">
+                    <span class="font-bold text-2xl text-teal-600 w-12 text-center" id="invest-display">5</span>
                     <span class="text-sm text-slate-500">Punkte</span>
                 </div>
                 <div class="text-xs text-slate-400">KI erhält: <span id="pot-display">15</span> Punkte (×3)</div>
-                <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700">
+                <button type="submit" class="bg-teal-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-teal-700">
                     Investieren
                 </button>
             </form>
@@ -80,7 +86,7 @@
 
 <script>
 function startGame() {
-    const strategy = document.querySelector('input[name="strategy_choice"]:checked').value;
+    const strategy = document.getElementById('strategy-preset').value;
     document.getElementById('strategy-hidden').value = strategy;
     document.getElementById('start-form').classList.add('hidden');
     document.getElementById('play-area').classList.remove('hidden');

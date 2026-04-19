@@ -1,0 +1,108 @@
+<!-- Daten-Nodes für JS -->
+<span id="events-data" data-value="{{ events_json }}" class="hidden"></span>
+<span id="next-node-data" data-value="{{ next_node_idx if next_node_idx is not none else '' }}" class="hidden"></span>
+
+{% if not is_final %}
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-3">
+    <div class="font-semibold text-slate-600 text-sm mb-3">Knoten {{ turn_result.events[0].node }} – Ergebnis</div>
+
+    {% for event in turn_result.events %}
+    <div class="flex items-center gap-3 p-3 rounded-lg mb-2
+        {% if event.actor == 'player' %}bg-indigo-50 border border-indigo-100
+        {% elif event.actor == 'ai' %}bg-red-50 border border-red-100
+        {% else %}bg-emerald-50 border border-emerald-100{% endif %}">
+        <div class="text-2xl">{{ '👤' if event.actor == 'player' else ('🤖' if event.actor == 'ai' else '✅') }}</div>
+        <div class="flex-1">
+            {% if event.action == 'take' %}
+            <div class="font-semibold {% if event.actor == 'player' %}text-indigo-700{% else %}text-red-700{% endif %}">
+                {{ 'Du hast' if event.actor == 'player' else 'KI hat' }} genommen (Knoten {{ event.node }})
+            </div>
+            <div class="text-xs text-slate-500 mt-0.5">
+                Auszahlung: Du {{ event.take_player }} | KI {{ event.take_ai }}
+            </div>
+            {% elif event.action == 'pass' %}
+            <div class="font-semibold text-emerald-700">
+                {{ 'Du gibst' if event.actor == 'player' else 'KI gibt' }} weiter →
+            </div>
+            <div class="text-xs text-slate-500 mt-0.5">Topf wächst weiter</div>
+            {% else %}
+            <div class="font-semibold text-emerald-700">Beide haben bis zum Ende weitergegeben!</div>
+            <div class="text-xs text-slate-500 mt-0.5">Maximalauszahlung: Du {{ event.take_player }} | KI {{ event.take_ai }}</div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if not turn_result.game_over %}
+    <div class="mt-3 bg-purple-50 rounded-lg p-3 text-sm text-purple-700">
+        <strong>Weiter:</strong> Knoten {{ next_node_idx + 1 }} – du entscheidest wieder.
+        Wenn du nimmst: Du bekommst <strong>{{ nodes[next_node_idx].take_player }}</strong> Punkte.
+    </div>
+    {% endif %}
+</div>
+
+<!-- Verlauf -->
+{% if events|length > 2 %}
+<div class="bg-slate-50 rounded-xl p-4 text-xs">
+    <div class="font-medium text-slate-500 mb-2 uppercase tracking-wide">Bisherige Züge</div>
+    <div class="flex flex-wrap gap-1">
+        {% for e in events %}
+        <span class="px-2 py-1 rounded
+            {% if e.action == 'take' and e.actor == 'player' %}bg-indigo-200 text-indigo-800
+            {% elif e.action == 'take' and e.actor == 'ai' %}bg-red-200 text-red-800
+            {% else %}bg-emerald-200 text-emerald-800{% endif %}">
+            K{{ e.node }}: {{ '👤' if e.actor == 'player' else '🤖' }} {{ '💰 Nehmen' if e.action == 'take' else '➡️ Weiter' }}
+        </span>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% else %}
+<span id="game-over" class="hidden"></span>
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <h3 class="text-xl font-bold text-slate-800 mb-2">
+        {% if final.result == 'win' %}🏆 Du hast mehr bekommen!
+        {% elif final.result == 'loss' %}📊 KI hat mehr bekommen
+        {% else %}⚖️ Gleichstand{% endif %}
+    </h3>
+    <p class="text-sm text-slate-500 mb-4">
+        Spiel endete an Knoten {{ final.reached_node }} von {{ final.total_nodes }}.
+    </p>
+
+    <div class="grid grid-cols-3 gap-3 mb-5 text-center">
+        <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100">
+            <div class="text-2xl font-bold text-indigo-600">{{ final.player_score }}</div>
+            <div class="text-xs text-slate-500 mt-1">Deine Punkte</div>
+        </div>
+        <div class="p-4 bg-slate-50 rounded-xl">
+            <div class="text-2xl font-bold text-slate-600">{{ final.ai_score }}</div>
+            <div class="text-xs text-slate-500 mt-1">KI-Punkte</div>
+        </div>
+        <div class="p-4 bg-purple-50 rounded-xl border border-purple-100">
+            <div class="text-2xl font-bold text-purple-600">{{ final.cooperation_depth }}%</div>
+            <div class="text-xs text-slate-500 mt-1">Kooperationstiefe</div>
+        </div>
+    </div>
+
+    <div class="bg-slate-50 rounded-xl p-4 text-sm text-slate-600 mb-4">
+        <strong>Rückwärtsinduktion sagt:</strong> Sofort nehmen (Knoten 1: Du bekommst 4).
+        Du hast bis Knoten {{ final.reached_node }} gewartet.
+        {% if final.player_score > 4 %}
+        Das hat sich ausgezahlt! Du hast mehr als den Sofort-Nehmen-Wert (4) erhalten.
+        {% elif final.player_score == 4 %}
+        Du hättest sofort nehmen und dasselbe erhalten.
+        {% else %}
+        Die KI hat genutzt, dass du gewartet hast – Rückwärtsinduktion hatte Recht.
+        {% endif %}
+    </div>
+
+    <div class="flex gap-3 mb-2">
+        <a href="/spiele/centipede" class="bg-purple-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-purple-700">
+            Nochmal spielen
+        </a>
+    </div>
+
+    {% include "partials/strategy_debrief.html" %}
+</div>
+{% endif %}

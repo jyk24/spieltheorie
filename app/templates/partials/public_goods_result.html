@@ -1,0 +1,104 @@
+<!-- Daten-Nodes für JS -->
+<span id="history-data" data-value="{{ history_json }}" class="hidden"></span>
+<span id="round-data" data-value="{{ history|length + 1 }}" class="hidden"></span>
+<span id="player-total-data" data-value="{{ history|sum(attribute='player_net') | round(1) }}" class="hidden"></span>
+<span id="ai-total-data" data-value="{{ history|sum(attribute='ai_net') | round(1) }}" class="hidden"></span>
+
+{% if not is_final %}
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-3">
+    <div class="font-semibold text-slate-600 text-sm mb-3">Runde {{ round_result.round }} – Ergebnis</div>
+
+    <div class="grid grid-cols-2 gap-4 mb-4">
+        <div class="text-center p-3 rounded-lg bg-teal-50 border border-teal-200">
+            <div class="text-xs text-slate-500 mb-1">Du eingezahlt</div>
+            <div class="text-2xl font-bold text-teal-700">{{ round_result.player_contribution }}</div>
+            <div class="text-xs text-slate-500 mt-1">von 10 Token</div>
+        </div>
+        <div class="text-center p-3 rounded-lg bg-slate-50 border border-slate-200">
+            <div class="text-xs text-slate-500 mb-1">KI eingezahlt</div>
+            <div class="text-2xl font-bold text-slate-700">{{ round_result.ai_contribution }}</div>
+            <div class="text-xs text-slate-500 mt-1">von 10 Token</div>
+        </div>
+    </div>
+
+    <div class="bg-teal-50 rounded-lg p-3 text-sm text-teal-800 mb-3">
+        <div class="flex justify-between">
+            <span>Gemeinschaftstopf:</span>
+            <span class="font-bold">{{ round_result.total_pool }} Token (×1,6)</span>
+        </div>
+        <div class="flex justify-between mt-1">
+            <span>Dein Anteil:</span>
+            <span class="font-bold">{{ round_result.each_share }} Token</span>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+        <div class="text-center p-3 rounded-lg {% if round_result.player_net > 10 %}bg-emerald-50 border border-emerald-200{% elif round_result.player_net < 10 %}bg-red-50 border border-red-200{% else %}bg-slate-50 border border-slate-200{% endif %}">
+            <div class="text-xs text-slate-500 mb-1">Dein Netto</div>
+            <div class="font-bold text-lg {% if round_result.player_net > 10 %}text-emerald-700{% elif round_result.player_net < 10 %}text-red-600{% else %}text-slate-600{% endif %}">
+                {{ round_result.player_net }}
+            </div>
+            <div class="text-xs text-slate-400">(Basis: 10)</div>
+        </div>
+        <div class="text-center p-3 rounded-lg bg-slate-50 border border-slate-200">
+            <div class="text-xs text-slate-500 mb-1">KI Netto</div>
+            <div class="font-bold text-lg text-slate-700">{{ round_result.ai_net }}</div>
+            <div class="text-xs text-slate-400">(Basis: 10)</div>
+        </div>
+    </div>
+</div>
+
+<!-- Beobachtungshinweis nach Runde 3 -->
+{% if history|length == 3 %}
+<div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 mb-3">
+    🔍 <strong>Beobachtung:</strong> Zahlt die KI immer viel ein? Immer wenig? Oder spiegelt sie dein Verhalten? Variiere deinen Beitrag bewusst und schau, wie sie reagiert.
+</div>
+{% endif %}
+
+{% if history|length > 1 %}
+<div class="bg-slate-50 rounded-xl p-4 text-xs">
+    <div class="font-medium text-slate-500 mb-2 uppercase tracking-wide">Beitrags-Verlauf (Du / KI)</div>
+    <div class="flex flex-wrap gap-1">
+        {% for r in history %}
+        <span class="px-2 py-1 rounded
+            {% if r.player_contribution >= 7 %}bg-teal-200 text-teal-800
+            {% elif r.player_contribution >= 4 %}bg-blue-200 text-blue-800
+            {% else %}bg-orange-200 text-orange-800{% endif %}">
+            R{{ r.round }}: {{ r.player_contribution }}/{{ r.ai_contribution }}
+        </span>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% else %}
+<span id="game-over" class="hidden"></span>
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <h3 class="text-xl font-bold text-slate-800 mb-4">
+        {% if final.result == 'win' %}🏆 Du hast mehr gesammelt!
+        {% elif final.result == 'loss' %}📊 KI hat mehr gesammelt
+        {% else %}⚖️ Ausgeglichen{% endif %}
+    </h3>
+
+    <div class="grid grid-cols-2 gap-4 mb-5">
+        <div class="text-center p-4 bg-teal-50 rounded-xl border border-teal-100">
+            <div class="text-2xl font-bold text-teal-600">{{ final.player_total }}</div>
+            <div class="text-xs text-slate-500 mt-1">Dein Gesamt-Netto</div>
+            <div class="text-xs text-teal-600 mt-1">Ø {{ final.avg_player_contrib }} eingezahlt</div>
+        </div>
+        <div class="text-center p-4 bg-slate-50 rounded-xl border border-slate-100">
+            <div class="text-2xl font-bold text-slate-600">{{ final.ai_total }}</div>
+            <div class="text-xs text-slate-500 mt-1">KI Gesamt-Netto</div>
+            <div class="text-xs text-slate-500 mt-1">Ø {{ final.avg_ai_contrib }} eingezahlt</div>
+        </div>
+    </div>
+
+    <div class="flex gap-3 mb-2">
+        <a href="/spiele/public-goods" class="bg-teal-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-teal-700">
+            Nochmal spielen
+        </a>
+    </div>
+
+    {% include "partials/strategy_debrief.html" %}
+</div>
+{% endif %}

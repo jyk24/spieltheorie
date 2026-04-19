@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Diktatorspiel – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">👑 Diktatorspiel</h1>
+        <p class="text-slate-500 mt-1">Teile 100 Punkte auf – dein Gegenüber kann nicht ablehnen.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-2">Spielregeln:</p>
+        <ul class="space-y-1 text-slate-600 text-xs">
+            <li>→ <strong>Runden 1–4:</strong> Du bist der Diktator. Du entscheidest, wie viel die KI bekommt (0–100). Du behältst den Rest.</li>
+            <li>→ <strong>Runden 5–8:</strong> Die KI ist Diktator. Sie entscheidet, wie viel du bekommst.</li>
+            <li>→ Die andere Seite kann <em>nicht ablehnen</em> – das unterscheidet das Diktatorspiel vom Ultimatumspiel.</li>
+            <li>→ Ziel: Maximiere deinen Gesamtscore über 8 Runden.</li>
+        </ul>
+    </div>
+
+    <!-- Spielbereich -->
+    <form id="start-form"
+          hx-post="/spiele/diktator/zug"
+          hx-target="#spiel-area"
+          hx-swap="innerHTML"
+          hx-trigger="submit"
+          class="hidden">
+        <input type="hidden" name="strategy" value="{{ hidden_strategy }}">
+        <input type="hidden" name="history_json" value="[]">
+        <input type="hidden" name="player_offer" value="50" id="start-offer">
+    </form>
+
+    <div id="spiel-area">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-4">Runde 1 von 8 – Du bist der Diktator</p>
+            <p class="text-sm text-slate-500 mb-6">Wie viel von 100 Punkten gibst du der KI? Du behältst den Rest.</p>
+
+            <form hx-post="/spiele/diktator/zug"
+                  hx-target="#spiel-area"
+                  hx-swap="innerHTML"
+                  class="space-y-5">
+                <input type="hidden" name="strategy" value="{{ hidden_strategy }}">
+                <input type="hidden" name="history_json" value="[]">
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        KI bekommt: <span id="offer-display" class="font-bold text-indigo-700">50</span> Punkte
+                        → Du behältst: <span id="keep-display" class="font-bold text-emerald-700">50</span> Punkte
+                    </label>
+                    <input type="range" min="0" max="100" value="50" step="5"
+                           name="player_offer" id="offer-slider"
+                           class="w-full accent-indigo-600"
+                           oninput="updateOffer(this.value)">
+                    <div class="flex justify-between text-xs text-slate-400 mt-1">
+                        <span>0 (alles behalten)</span>
+                        <span>50 (gleich teilen)</span>
+                        <span>100 (alles abgeben)</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 text-center text-xs">
+                    <button type="button" onclick="setOffer(0)"
+                            class="py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600">
+                        Egoistisch<br><span class="font-bold">0</span>
+                    </button>
+                    <button type="button" onclick="setOffer(50)"
+                            class="py-2 rounded-lg border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700">
+                        Fair<br><span class="font-bold">50</span>
+                    </button>
+                    <button type="button" onclick="setOffer(70)"
+                            class="py-2 rounded-lg border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700">
+                        Großzügig<br><span class="font-bold">70</span>
+                    </button>
+                </div>
+
+                <button type="submit"
+                        class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
+                    Angebot abgeben →
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateOffer(val) {
+    document.getElementById('offer-display').textContent = val;
+    document.getElementById('keep-display').textContent = 100 - val;
+}
+function setOffer(val) {
+    const slider = document.getElementById('offer-slider');
+    if (slider) {
+        slider.value = val;
+        updateOffer(val);
+    }
+}
+
+document.addEventListener('htmx:afterSwap', function(evt) {
+    if (evt.target.id === 'spiel-area') {
+        const go = document.getElementById('game-over');
+        if (go) {
+            const area = document.getElementById('spiel-area');
+            if (area) area.classList.add('pointer-events-none', 'opacity-60');
+        }
+    }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,144 @@
+{% if not is_final %}
+
+<!-- Laufende Auktion -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-3">
+    <div class="flex justify-between items-center mb-4">
+        <span class="text-sm font-semibold text-slate-600">Runde {{ round_num }}</span>
+        <span class="text-sm text-slate-500">Preis: <strong class="text-emerald-700">{{ prize }}</strong></span>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 mb-4">
+        <div class="bg-indigo-50 rounded-lg p-3 text-center">
+            <div class="text-xs text-indigo-600 mb-1">Dein Gebot</div>
+            <div class="text-2xl font-black text-indigo-800">{{ turn.player_bid }}</div>
+        </div>
+        <div class="bg-slate-50 rounded-lg p-3 text-center">
+            <div class="text-xs text-slate-600 mb-1">KI-Gebot</div>
+            <div class="text-2xl font-black text-slate-700">{{ turn.ai_bid }}</div>
+        </div>
+    </div>
+
+    {% if turn.ai_bid > prize %}
+    <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800 mb-4">
+        ⚠️ Die KI hat bereits über dem Preiswert geboten ({{ turn.ai_bid }} > {{ prize }}). Das Spiel geht in den Verlustbereich.
+    </div>
+    {% endif %}
+
+    <p class="text-sm font-semibold text-slate-700 mb-3">
+        Du bist dran. Mindestgebot: {{ turn.next_player_bid + 10 }}
+    </p>
+
+    <form hx-post="/spiele/dollarauktion/zug"
+          hx-target="#spiel-area"
+          hx-swap="innerHTML"
+          class="space-y-4">
+        <input type="hidden" name="strategy" value="{{ strategy }}">
+        <input type="hidden" name="ai_last_bid" value="{{ turn.ai_bid }}">
+        <input type="hidden" name="round_num" value="{{ round_num + 1 }}">
+        <input type="hidden" name="player_quit" value="false">
+
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Neues Gebot</label>
+            <input type="number" name="player_bid"
+                   min="{{ turn.next_player_bid + 10 }}" max="500"
+                   value="{{ turn.next_player_bid + 10 }}" step="10"
+                   class="w-full border border-slate-300 rounded-lg px-3 py-2 text-lg font-bold text-center focus:ring-2 focus:ring-indigo-300">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+            <button type="submit"
+                    class="bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
+                Höher bieten →
+            </button>
+            <button type="button" onclick="submitQuit_{{ round_num }}()"
+                    class="border-2 border-red-200 text-red-600 py-3 rounded-xl font-semibold hover:bg-red-50 transition-colors">
+                Aufgeben (Verlust: {{ turn.next_player_bid }})
+            </button>
+        </div>
+    </form>
+
+    <form id="quit-form-{{ round_num }}" hx-post="/spiele/dollarauktion/zug"
+          hx-target="#spiel-area" hx-swap="innerHTML" class="hidden">
+        <input type="hidden" name="strategy" value="{{ strategy }}">
+        <input type="hidden" name="ai_last_bid" value="{{ turn.ai_bid }}">
+        <input type="hidden" name="round_num" value="{{ round_num + 1 }}">
+        <input type="hidden" name="player_bid" value="{{ turn.next_player_bid }}">
+        <input type="hidden" name="player_quit" value="true">
+    </form>
+    <script>function submitQuit_{{ round_num }}() { htmx.trigger(document.getElementById('quit-form-{{ round_num }}'), 'submit'); }</script>
+</div>
+
+{% else %}
+
+<!-- Spielende -->
+<span id="game-over" class="hidden"></span>
+
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    {% if turn.winner == "player" %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">Du hast gewonnen!</h3>
+        <p class="text-sm text-emerald-700">
+            Die KI hat aufgegeben. Du bekommst {{ prize }} Punkte, zahlst {{ turn.player_bid }}.
+            <strong>Netto: {{ turn.player_payoff }} Punkte.</strong>
+        </p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-red-50 border-2 border-red-300">
+        <h3 class="text-xl font-bold text-red-800 mb-1">
+            {% if turn.player_payoff is not none and turn.player_payoff < 0 %}
+            Du hast verloren – und zahlst drauf!
+            {% else %}
+            Du hast aufgegeben.
+            {% endif %}
+        </h3>
+        <p class="text-sm text-red-700">
+            Die KI gewinnt. Du verlierst dein letztes Gebot: {{ turn.player_bid }} Punkte.
+            <strong>Netto: {{ turn.player_payoff }} Punkte.</strong>
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Endabrechnung -->
+    <div class="grid grid-cols-2 gap-4 mb-5">
+        <div class="{% if turn.winner == 'player' %}bg-emerald-50{% else %}bg-red-50{% endif %} rounded-xl p-4 text-center">
+            <div class="text-xs mb-1 {% if turn.winner == 'player' %}text-emerald-600{% else %}text-red-600{% endif %}">Dein Ergebnis</div>
+            <div class="text-3xl font-black {% if turn.winner == 'player' %}text-emerald-800{% else %}text-red-800{% endif %}">
+                {% if turn.player_payoff >= 0 %}+{% endif %}{{ turn.player_payoff }}
+            </div>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-4 text-center">
+            <div class="text-xs text-slate-500 mb-1">KI-Ergebnis</div>
+            <div class="text-3xl font-black text-slate-700">
+                {% if turn.ai_payoff >= 0 %}+{% endif %}{{ turn.ai_payoff }}
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-800">
+        <p class="font-semibold mb-2">Das Shubik-Paradoxon (1971):</p>
+        <p class="mb-2">In Experimenten bieten Spieler in der Dollarauktion regelmäßig <em>weit über den Preiswert</em> hinaus. Das passiert durch den <strong>Sunk-Cost-Fehler</strong>: Jeder neue Einsatz scheint den alten zu rechtfertigen.</p>
+        <p class="text-xs">Das Nash-Gleichgewicht: <em>niemand bietet</em>. Wenn beide rationale Spieler sind, steigt keiner ein – denn wer einsteigt, riskiert eine Eskalationsspirale. In der Praxis steigen die meisten ein.</p>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+        <p class="font-semibold mb-1">Verhandlungsrelevanz:</p>
+        <p class="mb-1">Die Dollarauktion modelliert <strong>Eskalationskommitment</strong>: Angebote, die man nicht zurückziehen kann, Projekte in die man bereits investiert hat, Drohungen die man einlösen muss. Das Sunk-Cost-Denken ("ich habe schon so viel investiert") ist in echten Verhandlungen weit verbreitet.</p>
+        <p><strong>Regel:</strong> Beurteile Entscheidungen nur anhand <em>zukünftiger</em> Kosten und Erträge – vergangene Kosten sind irreversibel.</p>
+    </div>
+
+    {% if strategy_info %}
+    {% include "partials/strategy_debrief.html" %}
+    {% endif %}
+
+    <div class="flex gap-3">
+        <a href="/spiele/dollarauktion" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/spiele" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Spiele
+        </a>
+    </div>
+</div>
+
+{% endif %}

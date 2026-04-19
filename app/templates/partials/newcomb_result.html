@@ -1,0 +1,70 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    <!-- Reaktion -->
+    {% if choice == 'b_only' %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-xl font-bold text-amber-800 mb-1">Nur Box B – du bist ein Evidential Decision Theorist.</h3>
+        <p class="text-sm text-amber-700">
+            Du folgst dem Erwartungswert-Argument: 95 % × 1.000.000 € = <strong>950.000 €</strong> erwartet.
+            Da der Vorhersager fast immer Recht hat, korreliert deine Wahl mit dem Inhalt – also nimm nur B.
+        </p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-indigo-50 border-2 border-indigo-300">
+        <h3 class="text-xl font-bold text-indigo-800 mb-1">Beide Boxen – du bist ein Causal Decision Theorist.</h3>
+        <p class="text-sm text-indigo-700">
+            Du folgst dem Dominanz-Argument: Was immer in Box B liegt, es liegt schon drin.
+            Beides nehmen gibt dir +1.000 € extra. Das ist kausal besser – unabhängig von der Vorhersage.
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Zwei Argumente -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+        <div class="border-2 {% if choice == 'b_only' %}border-amber-300 bg-amber-50{% else %}border-slate-200 bg-slate-50{% endif %} rounded-xl p-4 text-sm">
+            <div class="font-bold text-slate-700 mb-2">🔮 Argument für nur Box B:</div>
+            <p class="text-slate-600 mb-2"><strong>Evidential Decision Theory:</strong> Betrachte die Evidenz.</p>
+            <ul class="text-slate-600 space-y-1 text-xs">
+                <li>→ Wenn Vorhersager Recht hat (95 %): Box B = 1.000.000 €</li>
+                <li>→ Wenn falsch (5 %): Box B = 0 €</li>
+                <li>→ E[nur B] = 0.95 × 1M + 0.05 × 0 = <strong>950.000 €</strong></li>
+                <li>→ E[beide] = 0.05 × 1.001M + 0.95 × 1.000 = <strong>51.050 €</strong></li>
+            </ul>
+        </div>
+        <div class="border-2 {% if choice == 'both' %}border-indigo-300 bg-indigo-50{% else %}border-slate-200 bg-slate-50{% endif %} rounded-xl p-4 text-sm">
+            <div class="font-bold text-slate-700 mb-2">⚖️ Argument für beide Boxen:</div>
+            <p class="text-slate-600 mb-2"><strong>Causal Decision Theory:</strong> Betrachte die Kausalität.</p>
+            <ul class="text-slate-600 space-y-1 text-xs">
+                <li>→ Box B-Inhalt ist <em>bereits</em> festgelegt – meine Wahl ändert ihn nicht.</li>
+                <li>→ Falls B = 1M: beide = 1.001M &gt; nur B = 1M ✓</li>
+                <li>→ Falls B = 0: beide = 1.000 &gt; nur B = 0 ✓</li>
+                <li>→ Beide Boxen dominiert "nur B" in jedem Zustand der Welt.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Das Paradox -->
+    <div class="bg-slate-50 rounded-xl p-4 mb-4 text-sm text-slate-600">
+        <p class="font-semibold text-slate-700 mb-2">Wo liegt der Widerspruch?</p>
+        <p class="mb-2">Beide Argumente sind formal korrekt – und führen zur gegenteiligen Handlung. Das ist das Paradoxon. Es spaltet die Entscheidungstheoretiker seit 1960:</p>
+        <ul class="space-y-1 text-xs">
+            <li>→ <strong>Robert Nozick (1969)</strong> formalisierte das Problem – und wechselte mehrfach die Meinung.</li>
+            <li>→ <strong>Umfragen:</strong> ~55 % der befragten Philosophen wählen nur B (Evidential), ~45 % beide (Causal).</li>
+            <li>→ <strong>Kernfrage:</strong> Kann eine Entscheidung Evidenz über eine bereits festgelegte Vergangenheit sein?</li>
+        </ul>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+        <p class="font-semibold mb-1">Verhandlungsrelevanz:</p>
+        <p>Das Newcomb-Problem steckt in vielen Commitment-Situationen: Wenn dein Gegenüber dein Verhalten vorhersagen und auf Basis dieser Vorhersage handeln kann, <em>bevor</em> du handelst – wie rational sollst du dann handeln? Dominanzargumente und Korrelations-Kausalitäts-Unterscheidungen sind in strategischen Entscheidungen allgegenwärtig.</p>
+    </div>
+
+    <div class="flex gap-3">
+        <a href="/raetsel/newcomb" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>

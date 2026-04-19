@@ -20,9 +20,9 @@ def dashboard(request: Request, db: Session = Depends(get_db)):
         .first()
     )
     return templates.TemplateResponse(
+        request,
         "dashboard.html",
         {
-            "request": request,
             "active_page": "dashboard",
             "stats": stats,
             "next_lesson": next_lesson,

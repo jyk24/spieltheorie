@@ -1,0 +1,65 @@
+<!-- Phase 1 Auswahl gespeichert, jetzt Problem 2 -->
+<input type="hidden" id="choice1-store" value="{{ choice1 }}">
+
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <div class="flex items-center gap-2 mb-2">
+        <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-full">Problem 2 von 2</span>
+        <span class="text-xs text-slate-400">(unabhängig vom ersten Problem)</span>
+    </div>
+    <p class="font-semibold text-slate-800 mb-5">Und jetzt: Welche Lotterie bevorzugst du?</p>
+
+    <form hx-post="/raetsel/allais/result"
+          hx-target="#allais-area"
+          hx-swap="innerHTML"
+          class="grid grid-cols-1 gap-4">
+        <input type="hidden" name="choice1" value="{{ choice1 }}">
+
+        <button type="submit" name="choice2" value="C"
+                class="text-left p-5 rounded-xl border-2 border-violet-200 bg-violet-50 hover:border-violet-400 hover:bg-violet-100 transition-all">
+            <div class="flex items-start gap-4">
+                <span class="text-2xl font-black text-violet-700 mt-0.5">C</span>
+                <div class="flex-1">
+                    <div class="font-bold text-violet-800 mb-2">Kleine sichere Chance</div>
+                    <div class="space-y-1.5 text-sm">
+                        <div class="flex items-center gap-3">
+                            <div class="w-24 bg-slate-200 rounded-full h-4">
+                                <div class="bg-violet-500 h-4 rounded-full" style="width:11%"></div>
+                            </div>
+                            <span class="text-slate-600 font-semibold">11% → 1.000.000 €</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-24 bg-slate-200 rounded-full h-4">
+                                <div class="bg-slate-400 h-4 rounded-full" style="width:89%"></div>
+                            </div>
+                            <span class="text-slate-400">89% → 0 €</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </button>
+
+        <button type="submit" name="choice2" value="D"
+                class="text-left p-5 rounded-xl border-2 border-amber-200 bg-amber-50 hover:border-amber-400 hover:bg-amber-100 transition-all">
+            <div class="flex items-start gap-4">
+                <span class="text-2xl font-black text-amber-700 mt-0.5">D</span>
+                <div class="flex-1">
+                    <div class="font-bold text-amber-800 mb-2">Höherer Erwartungswert</div>
+                    <div class="space-y-1.5 text-sm">
+                        <div class="flex items-center gap-3">
+                            <div class="w-24 bg-slate-200 rounded-full h-4">
+                                <div class="bg-amber-500 h-4 rounded-full" style="width:10%"></div>
+                            </div>
+                            <span class="text-slate-600 font-semibold">10% → 5.000.000 €</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-24 bg-slate-200 rounded-full h-4">
+                                <div class="bg-slate-400 h-4 rounded-full" style="width:90%"></div>
+                            </div>
+                            <span class="text-slate-400">90% → 0 €</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </button>
+    </form>
+</div>

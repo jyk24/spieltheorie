@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Dollarauktion – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">💸 Dollarauktion</h1>
+        <p class="text-slate-500 mt-1">Ein Preis von {{ prize }}€ wird versteigert – aber beide zahlen ihr Gebot.</p>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-6 text-sm text-amber-800">
+        <p class="font-semibold mb-2">Die Regeln (Shubik 1971):</p>
+        <ul class="space-y-1 text-xs">
+            <li>→ Versteigerungsobjekt: <strong>{{ prize }} Punkte</strong></li>
+            <li>→ Du und die KI bietet abwechselnd. Du fängst an.</li>
+            <li>→ Jedes neue Gebot muss mindestens 10 höher sein als das letzte.</li>
+            <li>→ <strong>Wer aufgibt, verliert sein letztes Gebot.</strong></li>
+            <li>→ <strong>Wer gewinnt, zahlt sein Gebot und bekommt den Preis.</strong></li>
+            <li>→ Du kannst jederzeit aufgeben – dann verlierst du dein bisheriges Gebot.</li>
+        </ul>
+        <div class="mt-3 p-2 bg-amber-100 rounded-lg text-xs font-medium">
+            ⚠️ Vorsicht: Dieses Spiel hat eine Commitment-Falle. Es kann rational erscheinen weiterzubieten, obwohl man bereits verliert.
+        </div>
+    </div>
+
+    <div id="spiel-area">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-2">Einstieg: Mache dein erstes Gebot</p>
+            <p class="text-sm text-slate-500 mb-6">
+                Das Mindestgebot ist 10. Du kannst auch sofort aufgeben (Kosten: 0).
+            </p>
+
+            <form hx-post="/spiele/dollarauktion/zug"
+                  hx-target="#spiel-area"
+                  hx-swap="innerHTML"
+                  class="space-y-5">
+                <input type="hidden" name="strategy" value="{{ hidden_strategy }}">
+                <input type="hidden" name="ai_last_bid" value="0">
+                <input type="hidden" name="round_num" value="1">
+                <input type="hidden" name="player_quit" value="false">
+
+                <div class="flex items-center gap-4">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Dein Gebot</label>
+                        <input type="number" name="player_bid" min="10" max="500" value="10" step="10"
+                               class="w-full border border-slate-300 rounded-lg px-3 py-2 text-lg font-bold text-center focus:ring-2 focus:ring-indigo-300">
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs text-slate-500 mb-1">Preis</div>
+                        <div class="text-2xl font-black text-emerald-700">{{ prize }}</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <button type="submit"
+                            class="bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
+                        Bieten →
+                    </button>
+                    <button type="button"
+                            onclick="submitQuit()"
+                            class="border-2 border-slate-200 text-slate-600 py-3 rounded-xl font-semibold hover:bg-slate-50 transition-colors">
+                        Gar nicht erst einsteigen
+                    </button>
+                </div>
+            </form>
+
+            <form id="quit-form" hx-post="/spiele/dollarauktion/zug"
+                  hx-target="#spiel-area"
+                  hx-swap="innerHTML" class="hidden">
+                <input type="hidden" name="strategy" value="{{ hidden_strategy }}">
+                <input type="hidden" name="ai_last_bid" value="0">
+                <input type="hidden" name="round_num" value="1">
+                <input type="hidden" name="player_bid" value="0">
+                <input type="hidden" name="player_quit" value="true">
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function submitQuit() {
+    htmx.trigger(document.getElementById('quit-form'), 'submit');
+}
+</script>
+
+{% endblock %}

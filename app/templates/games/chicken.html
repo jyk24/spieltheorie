@@ -1,17 +1,30 @@
 {% extends "base.html" %}
-{% block title %}Gefangenendilemma – VerhandlungsTrainer{% endblock %}
+{% block title %}Feiglingsspiel – VerhandlungsTrainer{% endblock %}
 {% block content %}
 
 <div class="max-w-3xl mx-auto">
     <div class="mb-6">
         <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
-        <h1 class="text-3xl font-bold text-slate-800 mt-2">🔒 Gefangenendilemma</h1>
-        <p class="text-slate-500 mt-1">10 Runden – Kooperieren oder Verraten? Die KI-Strategie ist verborgen.</p>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🚗 Feiglingsspiel</h1>
+        <p class="text-slate-500 mt-1">8 Runden – Halten oder Ausweichen? Die KI-Strategie ist verborgen.</p>
     </div>
 
-    <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-5 mb-6 text-sm text-indigo-800">
-        <strong>Payoff-Matrix:</strong> CC = 3/3 Punkte | CD = 0/5 | DC = 5/0 | DD = 1/1 &nbsp;·&nbsp;
-        <a href="/lektionen/dominante-strategien" class="underline hover:no-underline">Theorie lesen →</a>
+    <div class="bg-amber-50 border border-amber-100 rounded-xl p-5 mb-6 text-sm text-amber-900">
+        <div class="font-semibold mb-2">Payoff-Matrix:</div>
+        <div class="grid grid-cols-3 gap-1 text-xs max-w-xs">
+            <div class="bg-amber-100 rounded p-1 text-center font-medium"></div>
+            <div class="bg-amber-100 rounded p-1 text-center font-medium">KI hält</div>
+            <div class="bg-amber-100 rounded p-1 text-center font-medium">KI weicht</div>
+            <div class="bg-amber-100 rounded p-1 text-center font-medium">Du hältst</div>
+            <div class="bg-red-100 rounded p-1 text-center text-red-700">−8 / −8</div>
+            <div class="bg-emerald-100 rounded p-1 text-center text-emerald-700">+5 / −3</div>
+            <div class="bg-amber-100 rounded p-1 text-center font-medium">Du weichst</div>
+            <div class="bg-orange-100 rounded p-1 text-center text-orange-700">−3 / +5</div>
+            <div class="bg-slate-100 rounded p-1 text-center text-slate-600">+1 / +1</div>
+        </div>
+        <div class="mt-3 text-xs">
+            <a href="/lektionen/feiglingsspiel-chicken-game" class="underline hover:no-underline">Theorie: Feiglingsspiel & Brinkmanship →</a>
+        </div>
     </div>
 
     <!-- Mystery-Start -->
@@ -21,20 +34,20 @@
         <div class="flex items-start gap-4 mb-5">
             <div class="text-5xl">🤖</div>
             <div>
-                <h2 class="font-bold text-slate-800 text-lg">Unbekannter Gegner</h2>
-                <p class="text-slate-500 text-sm mt-1">Die KI-Strategie ist verdeckt. Beobachte das Verhalten Runde für Runde – kannst du herausfinden, welche Logik sie verfolgt?</p>
-                <p class="text-slate-400 text-xs mt-2">Nach dem Spiel wird die Strategie aufgedeckt und erklärt.</p>
+                <h2 class="font-bold text-slate-800 text-lg">Unbekannter Fahrer</h2>
+                <p class="text-slate-500 text-sm mt-1">Aggressiv oder feige? Zufällig oder kalkuliert? Du fährst auf die KI zu – ihr Verhalten ist unbekannt.</p>
+                <p class="text-slate-400 text-xs mt-2">Nach dem Spiel wird die Strategie mit Erklärung aufgedeckt.</p>
             </div>
         </div>
 
         <div class="bg-slate-50 rounded-lg p-3 text-xs text-slate-500 mb-5 flex gap-4">
             <span>🔍 Erkenne das Muster</span>
-            <span>🧠 Passe dich an</span>
+            <span>🚗 Halten oder Ausweichen?</span>
             <span>📊 Lerne im Debrief</span>
         </div>
 
         <button type="button" onclick="startGame()"
-                class="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                class="bg-amber-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-amber-700 transition-colors">
             Spiel starten
         </button>
     </div>
@@ -42,10 +55,10 @@
     <!-- Spielfeld -->
     <div id="play-area" class="hidden">
         <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
-            <div class="flex justify-between items-center mb-4">
+            <div class="flex justify-between items-center mb-6">
                 <div>
                     <span class="text-sm text-slate-500">Runde</span>
-                    <span id="round-display" class="text-xl font-bold text-indigo-600 ml-1">1</span>
+                    <span id="round-display" class="text-xl font-bold text-amber-600 ml-1">1</span>
                     <span class="text-sm text-slate-500"> / {{ max_rounds }}</span>
                 </div>
                 <div class="flex gap-6 text-sm">
@@ -60,20 +73,26 @@
                 </div>
             </div>
 
-            <form hx-post="/spiele/gefangenendilemma/zug"
+            <div class="text-center text-slate-500 text-sm mb-4 italic">
+                Ihr fahrt aufeinander zu. Was tust du?
+            </div>
+
+            <form hx-post="/spiele/chicken/zug"
                   hx-target="#result-area"
                   hx-swap="innerHTML"
                   id="move-form"
                   class="flex gap-4">
                 <input type="hidden" name="strategy" id="strategy-hidden">
                 <input type="hidden" name="history_json" id="history-hidden" value="[]">
-                <button type="submit" name="move" value="C"
-                        class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-xl font-bold text-lg transition-colors">
-                    🤝 Kooperieren
+                <button type="submit" name="move" value="H"
+                        class="flex-1 bg-red-500 hover:bg-red-600 text-white py-5 rounded-xl font-bold text-lg transition-colors">
+                    🚗 Halten
+                    <div class="text-xs font-normal mt-1 opacity-80">Nicht nachgeben</div>
                 </button>
-                <button type="submit" name="move" value="D"
-                        class="flex-1 bg-red-500 hover:bg-red-600 text-white py-4 rounded-xl font-bold text-lg transition-colors">
-                    🗡️ Verraten
+                <button type="submit" name="move" value="S"
+                        class="flex-1 bg-slate-500 hover:bg-slate-600 text-white py-5 rounded-xl font-bold text-lg transition-colors">
+                    🔀 Ausweichen
+                    <div class="text-xs font-normal mt-1 opacity-80">Konflikt vermeiden</div>
                 </button>
             </form>
         </div>

@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}Centipede-Spiel – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🐛 Centipede-Spiel</h1>
+        <p class="text-slate-500 mt-1">Nehmen oder Weitergeben? Das Rückwärtsinduktions-Paradoxon.</p>
+    </div>
+
+    <div class="bg-purple-50 border border-purple-100 rounded-xl p-5 mb-6 text-sm text-purple-900">
+        <div class="font-semibold mb-2">Wie es funktioniert:</div>
+        <p class="text-sm mb-3">Der Topf verdoppelt sich fast mit jedem Weitergeben. Du und die KI wechseln sich ab.
+        Wer <strong>nimmt</strong>, bekommt den größeren Anteil – aber das Spiel endet sofort.
+        Wer <strong>weitergibt</strong>, riskiert, dass der andere am nächsten Zug nimmt.</p>
+        <div class="overflow-x-auto">
+            <div class="flex gap-1 items-center min-w-max text-xs mb-2">
+                {% for n in nodes %}
+                <div class="text-center">
+                    <div class="w-14 p-1 rounded {% if n.actor == 'player' %}bg-indigo-100 text-indigo-700{% else %}bg-red-100 text-red-700{% endif %}">
+                        <div class="font-bold">K{{ n.node }}</div>
+                        <div class="text-xs">{{ '👤' if n.actor == 'player' else '🤖' }}</div>
+                    </div>
+                    <div class="text-xs text-slate-500 mt-1">{{ n.take_player }}/{{ n.take_ai }}</div>
+                </div>
+                {% if not loop.last %}
+                <div class="text-slate-300 text-xs">→</div>
+                {% endif %}
+                {% endfor %}
+                <div class="text-slate-300 text-xs">→</div>
+                <div class="text-center">
+                    <div class="w-14 p-1 rounded bg-emerald-100 text-emerald-700">
+                        <div class="font-bold">Ende</div>
+                        <div class="text-xs">✓</div>
+                    </div>
+                    <div class="text-xs text-slate-500 mt-1">64/32</div>
+                </div>
+            </div>
+        </div>
+        <p class="text-xs text-purple-700">Du/KI-Auszahlung wenn an diesem Knoten genommen wird. Ende: beide passen durch = 64/32.</p>
+        <div class="mt-2 text-xs">
+            <a href="/lektionen/rueckwaertsinduktion" class="underline hover:no-underline">Theorie: Rückwärtsinduktion →</a>
+        </div>
+    </div>
+
+    <!-- Mystery-Start -->
+    <div id="start-form" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+        <input type="hidden" id="strategy-preset" value="{{ hidden_strategy }}">
+
+        <div class="flex items-start gap-4 mb-5">
+            <div class="text-5xl">🤖</div>
+            <div>
+                <h2 class="font-bold text-slate-800 text-lg">Unbekannte KI</h2>
+                <p class="text-slate-500 text-sm mt-1">Nimmt sie sofort (Rückwärtsinduktion)? Oder kooperiert sie, um den Topf wachsen zu lassen? Entscheide selbst – und lerne im Debrief.</p>
+                <p class="text-slate-400 text-xs mt-2">Die Strategie wird nach Spielende aufgedeckt.</p>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 rounded-lg p-3 text-xs text-slate-500 mb-5 flex gap-4 flex-wrap">
+            <span>🐛 8 Knoten</span>
+            <span>📈 Topf wächst bei jedem Weitergeben</span>
+            <span>🔢 Rückwärtsinduktions-Paradox</span>
+        </div>
+
+        <button type="button" onclick="startGame()"
+                class="bg-purple-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-purple-700 transition-colors">
+            Spiel starten
+        </button>
+    </div>
+
+    <!-- Spielfeld -->
+    <div id="play-area" class="hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+            <div class="flex justify-between items-center mb-5">
+                <div>
+                    <span class="text-sm text-slate-500">Knoten</span>
+                    <span id="node-display" class="text-xl font-bold text-purple-600 ml-1">1</span>
+                    <span class="text-sm text-slate-500"> von 8</span>
+                </div>
+                <div class="flex gap-6 text-sm">
+                    <div class="text-center">
+                        <div class="text-xs text-slate-400">Dein Anteil wenn du nimmst</div>
+                        <div id="take-value-display" class="text-lg font-bold text-indigo-600">4</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="current-node-info" class="bg-purple-50 rounded-lg p-3 text-sm text-purple-800 mb-5">
+                <div class="flex justify-between">
+                    <span>Wenn du <strong>nimmst</strong>:</span>
+                    <span id="take-info">Du: <strong>4</strong> | KI: <strong>1</strong></span>
+                </div>
+                <div class="flex justify-between mt-1 text-purple-600">
+                    <span>Wenn du <strong>weitergibst</strong>:</span>
+                    <span>KI entscheidet als nächstes</span>
+                </div>
+            </div>
+
+            <form hx-post="/spiele/centipede/zug"
+                  hx-target="#result-area"
+                  hx-swap="innerHTML"
+                  id="move-form"
+                  class="grid grid-cols-2 gap-4">
+                <input type="hidden" name="strategy" id="strategy-hidden">
+                <input type="hidden" name="events_json" id="events-hidden" value="[]">
+                <input type="hidden" name="node_idx" id="node-idx-hidden" value="0">
+                <button type="submit" name="action" value="take"
+                        class="bg-indigo-500 hover:bg-indigo-600 text-white py-6 rounded-xl font-bold text-lg transition-colors">
+                    💰 Nehmen
+                    <div class="text-xs font-normal mt-1 opacity-80">Spiel endet sofort</div>
+                </button>
+                <button type="submit" name="action" value="pass"
+                        class="bg-emerald-500 hover:bg-emerald-600 text-white py-6 rounded-xl font-bold text-lg transition-colors">
+                    ➡️ Weitergeben
+                    <div class="text-xs font-normal mt-1 opacity-80">Topf wächst – KI entscheidet</div>
+                </button>
+            </form>
+        </div>
+
+        <div id="result-area"></div>
+    </div>
+</div>
+
+<script>
+// Knotendaten für UI-Updates
+const NODES = [
+    {node: 1, take_player: 4,  take_ai: 1},
+    {node: 2, take_player: 2,  take_ai: 8},
+    {node: 3, take_player: 8,  take_ai: 4},
+    {node: 4, take_player: 4,  take_ai: 16},
+    {node: 5, take_player: 16, take_ai: 8},
+    {node: 6, take_player: 8,  take_ai: 32},
+    {node: 7, take_player: 32, take_ai: 16},
+    {node: 8, take_player: 16, take_ai: 64},
+];
+
+function startGame() {
+    const strategy = document.getElementById('strategy-preset').value;
+    document.getElementById('strategy-hidden').value = strategy;
+    document.getElementById('start-form').classList.add('hidden');
+    document.getElementById('play-area').classList.remove('hidden');
+    updateNodeDisplay(0);
+}
+
+function updateNodeDisplay(nodeIdx) {
+    if (nodeIdx === null || nodeIdx >= NODES.length) return;
+    const n = NODES[nodeIdx];
+    document.getElementById('node-display').textContent = n.node;
+    document.getElementById('take-value-display').textContent = n.take_player;
+    document.getElementById('take-info').innerHTML =
+        `Du: <strong>${n.take_player}</strong> | KI: <strong>${n.take_ai}</strong>`;
+    document.getElementById('node-idx-hidden').value = nodeIdx;
+}
+
+document.body.addEventListener('htmx:afterSwap', function() {
+    const nextNodeEl = document.getElementById('next-node-data');
+    const eventsEl = document.getElementById('events-data');
+
+    if (eventsEl) document.getElementById('events-hidden').value = eventsEl.dataset.value;
+
+    if (nextNodeEl && nextNodeEl.dataset.value !== '') {
+        const nextIdx = parseInt(nextNodeEl.dataset.value);
+        updateNodeDisplay(nextIdx);
+    }
+});
+</script>
+
+{% endblock %}

@@ -6,7 +6,7 @@
     <div class="mb-6">
         <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
         <h1 class="text-3xl font-bold text-slate-800 mt-2">⚖️ Ultimatumspiel</h1>
-        <p class="text-slate-500 mt-1">10 Runden – Runden 1-5: Du machst Angebote. Runden 6-10: Die KI macht Angebote.</p>
+        <p class="text-slate-500 mt-1">10 Runden – Runden 1–5: Du machst Angebote. Runden 6–10: Die KI macht Angebote.</p>
     </div>
 
     <div class="bg-amber-50 border border-amber-100 rounded-xl p-5 mb-6 text-sm text-amber-800">
@@ -14,22 +14,27 @@
         <a href="/lektionen/fairness-effekte" class="underline hover:no-underline">Theorie lesen →</a>
     </div>
 
-    <!-- Startbereich -->
+    <!-- Mystery-Start -->
     <div id="start-form" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
-        <h2 class="font-semibold text-slate-700 mb-4">KI-Strategie wählen</h2>
-        <div class="space-y-3 mb-6">
-            {% for s in strategies %}
-            <label class="flex items-start gap-3 cursor-pointer p-3 rounded-lg hover:bg-slate-50 border border-transparent has-[:checked]:border-indigo-300 has-[:checked]:bg-indigo-50">
-                <input type="radio" name="strategy_choice" value="{{ s.id }}" class="mt-1" {% if loop.first %}checked{% endif %}>
-                <div>
-                    <div class="font-medium text-slate-800 text-sm">{{ s.name }}</div>
-                    <div class="text-xs text-slate-500">{{ s.desc }}</div>
-                </div>
-            </label>
-            {% endfor %}
+        <input type="hidden" id="strategy-preset" value="{{ hidden_strategy }}">
+
+        <div class="flex items-start gap-4 mb-5">
+            <div class="text-5xl">🤖</div>
+            <div>
+                <h2 class="font-bold text-slate-800 text-lg">Unbekannte Fairnessschwelle</h2>
+                <p class="text-slate-500 text-sm mt-1">Die KI hat eine versteckte Akzeptanzlogik. Wie fair muss dein Angebot sein? Was bietet sie dir an? Finde es heraus.</p>
+                <p class="text-slate-400 text-xs mt-2">Nach dem Spiel wird die Strategie mit Erklärung aufgedeckt.</p>
+            </div>
         </div>
+
+        <div class="bg-slate-50 rounded-lg p-3 text-xs text-slate-500 mb-5 flex gap-4">
+            <span>🔍 Erkenne die Schwelle</span>
+            <span>⚖️ Teste die Grenzen</span>
+            <span>📊 Lerne im Debrief</span>
+        </div>
+
         <button type="button" onclick="startGame()"
-                class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                class="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
             Spiel starten
         </button>
     </div>
@@ -66,7 +71,7 @@
                     <input type="hidden" name="history_json" id="history-hidden" value="[]">
                     <div class="flex items-center gap-4">
                         <input type="range" name="player_offer" id="offer-slider" min="0" max="100" value="50"
-                               oninput="document.getElementById('offer-display').textContent = this.value"
+                               oninput="document.getElementById('offer-display').textContent = this.value; document.getElementById('keep-display').textContent = 100 - this.value"
                                class="flex-1 accent-indigo-600">
                         <span class="font-bold text-2xl text-indigo-600 w-12 text-center" id="offer-display">50</span>
                         <span class="text-sm text-slate-500">Punkte</span>
@@ -111,16 +116,12 @@
 
 <script>
 function startGame() {
-    const strategy = document.querySelector('input[name="strategy_choice"]:checked').value;
+    const strategy = document.getElementById('strategy-preset').value;
     document.getElementById('strategy-hidden').value = strategy;
     document.getElementById('strategy-hidden-r').value = strategy;
     document.getElementById('start-form').classList.add('hidden');
     document.getElementById('play-area').classList.remove('hidden');
 }
-
-document.getElementById('offer-slider')?.addEventListener('input', function() {
-    document.getElementById('keep-display').textContent = 100 - this.value;
-});
 
 document.body.addEventListener('htmx:afterSwap', function() {
     const historyEl = document.getElementById('history-data');

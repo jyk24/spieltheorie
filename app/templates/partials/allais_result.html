@@ -1,0 +1,68 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    <!-- Auflösung -->
+    {% if inconsistent %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-xl font-bold text-amber-800 mb-1">Willkommen im Club! Du hast das Allais-Paradox erlebt.</h3>
+        <p class="text-sm text-amber-700">
+            Du hast <strong>{{ choice1_label }}</strong> gewählt und dann <strong>{{ choice2_label }}</strong>.
+            Diese Kombination ({{ choice1 }} + {{ choice2 }}) ist mathematisch inkonsistent –
+            und genau so entscheiden ~80% aller Menschen.
+        </p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">Konsistente Wahl! Du bist rational im Sinne der EU-Theorie.</h3>
+        <p class="text-sm text-emerald-700">
+            Du hast <strong>{{ choice1_label }}</strong> und <strong>{{ choice2_label }}</strong> gewählt –
+            diese Kombination ({{ choice1 }} + {{ choice2 }}) ist konsistent mit der Erwartungsnutzentheorie.
+            Trotzdem: Schau dir an, warum die meisten Menschen anders wählen.
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Deine Entscheidungen -->
+    <div class="grid grid-cols-2 gap-3 mb-5">
+        <div class="p-3 bg-slate-50 rounded-xl text-center">
+            <div class="text-xs text-slate-400 mb-1">Problem 1</div>
+            <div class="text-2xl font-black {% if choice1 == 'A' %}text-emerald-700{% else %}text-blue-700{% endif %}">{{ choice1 }}</div>
+            <div class="text-xs text-slate-500">{{ 'Sichere Million' if choice1 == 'A' else 'Risiko-Lotterie' }}</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl text-center">
+            <div class="text-xs text-slate-400 mb-1">Problem 2</div>
+            <div class="text-2xl font-black {% if choice2 == 'C' %}text-violet-700{% else %}text-amber-700{% endif %}">{{ choice2 }}</div>
+            <div class="text-xs text-slate-500">{{ '11% auf 1 Mio.' if choice2 == 'C' else '10% auf 5 Mio.' }}</div>
+        </div>
+    </div>
+
+    <!-- Die Mathematik -->
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+        <p class="font-semibold mb-2">Warum ist A + D widersprüchlich?</p>
+        <p class="mb-2">Wenn du A &gt; B bevorzugst, bedeutet das mathematisch:</p>
+        <p class="bg-white rounded p-2 font-mono text-xs mb-2">u(1M) &gt; 0.10·u(5M) + 0.89·u(1M) + 0.01·u(0)</p>
+        <p class="mb-2">Vereinfacht: <span class="font-mono">0.11·u(1M) &gt; 0.10·u(5M) + 0.01·u(0)</span></p>
+        <p class="mb-2">Das ist dasselbe wie zu sagen: <span class="font-mono">0.11·u(1M) + 0.89·u(0) &gt; 0.10·u(5M) + 0.90·u(0)</span></p>
+        <p class="font-semibold">→ Also müsstest du <strong>C &gt; D</strong> bevorzugen. Du hast aber D gewählt.</p>
+    </div>
+
+    <!-- Psychologische Erklärung -->
+    <div class="bg-slate-50 rounded-xl p-4 mb-5 text-sm text-slate-600">
+        <p class="font-semibold text-slate-700 mb-2">Warum passiert das?</p>
+        <p class="mb-2"><strong>Certitude Effect (Gewissheitseffekt):</strong> In Problem 1 gibt es eine 100%-Option – das fühlt sich fundamental anders an als 99%. Die sichere Million übt eine magnetische Wirkung aus, die über den reinen Erwartungswert hinausgeht.</p>
+        <p>In Problem 2 gibt es keine sichere Option mehr – also entscheidest du rationaler nach Erwartungswert. <strong>Aber mathematisch sind die beiden Probleme dasselbe</strong>, nur mit 89% „1 Mio. auf jeden Fall" rausgekürzt.</p>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+        <p class="font-semibold mb-1">Verhandlungsrelevanz:</p>
+        <p>Der Certitude Effect erklärt, warum Menschen in Verhandlungen sichere kleine Gewinne übergewichten: <em>„Lieber den Spatz in der Hand"</em>. Gute Verhandler nutzen das – sie bieten eine sichere Lösung an, auch wenn der Erwartungswert eines Risikos höher wäre.</p>
+    </div>
+
+    <div class="flex gap-3">
+        <a href="/raetsel/allais" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>

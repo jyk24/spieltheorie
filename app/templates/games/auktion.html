@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}Vickrey-Auktion – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🔨 Vickrey-Auktion</h1>
+        <p class="text-slate-500 mt-1">5 Runden – Wie viel bietest du auf ein Objekt, dessen Wert nur du kennst?</p>
+    </div>
+
+    <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-5 mb-6 text-sm text-emerald-900">
+        <div class="font-semibold mb-2">Zweitpreisauktion (Vickrey-Auktion):</div>
+        <div class="space-y-1.5 text-sm mb-3">
+            <div class="flex items-start gap-2">
+                <span>🏷️</span>
+                <span>Du siehst deinen <strong>privaten Wert</strong> für das Objekt. Die KI-Bieter kennen nur ihren eigenen.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span>🏆</span>
+                <span>Der <strong>Höchstbietende</strong> gewinnt – zahlt aber nur den <strong>zweithöchsten Preis</strong>.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span>💡</span>
+                <span>Dein Gewinn = Wert − Preis. Verlierst du, gewinnst du 0.</span>
+            </div>
+        </div>
+        <div class="bg-emerald-100 rounded-lg p-3 text-xs font-medium">
+            Die spieltheoretische Lösung: Biete <em>immer genau deinen wahren Wert</em> – das ist die dominante Strategie, unabhängig von der Konkurrenz.
+        </div>
+    </div>
+
+    <!-- Mystery-Start -->
+    <div id="start-form" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+        <input type="hidden" id="strategy-preset" value="{{ hidden_strategy }}">
+        <div class="flex items-start gap-4 mb-5">
+            <div class="text-5xl">🤖</div>
+            <div>
+                <h2 class="font-bold text-slate-800 text-lg">Drei unbekannte Mitbieter</h2>
+                <p class="text-slate-500 text-sm mt-1">Bieten sie wahrheitsgetreu? Überbieten sie aggressiv? Du weißt es nicht – findest du trotzdem die optimale Strategie?</p>
+                <p class="text-slate-400 text-xs mt-2">Die KI-Strategie wird im Debrief aufgedeckt.</p>
+            </div>
+        </div>
+        <button type="button" onclick="startGame()"
+                class="bg-emerald-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-emerald-700 transition-colors">
+            Auktion beginnen
+        </button>
+    </div>
+
+    <!-- Spielfeld -->
+    <div id="play-area" class="hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-sm text-slate-500">Runde</span>
+                    <span id="round-display" class="text-xl font-bold text-emerald-600 ml-1">1</span>
+                    <span class="text-sm text-slate-500"> / {{ max_rounds }}</span>
+                </div>
+                <div class="text-center">
+                    <div class="text-xs text-slate-400">Gesamtgewinn</div>
+                    <div id="total-profit" class="text-lg font-bold text-emerald-600">0</div>
+                </div>
+            </div>
+
+            <!-- Wert-Anzeige -->
+            <div class="bg-amber-50 border-2 border-amber-300 rounded-xl p-4 mb-5 text-center">
+                <div class="text-xs text-amber-700 font-semibold uppercase tracking-wide mb-1">Dein privater Wert für dieses Objekt</div>
+                <div id="value-display" class="text-5xl font-black text-amber-700">{{ initial_value }}</div>
+                <div class="text-xs text-amber-600 mt-1">€ — nur du siehst diesen Wert</div>
+            </div>
+
+            <form hx-post="/spiele/auktion/zug"
+                  hx-target="#result-area"
+                  hx-swap="innerHTML"
+                  id="move-form">
+                <input type="hidden" name="strategy" id="strategy-hidden">
+                <input type="hidden" name="history_json" id="history-hidden" value="[]">
+                <input type="hidden" name="player_value" id="value-hidden" value="{{ initial_value }}">
+                <input type="hidden" name="round_num" id="round-hidden" value="{{ round_num }}">
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Dein Gebot (€):</label>
+                    <div class="flex items-center gap-3">
+                        <input type="number" name="player_bid" id="bid-input"
+                               min="0" max="200" value="{{ initial_value }}" required
+                               oninput="updateBidFeedback()"
+                               class="w-36 border-2 border-slate-200 rounded-lg px-4 py-3 text-center text-2xl font-bold focus:outline-none focus:border-emerald-400">
+                        <span class="text-slate-400 text-sm">€</span>
+                        <span id="bid-hint" class="text-sm text-slate-400"></span>
+                    </div>
+                    <input type="range" id="bid-slider" min="0" max="200" value="{{ initial_value }}"
+                           oninput="document.getElementById('bid-input').value=this.value; updateBidFeedback()"
+                           class="w-full mt-3 accent-emerald-600">
+                    <div class="flex justify-between text-xs text-slate-400 mt-1">
+                        <span>0€</span><span>50€</span><span>100€</span><span>150€</span><span>200€</span>
+                    </div>
+                </div>
+
+                <button type="submit"
+                        class="bg-emerald-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-emerald-700 transition-colors w-full">
+                    Gebot abgeben →
+                </button>
+            </form>
+        </div>
+
+        <div id="result-area"></div>
+    </div>
+</div>
+
+<script>
+function startGame() {
+    document.getElementById('strategy-hidden').value = document.getElementById('strategy-preset').value;
+    document.getElementById('start-form').classList.add('hidden');
+    document.getElementById('play-area').classList.remove('hidden');
+    updateBidFeedback();
+}
+
+function updateBidFeedback() {
+    const bid = parseInt(document.getElementById('bid-input').value) || 0;
+    const val = parseInt(document.getElementById('value-hidden').value) || 0;
+    const hint = document.getElementById('bid-hint');
+    const slider = document.getElementById('bid-slider');
+    slider.value = bid;
+    const diff = bid - val;
+    if (diff === 0) {
+        hint.textContent = '= Wahrer Wert (theoretisch optimal)';
+        hint.className = 'text-sm text-emerald-600 font-medium';
+    } else if (diff > 0) {
+        hint.textContent = `+${diff}€ über deinem Wert`;
+        hint.className = 'text-sm text-amber-600';
+    } else {
+        hint.textContent = `${diff}€ unter deinem Wert`;
+        hint.className = 'text-sm text-blue-600';
+    }
+}
+
+document.body.addEventListener('htmx:afterSwap', function() {
+    const h = document.getElementById('history-data');
+    const r = document.getElementById('round-data');
+    const nv = document.getElementById('next-value-data');
+    const tp = document.getElementById('total-profit-data');
+    if (h) document.getElementById('history-hidden').value = h.dataset.value;
+    if (r) {
+        const nr = parseInt(r.dataset.value);
+        document.getElementById('round-display').textContent = nr;
+        document.getElementById('round-hidden').value = nr;
+    }
+    if (nv) {
+        const newVal = nv.dataset.value;
+        document.getElementById('value-hidden').value = newVal;
+        document.getElementById('value-display').textContent = newVal;
+        document.getElementById('bid-input').value = newVal;
+        document.getElementById('bid-slider').value = newVal;
+        updateBidFeedback();
+    }
+    if (tp) {
+        const p = parseInt(tp.dataset.value);
+        const el = document.getElementById('total-profit');
+        el.textContent = (p >= 0 ? '+' : '') + p;
+        el.className = 'text-lg font-bold ' + (p >= 0 ? 'text-emerald-600' : 'text-red-500');
+    }
+});
+</script>
+
+{% endblock %}

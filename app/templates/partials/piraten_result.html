@@ -1,0 +1,142 @@
+{% set pirates = [
+    (0, '👑', 'P1', 'Kapitän'),
+    (1, '🗡️', 'P2', 'Erster Offizier'),
+    (2, '🔱', 'P3', 'Zweiter Offizier'),
+    (3, '⚓', 'P4', 'Matrose'),
+    (4, '🪝', 'P5', 'Schiffsjunge'),
+] %}
+
+<!-- Auflösung -->
+{% if exact %}
+<div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+    <h3 class="text-xl font-bold text-emerald-800 mb-1">Perfekt! Du hast die spieltheoretische Lösung gefunden.</h3>
+    <p class="text-sm text-emerald-700">
+        Exakt richtig: P1 behält <strong>98 Münzen</strong> und erkauft sich die Stimmen von P3 und P5
+        mit je <strong>1 Münze</strong>. Eine überraschend egoistische, aber logisch zwingende Lösung.
+    </p>
+</div>
+{% elif close %}
+<div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+    <h3 class="text-xl font-bold text-amber-800 mb-1">Fast! Du hast die Logik fast erfasst.</h3>
+    <p class="text-sm text-amber-700">
+        Deine Verteilung weicht nur um <strong>{{ diff }} Münzen</strong> von der spieltheoretischen Lösung ab.
+        Schau unten, warum die exakte Verteilung [98, 0, 1, 0, 1] die einzig stabile Lösung ist.
+    </p>
+</div>
+{% else %}
+<div class="mb-5 p-4 rounded-xl bg-slate-100 border-2 border-slate-300">
+    <h3 class="text-xl font-bold text-slate-800 mb-1">Die Lösung überrascht die meisten Menschen.</h3>
+    <p class="text-sm text-slate-600">
+        Deine Abweichung von {{ diff }} Münzen ist typisch – die meisten verteilen fairer als nötig.
+        Die spieltheoretische Lösung ist radikal egoistisch: P1 nimmt <strong>98 Münzen</strong>
+        und gibt P3 und P5 je nur <strong>1 Münze</strong>.
+    </p>
+</div>
+{% endif %}
+
+<!-- Vergleichstabelle -->
+<div class="bg-white rounded-xl border border-slate-200 overflow-hidden mb-5">
+    <div class="grid grid-cols-4 text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-50 px-4 py-2.5 border-b border-slate-200">
+        <div>Pirat</div>
+        <div class="text-center">Dein Vorschlag</div>
+        <div class="text-center">Korrekte Lösung</div>
+        <div class="text-center">Differenz</div>
+    </div>
+    {% for idx, icon, label, role in pirates %}
+    {% set d = player_guess[idx] - solution[idx] %}
+    <div class="grid grid-cols-4 items-center px-4 py-3 {% if not loop.last %}border-b border-slate-100{% endif %}">
+        <div class="flex items-center gap-2 text-sm">
+            <span>{{ icon }}</span>
+            <div>
+                <span class="font-medium text-slate-700">{{ label }}</span>
+                <span class="text-xs text-slate-400 ml-1">{{ role }}</span>
+            </div>
+        </div>
+        <div class="text-center font-bold text-slate-700">{{ player_guess[idx] }}</div>
+        <div class="text-center font-bold
+            {% if solution[idx] == 0 %}text-slate-400
+            {% elif solution[idx] >= 90 %}text-amber-600
+            {% else %}text-emerald-600{% endif %}">
+            {{ solution[idx] }}
+        </div>
+        <div class="text-center text-sm font-medium
+            {% if d == 0 %}text-emerald-600{% elif d | abs <= 5 %}text-amber-600{% else %}text-red-500{% endif %}">
+            {% if d == 0 %}✓{% elif d > 0 %}+{{ d }}{% else %}{{ d }}{% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    <div class="grid grid-cols-4 items-center px-4 py-2.5 bg-slate-50 border-t border-slate-200 text-xs font-semibold text-slate-500">
+        <div>Summe</div>
+        <div class="text-center {% if total == 100 %}text-emerald-600{% else %}text-red-500{% endif %}">{{ total }}</div>
+        <div class="text-center text-slate-700">100</div>
+        <div class="text-center {% if exact %}text-emerald-600{% else %}text-slate-400{% endif %}">
+            {% if exact %}✓ Exakt{% else %}Δ {{ diff }}{% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Rückwärtsinduktion -->
+<div class="mb-5">
+    <h4 class="font-bold text-slate-800 mb-3">Rückwärtsinduktion: Schritt für Schritt</h4>
+    <p class="text-sm text-slate-500 mb-4">Man beginnt am Ende: Was passiert, wenn nur noch 2 Piraten übrig sind?</p>
+
+    <div class="space-y-3">
+        {% for step in steps %}
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <div class="flex items-center gap-3 px-4 py-2.5 bg-slate-50 border-b border-slate-200">
+                <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">{{ step.n }} Piraten</span>
+                <span class="text-sm font-medium text-slate-600">{{ step.pirates }}</span>
+            </div>
+            <div class="px-4 py-3">
+                <!-- Mini-Verteilung -->
+                <div class="flex gap-2 mb-2.5">
+                    {% for i in range(5) %}
+                    {% if step.proposal[i] is not none %}
+                    <div class="flex-1 text-center">
+                        <div class="text-xs text-slate-400 mb-1">P{{ i+1 }}</div>
+                        <div class="rounded-lg py-1.5 font-bold text-sm
+                            {% if step.proposal[i] == 0 %}bg-slate-100 text-slate-400
+                            {% elif step.proposal[i] >= 90 %}bg-amber-100 text-amber-700
+                            {% else %}bg-emerald-100 text-emerald-700{% endif %}">
+                            {{ step.proposal[i] }}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="flex-1 text-center opacity-30">
+                        <div class="text-xs text-slate-400 mb-1">P{{ i+1 }}</div>
+                        <div class="rounded-lg py-1.5 bg-slate-100 text-slate-400 text-sm font-bold">–</div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <p class="text-xs text-indigo-700 font-medium mb-1">🗳 {{ step.votes }}</p>
+                <p class="text-xs text-slate-500">{{ step.reasoning }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Kernlektion -->
+<div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+    <p class="font-semibold mb-1">Warum ist das so überraschend?</p>
+    <p class="mb-2">Intuitiv würde man erwarten, dass P1 vorsichtig sein muss und fair teilt – schließlich braucht er 2 weitere Stimmen. Aber durch die Rückwärtsinduktion weiß P1 <em>genau</em>, was die anderen Piraten in allen Szenarien bekommen würden.</p>
+    <p>P3 und P5 wissen: Wenn P1 über Bord geht und das Spiel mit P2 als Kapitän weiterläuft, bekommen sie <strong>0 Münzen</strong>. Also reicht P1 je eine einzige Münze, um ihre Ja-Stimme zu kaufen. Das macht P1 zur gierigsten, aber rationalen Lösung.</p>
+</div>
+
+<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-5 text-sm text-indigo-800">
+    <p class="font-semibold mb-1">Verhandlungsrelevanz:</p>
+    <p>Wer die BATNA (Best Alternative to a Negotiated Agreement) der anderen Partei kennt, braucht nur <em>einen Cent mehr</em> zu bieten. Rückwärtsinduktion ist das Werkzeug, um diese Alternativen zu berechnen – und Verhandlungsmacht systematisch zu nutzen.</p>
+</div>
+
+<div class="flex gap-3">
+    <a href="/raetsel/piraten" class="bg-amber-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-amber-700">
+        Nochmal
+    </a>
+    <a href="/lektionen" class="border border-indigo-200 text-indigo-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50">
+        Zur Lektion
+    </a>
+    <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+        Andere Rätsel
+    </a>
+</div>

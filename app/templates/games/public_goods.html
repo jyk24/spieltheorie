@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Öffentliche-Güter-Spiel – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🏛️ Öffentliche-Güter-Spiel</h1>
+        <p class="text-slate-500 mt-1">8 Runden – Wie viel trägst du bei? Die KI-Strategie ist verborgen.</p>
+    </div>
+
+    <div class="bg-teal-50 border border-teal-100 rounded-xl p-5 mb-6 text-sm text-teal-900">
+        <div class="font-semibold mb-1">Wie es funktioniert:</div>
+        <p>Du und die KI bekommen je <strong>{{ tokens_per_round }} Token</strong> pro Runde. Der Gemeinschaftstopf wird mit <strong>×1,6</strong> multipliziert und gleichmäßig aufgeteilt – egal wer wie viel beigetragen hat.</p>
+        <div class="mt-2">
+            <a href="/lektionen/oeffentliche-gueter-kollektivgut" class="underline hover:no-underline text-xs">Theorie: Öffentliche Güter & Trittbrettfahrer →</a>
+        </div>
+    </div>
+
+    <!-- Mystery-Start -->
+    <div id="start-form" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+        <input type="hidden" id="strategy-preset" value="{{ hidden_strategy }}">
+
+        <div class="flex items-start gap-4 mb-5">
+            <div class="text-5xl">🤖</div>
+            <div>
+                <h2 class="font-bold text-slate-800 text-lg">Unbekannter Mitspieler</h2>
+                <p class="text-slate-500 text-sm mt-1">Kooperiert die KI, fährt sie Trittbrett oder reagiert sie auf dein Verhalten? Finde es durch deine Einzahlungen heraus.</p>
+                <p class="text-slate-400 text-xs mt-2">Nach dem Spiel wird das Verhalten analysiert und erklärt.</p>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 rounded-lg p-3 text-xs text-slate-500 mb-5 flex gap-4">
+            <span>🔍 Erkenne das Muster</span>
+            <span>🏛️ Teste verschiedene Beiträge</span>
+            <span>📊 Lerne im Debrief</span>
+        </div>
+
+        <button type="button" onclick="startGame()"
+                class="bg-teal-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-teal-700 transition-colors">
+            Spiel starten
+        </button>
+    </div>
+
+    <!-- Spielfeld -->
+    <div id="play-area" class="hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+            <div class="flex justify-between items-center mb-5">
+                <div>
+                    <span class="text-sm text-slate-500">Runde</span>
+                    <span id="round-display" class="text-xl font-bold text-teal-600 ml-1">1</span>
+                    <span class="text-sm text-slate-500"> / {{ max_rounds }}</span>
+                </div>
+                <div class="flex gap-6 text-sm">
+                    <div class="text-center">
+                        <div class="text-xs text-slate-400">Du gesamt</div>
+                        <div id="player-total" class="text-lg font-bold text-teal-600">0</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs text-slate-400">KI gesamt</div>
+                        <div id="ai-total" class="text-lg font-bold text-slate-500">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-5">
+                <div class="text-sm font-medium text-slate-700 mb-1">Du hast {{ tokens_per_round }} Token. Wie viele zahlst du ein?</div>
+                <form hx-post="/spiele/public-goods/zug"
+                      hx-target="#result-area"
+                      hx-swap="innerHTML"
+                      id="move-form">
+                    <input type="hidden" name="strategy" id="strategy-hidden">
+                    <input type="hidden" name="history_json" id="history-hidden" value="[]">
+
+                    <div class="flex items-center gap-4 mb-4">
+                        <input type="range" name="contribution" id="contrib-slider"
+                               min="0" max="{{ tokens_per_round }}" value="5"
+                               class="flex-1 accent-teal-600"
+                               oninput="updateContrib(this.value)">
+                        <div class="text-2xl font-bold text-teal-600 w-12 text-right" id="contrib-display">5</div>
+                        <div class="text-sm text-slate-400">/ {{ tokens_per_round }}</div>
+                    </div>
+
+                    <div class="flex gap-2 mb-4">
+                        {% for val in [0, 2, 5, 7, 10] %}
+                        <button type="button" onclick="setContrib({{ val }})"
+                                class="flex-1 text-xs py-2 rounded-lg border border-slate-200 hover:border-teal-400 hover:bg-teal-50 transition-colors font-medium text-slate-600">
+                            {{ val }}
+                        </button>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit"
+                            class="w-full bg-teal-600 text-white py-3 rounded-xl font-bold hover:bg-teal-700 transition-colors">
+                        Einzahlen & Spielen
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="result-area"></div>
+    </div>
+</div>
+
+<script>
+function startGame() {
+    const strategy = document.getElementById('strategy-preset').value;
+    document.getElementById('strategy-hidden').value = strategy;
+    document.getElementById('start-form').classList.add('hidden');
+    document.getElementById('play-area').classList.remove('hidden');
+}
+
+function updateContrib(val) {
+    document.getElementById('contrib-display').textContent = val;
+}
+
+function setContrib(val) {
+    document.getElementById('contrib-slider').value = val;
+    document.getElementById('contrib-display').textContent = val;
+}
+
+document.body.addEventListener('htmx:afterSwap', function() {
+    const historyEl = document.getElementById('history-data');
+    const roundEl = document.getElementById('round-data');
+    const playerTotalEl = document.getElementById('player-total-data');
+    const aiTotalEl = document.getElementById('ai-total-data');
+
+    if (historyEl) document.getElementById('history-hidden').value = historyEl.dataset.value;
+    if (roundEl) document.getElementById('round-display').textContent = roundEl.dataset.value;
+    if (playerTotalEl) document.getElementById('player-total').textContent = playerTotalEl.dataset.value;
+    if (aiTotalEl) document.getElementById('ai-total').textContent = aiTotalEl.dataset.value;
+});
+</script>
+
+{% endblock %}

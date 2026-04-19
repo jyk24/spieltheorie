@@ -1,0 +1,107 @@
+<!-- Daten-Nodes für JS -->
+<span id="history-data" data-value="{{ history_json }}" class="hidden"></span>
+<span id="round-data" data-value="{{ history|length + 1 }}" class="hidden"></span>
+<span id="player-total-data" data-value="{{ history|sum(attribute='player_wins_round')|int }}" class="hidden"></span>
+
+{% if not is_final %}
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-3">
+    <div class="font-semibold text-slate-600 text-sm mb-3">Runde {{ round_result.round }} – Ergebnis</div>
+
+    <div class="bg-indigo-50 rounded-lg p-3 text-sm text-indigo-800 mb-3">
+        <div class="flex justify-between">
+            <span>Durchschnitt aller Ratenden:</span>
+            <span class="font-bold">{{ round_result.average }}</span>
+        </div>
+        <div class="flex justify-between mt-1">
+            <span>🎯 Ziel (2/3 des Durchschnitts):</span>
+            <span class="font-bold">{{ round_result.target }}</span>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 mb-3">
+        <div class="text-center p-3 rounded-lg {% if round_result.player_wins_round %}bg-emerald-50 border border-emerald-200{% else %}bg-slate-50 border border-slate-200{% endif %}">
+            <div class="text-xs text-slate-500 mb-1">Deine Rate</div>
+            <div class="text-2xl font-bold {% if round_result.player_wins_round %}text-emerald-700{% else %}text-slate-600{% endif %}">
+                {{ round_result.player_guess }}
+            </div>
+            <div class="text-xs mt-1 {% if round_result.player_wins_round %}text-emerald-600{% else %}text-slate-400{% endif %}">
+                Abstand: {{ round_result.player_distance }}
+                {% if round_result.player_wins_round %} 🏆{% endif %}
+            </div>
+        </div>
+        <div class="text-center p-3 rounded-lg bg-slate-50 border border-slate-200">
+            <div class="text-xs text-slate-500 mb-1">KI-Mitspieler</div>
+            <div class="text-sm font-mono text-slate-600 mt-1">
+                {% for g in round_result.ai_guesses %}
+                <span class="inline-block bg-slate-100 px-2 py-0.5 rounded text-xs mr-1">{{ g }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center text-sm {% if round_result.player_wins_round %}text-emerald-700 font-semibold{% else %}text-slate-500{% endif %}">
+        {% if round_result.player_wins_round %}
+        🏆 Du warst am nächsten – Runde gewonnen!
+        {% else %}
+        Die KI lag näher am Ziel ({{ round_result.target }}).
+        {% endif %}
+    </div>
+</div>
+
+<!-- Beobachtungshinweis nach Runde 3 -->
+{% if history|length == 3 %}
+<div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 mb-3">
+    🔍 <strong>Halbzeit:</strong> Schau dir die bisherigen Zielzahlen an. Was raten die KI-Spieler typischerweise? Erkennst du ein Muster – zufällig (~50), Level-1 (~33) oder Level-2 (~22)?
+</div>
+{% endif %}
+
+{% if history|length > 1 %}
+<div class="bg-slate-50 rounded-xl p-4 text-xs">
+    <div class="font-medium text-slate-500 mb-2 uppercase tracking-wide">Verlauf (Deine Rate / Ziel)</div>
+    <div class="flex flex-wrap gap-1">
+        {% for r in history %}
+        <span class="px-2 py-1 rounded {% if r.player_wins_round %}bg-emerald-200 text-emerald-800{% else %}bg-slate-200 text-slate-700{% endif %}">
+            R{{ r.round }}: {{ r.player_guess }} → {{ r.target }}
+        </span>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% else %}
+<span id="game-over" class="hidden"></span>
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <h3 class="text-xl font-bold text-slate-800 mb-4">
+        {% if final.result == 'win' %}🏆 Meistdenker!
+        {% elif final.result == 'loss' %}🧮 Die KI war öfter näher dran
+        {% else %}⚖️ Gleichstand{% endif %}
+    </h3>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5 text-center">
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <div class="text-xl font-bold text-indigo-600">{{ final.player_round_wins }}/{{ final.total_rounds }}</div>
+            <div class="text-xs text-slate-500 mt-1">Deine Rundensiege</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <div class="text-xl font-bold text-slate-600">{{ final.avg_player_guess }}</div>
+            <div class="text-xs text-slate-500 mt-1">Dein Ø-Einsatz</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <div class="text-xl font-bold text-amber-600">{{ final.avg_target }}</div>
+            <div class="text-xs text-slate-500 mt-1">Ø Zielzahl</div>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl">
+            <div class="text-xl font-bold text-slate-600">{{ final.avg_distance }}</div>
+            <div class="text-xs text-slate-500 mt-1">Dein Ø-Abstand</div>
+        </div>
+    </div>
+
+    <div class="flex gap-3 mb-2">
+        <a href="/spiele/beauty-contest" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal spielen
+        </a>
+    </div>
+
+    {% include "partials/strategy_debrief.html" %}
+</div>
+{% endif %}

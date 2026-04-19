@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Minderheitsspiel – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🔢 Minderheitsspiel</h1>
+        <p class="text-slate-500 mt-1">Wähle A oder B – wer in der Minderheit ist, gewinnt.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-2">Spielregeln (El Farol Problem):</p>
+        <ul class="space-y-1 text-slate-600 text-xs">
+            <li>→ 7 Spieler insgesamt: du + 6 KI-Bots. Jeder wählt unabhängig A oder B.</li>
+            <li>→ <strong>Wer in der Minderheit ist, gewinnt 3 Punkte.</strong></li>
+            <li>→ Bei Gleichstand (3,5 vs 3,5 ist nicht möglich bei 7 – aber 4 vs 3): Minderheit gewinnt trotzdem.</li>
+            <li>→ Wer in der Mehrheit ist, bekommt 0 Punkte.</li>
+            <li>→ Ziel: Sei öfter in der Minderheit als in der Mehrheit.</li>
+        </ul>
+        <div class="mt-3 p-2 bg-slate-100 rounded-lg text-xs text-slate-600">
+            Das Dilemma: Wenn alle Minderheit anstreben, werden sie zur Mehrheit. Koordination ohne Kommunikation.
+        </div>
+    </div>
+
+    <div id="spiel-area">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-2">Runde 1 von {{ max_rounds }}</p>
+            <p class="text-sm text-slate-500 mb-6">Wähle eine Gruppe – A oder B. Die KI-Bots entscheiden gleichzeitig.</p>
+
+            <form hx-post="/spiele/minderheit/zug"
+                  hx-target="#spiel-area"
+                  hx-swap="innerHTML"
+                  class="grid grid-cols-2 gap-4">
+                <input type="hidden" name="strategy" value="{{ hidden_strategy }}">
+                <input type="hidden" name="history_json" value="[]">
+
+                <button type="submit" name="choice" value="0"
+                        class="p-6 rounded-xl border-2 border-blue-200 bg-blue-50 hover:border-blue-400 hover:bg-blue-100 transition-all text-center">
+                    <div class="text-4xl mb-2">🅰️</div>
+                    <div class="font-bold text-blue-800 text-xl">Gruppe A</div>
+                    <div class="text-xs text-blue-600 mt-2">Wähle A und hoffe auf die Minderheit</div>
+                </button>
+
+                <button type="submit" name="choice" value="1"
+                        class="p-6 rounded-xl border-2 border-amber-200 bg-amber-50 hover:border-amber-400 hover:bg-amber-100 transition-all text-center">
+                    <div class="text-4xl mb-2">🅱️</div>
+                    <div class="font-bold text-amber-800 text-xl">Gruppe B</div>
+                    <div class="text-xs text-amber-600 mt-2">Wähle B und hoffe auf die Minderheit</div>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('htmx:afterSwap', function(evt) {
+    if (evt.target.id === 'spiel-area') {
+        const go = document.getElementById('game-over');
+        if (go) {
+            const area = document.getElementById('spiel-area');
+            if (area) area.classList.add('pointer-events-none', 'opacity-60');
+        }
+    }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% if strategy_info %}
+<div class="mt-6 border-t border-slate-100 pt-5">
+    <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">— Aufgelöst —</div>
+
+    <div class="bg-gradient-to-br from-indigo-50 to-slate-50 border border-indigo-100 rounded-xl p-5 mb-4">
+        <div class="flex items-center gap-3 mb-3">
+            <span class="text-3xl">{{ strategy_info.icon }}</span>
+            <div>
+                <div class="text-xs text-indigo-500 font-semibold uppercase tracking-wide">KI-Strategie war</div>
+                <div class="text-xl font-bold text-slate-800">{{ strategy_info.name }}</div>
+            </div>
+        </div>
+        <p class="text-sm text-slate-600 mb-3">{{ strategy_info.verhalten }}</p>
+        <div class="bg-white rounded-lg p-3 border border-indigo-100">
+            <div class="text-xs font-semibold text-indigo-600 mb-1">Optimale Gegenstrategie:</div>
+            <p class="text-sm text-slate-700">{{ strategy_info.gegencheck }}</p>
+        </div>
+    </div>
+
+    {% if player_analysis %}
+    <div class="bg-slate-50 rounded-xl p-4 mb-4 text-sm">
+        <div class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Dein Spielmuster</div>
+        <p class="text-slate-600">{{ player_analysis.pattern }}</p>
+        <div class="flex gap-4 mt-2 text-xs text-slate-500">
+            <span>Kooperationsrate: <strong class="text-slate-700">{{ player_analysis.coop_rate }}%</strong></span>
+            {% if player_analysis.first_defect %}
+            <span>Erster Verrat: <strong class="text-slate-700">Runde {{ player_analysis.first_defect }}</strong></span>
+            {% else %}
+            <span>Erster Verrat: <strong class="text-emerald-600">keiner</strong></span>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <a href="/lektionen/{{ strategy_info.lesson_slug }}"
+       class="inline-flex items-center gap-2 text-sm text-indigo-600 border border-indigo-200 px-4 py-2 rounded-lg hover:bg-indigo-50 transition-colors">
+        📖 {{ strategy_info.lesson_title }} lesen →
+    </a>
+</div>
+{% endif %}

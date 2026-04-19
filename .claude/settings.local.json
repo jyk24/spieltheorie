@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"from app.game_engine import chicken_play_round, chicken_final_result, public_goods_play_round, public_goods_final_result; h = [chicken_play_round\\('H', 'aggressive', []\\) for _ in range\\(8\\)]; print\\('Chicken:', chicken_final_result\\(h\\)\\); pg = [public_goods_play_round\\(7, 'cooperative', []\\) for _ in range\\(8\\)]; print\\('PG:', public_goods_final_result\\(pg\\)\\); print\\('OK'\\)\")",
+      "Bash(python -c ':*)",
+      "Bash(python -c \"import app.routers.spiele; print\\('spiele.py: OK'\\)\")",
+      "Bash(python -c \"import app.seed; print\\('seed.py: OK'\\)\")",
+      "Bash(python -c \"import json; data=json.load\\(open\\('e:/User/Documents/Apps/Spieltheorie/data/lektionen.json', encoding='utf-8'\\)\\); print\\(len\\(data\\), 'lektionen'\\); [print\\(f\\\\\"{l['order_index']}: {l['slug']}\\\\\"\\) for l in sorted\\(data, key=lambda x: x['order_index']\\)]\")",
+      "Bash(python -c \"import json; data=json.load\\(open\\('e:/User/Documents/Apps/Spieltheorie/data/lektionen.json', encoding='utf-8'\\)\\); print\\(json.dumps\\(data[-1], ensure_ascii=False, indent=2\\)[:200]\\)\")",
+      "Bash(python add_lessons.py)",
+      "Bash(python -c \"from app.game_engine import beauty_contest_play_round, stag_play_round, centipede_process_turn, CENTIPEDE_NODES; print\\('game_engine OK'\\); print\\('Nodes:', len\\(CENTIPEDE_NODES\\)\\)\")",
+      "Bash(python -c \"from app.routers.spiele import router; print\\('spiele router OK'\\)\")",
+      "Bash(python -c \"from app.main import app; print\\('App OK'\\)\")",
+      "Bash(python -c \"from app.main import app; print\\('OK'\\)\")",
+      "Bash(grep -l \"game-over\" app/templates/partials/*_result.html)",
+      "Bash(netstat -ano)",
+      "Bash(python -m uvicorn app.main:app --port 8000 --host 127.0.0.1)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8000/)",
+      "Bash(python -c \"from app.main import app; print\\('Import OK'\\)\")",
+      "Bash(taskkill //F //IM python.exe)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:8000/spiele/rps/zug -d 'move=S&strategy=nash_mixed&history_json=%5B%5D')",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:8000/spiele/koordination/zug -d 'move=A&strategy=stubborn&history_json=%5B%5D')",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:8000/spiele/auktion/zug -d 'player_bid=60&player_value=65&strategy=truthful&round_num=1&history_json=%5B%5D')",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:8000/raetsel/st-petersburg/result -d wtp=25)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:8000/raetsel/reisenden-dilemma/result -d claim=90)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST http://127.0.0.1:8000/raetsel/newcomb/result -d \"choice=b_only\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST http://127.0.0.1:8000/raetsel/newcomb/result -d \"choice=both\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST http://127.0.0.1:8000/raetsel/simpson/result -d \"choice=A\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST http://127.0.0.1:8000/raetsel/simpson/result -d \"choice=B\")",
+      "Bash(curl -s http://127.0.0.1:8000/raetsel)",
+      "Bash(curl -s http://127.0.0.1:8000/spiele)",
+      "Bash(curl -s http://127.0.0.1:8000/grundlagen)"
+    ]
+  }
+}

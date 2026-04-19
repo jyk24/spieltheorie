@@ -8,18 +8,19 @@ from .models import Lesson, UserProgress
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 
-GAME_TYPES = ["gefangenendilemma", "ultimatum", "vertrauen", "verhandlung"]
+GAME_TYPES = ["gefangenendilemma", "ultimatum", "vertrauen", "verhandlung", "chicken", "public_goods", "beauty_contest", "stag_hunt", "centipede", "rps", "koordination", "auktion", "diktator", "dollarauktion", "minderheit"]
 
 
 def seed_lessons(db: Session) -> None:
-    """Lektionen aus lektionen.json in die DB laden (nur wenn noch nicht vorhanden)."""
-    if db.query(Lesson).count() > 0:
-        return
-
+    """Lektionen aus lektionen.json laden – fehlende Einträge werden ergänzt."""
     with open(DATA_DIR / "lektionen.json", encoding="utf-8") as f:
         lessons = json.load(f)
 
+    existing_slugs = {slug for (slug,) in db.query(Lesson.slug).all()}
+    added = 0
     for item in lessons:
+        if item["slug"] in existing_slugs:
+            continue
         lesson = Lesson(
             slug=item["slug"],
             title=item["title"],
@@ -31,8 +32,10 @@ def seed_lessons(db: Session) -> None:
             order_index=item["order_index"],
         )
         db.add(lesson)
+        added += 1
 
-    db.commit()
+    if added:
+        db.commit()
 
 
 def seed_progress(db: Session) -> None:

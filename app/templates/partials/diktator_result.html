@@ -1,0 +1,205 @@
+{% set round = round_result %}
+{% set is_player_dictator = round.player_is_dictator %}
+{% set current_round = round.round %}
+
+<!-- Rundenauswertung -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-3">
+    <div class="flex justify-between items-start mb-3">
+        <div>
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                Runde {{ current_round }} von 8
+            </span>
+            <p class="font-semibold text-slate-800 mt-0.5">
+                {% if is_player_dictator %}Du warst Diktator{% else %}KI war Diktator{% endif %}
+            </p>
+        </div>
+        <div class="text-right">
+            <div class="text-xs text-slate-500">Gesamt</div>
+            <div class="text-lg font-bold text-indigo-700">Du: {{ round.player_total }}</div>
+            <div class="text-xs text-slate-500">KI: {{ round.ai_total }}</div>
+        </div>
+    </div>
+
+    {% if is_player_dictator %}
+    <div class="grid grid-cols-2 gap-3">
+        <div class="bg-emerald-50 rounded-lg p-3 text-center">
+            <div class="text-xs text-emerald-700 mb-1">Du behältst</div>
+            <div class="text-2xl font-black text-emerald-800">{{ round.player_score }}</div>
+        </div>
+        <div class="bg-slate-50 rounded-lg p-3 text-center">
+            <div class="text-xs text-slate-600 mb-1">KI bekommt</div>
+            <div class="text-2xl font-black text-slate-700">{{ round.ai_score }}</div>
+        </div>
+    </div>
+    {% else %}
+    <div class="grid grid-cols-2 gap-3">
+        <div class="bg-blue-50 rounded-lg p-3 text-center">
+            <div class="text-xs text-blue-700 mb-1">Du bekommst</div>
+            <div class="text-2xl font-black text-blue-800">{{ round.player_score }}</div>
+        </div>
+        <div class="bg-emerald-50 rounded-lg p-3 text-center">
+            <div class="text-xs text-emerald-700 mb-1">KI behält</div>
+            <div class="text-2xl font-black text-emerald-800">{{ round.ai_score }}</div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% if not is_final %}
+
+<!-- Nächste Runde -->
+{% set next_round = current_round + 1 %}
+{% set next_is_player_dictator = next_round <= 4 %}
+
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+    {% if next_is_player_dictator %}
+    <p class="font-semibold text-slate-800 mb-1">Runde {{ next_round }} – Du bist Diktator</p>
+    <p class="text-sm text-slate-500 mb-4">Wie viel von 100 gibst du der KI?</p>
+
+    <form hx-post="/spiele/diktator/zug"
+          hx-target="#spiel-area"
+          hx-swap="innerHTML"
+          class="space-y-4">
+        <input type="hidden" name="strategy" value="{{ strategy }}">
+        <input type="hidden" name="history_json" value="{{ history_json }}">
+
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-2">
+                KI bekommt: <span id="offer-display-{{ next_round }}" class="font-bold text-indigo-700">50</span> Punkte
+                → Du behältst: <span id="keep-display-{{ next_round }}" class="font-bold text-emerald-700">50</span> Punkte
+            </label>
+            <input type="range" min="0" max="100" value="50" step="5"
+                   name="player_offer"
+                   id="offer-slider-{{ next_round }}"
+                   class="w-full accent-indigo-600"
+                   oninput="updateOffer{{ next_round }}(this.value)">
+        </div>
+
+        <script>
+        function updateOffer{{ next_round }}(val) {
+            document.getElementById('offer-display-{{ next_round }}').textContent = val;
+            document.getElementById('keep-display-{{ next_round }}').textContent = 100 - val;
+        }
+        </script>
+
+        <button type="submit"
+                class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
+            Angebot abgeben →
+        </button>
+    </form>
+
+    {% else %}
+    <p class="font-semibold text-slate-800 mb-1">Runde {{ next_round }} – KI ist Diktator</p>
+    <p class="text-sm text-slate-500 mb-4">Die KI entscheidet jetzt, wie viel du bekommst.</p>
+
+    <form hx-post="/spiele/diktator/zug"
+          hx-target="#spiel-area"
+          hx-swap="innerHTML">
+        <input type="hidden" name="strategy" value="{{ strategy }}">
+        <input type="hidden" name="history_json" value="{{ history_json }}">
+        <input type="hidden" name="player_offer" value="0">
+
+        <button type="submit"
+                class="w-full bg-slate-700 text-white py-3 rounded-xl font-semibold hover:bg-slate-800 transition-colors">
+            KI-Entscheidung ansehen →
+        </button>
+    </form>
+    {% endif %}
+</div>
+
+{% else %}
+
+<!-- Finales Ergebnis -->
+<span id="game-over" class="hidden"></span>
+
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    {% if final.generosity == "sehr_großzügig" %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">Sehr großzügig! Ø {{ final.avg_offer }}% abgegeben.</h3>
+        <p class="text-sm text-emerald-700">Du hast mehr als erwartet gegeben. Studien zeigen: viele Menschen geben auch ohne Drohung freiwillig ~20–40 %. Du bist deutlich darüber.</p>
+    </div>
+    {% elif final.generosity == "fair" %}
+    <div class="mb-5 p-4 rounded-xl bg-blue-50 border-2 border-blue-300">
+        <h3 class="text-xl font-bold text-blue-800 mb-1">Fair gespielt! Ø {{ final.avg_offer }}% abgegeben.</h3>
+        <p class="text-sm text-blue-700">Du hast nahe an 50/50 geteilt – das soziale Fairnessnorm. Im Labor tun das ca. 30 % der Probanden.</p>
+    </div>
+    {% elif final.generosity == "leicht_egoistisch" %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-xl font-bold text-amber-800 mb-1">Leicht egoistisch. Ø {{ final.avg_offer }}% abgegeben.</h3>
+        <p class="text-sm text-amber-700">Du hast mehr behalten als abgegeben – aber noch immer mehr als das spieltheoretische Minimum (0 %). Das ist der typische Bereich in echten Experimenten.</p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-slate-50 border-2 border-slate-300">
+        <h3 class="text-xl font-bold text-slate-800 mb-1">Sehr egoistisch. Ø {{ final.avg_offer }}% abgegeben.</h3>
+        <p class="text-sm text-slate-600">Du hast fast nichts abgegeben – das ist die spieltheoretisch "rationale" Antwort (der Empfänger kann nicht ablehnen). Nur ~5 % der Probanden geben tatsächlich 0.</p>
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-2 gap-4 mb-5">
+        <div class="bg-indigo-50 rounded-xl p-4 text-center">
+            <div class="text-xs text-indigo-600 mb-1 font-medium">Dein Gesamtscore</div>
+            <div class="text-3xl font-black text-indigo-800">{{ final.player_total }}</div>
+            <div class="text-xs text-indigo-600 mt-1">Punkte</div>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-4 text-center">
+            <div class="text-xs text-slate-600 mb-1 font-medium">KI-Gesamtscore</div>
+            <div class="text-3xl font-black text-slate-700">{{ final.ai_total }}</div>
+            <div class="text-xs text-slate-500 mt-1">Punkte</div>
+        </div>
+    </div>
+
+    <!-- Rundenhistorie -->
+    <div class="mb-5 overflow-x-auto">
+        <table class="w-full text-xs">
+            <thead>
+                <tr class="text-slate-500 border-b border-slate-100">
+                    <th class="text-left pb-2">Runde</th>
+                    <th class="text-left pb-2">Rolle</th>
+                    <th class="text-right pb-2">Abgabe</th>
+                    <th class="text-right pb-2">Du</th>
+                    <th class="text-right pb-2">KI</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in history %}
+                <tr class="border-b border-slate-50">
+                    <td class="py-1 text-slate-600">{{ r.round }}</td>
+                    <td class="py-1 text-slate-600">{% if r.player_is_dictator %}Du (Diktator){% else %}KI (Diktator){% endif %}</td>
+                    <td class="py-1 text-right text-slate-600">
+                        {% if r.player_is_dictator %}{{ r.ai_score }}{% else %}{{ r.player_score }}{% endif %}
+                    </td>
+                    <td class="py-1 text-right font-medium text-indigo-700">{{ r.player_score }}</td>
+                    <td class="py-1 text-right text-slate-600">{{ r.ai_score }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-800">
+        <p class="font-semibold mb-2">Das Diktatorexperiment (Forsythe et al. 1994):</p>
+        <p class="mb-1">Im spieltheoretischen Modell sollte ein rational-egoistischer Diktator <strong>0 abgeben</strong> – die andere Seite kann nicht ablehnen. Tatsächlich geben Probanden im Schnitt <strong>20–30 %</strong>.</p>
+        <p class="text-xs">Das widerlegt den reinen homo oeconomicus. Menschen haben <em>soziale Präferenzen</em>: Fairness-Normen, Altruismus oder Sorge um Reputation.</p>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+        <p class="font-semibold mb-1">Verhandlungsrelevanz:</p>
+        <p>Auch in echten Verhandlungen haben Menschen Machtpositionen, die sie nicht ausschöpfen. Wer immer das Maximum herausquetscht, beschädigt die Beziehung – selbst wenn das Gegenüber formal nicht ablehnen kann. Fairness hat einen strategischen Wert jenseits der Spieltheorie.</p>
+    </div>
+
+    {% if strategy_info %}
+    {% include "partials/strategy_debrief.html" %}
+    {% endif %}
+
+    <div class="flex gap-3">
+        <a href="/spiele/diktator" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/spiele" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Spiele
+        </a>
+    </div>
+</div>
+
+{% endif %}

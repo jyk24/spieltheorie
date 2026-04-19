@@ -1,0 +1,61 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    <!-- Reaktion -->
+    {% if reaction == 'sehr_niedrig' %}
+    <div class="mb-5 p-4 rounded-xl bg-blue-50 border-2 border-blue-300">
+        <h3 class="text-xl font-bold text-blue-800 mb-1">Sehr vorsichtig! Du bist bei {{ wtp }}€ – wie die meisten.</h3>
+        <p class="text-sm text-blue-700">Das ist überraschend vernünftig – auch wenn der theoretische Erwartungswert unendlich ist.</p>
+    </div>
+    {% elif reaction == 'typisch' %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">Typisch! {{ wtp }}€ – genau im Bereich der meisten Studienteilnehmer.</h3>
+        <p class="text-sm text-emerald-700">Experimente zeigen: Menschen zahlen im Schnitt 10–30€, obwohl der Erwartungswert unendlich ist.</p>
+    </div>
+    {% elif reaction == 'hoch' %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-xl font-bold text-amber-800 mb-1">Mutig! {{ wtp }}€ – deutlich über dem Durchschnitt.</h3>
+        <p class="text-sm text-amber-700">Du bewertest seltene große Gewinne höher als die meisten. Der Erwartungswert rechtfertigt es – in der Theorie.</p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-violet-50 border-2 border-violet-300">
+        <h3 class="text-xl font-bold text-violet-800 mb-1">Extrem! {{ wtp }}€ – fast niemand zahlt so viel.</h3>
+        <p class="text-sm text-violet-700">Du folgst wirklich dem mathematischen Erwartungswert. In der Praxis würde kein Kasino das anbieten – und du könntest nie so viel verlieren.</p>
+    </div>
+    {% endif %}
+
+    <!-- Das Paradox -->
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+        <p class="font-semibold mb-2">Warum ist der Erwartungswert unendlich?</p>
+        <div class="bg-white rounded-lg p-3 font-mono text-xs mb-3 space-y-1">
+            <div>P(Kopf bei Wurf 1) = ½  →  Gewinn 2€    →  Beitrag: 1€</div>
+            <div>P(Kopf bei Wurf 2) = ¼  →  Gewinn 4€    →  Beitrag: 1€</div>
+            <div>P(Kopf bei Wurf 3) = ⅛  →  Gewinn 8€    →  Beitrag: 1€</div>
+            <div>P(Kopf bei Wurf n) = ½ⁿ →  Gewinn 2ⁿ€  →  Beitrag: 1€</div>
+            <div class="border-t border-slate-200 pt-1 font-bold">E = 1 + 1 + 1 + ... = ∞</div>
+        </div>
+        <p>In der Praxis: Bis zu 10 Würfen liegt der Erwartungswert bei <strong>{{ ev_10 }}€</strong>,
+        bis zu 20 Würfen bei <strong>{{ ev_20 }}€</strong>. Die unendliche Summe kommt von immer unwahrscheinlicheren, immer größeren Gewinnen.</p>
+    </div>
+
+    <!-- Bernoulli-Erklärung -->
+    <div class="bg-slate-50 rounded-xl p-4 mb-4 text-sm text-slate-600">
+        <p class="font-semibold text-slate-700 mb-2">Daniels Bernoullis Lösung (1738): Logarithmischer Nutzen</p>
+        <p class="mb-2">Bernoulli erkannte: Menschen maximieren nicht den <em>Erwartungswert</em>, sondern den <em>Erwartungsnutzen</em>. Nutzen wächst logarithmisch mit dem Reichtum:</p>
+        <p class="bg-white rounded p-2 font-mono text-xs mb-2">U(W) = log(W)</p>
+        <p>Mit logarithmischem Nutzen ergibt sich ein endlicher fairer Preis: etwa <strong>{{ log_utility_price }}€</strong> für deinen angegebenen Wert. Das liegt näher an deiner Intuition – und an der Realität.</p>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+        <p class="font-semibold mb-1">Verhandlungsrelevanz:</p>
+        <p>Der St. Petersburger Beweis ist der Grundstein der modernen Nutzenfunktionstheorie. In Verhandlungen: Menschen sind <strong>risikoavers</strong> – ein sicherer kleinerer Betrag wird einem unsicheren größeren Erwartungswert oft vorgezogen. Gute Verhandler bieten daher sichere Lösungen an, auch wenn der Erwartungswert der Alternative höher wäre.</p>
+    </div>
+
+    <div class="flex gap-3">
+        <a href="/raetsel/st-petersburg" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>

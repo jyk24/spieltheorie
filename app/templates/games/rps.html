@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Schere-Stein-Papier – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">✂️ Schere-Stein-Papier</h1>
+        <p class="text-slate-500 mt-1">7 Runden – das klassische Nullsummenspiel und seine spieltheoretische Lösung.</p>
+    </div>
+
+    <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-5 mb-6 text-sm text-indigo-900">
+        <div class="font-semibold mb-2">Das Nash-Gleichgewicht:</div>
+        <p class="mb-2">In gemischten Strategien: Spiele jede Option mit exakt <strong>1/3 Wahrscheinlichkeit</strong>. Jede andere Verteilung ist ausnutzbar.</p>
+        <p class="text-xs text-indigo-700">Menschen sind keine guten Zufallsgeneratoren – sie zeigen Muster. Die KI könnte genau das ausnutzen.</p>
+        <div class="mt-2 text-xs">
+            <a href="/lektionen/gemischte-strategien" class="underline hover:no-underline">Theorie: Gemischte Strategien →</a>
+        </div>
+    </div>
+
+    <!-- Mystery-Start -->
+    <div id="start-form" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+        <input type="hidden" id="strategy-preset" value="{{ hidden_strategy }}">
+        <div class="flex items-start gap-4 mb-5">
+            <div class="text-5xl">🤖</div>
+            <div>
+                <h2 class="font-bold text-slate-800 text-lg">Unbekannter Gegner</h2>
+                <p class="text-slate-500 text-sm mt-1">Spielt die KI wirklich zufällig – oder hat sie ein System? Erkennst du das Muster, bevor es dich erkennt?</p>
+                <p class="text-slate-400 text-xs mt-2">Die Strategie wird im Debrief aufgedeckt.</p>
+            </div>
+        </div>
+        <button type="button" onclick="startGame()"
+                class="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+            Spiel beginnen
+        </button>
+    </div>
+
+    <!-- Spielfeld -->
+    <div id="play-area" class="hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <span class="text-sm text-slate-500">Runde</span>
+                    <span id="round-display" class="text-xl font-bold text-indigo-600 ml-1">1</span>
+                    <span class="text-sm text-slate-500"> / {{ max_rounds }}</span>
+                </div>
+                <div class="flex gap-6 text-sm">
+                    <div class="text-center">
+                        <div class="text-xs text-slate-400">Du</div>
+                        <div id="player-score" class="text-lg font-bold text-indigo-600">0</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs text-slate-400">KI</div>
+                        <div id="ai-score" class="text-lg font-bold text-slate-500">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center text-slate-500 text-sm mb-5 italic">Dein Zug:</div>
+
+            <form hx-post="/spiele/rps/zug"
+                  hx-target="#result-area"
+                  hx-swap="innerHTML"
+                  id="move-form"
+                  class="grid grid-cols-3 gap-3">
+                <input type="hidden" name="strategy" id="strategy-hidden">
+                <input type="hidden" name="history_json" id="history-hidden" value="[]">
+
+                <button type="submit" name="move" value="S"
+                        class="bg-red-50 hover:bg-red-100 border-2 border-red-200 hover:border-red-400 text-red-700 py-8 rounded-xl font-bold text-xl transition-all">
+                    ✂️
+                    <div class="text-sm font-semibold mt-1">Schere</div>
+                    <div class="text-xs font-normal opacity-70 mt-0.5">schlägt Papier</div>
+                </button>
+                <button type="submit" name="move" value="T"
+                        class="bg-slate-50 hover:bg-slate-100 border-2 border-slate-200 hover:border-slate-400 text-slate-700 py-8 rounded-xl font-bold text-xl transition-all">
+                    🪨
+                    <div class="text-sm font-semibold mt-1">Stein</div>
+                    <div class="text-xs font-normal opacity-70 mt-0.5">schlägt Schere</div>
+                </button>
+                <button type="submit" name="move" value="P"
+                        class="bg-blue-50 hover:bg-blue-100 border-2 border-blue-200 hover:border-blue-400 text-blue-700 py-8 rounded-xl font-bold text-xl transition-all">
+                    📄
+                    <div class="text-sm font-semibold mt-1">Papier</div>
+                    <div class="text-xs font-normal opacity-70 mt-0.5">schlägt Stein</div>
+                </button>
+            </form>
+        </div>
+
+        <div id="result-area"></div>
+    </div>
+</div>
+
+<script>
+function startGame() {
+    document.getElementById('strategy-hidden').value = document.getElementById('strategy-preset').value;
+    document.getElementById('start-form').classList.add('hidden');
+    document.getElementById('play-area').classList.remove('hidden');
+}
+
+document.body.addEventListener('htmx:afterSwap', function() {
+    const h = document.getElementById('history-data');
+    const r = document.getElementById('round-data');
+    const ps = document.getElementById('player-score-data');
+    const as = document.getElementById('ai-score-data');
+    if (h) document.getElementById('history-hidden').value = h.dataset.value;
+    if (r) document.getElementById('round-display').textContent = r.dataset.value;
+    if (ps) document.getElementById('player-score').textContent = ps.dataset.value;
+    if (as) document.getElementById('ai-score').textContent = as.dataset.value;
+});
+</script>
+
+{% endblock %}

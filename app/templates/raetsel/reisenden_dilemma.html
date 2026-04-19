@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Reisenden-Dilemma – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🧳 Reisenden-Dilemma</h1>
+        <p class="text-slate-500 mt-1">Nash-Gleichgewicht: 2. Aber fast alle spielen 95+ – und verdienen mehr.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Situation:</p>
+        <p class="mb-3">Zwei Reisende kehren aus dem Urlaub zurück. Beide haben dasselbe antike Objekt gekauft. Der Koffer geht verloren – die Fluggesellschaft muss zahlen. Beide Reisende müssen <strong>unabhängig</strong> einen Wert zwischen 2 und 100 angeben.</p>
+        <div class="bg-white rounded-lg p-3 border border-slate-200 mb-3 text-xs space-y-1.5">
+            <div><strong>Niedrigerer Wert (L) gewinnt:</strong> Beide erhalten L</div>
+            <div><strong>Bonus:</strong> Wer den niedrigeren Wert angab, bekommt L + 2€ extra</div>
+            <div><strong>Malus:</strong> Wer den höheren Wert angab, bekommt L − 2€</div>
+            <div><strong>Unentschieden:</strong> Beide erhalten ihren Wert</div>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs">
+            <strong>Beispiel:</strong> Du sagst 80, Gegner sagt 60 → Du bekommst 58€, Gegner bekommt 62€.
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="spiel-area">
+        <p class="font-semibold text-slate-800 mb-1">Deine Angabe:</p>
+        <p class="text-sm text-slate-500 mb-5">Was gibst du an – wissend, dass dein Gegner genauso rational denkt wie du?</p>
+
+        <form hx-post="/raetsel/reisenden-dilemma/result"
+              hx-target="#spiel-area"
+              hx-swap="innerHTML">
+
+            <div class="mb-5">
+                <div class="flex items-center gap-4 mb-3">
+                    <input type="number" name="claim" id="claim-input"
+                           min="2" max="100" value="80" required
+                           oninput="updateClaimSlider()"
+                           class="w-28 border-2 border-slate-200 rounded-lg px-4 py-3 text-2xl font-bold text-center focus:outline-none focus:border-indigo-400">
+                    <span class="text-slate-500 font-medium">€</span>
+                    <span id="claim-label" class="text-sm text-slate-400"></span>
+                </div>
+
+                <input type="range" id="claim-slider" min="2" max="100" value="80"
+                       oninput="document.getElementById('claim-input').value=this.value; updateClaimSlider()"
+                       class="w-full accent-indigo-600">
+                <div class="flex justify-between text-xs text-slate-400 mt-1">
+                    <span>2 (Nash)</span><span>25</span><span>50</span><span>75</span><span>100</span>
+                </div>
+
+                <div class="flex gap-2 mt-4 flex-wrap">
+                    {% for val in [2, 25, 50, 75, 90, 97, 100] %}
+                    <button type="button" onclick="setClaim({{ val }})"
+                            class="text-xs px-3 py-1.5 border border-slate-200 rounded-full text-slate-500 hover:border-indigo-400 hover:text-indigo-600">
+                        {{ val }}
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button type="submit"
+                    class="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                Auflösung →
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+function updateClaimSlider() {
+    const v = parseInt(document.getElementById('claim-input').value) || 2;
+    document.getElementById('claim-slider').value = v;
+    const label = document.getElementById('claim-label');
+    if (v === 2) label.textContent = '= Nash-Gleichgewicht';
+    else if (v >= 90) label.textContent = '← typische menschliche Wahl';
+    else label.textContent = '';
+}
+function setClaim(v) {
+    document.getElementById('claim-input').value = v;
+    document.getElementById('claim-slider').value = v;
+    updateClaimSlider();
+}
+updateClaimSlider();
+</script>
+
+{% endblock %}

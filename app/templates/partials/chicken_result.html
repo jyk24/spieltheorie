@@ -1,0 +1,110 @@
+<!-- Daten-Nodes für JS -->
+<span id="history-data" data-value="{{ history_json }}" class="hidden"></span>
+<span id="round-data" data-value="{{ history|length + 1 }}" class="hidden"></span>
+<span id="player-total-data" data-value="{{ history|sum(attribute='player_score') }}" class="hidden"></span>
+<span id="ai-total-data" data-value="{{ history|sum(attribute='ai_score') }}" class="hidden"></span>
+
+{% if not is_final %}
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-3">
+    <div class="font-semibold text-slate-600 text-sm mb-3">Runde {{ round_result.round }} – Ergebnis</div>
+
+    {% if round_result.player == 'H' and round_result.ai == 'H' %}
+    <div class="bg-red-50 border border-red-200 rounded-lg p-3 text-center mb-3">
+        <div class="text-2xl mb-1">💥</div>
+        <div class="font-bold text-red-700">Crash! Beide haben gehalten.</div>
+    </div>
+    {% elif round_result.player == 'H' and round_result.ai == 'S' %}
+    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-center mb-3">
+        <div class="text-2xl mb-1">🏆</div>
+        <div class="font-bold text-emerald-700">Du hast Nerven bewiesen – KI ist ausgewichen!</div>
+    </div>
+    {% elif round_result.player == 'S' and round_result.ai == 'H' %}
+    <div class="bg-orange-50 border border-orange-200 rounded-lg p-3 text-center mb-3">
+        <div class="text-2xl mb-1">😮</div>
+        <div class="font-bold text-orange-700">Du bist ausgewichen – KI hat gehalten.</div>
+    </div>
+    {% else %}
+    <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center mb-3">
+        <div class="text-2xl mb-1">🤝</div>
+        <div class="font-bold text-slate-700">Beide ausgewichen – kleines Plus für beide.</div>
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-2 gap-4">
+        <div class="text-center p-3 rounded-lg {% if round_result.player == 'H' %}bg-red-50 border border-red-200{% else %}bg-slate-50 border border-slate-200{% endif %}">
+            <div class="text-xs text-slate-500 mb-1">Du</div>
+            <div class="font-bold {% if round_result.player == 'H' %}text-red-700{% else %}text-slate-600{% endif %}">{{ round_result.player_label }}</div>
+            <div class="text-xl font-bold mt-1 {% if round_result.player_score > 0 %}text-emerald-600{% elif round_result.player_score < 0 %}text-red-600{% else %}text-slate-600{% endif %}">
+                {{ '%+d' | format(round_result.player_score) }}
+            </div>
+        </div>
+        <div class="text-center p-3 rounded-lg {% if round_result.ai == 'H' %}bg-red-50 border border-red-200{% else %}bg-slate-50 border border-slate-200{% endif %}">
+            <div class="text-xs text-slate-500 mb-1">KI</div>
+            <div class="font-bold {% if round_result.ai == 'H' %}text-red-700{% else %}text-slate-600{% endif %}">{{ round_result.ai_label }}</div>
+            <div class="text-xl font-bold mt-1 {% if round_result.ai_score > 0 %}text-emerald-600{% elif round_result.ai_score < 0 %}text-red-600{% else %}text-slate-600{% endif %}">
+                {{ '%+d' | format(round_result.ai_score) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Beobachtungshinweis nach Runde 4 -->
+{% if history|length == 4 %}
+<div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 mb-3">
+    🔍 <strong>Halbzeit:</strong> Hält die KI immer? Weicht sie aus? Oder folgt sie deinem Muster? Nutze diese Beobachtung für die nächsten Runden – Commitment oder Flexibilität?
+</div>
+{% endif %}
+
+{% if history|length > 1 %}
+<div class="bg-slate-50 rounded-xl p-4 text-xs">
+    <div class="font-medium text-slate-500 mb-2 uppercase tracking-wide">Verlauf</div>
+    <div class="flex flex-wrap gap-1">
+        {% for r in history %}
+        <span class="px-2 py-1 rounded
+            {% if r.player == 'H' and r.ai == 'H' %}bg-red-200 text-red-800
+            {% elif r.player == 'H' %}bg-emerald-200 text-emerald-800
+            {% elif r.ai == 'H' %}bg-orange-200 text-orange-800
+            {% else %}bg-slate-200 text-slate-700{% endif %}">
+            R{{ r.round }}: {{ 'H' if r.player == 'H' else 'A' }}/{{ 'H' if r.ai == 'H' else 'A' }}
+        </span>
+        {% endfor %}
+    </div>
+    <div class="text-slate-400 mt-1">H = Halten, A = Ausweichen (Du / KI)</div>
+</div>
+{% endif %}
+
+{% else %}
+<span id="game-over" class="hidden"></span>
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <h3 class="text-xl font-bold text-slate-800 mb-4">
+        {% if final.result == 'win' %}🏆 Du hast gewonnen!
+        {% elif final.result == 'loss' %}😔 KI hat gewonnen
+        {% else %}🤝 Unentschieden{% endif %}
+    </h3>
+
+    <div class="grid grid-cols-3 gap-4 mb-5">
+        <div class="text-center p-4 bg-slate-50 rounded-xl">
+            <div class="text-2xl font-bold {% if final.player_total > 0 %}text-emerald-600{% elif final.player_total < 0 %}text-red-600{% else %}text-indigo-600{% endif %}">
+                {{ '%+d' | format(final.player_total) }}
+            </div>
+            <div class="text-xs text-slate-500 mt-1">Deine Punkte</div>
+        </div>
+        <div class="text-center p-4 bg-slate-50 rounded-xl">
+            <div class="text-2xl font-bold text-slate-600">{{ '%+d' | format(final.ai_total) }}</div>
+            <div class="text-xs text-slate-500 mt-1">KI-Punkte</div>
+        </div>
+        <div class="text-center p-4 bg-slate-50 rounded-xl">
+            <div class="text-2xl font-bold text-red-600">{{ final.crashes }}×</div>
+            <div class="text-xs text-slate-500 mt-1">Crashes</div>
+        </div>
+    </div>
+
+    <div class="flex gap-3 mb-2">
+        <a href="/spiele/chicken" class="bg-amber-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-amber-700">
+            Nochmal spielen
+        </a>
+    </div>
+
+    {% include "partials/strategy_debrief.html" %}
+</div>
+{% endif %}

@@ -1,0 +1,96 @@
+<!-- State für JS -->
+<span id="history-data" class="hidden" data-value="{{ history_json }}"></span>
+<span id="round-data" class="hidden" data-value="{{ history|length + 1 }}"></span>
+<span id="player-total-data" class="hidden" data-value="{{ round_result.player_total }}"></span>
+<span id="ai-total-data" class="hidden" data-value="{{ round_result.ai_total }}"></span>
+
+<!-- Rundenresultat -->
+<div class="bg-white rounded-xl border border-slate-100 p-5 mb-3">
+    <div class="flex items-center justify-center gap-8 mb-4">
+        <div class="text-center">
+            <div class="text-4xl mb-1">{% if round_result.player == 'A' %}🎵{% else %}⚽{% endif %}</div>
+            <div class="font-semibold text-slate-700">{% if round_result.player == 'A' %}Konzert{% else %}Sport{% endif %}</div>
+            <div class="text-xs text-slate-400">Du</div>
+        </div>
+
+        <div class="text-center">
+            {% if round_result.coordinated %}
+            <div class="text-2xl font-black text-emerald-600">KOORDINIERT</div>
+            <div class="text-sm text-emerald-500">+{{ round_result.player_score_round }} / +{{ round_result.ai_score_round }}</div>
+            {% else %}
+            <div class="text-2xl font-black text-red-500">VERPASST</div>
+            <div class="text-sm text-red-400">+0 / +0</div>
+            {% endif %}
+        </div>
+
+        <div class="text-center">
+            <div class="text-4xl mb-1">{% if round_result.ai == 'A' %}🎵{% else %}⚽{% endif %}</div>
+            <div class="font-semibold text-slate-700">{% if round_result.ai == 'A' %}Konzert{% else %}Sport{% endif %}</div>
+            <div class="text-xs text-slate-400">KI</div>
+        </div>
+    </div>
+
+    <!-- Verlauf -->
+    <div class="flex gap-1.5 justify-center flex-wrap">
+        {% for r in history %}
+        <span class="text-xs px-2 py-0.5 rounded-full font-medium
+            {% if r.coordinated %}bg-emerald-100 text-emerald-700{% else %}bg-red-100 text-red-600{% endif %}">
+            {% if r.player == 'A' %}🎵{% else %}⚽{% endif %}{% if r.coordinated %}✓{% else %}✗{% endif %}
+        </span>
+        {% endfor %}
+    </div>
+</div>
+
+{% if is_final %}
+<span id="game-over" class="hidden"></span>
+
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <div class="mb-5 p-4 rounded-xl border-2
+        {% if final.result == 'win' %}bg-emerald-50 border-emerald-300
+        {% elif final.result == 'loss' %}bg-red-50 border-red-300
+        {% else %}bg-amber-50 border-amber-300{% endif %}">
+        <h3 class="text-xl font-bold mb-1
+            {% if final.result == 'win' %}text-emerald-800
+            {% elif final.result == 'loss' %}text-red-700
+            {% else %}text-amber-800{% endif %}">
+            {% if final.result == 'win' %}Gut koordiniert! Ihr habt oft genug übereingestimmt.
+            {% elif final.result == 'loss' %}Zu wenig Koordination – viel Potenzial verschenkt.
+            {% else %}Solide – aber es war schwieriger als erwartet.{% endif %}
+        </h3>
+        <p class="text-sm">
+            Koordiniert in <strong>{{ final.coord_rounds }} / {{ final.total_rounds }}</strong> Runden
+            ({{ final.coord_rate }}%) · Effizienz: <strong>{{ final.efficiency }}%</strong>
+        </p>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 gap-3 mb-4">
+        <div class="bg-violet-50 rounded-xl p-3 text-center">
+            <div class="text-2xl font-black text-violet-700">{{ final.player_total }}</div>
+            <div class="text-xs text-slate-500">Deine Punkte</div>
+        </div>
+        <div class="bg-orange-50 rounded-xl p-3 text-center">
+            <div class="text-2xl font-black text-orange-600">{{ final.ai_total }}</div>
+            <div class="text-xs text-slate-500">KI-Punkte</div>
+        </div>
+    </div>
+
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+        <p class="font-semibold mb-1">Spieltheoretische Lektion:</p>
+        <p class="mb-2">Das Koordinationsspiel hat <strong>zwei Nash-Gleichgewichte</strong>: (Konzert, Konzert) und (Sport, Sport). Beide sind stabil – aber ohne Kommunikation ist unklar, welches sich durchsetzt.</p>
+        <p>Schelling-Punkte ("Focal Points") helfen: Gibt es eine Option, die "natürlicher" wirkt? Wer die Erwartungen der anderen Partei versteht, kann die Koordination steuern.</p>
+    </div>
+
+    {% include "partials/strategy_debrief.html" %}
+
+    <div class="flex gap-3 mt-4">
+        <a href="/spiele/koordination" class="bg-amber-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-amber-700">
+            Nochmal
+        </a>
+        <a href="/spiele" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Alle Spiele
+        </a>
+    </div>
+</div>
+
+{% endif %}

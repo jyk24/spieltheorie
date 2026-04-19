@@ -1,0 +1,13 @@
+<a href="/raetsel/{{ r.id }}"
+   class="flex items-start gap-5 bg-white rounded-xl shadow-sm border border-slate-100 p-5 hover:shadow-md hover:border-indigo-200 transition-all group">
+    <div class="text-4xl shrink-0">{{ r.icon }}</div>
+    <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <h2 class="text-lg font-bold text-slate-800 group-hover:text-indigo-700 transition-colors">{{ r.name }}</h2>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium">{{ r.typ }}</span>
+            <span class="text-xs text-slate-400">{{ r.dauer }}</span>
+        </div>
+        <p class="text-slate-500 text-sm leading-relaxed">{{ r.beschreibung }}</p>
+    </div>
+    <div class="text-slate-300 group-hover:text-indigo-400 transition-colors text-xl mt-1 shrink-0">→</div>
+</a>

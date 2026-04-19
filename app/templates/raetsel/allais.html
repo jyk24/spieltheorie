@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Allais-Paradoxon – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🎰 Allais-Paradoxon</h1>
+        <p class="text-slate-500 mt-1">Zwei unabhängige Entscheidungen – kein Feedback dazwischen. Sei ehrlich.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 text-sm text-slate-600">
+        Entscheide dich in jedem Problem so, als würde die Entscheidung wirklich für dich umgesetzt.
+        Es gibt keine richtige oder falsche Antwort – noch nicht.
+    </div>
+
+    <div id="allais-area">
+        <!-- Problem 1 -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <div class="flex items-center gap-2 mb-5">
+                <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-full">Problem 1 von 2</span>
+            </div>
+            <p class="font-semibold text-slate-800 mb-5">Welche Lotterie bevorzugst du?</p>
+
+            <form hx-post="/raetsel/allais/phase2"
+                  hx-target="#allais-area"
+                  hx-swap="innerHTML"
+                  class="grid grid-cols-1 gap-4">
+
+                <button type="submit" name="choice1" value="A"
+                        class="text-left p-5 rounded-xl border-2 border-emerald-200 bg-emerald-50 hover:border-emerald-400 hover:bg-emerald-100 transition-all group">
+                    <div class="flex items-start gap-4">
+                        <span class="text-2xl font-black text-emerald-700 mt-0.5">A</span>
+                        <div class="flex-1">
+                            <div class="font-bold text-emerald-800 mb-2">Sichere Million</div>
+                            <div class="flex items-center gap-3">
+                                <div class="flex-1 bg-emerald-200 rounded-full h-5">
+                                    <div class="bg-emerald-600 h-5 rounded-full" style="width:100%"></div>
+                                </div>
+                                <span class="text-sm font-bold text-emerald-700 whitespace-nowrap">100% → 1.000.000 €</span>
+                            </div>
+                        </div>
+                    </div>
+                </button>
+
+                <button type="submit" name="choice1" value="B"
+                        class="text-left p-5 rounded-xl border-2 border-blue-200 bg-blue-50 hover:border-blue-400 hover:bg-blue-100 transition-all group">
+                    <div class="flex items-start gap-4">
+                        <span class="text-2xl font-black text-blue-700 mt-0.5">B</span>
+                        <div class="flex-1">
+                            <div class="font-bold text-blue-800 mb-2">Risiko-Lotterie <span class="text-xs font-normal text-slate-500">(höherer Erwartungswert)</span></div>
+                            <div class="space-y-1.5 text-sm">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-24 bg-slate-200 rounded-full h-4">
+                                        <div class="bg-blue-500 h-4 rounded-full" style="width:89%"></div>
+                                    </div>
+                                    <span class="text-slate-600">89% → 1.000.000 €</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-24 bg-slate-200 rounded-full h-4">
+                                        <div class="bg-amber-500 h-4 rounded-full" style="width:10%"></div>
+                                    </div>
+                                    <span class="text-slate-600 font-semibold">10% → 5.000.000 €</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-24 bg-slate-200 rounded-full h-4">
+                                        <div class="bg-red-500 h-4 rounded-l-full" style="width:1%"></div>
+                                    </div>
+                                    <span class="text-slate-400">1% → 0 €</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Monty Hall Problem – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🚪 Monty Hall Problem</h1>
+        <p class="text-slate-500 mt-1">Ein Wahrscheinlichkeits-Paradoxon – das die meisten Menschen falsch einschätzen.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-2">Die Situation:</p>
+        <p>Du nimmst an einer Spielshow teil. Vor dir stehen <strong>3 Türen</strong>. Hinter einer ist ein Auto, hinter den anderen zwei je eine Ziege.</p>
+        <ol class="list-decimal ml-4 mt-2 space-y-1">
+            <li>Du wählst eine Tür.</li>
+            <li>Der Moderator – der weiß wo das Auto ist – öffnet eine der anderen Türen und zeigt eine Ziege.</li>
+            <li>Er fragt: <strong>Möchtest du bei deiner Wahl bleiben oder wechseln?</strong></li>
+        </ol>
+        <p class="mt-3 text-slate-500 italic">Was ist die bessere Strategie – und warum?</p>
+    </div>
+
+    <!-- Spiel-Bereich -->
+    <div id="game-area">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="text-center font-semibold text-slate-700 mb-6">Schritt 1: Wähle eine Tür</p>
+
+            <div class="grid grid-cols-3 gap-4">
+                {% for door in [1, 2, 3] %}
+                <form hx-post="/raetsel/monty-hall/reveal"
+                      hx-target="#game-area"
+                      hx-swap="innerHTML">
+                    <input type="hidden" name="chosen" value="{{ door }}">
+                    <button type="submit"
+                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-10 font-bold text-2xl transition-all hover:scale-105 flex flex-col items-center gap-2">
+                        <span class="text-4xl">🚪</span>
+                        <span>Tür {{ door }}</span>
+                    </button>
+                </form>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

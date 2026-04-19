@@ -17,6 +17,8 @@ GAME_LABELS = {
     "ultimatum": "Ultimatumspiel",
     "vertrauen": "Vertrauensspiel",
     "verhandlung": "Verhandlungssimulation",
+    "chicken": "Feiglingsspiel",
+    "public_goods": "Öffentliche Güter",
 }
 
 
@@ -47,9 +49,9 @@ def fortschritt(request: Request, db: Session = Depends(get_db)):
     ]
 
     return templates.TemplateResponse(
+        request,
         "fortschritt.html",
         {
-            "request": request,
             "active_page": "fortschritt",
             "stats": stats,
             "chart_labels": json.dumps(chart_labels),

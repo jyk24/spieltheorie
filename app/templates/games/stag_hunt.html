@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Hirschjagd – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🦌 Hirschjagd</h1>
+        <p class="text-slate-500 mt-1">8 Runden – Riskante Koordination oder sicheres Ergebnis?</p>
+    </div>
+
+    <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-5 mb-6 text-sm text-emerald-900">
+        <div class="font-semibold mb-2">Payoff-Matrix:</div>
+        <div class="grid grid-cols-3 gap-1 text-xs max-w-xs mb-3">
+            <div class="bg-emerald-100 rounded p-1 text-center font-medium"></div>
+            <div class="bg-emerald-100 rounded p-1 text-center font-medium">KI: Hirsch</div>
+            <div class="bg-emerald-100 rounded p-1 text-center font-medium">KI: Hase</div>
+            <div class="bg-emerald-100 rounded p-1 text-center font-medium">Du: Hirsch</div>
+            <div class="bg-emerald-100 rounded p-1 text-center text-emerald-700 font-bold">8 / 8 ⭐</div>
+            <div class="bg-red-100 rounded p-1 text-center text-red-700">0 / 3</div>
+            <div class="bg-emerald-100 rounded p-1 text-center font-medium">Du: Hase</div>
+            <div class="bg-orange-100 rounded p-1 text-center text-orange-700">3 / 0</div>
+            <div class="bg-slate-100 rounded p-1 text-center text-slate-600">3 / 3</div>
+        </div>
+        <p class="text-xs text-emerald-800">
+            <strong>Hirsch jagen</strong> bringt 8 – aber nur wenn beide zusammenarbeiten. <strong>Hase jagen</strong> bringt immer 3, egal was die KI tut.
+        </p>
+        <div class="mt-2 text-xs">
+            <a href="/lektionen/koordinationsspiele" class="underline hover:no-underline">Theorie: Koordinationsspiele & Gleichgewichtsauswahl →</a>
+        </div>
+    </div>
+
+    <!-- Mystery-Start -->
+    <div id="start-form" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+        <input type="hidden" id="strategy-preset" value="{{ hidden_strategy }}">
+
+        <div class="flex items-start gap-4 mb-5">
+            <div class="text-5xl">🤖</div>
+            <div>
+                <h2 class="font-bold text-slate-800 text-lg">Unbekannter Jagdgefährte</h2>
+                <p class="text-slate-500 text-sm mt-1">Vertraut die KI auf Koordination? Oder zieht sie die sichere Wahl vor? Du weißt es nicht – bis das Spiel vorbei ist.</p>
+                <p class="text-slate-400 text-xs mt-2">Die Strategie wird im Debrief aufgedeckt.</p>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 rounded-lg p-3 text-xs text-slate-500 mb-5 flex gap-4 flex-wrap">
+            <span>🦌 Hirsch = riskant, Maximalgewinn</span>
+            <span>🐇 Hase = sicher, niedriger Gewinn</span>
+            <span>📊 Aufdeckung im Debrief</span>
+        </div>
+
+        <button type="button" onclick="startGame()"
+                class="bg-emerald-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-emerald-700 transition-colors">
+            Jagd beginnen
+        </button>
+    </div>
+
+    <!-- Spielfeld -->
+    <div id="play-area" class="hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <span class="text-sm text-slate-500">Runde</span>
+                    <span id="round-display" class="text-xl font-bold text-emerald-600 ml-1">1</span>
+                    <span class="text-sm text-slate-500"> / {{ max_rounds }}</span>
+                </div>
+                <div class="flex gap-6 text-sm">
+                    <div class="text-center">
+                        <div class="text-xs text-slate-400">Du</div>
+                        <div id="player-total" class="text-lg font-bold text-emerald-600">0</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs text-slate-400">KI</div>
+                        <div id="ai-total" class="text-lg font-bold text-slate-500">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center text-slate-500 text-sm mb-5 italic">
+                Was jagst du heute?
+            </div>
+
+            <form hx-post="/spiele/stag-hunt/zug"
+                  hx-target="#result-area"
+                  hx-swap="innerHTML"
+                  id="move-form"
+                  class="grid grid-cols-2 gap-4">
+                <input type="hidden" name="strategy" id="strategy-hidden">
+                <input type="hidden" name="history_json" id="history-hidden" value="[]">
+                <button type="submit" name="move" value="S"
+                        class="bg-emerald-500 hover:bg-emerald-600 text-white py-6 rounded-xl font-bold text-lg transition-colors">
+                    🦌 Hirsch jagen
+                    <div class="text-xs font-normal mt-1 opacity-80">8 Punkte – aber nur gemeinsam</div>
+                </button>
+                <button type="submit" name="move" value="H"
+                        class="bg-amber-500 hover:bg-amber-600 text-white py-6 rounded-xl font-bold text-lg transition-colors">
+                    🐇 Hase jagen
+                    <div class="text-xs font-normal mt-1 opacity-80">3 Punkte – immer sicher</div>
+                </button>
+            </form>
+        </div>
+
+        <div id="result-area"></div>
+    </div>
+</div>
+
+<script>
+function startGame() {
+    const strategy = document.getElementById('strategy-preset').value;
+    document.getElementById('strategy-hidden').value = strategy;
+    document.getElementById('start-form').classList.add('hidden');
+    document.getElementById('play-area').classList.remove('hidden');
+}
+
+document.body.addEventListener('htmx:afterSwap', function() {
+    const historyEl = document.getElementById('history-data');
+    const roundEl = document.getElementById('round-data');
+    const playerTotalEl = document.getElementById('player-total-data');
+    const aiTotalEl = document.getElementById('ai-total-data');
+
+    if (historyEl) document.getElementById('history-hidden').value = historyEl.dataset.value;
+    if (roundEl) document.getElementById('round-display').textContent = roundEl.dataset.value;
+    if (playerTotalEl) document.getElementById('player-total').textContent = playerTotalEl.dataset.value;
+    if (aiTotalEl) document.getElementById('ai-total').textContent = aiTotalEl.dataset.value;
+});
+</script>
+
+{% endblock %}
