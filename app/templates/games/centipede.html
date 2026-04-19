@@ -9,39 +9,23 @@
         <p class="text-slate-500 mt-1">Nehmen oder Weitergeben? Das Rückwärtsinduktions-Paradoxon.</p>
     </div>
 
-    <div class="bg-purple-50 border border-purple-100 rounded-xl p-5 mb-6 text-sm text-purple-900">
-        <div class="font-semibold mb-2">Wie es funktioniert:</div>
-        <p class="text-sm mb-3">Der Topf verdoppelt sich fast mit jedem Weitergeben. Du und die KI wechseln sich ab.
-        Wer <strong>nimmt</strong>, bekommt den größeren Anteil – aber das Spiel endet sofort.
-        Wer <strong>weitergibt</strong>, riskiert, dass der andere am nächsten Zug nimmt.</p>
-        <div class="overflow-x-auto">
-            <div class="flex gap-1 items-center min-w-max text-xs mb-2">
-                {% for n in nodes %}
-                <div class="text-center">
-                    <div class="w-14 p-1 rounded {% if n.actor == 'player' %}bg-indigo-100 text-indigo-700{% else %}bg-red-100 text-red-700{% endif %}">
-                        <div class="font-bold">K{{ n.node }}</div>
-                        <div class="text-xs">{{ '👤' if n.actor == 'player' else '🤖' }}</div>
-                    </div>
-                    <div class="text-xs text-slate-500 mt-1">{{ n.take_player }}/{{ n.take_ai }}</div>
-                </div>
-                {% if not loop.last %}
-                <div class="text-slate-300 text-xs">→</div>
-                {% endif %}
-                {% endfor %}
-                <div class="text-slate-300 text-xs">→</div>
-                <div class="text-center">
-                    <div class="w-14 p-1 rounded bg-emerald-100 text-emerald-700">
-                        <div class="font-bold">Ende</div>
-                        <div class="text-xs">✓</div>
-                    </div>
-                    <div class="text-xs text-slate-500 mt-1">64/32</div>
-                </div>
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="italic text-slate-500 mb-3">"Ein Topf Geld liegt vor euch. Er wächst mit jeder Runde. Jederzeit kannst du 'nehmen' und dir deinen Anteil sichern – aber das Spiel endet sofort."</p>
+        <div class="space-y-2 text-xs">
+            <div class="flex items-start gap-2">
+                <span class="text-purple-500 font-bold mt-0.5">→</span>
+                <span><strong>Du und die KI wechseln sich ab.</strong> Wer nimmt, bekommt den größeren Anteil – der andere den kleineren. Dann ist das Spiel vorbei.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-purple-500 font-bold mt-0.5">→</span>
+                <span><strong>Wenn du weiter gibst:</strong> Der Topf wächst. Aber die KI kann im nächsten Zug nehmen.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-amber-500 font-bold mt-0.5">→</span>
+                <span><strong>Das Paradoxon:</strong> Die Logik sagt "sofort nehmen". Aber wenn beide durchhalten, gewinnen beide viel mehr.</span>
             </div>
         </div>
-        <p class="text-xs text-purple-700">Du/KI-Auszahlung wenn an diesem Knoten genommen wird. Ende: beide passen durch = 64/32.</p>
-        <div class="mt-2 text-xs">
-            <a href="/lektionen/rueckwaertsinduktion" class="underline hover:no-underline">Theorie: Rückwärtsinduktion →</a>
-        </div>
+        <p class="text-xs text-slate-400 mt-3">Maximal erreichbar: 64 Punkte für dich. Sofort nehmen gibt nur 2.</p>
     </div>
 
     <!-- Mystery-Start -->

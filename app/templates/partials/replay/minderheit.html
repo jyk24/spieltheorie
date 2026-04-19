@@ -1,0 +1,55 @@
+<div class="overflow-x-auto">
+<table class="w-full text-sm">
+    <thead>
+        <tr class="text-slate-500 border-b border-slate-100 text-xs uppercase tracking-wide">
+            <th class="text-left pb-2 pr-3">Runde</th>
+            <th class="text-center pb-2 pr-3">Du</th>
+            <th class="text-center pb-2 pr-3">Gruppe A</th>
+            <th class="text-center pb-2 pr-3">Gruppe B</th>
+            <th class="text-center pb-2 pr-3">Ergebnis</th>
+            <th class="text-right pb-2 pr-3">Punkte</th>
+            <th class="text-right pb-2">Gesamt</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in moves %}
+        <tr class="border-b border-slate-50
+            {% if m.in_minority %}bg-emerald-50
+            {% elif m.in_tie %}bg-amber-50{% endif %}">
+            <td class="py-2 pr-3 text-slate-500 text-xs">{{ m.round }}</td>
+            <td class="py-2 pr-3 text-center font-bold
+                {% if m.player == 0 %}text-blue-700{% else %}text-amber-700{% endif %}">
+                {% if m.player == 0 %}A{% else %}B{% endif %}
+            </td>
+            <td class="py-2 pr-3 text-center text-blue-700 font-semibold">{{ m.count_0 }}</td>
+            <td class="py-2 pr-3 text-center text-amber-700 font-semibold">{{ m.count_1 }}</td>
+            <td class="py-2 pr-3 text-center text-xs font-semibold">
+                {% if m.in_minority %}
+                <span class="text-emerald-700">Minderheit 🏆</span>
+                {% elif m.in_tie %}
+                <span class="text-amber-600">Gleichstand</span>
+                {% else %}
+                <span class="text-slate-400">Mehrheit</span>
+                {% endif %}
+            </td>
+            <td class="py-2 pr-3 text-right font-bold
+                {% if m.player_score == 3 %}text-emerald-700
+                {% elif m.player_score == 1 %}text-amber-600
+                {% else %}text-slate-400{% endif %}">
+                +{{ m.player_score }}
+            </td>
+            <td class="py-2 text-right font-bold text-indigo-700">{{ m.player_total }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr class="border-t-2 border-slate-200">
+            <td colspan="5" class="pt-2 text-xs text-slate-400 font-medium">Gesamt</td>
+            <td class="pt-2 text-right font-bold text-indigo-700">
+                {% if moves %}{{ moves[-1].player_total }}{% endif %}
+            </td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>
+</div>

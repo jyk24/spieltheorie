@@ -1,0 +1,72 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    <!-- Auflösung -->
+    {% if choice == "no_new_road" %}
+    <div class="mb-5 p-4 rounded-xl bg-indigo-50 border-2 border-indigo-300">
+        <h3 class="text-xl font-bold text-indigo-800 mb-1">Richtig! Keine neue Straße ist besser.</h3>
+        <p class="text-sm text-indigo-700">Du hast das Braess-Paradoxon erkannt: Mehr Kapazität kann das Nash-Gleichgewicht für alle verschlechtern.</p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-xl font-bold text-amber-800 mb-1">Nachvollziehbar – aber das Paradoxon überrascht!</h3>
+        <p class="text-sm text-amber-700">Die neue Straße erscheint sinnvoll. Aber wenn alle "rational" entscheiden, werden alle langsamer. Das ist das Braess-Paradoxon.</p>
+    </div>
+    {% endif %}
+
+    <!-- Was passiert mit der neuen Straße -->
+    <div class="bg-slate-50 rounded-xl p-4 mb-4">
+        <h4 class="font-bold text-slate-800 mb-3">Was passiert, wenn X→Y gebaut wird:</h4>
+
+        <div class="space-y-3 text-sm">
+            <div class="bg-white rounded-lg p-3 border border-amber-200">
+                <p class="font-medium text-amber-800 mb-1">Neue dominante Strategie: A → X → Y → B</p>
+                <p class="text-xs text-amber-700">Diese Route ist bei niedrigem t immer schneller (kein fester 45-Min-Block). Jeder einzelne Fahrer wechselt.</p>
+            </div>
+
+            <div class="bg-red-50 rounded-lg p-3 border border-red-200">
+                <p class="font-medium text-red-800 mb-1">Nash-Gleichgewicht: Alle nehmen die neue Route</p>
+                <p class="text-xs text-red-700">
+                    Wenn alle 4000 Fahrer A→X→Y→B nehmen:<br>
+                    t(A→X) = 4000/100 = 40 min<br>
+                    t(Y→B) = 4000/100 = 40 min<br>
+                    <strong>Gesamt: 80 Minuten</strong> statt 65!
+                </p>
+            </div>
+
+            <div class="bg-emerald-50 rounded-lg p-3 border border-emerald-200">
+                <p class="font-medium text-emerald-800 mb-1">Gesellschaftliches Optimum: Alte Routen</p>
+                <p class="text-xs text-emerald-700">
+                    Je 2000 Fahrer auf alter Route: 65 Minuten für alle.<br>
+                    <strong>Das Optimum ist erreichbar – aber nicht stabil</strong> (jeder hat Anreiz abzuweichen).
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Das formale Paradoxon -->
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-800">
+        <p class="font-semibold mb-2">Das Braess-Paradoxon (1968):</p>
+        <p class="mb-2">Dietrich Braess zeigte mathematisch: Das Hinzufügen einer neuen Verbindung zu einem Netzwerk kann das Nash-Gleichgewicht verschlechtern, wenn individuelle Rationalität kollektive Irrationalität erzeugt.</p>
+        <div class="font-mono text-xs bg-white rounded p-2">
+            Ohne X→Y: Nash = Optimum = 65 min<br>
+            Mit X→Y: Nash = 80 min, Optimum = 65 min<br>
+            ΔVerlust = 15 min für alle 4000 Fahrer
+        </div>
+        <p class="mt-2 text-xs">Reale Beispiele: Stuttgart (1969), Seoul (2003) – Straßenabbau verbesserte den Verkehr.</p>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+        <p class="font-semibold mb-1">Verhandlungs- und Entscheidungsrelevanz:</p>
+        <p class="mb-1">Das Braess-Paradoxon tritt überall auf, wo individuell rationale Entscheidungen kollektiv schlechte Ergebnisse erzeugen: Preiskämpfe, die beide Seiten schlechter stellen; Aufrüstungsspiralen; Übernutzung gemeinsamer Ressourcen.</p>
+        <p><strong>Kern:</strong> Mehr Optionen sind nicht immer besser. Manchmal erzeugen zusätzliche Freiheiten ein schlechteres Gleichgewicht. Institutionelle Regeln (Verbote, Preise, Zuteilung) können das gesellschaftliche Optimum erzwingen, das der Markt allein nicht findet.</p>
+    </div>
+
+    <div class="flex gap-3">
+        <a href="/raetsel/braess" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>

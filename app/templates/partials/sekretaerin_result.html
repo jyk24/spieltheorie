@@ -1,0 +1,82 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    <!-- Auflösung -->
+    {% if outcome == "optimal" %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">Perfekt! Du hast den besten Kandidaten gewählt.</h3>
+        <p class="text-sm text-emerald-700">Kandidat #{{ chosen_at }} war der Beste (Qualität {{ chosen_quality }}/100). Mit der optimalen Strategie gelingt das in ~36,8 % der Fälle.</p>
+    </div>
+    {% elif outcome == "gut" %}
+    <div class="mb-5 p-4 rounded-xl bg-blue-50 border-2 border-blue-300">
+        <h3 class="text-xl font-bold text-blue-800 mb-1">Sehr gut! Ein exzellenter Kandidat.</h3>
+        <p class="text-sm text-blue-700">Du hast Kandidat #{{ chosen_at }} mit Qualität {{ chosen_quality }}/100 gewählt – fast optimal. Der beste war {{ best_quality }}/100.</p>
+    </div>
+    {% elif outcome == "mittel" %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-xl font-bold text-amber-800 mb-1">Solide. Du hast zu früh oder zu spät gestoppt.</h3>
+        <p class="text-sm text-amber-700">Kandidat #{{ chosen_at }}: Qualität {{ chosen_quality }}/100 (bester war {{ best_quality }}). Die optimale Strategie empfiehlt: erst nach Kandidat {{ optimal_cutoff }} entscheiden.</p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-slate-50 border-2 border-slate-300">
+        <h3 class="text-xl font-bold text-slate-800 mb-1">Verbesserungspotenzial. Kandidat war unterdurchschnittlich.</h3>
+        <p class="text-sm text-slate-600">Du hast Kandidat #{{ chosen_at }} mit Qualität {{ chosen_quality }}/100 gewählt (bester war {{ best_quality }}). Zu frühes oder falsches Abbrechen.</p>
+    </div>
+    {% endif %}
+
+    <!-- Dein Kandidat vs. Optimal -->
+    <div class="grid grid-cols-2 gap-4 mb-5">
+        <div class="bg-indigo-50 rounded-xl p-4 text-center">
+            <div class="text-xs text-indigo-600 mb-1">Dein Kandidat</div>
+            <div class="text-3xl font-black text-indigo-800">{{ chosen_quality }}</div>
+            <div class="text-xs text-indigo-600 mt-1">Qualitätspunkte</div>
+            <div class="text-xs text-indigo-500 mt-0.5">Position #{{ chosen_at }}</div>
+        </div>
+        <div class="bg-emerald-50 rounded-xl p-4 text-center">
+            <div class="text-xs text-emerald-600 mb-1">Bester Kandidat</div>
+            <div class="text-3xl font-black text-emerald-800">{{ best_quality }}</div>
+            <div class="text-xs text-emerald-600 mt-1">Qualitätspunkte</div>
+            <div class="text-xs text-emerald-500 mt-0.5">{{ rank_fraction }}% erreicht</div>
+        </div>
+    </div>
+
+    <!-- Optimale Strategie -->
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-800">
+        <p class="font-semibold mb-2">Die optimale Strategie – die 37%-Regel:</p>
+        <div class="grid grid-cols-2 gap-3 text-xs mb-2">
+            <div class="bg-white rounded-lg p-2">
+                <div class="font-medium mb-1">Phase 1 (Beobachten)</div>
+                <p>Lehne die ersten <strong>{{ optimal_cutoff }} von {{ n }}</strong> Kandidaten grundsätzlich ab – egal wie gut. Lerne, was verfügbar ist.</p>
+            </div>
+            <div class="bg-white rounded-lg p-2">
+                <div class="font-medium mb-1">Phase 2 (Entscheiden)</div>
+                <p>Ab Kandidat {{ optimal_cutoff + 1 }}: Nimm den ersten, der <strong>besser ist als alle bisher Gesehenen</strong>.</p>
+            </div>
+        </div>
+        <p class="text-xs">Mit dieser Strategie findest du den Besten mit Wahrscheinlichkeit ≈ <strong>{{ optimal_prob }}%</strong> (= 1/e). Das ist das mathematische Maximum – keine andere Strategie macht es besser.</p>
+    </div>
+
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+        <p class="font-semibold mb-2">Das formale Ergebnis:</p>
+        <p class="font-mono text-xs bg-white rounded p-2 mb-2">
+            Optimaler Stoppzeitpunkt: k* = ⌊n/e⌋ = ⌊{{ n }}/2.718⌋ = {{ optimal_cutoff }}<br>
+            P(bestes Ergebnis) = 1/e ≈ {{ optimal_prob }}%<br>
+            Bei n → ∞: Grenzwahrscheinlichkeit = 1/e ≈ 36,79%
+        </p>
+        <p class="text-xs">Erstmals bewiesen von Lindley (1961). Das Problem hat viele Namen: Secretary Problem, Marriage Problem, Optimal Stopping.</p>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+        <p class="font-semibold mb-1">Verhandlungsrelevanz:</p>
+        <p class="mb-1">Optimal Stopping tritt in jeder sequentiellen Entscheidung auf: Wohnungssuche, Jobsuche, Lieferantenauswahl. Ohne Strategie neigen Menschen zu <em>zu frühem</em> Abbrechen (Verlustaversion) oder <em>zu langem</em> Suchen (Gier nach dem Besten).</p>
+        <p><strong>Regel:</strong> Lerne die ersten 37 % des Marktspektrums kennen, bevor du entscheidest. Dann nimm das erste, das besser ist als alles Gesehene.</p>
+    </div>
+
+    <div class="flex gap-3">
+        <a href="/raetsel/sekretaerin" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="overflow-x-auto">
+<table class="w-full text-sm">
+    <thead>
+        <tr class="text-slate-500 border-b border-slate-100 text-xs uppercase tracking-wide">
+            <th class="text-left pb-2 pr-3">Runde</th>
+            <th class="text-left pb-2 pr-3">Rolle</th>
+            <th class="text-right pb-2 pr-3">Abgabe %</th>
+            <th class="text-right pb-2 pr-3">Du</th>
+            <th class="text-right pb-2 pr-3">KI</th>
+            <th class="text-right pb-2">Gesamt Du</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in moves %}
+        <tr class="border-b border-slate-50
+            {% if m.player_is_dictator and m.ai_score >= 40 %}bg-emerald-50
+            {% elif m.player_is_dictator and m.ai_score <= 10 %}bg-red-50{% endif %}">
+            <td class="py-2 pr-3 text-slate-500 text-xs">{{ m.round }}</td>
+            <td class="py-2 pr-3 text-slate-600 text-xs">
+                {% if m.player_is_dictator %}Du (Diktator){% else %}KI (Diktator){% endif %}
+            </td>
+            <td class="py-2 pr-3 text-right font-semibold
+                {% if m.player_is_dictator %}
+                    {% if m.ai_score >= 40 %}text-emerald-700
+                    {% elif m.ai_score >= 20 %}text-amber-600
+                    {% else %}text-red-600{% endif %}
+                {% else %}
+                    {% if m.player_score >= 40 %}text-emerald-700
+                    {% elif m.player_score >= 20 %}text-amber-600
+                    {% else %}text-red-600{% endif %}
+                {% endif %}">
+                {% if m.player_is_dictator %}{{ m.ai_score }}%{% else %}{{ m.player_score }}%{% endif %}
+            </td>
+            <td class="py-2 pr-3 text-right text-slate-700 font-medium">{{ m.player_score }}</td>
+            <td class="py-2 pr-3 text-right text-slate-500">{{ m.ai_score }}</td>
+            <td class="py-2 text-right font-bold text-indigo-700">{{ m.player_total }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr class="border-t-2 border-slate-200">
+            <td colspan="4" class="pt-2 text-xs text-slate-400 font-medium">Gesamt</td>
+            <td class="pt-2 text-right font-bold text-indigo-700">
+                {% if moves %}{{ moves[-1].player_total }}{% endif %}
+            </td>
+            <td class="pt-2 text-right text-xs text-slate-400">
+                KI: {% if moves %}{{ moves[-1].ai_total }}{% endif %}
+            </td>
+        </tr>
+    </tfoot>
+</table>
+</div>

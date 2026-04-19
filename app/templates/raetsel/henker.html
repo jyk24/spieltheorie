@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Das Henkerparadoxon – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">⚖️ Das Henkerparadoxon</h1>
+        <p class="text-slate-500 mt-1">Rückwärtsinduktion beweist das Unmögliche – und liegt trotzdem falsch.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Situation:</p>
+        <div class="space-y-2 mb-4">
+            <div class="flex items-start gap-2">
+                <span class="text-slate-500 mt-0.5">⚖️</span>
+                <span>Ein Richter verurteilt einen Gefangenen zum Tode und sagt:</span>
+            </div>
+        </div>
+        <div class="bg-amber-50 border-l-4 border-amber-400 rounded-r-xl p-4 mb-4 italic text-slate-700 text-base">
+            „Du wirst nächste Woche an einem Werktag zwischen Montag und Freitag gehängt.
+            Der genaue Tag wird für dich eine <strong>vollständige Überraschung</strong> sein –
+            du wirst ihn nicht im Voraus wissen können."
+        </div>
+        <div class="space-y-2 text-sm text-slate-600">
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-400 mt-0.5">•</span>
+                <span>Der Gefangene ist vollständig rational und kennt diese Aussage.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-400 mt-0.5">•</span>
+                <span>Eine „Überraschung" bedeutet: Er kann den Henkermorgen nicht sicher deduzieren.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-400 mt-0.5">•</span>
+                <span>Der Richter hat sich in der Vergangenheit nie geirrt und immer Wort gehalten.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reasoning Prompt -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5">
+        <p class="font-semibold text-slate-800 mb-1">Der Gefangene denkt nach...</p>
+        <p class="text-sm text-slate-500 mb-5">
+            In seiner Zelle analysiert er die Aussage des Richters systematisch.
+            Er beginnt mit dem letzten möglichen Tag und arbeitet sich rückwärts vor.
+            Was kommt dabei heraus?
+        </p>
+
+        <!-- Backward induction animation -->
+        <div class="flex gap-2 justify-center mb-6">
+            {% set tage = [("Mo", "slate"), ("Di", "slate"), ("Mi", "slate"), ("Do", "slate"), ("Fr", "slate")] %}
+            {% for tag, color in tage %}
+            <div class="flex flex-col items-center gap-1">
+                <div class="w-12 h-12 rounded-xl bg-slate-100 border-2 border-slate-200 flex items-center justify-center font-bold text-slate-600 text-sm">
+                    {{ tag }}
+                </div>
+                <span class="text-xs text-slate-400">?</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <form hx-post="/raetsel/henker/result"
+              hx-target="#henker-area"
+              hx-swap="innerHTML"
+              class="space-y-3"
+              id="henker-form">
+
+            <p class="text-sm font-medium text-slate-700 mb-3">Was schlussfolgert der Gefangene nach seiner Überlegung?</p>
+
+            <button type="submit" name="choice" value="unmoeglich"
+                    class="w-full text-left p-4 rounded-xl border-2 border-red-200 bg-red-50 hover:border-red-400 hover:bg-red-100 transition-all group">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl">🚫</span>
+                    <div>
+                        <div class="font-bold text-red-800">Die Hinrichtung kann logisch nicht stattfinden.</div>
+                        <div class="text-sm text-red-600 mt-0.5">Die Aussage des Richters widerspricht sich selbst – also wird er nicht gehängt.</div>
+                    </div>
+                </div>
+            </button>
+
+            <button type="submit" name="choice" value="montag"
+                    class="w-full text-left p-4 rounded-xl border-2 border-blue-200 bg-blue-50 hover:border-blue-400 hover:bg-blue-100 transition-all">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl">📅</span>
+                    <div>
+                        <div class="font-bold text-blue-800">Er wird am Montag hingerichtet.</div>
+                        <div class="text-sm text-blue-600 mt-0.5">Der erste Tag ist der einzig mögliche überraschende Termin.</div>
+                    </div>
+                </div>
+            </button>
+
+            <button type="submit" name="choice" value="freitag"
+                    class="w-full text-left p-4 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 hover:bg-slate-100 transition-all">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl">🗓️</span>
+                    <div>
+                        <div class="font-bold text-slate-700">Er wird am Freitag hingerichtet.</div>
+                        <div class="text-sm text-slate-500 mt-0.5">Der Richter wartet bis zum letzten Tag.</div>
+                    </div>
+                </div>
+            </button>
+
+            <button type="submit" name="choice" value="zufaellig"
+                    class="w-full text-left p-4 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 hover:bg-slate-100 transition-all">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl">🎲</span>
+                    <div>
+                        <div class="font-bold text-slate-700">Kein Tag kann ausgeschlossen werden.</div>
+                        <div class="text-sm text-slate-500 mt-0.5">Der Richter hat einfach Recht – die Überraschung ist echt.</div>
+                    </div>
+                </div>
+            </button>
+
+        </form>
+
+        <div id="henker-area"></div>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-500">
+        <span class="font-semibold">Hinweis:</span> Dieses Paradoxon wurde in den 1940er Jahren zuerst als Überraschungsklausur-Problem bekannt und
+        später von <strong>Martin Gardner</strong> (1963 in Scientific American) popularisiert. Es berührt
+        Gödels Unvollständigkeitssatz, das Lügner-Paradoxon und epistemische Logik.
+    </div>
+</div>
+
+<script>
+document.body.addEventListener('htmx:afterSwap', function(e) {
+    if (e.detail.target.id === 'henker-area') {
+        document.getElementById('henker-form').style.display = 'none';
+    }
+});
+</script>
+
+{% endblock %}

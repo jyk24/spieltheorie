@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Braess-Paradoxon – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🛣️ Braess-Paradoxon</h1>
+        <p class="text-slate-500 mt-1">Eine neue Straße kann alle verlangsamen – Nash-Gleichgewicht vs. gesellschaftliches Optimum.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Das Netzwerk:</p>
+        <p class="mb-3">4000 Pendler fahren täglich von Stadt A nach Stadt B. Es gibt zwei Routen:</p>
+
+        <div class="space-y-3 mb-4">
+            <div class="bg-white rounded-lg p-3 border border-slate-200">
+                <div class="font-medium text-slate-700 mb-1">Route Oben: A → X → B</div>
+                <div class="text-xs text-slate-600">
+                    A→X: Dauer = <span class="font-mono">t/100</span> Minuten (t = Anzahl Fahrer auf dieser Strecke)<br>
+                    X→B: Dauer = <strong>45 Minuten</strong> (feste Strecke, unabhängig von t)
+                </div>
+            </div>
+            <div class="bg-white rounded-lg p-3 border border-slate-200">
+                <div class="font-medium text-slate-700 mb-1">Route Unten: A → Y → B</div>
+                <div class="text-xs text-slate-600">
+                    A→Y: Dauer = <strong>45 Minuten</strong> (feste Strecke)<br>
+                    Y→B: Dauer = <span class="font-mono">t/100</span> Minuten (variabel)
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-xs text-emerald-800 mb-3">
+            <strong>Ohne neue Straße:</strong> Bei 2000 Fahrern auf jeder Route: 2000/100 + 45 = <strong>65 Minuten</strong> für alle.
+        </div>
+
+        <p class="font-semibold mt-3 mb-2">Jetzt wird eine neue Straße gebaut: X → Y (Dauer: 0 Minuten)</p>
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800">
+            Neue Option: A → X → Y → B<br>
+            Kosten: t/100 (A→X) + 0 (X→Y) + t/100 (Y→B) = <span class="font-mono">t/100 + t/100</span> Minuten
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="spiel-area">
+        <p class="font-semibold text-slate-800 mb-2">Die Entscheidung:</p>
+        <p class="text-sm text-slate-500 mb-5">
+            Die Stadt überlegt, die neue Straße X→Y zu bauen. Sie kostet nichts – eine "kostenlose" Verbesserung.
+            Sollte die Stadt die Straße bauen?
+        </p>
+
+        <form hx-post="/raetsel/braess/result"
+              hx-target="#spiel-area"
+              hx-swap="innerHTML"
+              class="space-y-4">
+
+            <button type="submit" name="choice" value="yes_new_road"
+                    class="w-full text-left p-5 rounded-xl border-2 border-emerald-200 bg-emerald-50 hover:border-emerald-400 hover:bg-emerald-100 transition-all">
+                <div class="flex items-start gap-4">
+                    <span class="text-3xl">🏗️</span>
+                    <div>
+                        <div class="font-bold text-emerald-800 text-lg">Ja, neue Straße bauen</div>
+                        <div class="text-sm text-emerald-700 mt-1">Mehr Verbindungen = mehr Optionen = besser für alle.</div>
+                    </div>
+                </div>
+            </button>
+
+            <button type="submit" name="choice" value="no_new_road"
+                    class="w-full text-left p-5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 hover:bg-slate-100 transition-all">
+                <div class="flex items-start gap-4">
+                    <span class="text-3xl">🚫</span>
+                    <div>
+                        <div class="font-bold text-slate-800 text-lg">Nein, keine neue Straße</div>
+                        <div class="text-sm text-slate-600 mt-1">Eine neue Straße könnte das Gleichgewicht verschlechtern.</div>
+                    </div>
+                </div>
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

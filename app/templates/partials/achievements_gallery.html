@@ -1,0 +1,57 @@
+<!-- Errungenschaften-Galerie -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-8">
+    <div class="flex items-center justify-between mb-5">
+        <h2 class="font-semibold text-slate-700">
+            Errungenschaften
+            <span class="text-sm font-normal text-slate-400 ml-2">
+                {{ unlocked_slugs|length }} / {{ all_achievements|length }} freigeschaltet
+            </span>
+        </h2>
+    </div>
+
+    <!-- Fortschrittsbalken -->
+    <div class="mb-5">
+        <div class="bg-slate-100 rounded-full h-2">
+            <div class="bg-amber-400 h-2 rounded-full transition-all"
+                 style="width: {{ (unlocked_slugs|length / all_achievements|length * 100)|round|int if all_achievements else 0 }}%">
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        {% for ach in all_achievements %}
+        {% set is_unlocked = ach.slug in unlocked_slugs %}
+        <div class="relative group rounded-xl border p-4 text-center transition-all
+            {% if is_unlocked %}
+                bg-gradient-to-b from-amber-50 to-yellow-50 border-amber-200 shadow-sm
+            {% else %}
+                bg-slate-50 border-slate-150 opacity-60
+            {% endif %}">
+
+            <!-- Icon -->
+            <div class="text-3xl mb-2 {% if not is_unlocked %}grayscale{% endif %}">
+                {% if is_unlocked %}{{ ach.icon }}{% else %}🔒{% endif %}
+            </div>
+
+            <!-- Titel -->
+            <div class="text-xs font-bold mb-0.5
+                {% if is_unlocked %}text-amber-900{% else %}text-slate-400{% endif %}">
+                {{ ach.title }}
+            </div>
+
+            <!-- Datum oder verschleierter Hinweis -->
+            {% if is_unlocked %}
+            <div class="text-xs text-amber-600">
+                {{ achievement_dates.get(ach.slug, "") }}
+            </div>
+            {% else %}
+            <!-- Tooltip on hover -->
+            <div class="text-xs text-slate-400 group-hover:hidden">???</div>
+            <div class="hidden group-hover:block text-xs text-slate-500 leading-tight">
+                {{ ach.desc }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>

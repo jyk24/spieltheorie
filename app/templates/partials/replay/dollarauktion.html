@@ -1,0 +1,27 @@
+<!-- Dollarauktion: moves enthält genau einen Eintrag (das Endergebnis) -->
+{% if moves %}
+{% set m = moves[0] %}
+<div class="grid grid-cols-2 gap-4 mb-4">
+    <div class="{% if m.winner == 'player' %}bg-emerald-50 border border-emerald-200{% else %}bg-red-50 border border-red-200{% endif %} rounded-xl p-4 text-center">
+        <div class="text-xs text-slate-500 mb-1">Dein Ergebnis</div>
+        <div class="text-3xl font-black {% if m.winner == 'player' %}text-emerald-700{% else %}text-red-700{% endif %}">
+            {% if m.player_payoff >= 0 %}+{% endif %}{{ m.player_payoff }}
+        </div>
+        <div class="text-xs text-slate-500 mt-1">Letztes Gebot: {{ m.player_bid }}</div>
+    </div>
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
+        <div class="text-xs text-slate-500 mb-1">KI-Ergebnis</div>
+        <div class="text-3xl font-black text-slate-700">
+            {% if m.ai_payoff >= 0 %}+{% endif %}{{ m.ai_payoff }}
+        </div>
+        <div class="text-xs text-slate-500 mt-1">KI-Gebot: {{ m.ai_bid }}</div>
+    </div>
+</div>
+<div class="text-sm text-slate-600 bg-slate-50 rounded-lg p-3">
+    <strong>Gewinner:</strong>
+    {% if m.winner == 'player' %}Du hast gewonnen – die KI gab auf.
+    {% else %}Die KI hat gewonnen – du hast aufgegeben oder weniger geboten.{% endif %}
+</div>
+{% else %}
+<p class="text-sm text-slate-400">Keine Daten verfügbar.</p>
+{% endif %}

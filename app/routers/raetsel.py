@@ -117,6 +117,96 @@ RAETSEL_META = [
         "schwierigkeit": "Fortgeschritten",
         "dauer": "5 min",
     },
+    {
+        "id": "zerrissene-karte",
+        "name": "Die zerrissene Karte",
+        "icon": "🃏",
+        "beschreibung": "Du hast 5 rote Karten (Monopol), 5 andere je eine blaue. Ein Paar = 1 €. Welche Strategie bringt mehr: Alle annehmen? Hart verhandeln? Oder eine Karte öffentlich zerreißen?",
+        "typ": "Monopol-Experiment",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+    },
+    {
+        "id": "hotelling",
+        "name": "Hotelling-Gesetz",
+        "icon": "🏖️",
+        "beschreibung": "Zwei Eiswagen auf einem Strand – wo stellst du dich auf? Die Nash-Logik treibt beide in die Mitte, zum Schaden aller Kunden.",
+        "typ": "Wettbewerbsparadox",
+        "schwierigkeit": "Einsteiger",
+        "dauer": "3 min",
+    },
+    {
+        "id": "el-farol",
+        "name": "El Farol Bar Problem",
+        "icon": "🍺",
+        "beschreibung": "Die Bar macht Spaß, solange weniger als 60 von 100 Stammgästen kommen. Aber wenn alle so rechnen – was passiert dann?",
+        "typ": "Koordinationsparadox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+    },
+    {
+        "id": "henker",
+        "name": "Das Henkerparadoxon",
+        "icon": "⚖️",
+        "beschreibung": "Der Richter verspricht eine überraschende Hinrichtung nächste Woche. Der Gefangene beweist mit Rückwärtsinduktion, dass sie unmöglich stattfinden kann – und wird trotzdem überrascht.",
+        "typ": "Logik-Paradox",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "5 min",
+    },
+    {
+        "id": "hundert-gefangene",
+        "name": "Das 100-Gefangenen-Problem",
+        "icon": "📦",
+        "beschreibung": "100 Gefangene, 100 Boxen mit Nummern. Jeder darf 50 öffnen. Zufällig überleben fast 0% – mit einer cleveren Strategie plötzlich 30%. Wie?",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+    },
+    {
+        "id": "vergiftete-faesser",
+        "name": "Die vergifteten Fässer",
+        "icon": "🪣",
+        "beschreibung": "1000 Fässer, eines vergiftet. Das Gift wirkt nach einer Nacht. Wie viele Tester brauchst du mindestens, um das vergiftete Fass in einer Nacht zu identifizieren?",
+        "typ": "Logik-Puzzle",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+    },
+    {
+        "id": "wasserkrug",
+        "name": "Das Wasserkrug-Problem",
+        "icon": "🫙",
+        "beschreibung": "Zwei Krüge: 3 Liter und 5 Liter. Kein Maßstrich. Wie misst du exakt 4 Liter ab? Interaktiv – fülle und leere die Krüge selbst.",
+        "typ": "Logik-Puzzle",
+        "schwierigkeit": "Einsteiger",
+        "dauer": "5 min",
+    },
+    {
+        "id": "josephus",
+        "name": "Das Josephus-Problem",
+        "icon": "⚔️",
+        "beschreibung": "10 Soldaten stehen im Kreis. Jeder zweite wird eliminiert. Wo musst du stehen, um zu überleben? Die Antwort folgt einem überraschenden Muster.",
+        "typ": "Logik-Puzzle",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+    },
+    {
+        "id": "huete-spiel",
+        "name": "Das Hüte-Rätsel",
+        "icon": "🎩",
+        "beschreibung": "Drei Gefangene tragen Hüte (3 weiß, 2 rot). C sagt 'ich weiß nicht', B sagt 'ich weiß nicht'. Was schlussfolgert Gefangener A über seinen eigenen Hut?",
+        "typ": "Logik-Puzzle",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+    },
+    {
+        "id": "muenzwaegen",
+        "name": "Die falsche Münze",
+        "icon": "🪙",
+        "beschreibung": "9 Münzen – eine ist schwerer als die anderen. Du hast eine Balkenwaage und genau 2 Wägungen. Kannst du die schwere Münze immer finden?",
+        "typ": "Logik-Puzzle",
+        "schwierigkeit": "Einsteiger",
+        "dauer": "5 min",
+    },
 ]
 
 
@@ -802,4 +892,664 @@ def braess_result(
             "choice": choice,
             "network": BRAESS_NETWORK,
         },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Die zerrissene Karte (Monopol-Verhandlungsexperiment)
+# ---------------------------------------------------------------------------
+# Setup: You hold 5 red cards (monopoly). 5 players each hold 1 blue card.
+# Each red+blue pair is worth 1 €. Players make initial offers.
+# You choose a strategy. The commitment device: tearing a card.
+
+_KARTE_PLAYERS = [
+    {"id": 1, "icon": "🧑‍💼", "name": "Spieler A", "offer": 0.30, "note": "Niedrigstes Angebot"},
+    {"id": 2, "icon": "👩‍💼", "name": "Spieler B", "offer": 0.40, "note": "Unter fairem Wert"},
+    {"id": 3, "icon": "🧔",   "name": "Spieler C", "offer": 0.50, "note": "Faire 50/50-Aufteilung"},
+    {"id": 4, "icon": "👩",   "name": "Spieler D", "offer": 0.35, "note": "Etwas unter fair"},
+    {"id": 5, "icon": "🧑",   "name": "Spieler E", "offer": 0.25, "note": "Sehr niedriges Angebot"},
+]
+
+# Per-player outcome for each strategy.
+# "accepted": deal happens | "excluded": card torn/player passed over | your_share in €
+_KARTE_STRATEGIES = {
+    "accept_all": {
+        "label": "Alle Angebote annehmen",
+        "icon": "🤝",
+        "color": "slate",
+        "description": "Du nimmst jeden Deal so an, wie er dir angeboten wird – kein Widerspruch.",
+        "results": [
+            {"accepted": True,  "excluded": False, "your_share": 0.30, "note": "Angenommen"},
+            {"accepted": True,  "excluded": False, "your_share": 0.40, "note": "Angenommen"},
+            {"accepted": True,  "excluded": False, "your_share": 0.50, "note": "Angenommen"},
+            {"accepted": True,  "excluded": False, "your_share": 0.35, "note": "Angenommen"},
+            {"accepted": True,  "excluded": False, "your_share": 0.25, "note": "Angenommen"},
+        ],
+    },
+    "equal_split": {
+        "label": "Gleichteilung fordern (50/50)",
+        "icon": "⚖️",
+        "color": "indigo",
+        "description": "Du forderst von jedem Spieler eine faire 50/50-Aufteilung. BATNA aller = 0, also akzeptieren alle.",
+        "results": [
+            {"accepted": True,  "excluded": False, "your_share": 0.50, "note": "Akzeptiert (50¢ > 0¢ BATNA)"},
+            {"accepted": True,  "excluded": False, "your_share": 0.50, "note": "Akzeptiert"},
+            {"accepted": True,  "excluded": False, "your_share": 0.50, "note": "Akzeptiert (war schon fair)"},
+            {"accepted": True,  "excluded": False, "your_share": 0.50, "note": "Akzeptiert"},
+            {"accepted": True,  "excluded": False, "your_share": 0.50, "note": "Akzeptiert"},
+        ],
+    },
+    "aggressive": {
+        "label": "Aggressiv verhandeln – 70/30, kein Zerreißen",
+        "icon": "💪",
+        "color": "amber",
+        "description": "Du verlangst 70% ohne Commitment-Signal. Fairness-Normen schlagen zurück.",
+        "results": [
+            {"accepted": False, "excluded": False, "your_share": 0.00, "note": "Abgelehnt – Fairness-Reflex (bot dir 30¢, bekommt jetzt 30¢ = Demütigung)"},
+            {"accepted": True,  "excluded": False, "your_share": 0.70, "note": "Akzeptiert (rational: 30¢ > 0¢)"},
+            {"accepted": True,  "excluded": False, "your_share": 0.70, "note": "Akzeptiert – war schon kooperativ"},
+            {"accepted": False, "excluded": False, "your_share": 0.00, "note": "Abgelehnt – kein Vertrauen ohne Commitment"},
+            {"accepted": False, "excluded": False, "your_share": 0.00, "note": "Abgelehnt – 25¢ Angebot + 70/30 Forderung = Widerspruch"},
+        ],
+    },
+    "tear_one": {
+        "label": "Eine Karte zerreißen + 65/35 fordern",
+        "icon": "✂️",
+        "color": "emerald",
+        "description": "Du zerreißt öffentlich eine Karte. Nur noch 4 Deals möglich. Die verbleibenden 4 sehen: Ausschluss ist real.",
+        "results": [
+            {"accepted": True,  "excluded": False, "your_share": 0.65, "note": "Akzeptiert – Ausschluss ist glaubwürdig"},
+            {"accepted": True,  "excluded": False, "your_share": 0.65, "note": "Akzeptiert"},
+            {"accepted": True,  "excluded": False, "your_share": 0.65, "note": "Akzeptiert"},
+            {"accepted": True,  "excluded": False, "your_share": 0.65, "note": "Akzeptiert"},
+            {"accepted": False, "excluded": True,  "your_share": 0.00, "note": "Ausgeschlossen – Karte zerrissen"},
+        ],
+    },
+    "tear_two": {
+        "label": "Zwei Karten zerreißen + 75/25 fordern",
+        "icon": "✂️✂️",
+        "color": "red",
+        "description": "Maximale Verknappung: Nur noch 3 Deals. Restliche Spieler akzeptieren widerwillig 25¢.",
+        "results": [
+            {"accepted": True,  "excluded": False, "your_share": 0.75, "note": "Akzeptiert – keine Alternative"},
+            {"accepted": True,  "excluded": False, "your_share": 0.75, "note": "Akzeptiert"},
+            {"accepted": True,  "excluded": False, "your_share": 0.75, "note": "Akzeptiert"},
+            {"accepted": False, "excluded": True,  "your_share": 0.00, "note": "Ausgeschlossen"},
+            {"accepted": False, "excluded": True,  "your_share": 0.00, "note": "Ausgeschlossen"},
+        ],
+    },
+}
+
+
+@router.get("/zerrissene-karte", response_class=HTMLResponse)
+def zerrissene_karte_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "raetsel/zerrissene_karte.html",
+        {
+            "active_page": "raetsel",
+            "players": _KARTE_PLAYERS,
+            "strategies": list(_KARTE_STRATEGIES.items()),
+        },
+    )
+
+
+@router.post("/zerrissene-karte/result", response_class=HTMLResponse)
+def zerrissene_karte_result(
+    request: Request,
+    strategy: str = Form(...),
+):
+    if strategy not in _KARTE_STRATEGIES:
+        strategy = "accept_all"
+
+    chosen = _KARTE_STRATEGIES[strategy]
+    results = chosen["results"]
+
+    # Compute totals
+    your_total = round(sum(r["your_share"] for r in results), 2)
+    deals_closed = sum(1 for r in results if r["accepted"] and not r["excluded"])
+    cards_torn = sum(1 for r in results if r["excluded"])
+
+    # Per-player combined view
+    player_results = []
+    for p, r in zip(_KARTE_PLAYERS, results):
+        their_share = round(1.0 - r["your_share"], 2) if r["accepted"] else 0.0
+        player_results.append({**p, **r, "their_share": their_share})
+
+    # Build comparison across all strategies
+    comparison = []
+    best_strat = None
+    best_total = -1
+    for sid, sdata in _KARTE_STRATEGIES.items():
+        total = round(sum(r["your_share"] for r in sdata["results"]), 2)
+        torn = sum(1 for r in sdata["results"] if r["excluded"])
+        closed = sum(1 for r in sdata["results"] if r["accepted"] and not r["excluded"])
+        comparison.append({
+            "id": sid,
+            "label": sdata["label"],
+            "icon": sdata["icon"],
+            "total": total,
+            "deals": closed,
+            "torn": torn,
+            "is_chosen": sid == strategy,
+        })
+        if total > best_total:
+            best_total = total
+            best_strat = sid
+
+    return templates.TemplateResponse(
+        request,
+        "partials/zerrissene_karte_result.html",
+        {
+            "strategy": strategy,
+            "chosen": chosen,
+            "player_results": player_results,
+            "your_total": your_total,
+            "deals_closed": deals_closed,
+            "cards_torn": cards_torn,
+            "comparison": comparison,
+            "best_strat": best_strat,
+            "best_total": best_total,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Hotelling-Gesetz (Vendor Positioning)
+# ---------------------------------------------------------------------------
+
+_HOTELLING_A = 25   # fixed position of Vendor A
+
+
+@router.get("/hotelling", response_class=HTMLResponse)
+def hotelling_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "raetsel/hotelling.html",
+        {"active_page": "raetsel", "vendor_a": _HOTELLING_A},
+    )
+
+
+@router.post("/hotelling/result", response_class=HTMLResponse)
+def hotelling_result(
+    request: Request,
+    position_b: int = Form(...),
+):
+    import math as _m
+
+    vendor_a = _HOTELLING_A
+    beach_size = 101   # positions 0–100, 1 customer per position
+
+    # Customer split: each customer goes to the nearer vendor
+    if vendor_a == position_b:
+        customers_b = beach_size // 2
+        customers_a = beach_size - customers_b
+    else:
+        a_pos = min(vendor_a, position_b)
+        b_pos = max(vendor_a, position_b)
+        boundary = _m.floor((a_pos + b_pos) / 2)
+        # customers 0..boundary go to left vendor, boundary+1..100 to right
+        left_customers = boundary + 1
+        right_customers = beach_size - left_customers
+        if vendor_a < position_b:
+            customers_a = left_customers
+            customers_b = right_customers
+        else:
+            customers_b = left_customers
+            customers_a = right_customers
+
+    # Find optimal B position (maximise B customers)
+    best_b_pos = position_b
+    best_b_customers = 0
+    for pos in range(0, 101):
+        if pos == vendor_a:
+            continue
+        if vendor_a == pos:
+            bc = beach_size // 2
+        else:
+            ap = min(vendor_a, pos)
+            bp = max(vendor_a, pos)
+            bnd = _m.floor((ap + bp) / 2)
+            lc = bnd + 1
+            rc = beach_size - lc
+            bc = rc if vendor_a < pos else lc
+        if bc > best_b_customers:
+            best_b_customers = bc
+            best_b_pos = pos
+
+    # Nash equilibrium note
+    if position_b < 50:
+        nash_pressure = f"A würde jetzt auf {position_b + 1} wandern → Beide driften zur Mitte."
+    elif position_b > 50:
+        nash_pressure = f"A würde jetzt auf {position_b - 1} wandern → Beide driften zur Mitte."
+    else:
+        nash_pressure = "Nash-Gleichgewicht erreicht! Beide stehen bei 50 – niemand kann profitieren, indem er sich bewegt."
+
+    # Social optimum: vendors at 25 and 75 (minimize total travel distance)
+    social_opt_a = 25
+    social_opt_b = 75
+    avg_travel_player = sum(
+        min(abs(i - vendor_a), abs(i - position_b)) for i in range(101)
+    ) / 101
+    avg_travel_optimal = sum(
+        min(abs(i - social_opt_a), abs(i - social_opt_b)) for i in range(101)
+    ) / 101
+
+    return templates.TemplateResponse(
+        request,
+        "partials/hotelling_result.html",
+        {
+            "position_b": position_b,
+            "vendor_a": vendor_a,
+            "customers_a": customers_a,
+            "customers_b": customers_b,
+            "beach_size": beach_size,
+            "best_b_pos": best_b_pos,
+            "best_b_customers": best_b_customers,
+            "nash_pressure": nash_pressure,
+            "avg_travel_player": round(avg_travel_player, 1),
+            "avg_travel_optimal": round(avg_travel_optimal, 1),
+            "social_opt_b": social_opt_b,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# El Farol Bar Problem
+# ---------------------------------------------------------------------------
+
+_ELFAROL_HISTORY = [72, 45, 68, 55, 63, 48, 71, 52]   # last 8 weeks
+_ELFAROL_THRESHOLD = 60
+_ELFAROL_TOTAL = 100
+
+
+@router.get("/el-farol", response_class=HTMLResponse)
+def el_farol_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "raetsel/el_farol.html",
+        {
+            "active_page": "raetsel",
+            "history": _ELFAROL_HISTORY,
+            "threshold": _ELFAROL_THRESHOLD,
+            "total": _ELFAROL_TOTAL,
+        },
+    )
+
+
+@router.post("/el-farol/result", response_class=HTMLResponse)
+def el_farol_result(
+    request: Request,
+    prediction: int = Form(...),
+    decision: str = Form(...),   # "go" | "stay"
+):
+    threshold = _ELFAROL_THRESHOLD
+
+    # Simulate the 99 other regulars:
+    # Each forms their own prediction based on history (mean ~60, sd ~12).
+    # Those who predict < threshold go; those predicting ≥ threshold stay.
+    others_going = 0
+    for _ in range(99):
+        their_pred = _random.gauss(58, 12)
+        if their_pred < threshold:
+            if _random.random() < 0.85:
+                others_going += 1
+        else:
+            if _random.random() < 0.15:
+                others_going += 1
+
+    player_goes = decision == "go"
+    total_attendance = others_going + (1 if player_goes else 0)
+    bar_fun = total_attendance <= threshold
+
+    if player_goes and bar_fun:
+        outcome_key = "toll"
+    elif player_goes and not bar_fun:
+        outcome_key = "schlecht"
+    elif not player_goes and bar_fun:
+        outcome_key = "verpasst"
+    else:
+        outcome_key = "klug"
+
+    prediction_error = abs(prediction - total_attendance)
+    prediction_quality = (
+        "sehr_gut" if prediction_error <= 5
+        else "gut" if prediction_error <= 12
+        else "mittel" if prediction_error <= 20
+        else "schlecht"
+    )
+
+    # Illustrate the self-defeating-prediction paradox:
+    # If everyone predicts < 60 → all 100 go → 100 > 60 → bar ruined → prediction wrong
+    # If everyone predicts ≥ 60 → nobody goes → 0 < 60 → bar would have been fun → also wrong
+
+    return templates.TemplateResponse(
+        request,
+        "partials/el_farol_result.html",
+        {
+            "prediction": prediction,
+            "decision": decision,
+            "others_going": others_going,
+            "total_attendance": total_attendance,
+            "threshold": threshold,
+            "bar_fun": bar_fun,
+            "outcome_key": outcome_key,
+            "prediction_error": prediction_error,
+            "prediction_quality": prediction_quality,
+            "player_goes": player_goes,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Henkerparadoxon (Unexpected Hanging Paradox)
+# ---------------------------------------------------------------------------
+
+HENKER_STEPS = [
+    {
+        "tag": "Freitag",
+        "tagkurz": "Fr",
+        "reasoning": "Wenn ich Donnerstagabend noch lebe, ist Freitag der einzige verbleibende Tag. Ich würde es wissen → keine Überraschung → der Richter hätte gelogen → Freitag ist ausgeschlossen.",
+    },
+    {
+        "tag": "Donnerstag",
+        "tagkurz": "Do",
+        "reasoning": "Da Freitag ausgeschlossen ist: Wenn ich Mittwochabend noch lebe, bleibt nur Donnerstag. Ich würde es wissen → keine Überraschung → auch Donnerstag ausgeschlossen.",
+    },
+    {
+        "tag": "Mittwoch",
+        "tagkurz": "Mi",
+        "reasoning": "Da Fr + Do ausgeschlossen sind: Wenn ich Dienstagabend noch lebe, bleibt nur Mittwoch. Ich würde es wissen → auch Mittwoch ausgeschlossen.",
+    },
+    {
+        "tag": "Dienstag",
+        "tagkurz": "Di",
+        "reasoning": "Da Fr + Do + Mi ausgeschlossen sind: Wenn ich Montagabend noch lebe, bleibt nur Dienstag. Auch Dienstag ausgeschlossen.",
+    },
+    {
+        "tag": "Montag",
+        "tagkurz": "Mo",
+        "reasoning": "Da alle anderen Tage ausgeschlossen sind, bleibt nur Montag. Aber dann wäre Montag vorhersehbar → keine Überraschung → auch Montag ausgeschlossen.",
+    },
+]
+
+
+@router.get("/henker", response_class=HTMLResponse)
+def henker_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/henker.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/henker/result", response_class=HTMLResponse)
+def henker_result(request: Request, choice: str = Form(...)):
+    # choices: "unmoeglich" | "montag" | "freitag" | "zufaellig"
+    is_correct_deduction = choice == "unmoeglich"
+    choice_labels = {
+        "unmoeglich": "Die Hinrichtung kann logisch unmöglich stattfinden.",
+        "montag": "Er wird am Montag hingerichtet – dem ersten möglichen Tag.",
+        "freitag": "Er wird am Freitag hingerichtet – dem letzten möglichen Tag.",
+        "zufaellig": "Er kann keinen Tag ausschließen – der Richter hat einfach Recht.",
+    }
+    return templates.TemplateResponse(
+        request,
+        "partials/henker_result.html",
+        {
+            "choice": choice,
+            "choice_label": choice_labels.get(choice, ""),
+            "is_correct_deduction": is_correct_deduction,
+            "steps": HENKER_STEPS,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# 100-Gefangenen-Problem
+# ---------------------------------------------------------------------------
+
+@router.get("/hundert-gefangene", response_class=HTMLResponse)
+def hundert_gefangene_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/hundert_gefangene.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/hundert-gefangene/result", response_class=HTMLResponse)
+def hundert_gefangene_result(request: Request, strategy: str = Form(...)):
+    n_trials = 2000
+    loop_wins = 0
+    for _ in range(n_trials):
+        boxes = list(range(1, 101))
+        _random.shuffle(boxes)
+        all_found = True
+        for prisoner in range(1, 101):
+            found = False
+            current = prisoner
+            for _ in range(50):
+                if boxes[current - 1] == prisoner:
+                    found = True
+                    break
+                current = boxes[current - 1]
+            if not found:
+                all_found = False
+                break
+        if all_found:
+            loop_wins += 1
+    loop_rate = round(loop_wins / n_trials * 100, 1)
+    theoretical = round((1 - sum(1 / k for k in range(51, 101))) * 100, 2)
+    return templates.TemplateResponse(
+        request,
+        "partials/hundert_gefangene_result.html",
+        {"strategy": strategy, "loop_rate": loop_rate, "theoretical": theoretical, "n_trials": n_trials},
+    )
+
+
+# ---------------------------------------------------------------------------
+# Vergiftete Fässer
+# ---------------------------------------------------------------------------
+
+@router.get("/vergiftete-faesser", response_class=HTMLResponse)
+def vergiftete_faesser_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/vergiftete_faesser.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/vergiftete-faesser/result", response_class=HTMLResponse)
+def vergiftete_faesser_result(request: Request, guess: int = Form(...)):
+    correct = 10
+    return templates.TemplateResponse(
+        request,
+        "partials/vergiftete_faesser_result.html",
+        {"guess": guess, "correct": correct, "is_correct": guess == correct},
+    )
+
+
+# ---------------------------------------------------------------------------
+# Wasserkrug-Problem
+# ---------------------------------------------------------------------------
+
+def _water_pour(a: int, b: int, action: str, cap_a: int = 3, cap_b: int = 5):
+    if action == "fill_a":
+        a = cap_a
+    elif action == "fill_b":
+        b = cap_b
+    elif action == "empty_a":
+        a = 0
+    elif action == "empty_b":
+        b = 0
+    elif action == "pour_ab":
+        t = min(a, cap_b - b); a -= t; b += t
+    elif action == "pour_ba":
+        t = min(b, cap_a - a); b -= t; a += t
+    return a, b
+
+
+@router.get("/wasserkrug", response_class=HTMLResponse)
+def wasserkrug_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/wasserkrug.html",
+        {"active_page": "raetsel", "jug_a": 0, "jug_b": 0, "cap_a": 3, "cap_b": 5, "moves": 0, "won": False, "history": [], "history_str": ""},
+    )
+
+
+@router.post("/wasserkrug/pour", response_class=HTMLResponse)
+def wasserkrug_pour(
+    request: Request,
+    jug_a: int = Form(...),
+    jug_b: int = Form(...),
+    moves: int = Form(...),
+    history: str = Form(default=""),
+    action: str = Form(...),
+):
+    cap_a, cap_b, goal = 3, 5, 4
+    new_a, new_b = _water_pour(jug_a, jug_b, action, cap_a, cap_b)
+    new_moves = moves + 1
+    won = (new_b == goal or new_a == goal)
+    action_labels = {
+        "fill_a": "Krug A (3L) füllen", "fill_b": "Krug B (5L) füllen",
+        "empty_a": "Krug A leeren", "empty_b": "Krug B leeren",
+        "pour_ab": "A → B umfüllen", "pour_ba": "B → A umfüllen",
+    }
+    hist = [e for e in history.split("|") if e]
+    hist.append(f"{action_labels.get(action, action)}: A={new_a}L, B={new_b}L")
+    new_history_str = "|".join(hist[-10:])
+    return templates.TemplateResponse(
+        request,
+        "partials/wasserkrug_state.html",
+        {
+            "jug_a": new_a, "jug_b": new_b, "cap_a": cap_a, "cap_b": cap_b,
+            "moves": new_moves, "won": won, "goal": goal,
+            "history": hist, "history_str": new_history_str,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Josephus-Problem
+# ---------------------------------------------------------------------------
+
+def _josephus(n: int, k: int = 2):
+    people = list(range(1, n + 1))
+    order = []
+    idx = 0
+    while len(people) > 1:
+        idx = (idx + k - 1) % len(people)
+        order.append(people.pop(idx))
+        if idx == len(people):
+            idx = 0
+    return people[0], order
+
+
+@router.get("/josephus", response_class=HTMLResponse)
+def josephus_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/josephus.html",
+        {"active_page": "raetsel", "n": 10, "positions": list(range(1, 11))},
+    )
+
+
+@router.post("/josephus/result", response_class=HTMLResponse)
+def josephus_result(request: Request, position: int = Form(...)):
+    n = 10
+    survivor, order = _josephus(n)
+    return templates.TemplateResponse(
+        request,
+        "partials/josephus_result.html",
+        {"position": position, "survivor": survivor, "order": order, "n": n, "is_correct": position == survivor},
+    )
+
+
+# ---------------------------------------------------------------------------
+# Hüte-Rätsel
+# ---------------------------------------------------------------------------
+
+@router.get("/huete-spiel", response_class=HTMLResponse)
+def huete_spiel_page(request: Request):
+    choices = [
+        ("weiß", "weiß"), ("weiß", "rot"), ("rot", "weiß"), ("rot", "rot"),
+    ]
+    hat_b, hat_c = _random.choice(choices)
+    return templates.TemplateResponse(
+        request, "raetsel/huete_spiel.html",
+        {"active_page": "raetsel", "hat_b": hat_b, "hat_c": hat_c},
+    )
+
+
+@router.post("/huete-spiel/result", response_class=HTMLResponse)
+def huete_spiel_result(
+    request: Request,
+    guess: str = Form(...),
+    hat_b: str = Form(...),
+    hat_c: str = Form(...),
+):
+    is_correct = guess == "weiß"
+    return templates.TemplateResponse(
+        request,
+        "partials/huete_result.html",
+        {"guess": guess, "hat_b": hat_b, "hat_c": hat_c, "is_correct": is_correct},
+    )
+
+
+# ---------------------------------------------------------------------------
+# Münzenwägen (9 Münzen, 1 schwerer, 2 Wägungen)
+# ---------------------------------------------------------------------------
+
+@router.get("/muenzwaegen", response_class=HTMLResponse)
+def muenzwaegen_page(request: Request):
+    heavy = _random.randint(1, 9)
+    return templates.TemplateResponse(
+        request, "raetsel/muenzwaegen.html",
+        {"active_page": "raetsel", "heavy": heavy, "bags": [[1, 2, 3], [4, 5, 6], [7, 8, 9]]},
+    )
+
+
+@router.post("/muenzwaegen/weigh1", response_class=HTMLResponse)
+def muenzwaegen_weigh1(
+    request: Request,
+    heavy: int = Form(...),
+    left_bag: int = Form(...),   # 0,1,2 = bag index
+    right_bag: int = Form(...),
+):
+    bags = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    aside_bag = [i for i in range(3) if i not in (left_bag, right_bag)][0]
+    left_coins = bags[left_bag]
+    right_coins = bags[right_bag]
+    aside_coins = bags[aside_bag]
+    left_heavy = heavy in left_coins
+    right_heavy = heavy in right_coins
+    if left_heavy:
+        result, candidates = "left", left_coins
+    elif right_heavy:
+        result, candidates = "right", right_coins
+    else:
+        result, candidates = "equal", aside_coins
+    return templates.TemplateResponse(
+        request,
+        "partials/muenzwaegen_weigh1.html",
+        {
+            "heavy": heavy, "result": result, "candidates": candidates,
+            "left_coins": left_coins, "right_coins": right_coins, "aside_coins": aside_coins,
+        },
+    )
+
+
+@router.post("/muenzwaegen/weigh2", response_class=HTMLResponse)
+def muenzwaegen_weigh2(
+    request: Request,
+    heavy: int = Form(...),
+    left_coin: int = Form(...),
+    right_coin: int = Form(...),
+    aside_coin: int = Form(...),
+):
+    if heavy == left_coin:
+        result, found = "left", left_coin
+    elif heavy == right_coin:
+        result, found = "right", right_coin
+    else:
+        result, found = "equal", aside_coin
+    return templates.TemplateResponse(
+        request,
+        "partials/muenzwaegen_result.html",
+        {"heavy": heavy, "found": found, "result": result, "is_correct": found == heavy},
     )

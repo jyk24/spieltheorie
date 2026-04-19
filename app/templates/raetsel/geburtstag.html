@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Geburtstagsparadoxon – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🎂 Geburtstagsparadoxon</h1>
+        <p class="text-slate-500 mt-1">Wie viele Menschen braucht man für eine 50/50-Chance auf gleichen Geburtstag?</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Frage:</p>
+        <p class="mb-3">In einem Raum mit <em>n</em> Menschen: Wie groß ist die Wahrscheinlichkeit, dass mindestens zwei von ihnen am selben Tag Geburtstag haben?</p>
+        <div class="bg-white border border-slate-100 rounded-lg p-3 text-xs text-slate-600">
+            <p class="font-medium mb-1">Annahmen:</p>
+            <ul class="space-y-0.5">
+                <li>→ Jeder Geburtstag ist gleich wahrscheinlich (1/365)</li>
+                <li>→ Schaltjahre werden ignoriert</li>
+                <li>→ Die Geburtstage sind unabhängig voneinander</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="spiel-area">
+        <p class="font-semibold text-slate-800 mb-2">Deine Schätzung:</p>
+        <p class="text-sm text-slate-500 mb-5">
+            Bei wie vielen Personen in einem Raum überschreitet die Wahrscheinlichkeit für einen gemeinsamen Geburtstag erstmals <strong>50 %</strong>?
+        </p>
+
+        <form hx-post="/raetsel/geburtstag/result"
+              hx-target="#spiel-area"
+              hx-swap="innerHTML"
+              class="space-y-5">
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Meine Antwort: <span id="guess-display" class="font-bold text-indigo-700">30</span> Personen
+                </label>
+                <input type="range" min="2" max="100" value="30" step="1"
+                       name="guess" id="guess-slider"
+                       class="w-full accent-indigo-600"
+                       oninput="document.getElementById('guess-display').textContent = this.value">
+                <div class="flex justify-between text-xs text-slate-400 mt-1">
+                    <span>2</span>
+                    <span>50</span>
+                    <span>100</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-4 gap-2 text-xs text-center">
+                {% for v in [10, 23, 50, 75] %}
+                <button type="button"
+                        onclick="setGuess({{ v }})"
+                        class="py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600">
+                    {{ v }}
+                </button>
+                {% endfor %}
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
+                Auflösung ansehen →
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+function setGuess(val) {
+    const slider = document.getElementById('guess-slider');
+    if (slider) {
+        slider.value = val;
+        document.getElementById('guess-display').textContent = val;
+    }
+}
+</script>
+
+{% endblock %}

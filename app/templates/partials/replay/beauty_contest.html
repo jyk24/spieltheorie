@@ -1,0 +1,44 @@
+{% set ns = namespace(wins=0) %}
+<div class="overflow-x-auto">
+<table class="w-full text-sm">
+    <thead>
+        <tr class="text-slate-500 border-b border-slate-100 text-xs uppercase tracking-wide">
+            <th class="text-left pb-2 pr-3">Runde</th>
+            <th class="text-right pb-2 pr-3">Dein Tipp</th>
+            <th class="text-right pb-2 pr-3">Zielzahl (2/3 Ø)</th>
+            <th class="text-right pb-2 pr-3">Abstand</th>
+            <th class="text-center pb-2">Gewonnen?</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in moves %}
+        {% if m.player_wins_round %}{% set ns.wins = ns.wins + 1 %}{% endif %}
+        <tr class="border-b border-slate-50
+            {% if m.player_wins_round %}bg-emerald-50{% endif %}">
+            <td class="py-2 pr-3 text-slate-500 text-xs">{{ m.round }}</td>
+            <td class="py-2 pr-3 text-right font-semibold text-slate-700">{{ m.player_guess }}</td>
+            <td class="py-2 pr-3 text-right text-indigo-600 font-medium">{{ m.target }}</td>
+            <td class="py-2 pr-3 text-right
+                {% if m.player_distance <= 3 %}text-emerald-600 font-bold
+                {% elif m.player_distance <= 10 %}text-amber-600
+                {% else %}text-red-500{% endif %}">
+                {{ m.player_distance }}
+            </td>
+            <td class="py-2 text-center text-xs font-semibold">
+                {% if m.player_wins_round %}
+                <span class="text-emerald-700">✓ Gewonnen</span>
+                {% else %}
+                <span class="text-slate-400">–</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr class="border-t-2 border-slate-200">
+            <td colspan="4" class="pt-2 text-xs text-slate-400 font-medium">Rundensiege</td>
+            <td class="pt-2 text-center font-bold text-indigo-700">{{ ns.wins }}/{{ moves|length }}</td>
+        </tr>
+    </tfoot>
+</table>
+</div>

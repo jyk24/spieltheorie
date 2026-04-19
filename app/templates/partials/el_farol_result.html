@@ -1,0 +1,129 @@
+<!-- Ergebnis-Banner -->
+{% if outcome_key == "toll" %}
+<div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+    <h3 class="text-xl font-bold text-emerald-800 mb-1">🍺 Richtig entschieden – und Spaß gehabt!</h3>
+    <p class="text-sm text-emerald-700">
+        Du bist gegangen, und die Bar war <strong>angenehm voll ({{ total_attendance }} Personen)</strong>.
+        Diesmal hat deine Vorhersage gepasst.
+    </p>
+</div>
+{% elif outcome_key == "schlecht" %}
+<div class="mb-5 p-4 rounded-xl bg-red-50 border-2 border-red-300">
+    <h3 class="text-xl font-bold text-red-800 mb-1">😰 Überfüllt – du hättest besser zuhause bleiben sollen.</h3>
+    <p class="text-sm text-red-700">
+        Du bist gegangen, aber <strong>{{ total_attendance }} Personen</strong> waren da – zu voll!
+        Der Abend war eine Enttäuschung.
+    </p>
+</div>
+{% elif outcome_key == "verpasst" %}
+<div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+    <h3 class="text-xl font-bold text-amber-800 mb-1">😔 Verpasst – die Bar wäre toll gewesen.</h3>
+    <p class="text-sm text-amber-700">
+        Du bist zuhause geblieben, aber nur <strong>{{ total_attendance }} Personen</strong> sind gegangen.
+        Die Bar war entspannt und du warst nicht dabei.
+    </p>
+</div>
+{% else %}
+<div class="mb-5 p-4 rounded-xl bg-slate-100 border-2 border-slate-300">
+    <h3 class="text-xl font-bold text-slate-800 mb-1">🏠 Gute Entscheidung – zuhause war besser.</h3>
+    <p class="text-sm text-slate-600">
+        Du bist zuhause geblieben, und tatsächlich kamen <strong>{{ total_attendance }} Personen</strong> – zu voll.
+        Deine Skepsis war berechtigt.
+    </p>
+</div>
+{% endif %}
+
+<!-- Ergebnisübersicht -->
+<div class="bg-white rounded-xl border border-slate-200 p-4 mb-5">
+    <div class="grid grid-cols-3 gap-4 text-center">
+        <div>
+            <div class="text-2xl font-black text-indigo-600">{{ prediction }}</div>
+            <div class="text-xs text-slate-500 mt-1">Deine Vorhersage</div>
+        </div>
+        <div>
+            <div class="text-2xl font-black {% if bar_fun %}text-emerald-600{% else %}text-red-600{% endif %}">{{ total_attendance }}</div>
+            <div class="text-xs text-slate-500 mt-1">Tatsächlich da</div>
+        </div>
+        <div>
+            <div class="text-2xl font-black text-slate-700">{{ prediction_error }}</div>
+            <div class="text-xs text-slate-500 mt-1">
+                Abweichung
+                {% if prediction_quality == "sehr_gut" %}<span class="text-emerald-600">(sehr gut)</span>
+                {% elif prediction_quality == "gut" %}<span class="text-emerald-600">(gut)</span>
+                {% elif prediction_quality == "mittel" %}<span class="text-amber-600">(mittel)</span>
+                {% else %}<span class="text-red-600">(weit daneben)</span>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Balken -->
+    <div class="mt-4">
+        <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+            <span>Besucherzahl</span>
+            <span>Grenze: {{ threshold }}</span>
+        </div>
+        <div class="relative bg-slate-100 rounded-full h-4 overflow-hidden">
+            <div class="absolute top-0 bottom-0 {% if bar_fun %}bg-emerald-400{% else %}bg-red-400{% endif %} rounded-full transition-all"
+                 style="width: {{ [total_attendance, 100] | min }}%"></div>
+            <!-- Threshold marker -->
+            <div class="absolute top-0 bottom-0 border-r-2 border-amber-500" style="left: {{ threshold }}%"></div>
+        </div>
+        <div class="flex justify-between text-xs text-slate-400 mt-1">
+            <span>0</span>
+            <span>{{ threshold }} (Kapazitätsgrenze)</span>
+            <span>{{ threshold * 2 // 2 }}+</span>
+        </div>
+    </div>
+</div>
+
+<!-- Paradoxie-Erklärung -->
+<div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+    <p class="font-semibold mb-2">Das selbst-destruktive Prognose-Paradox:</p>
+    <div class="space-y-2 text-xs">
+        <div class="flex items-start gap-2">
+            <span class="font-bold text-violet-600 mt-0.5">Szenario 1:</span>
+            <span>Alle 100 Gäste denken: <em>„Es werden weniger als 60 kommen."</em> → Alle gehen hin → 100 Personen da → Bar überfüllt → <strong>Vorhersage falsch!</strong></span>
+        </div>
+        <div class="flex items-start gap-2">
+            <span class="font-bold text-violet-600 mt-0.5">Szenario 2:</span>
+            <span>Alle 100 Gäste denken: <em>„Es werden mehr als 60 kommen."</em> → Niemand geht → 0 Personen da → Bar wäre toll gewesen → <strong>Vorhersage auch falsch!</strong></span>
+        </div>
+        <div class="bg-violet-100 rounded-lg p-3 mt-2">
+            <strong>Fazit:</strong> Es gibt keine stabile gemeinsame Erwartung, auf die sich alle einigen können – ohne Kommunikation. Das System schwankt ständig zwischen überfüllt und leer.
+        </div>
+    </div>
+</div>
+
+<!-- W. Brian Arthur -->
+<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-5 text-sm text-indigo-800">
+    <p class="font-semibold mb-1">W. Brian Arthurs Modell (1994):</p>
+    <p class="mb-2">
+        Der Ökonom W. Brian Arthur nutzte dieses Problem, um zu zeigen, dass rationale Agenten
+        durch <strong>heterogene Vorhersage-Heuristiken</strong> zu einem stabilen Gleichgewicht
+        konvergieren können – aber nur als emergentes Phänomen, nicht durch koordiniertes Planen.
+    </p>
+    <p class="text-xs text-indigo-700">
+        Im Durchschnitt über viele Wochen besuchen <em>nahezu genau {{ threshold }} Personen</em> die Bar –
+        nicht weil jemand das plant, sondern weil jede Abweichung davon Anreize zur Korrektur schafft.
+        Komplexität ohne zentrale Steuerung.
+    </p>
+</div>
+
+<!-- Verhandlungsrelevanz -->
+<div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5 text-sm text-amber-800">
+    <p class="font-semibold mb-1">Relevanz für Verhandlungen und Märkte:</p>
+    <ul class="space-y-1.5 mt-1">
+        <li class="flex items-start gap-2"><span>📈</span><span><strong>Finanzmärkte:</strong> „Alle kaufen jetzt" → Preis steigt → Vorhersage falsch → alle verkaufen.</span></li>
+        <li class="flex items-start gap-2"><span>🚗</span><span><strong>Pendler:</strong> „Heute ist die Autobahn frei" → alle fahren → Stau → Vorhersage falsch.</span></li>
+        <li class="flex items-start gap-2"><span>🤝</span><span><strong>Verhandlungen:</strong> Wenn alle denken, der Gegner wird nachgeben, wird niemand Zugeständnisse machen.</span></li>
+    </ul>
+</div>
+
+<div class="flex gap-3 flex-wrap">
+    <a href="/raetsel/el-farol" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+        Nochmal (neue Simulation)
+    </a>
+    <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+        Andere Rätsel
+    </a>
+</div>

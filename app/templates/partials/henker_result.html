@@ -1,0 +1,135 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    <!-- Reaktion auf Wahl -->
+    {% if is_correct_deduction %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">Genau das schlussfolgert der Gefangene.</h3>
+        <p class="text-sm text-emerald-700">
+            Mit vollständiger Rückwärtsinduktion beweist er, dass die Hinrichtung <strong>logisch unmöglich</strong> ist.
+            Er geht beruhigt schlafen – und wird am <strong>Mittwochmorgen</strong> vom Henker geweckt.
+        </p>
+    </div>
+    {% elif choice == "zufaellig" %}
+    <div class="mb-5 p-4 rounded-xl bg-blue-50 border-2 border-blue-300">
+        <h3 class="text-xl font-bold text-blue-800 mb-1">Das wäre die intuitive Antwort – aber nicht die des rationalen Gefangenen.</h3>
+        <p class="text-sm text-blue-700">
+            Ein vollständig rationaler Gefangener würde nicht aufgeben. Er wendet Rückwärtsinduktion an –
+            und kommt zu einem viel radikaleren Schluss: Die Hinrichtung ist <strong>logisch unmöglich</strong>.
+        </p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-slate-100 border-2 border-slate-300">
+        <h3 class="text-xl font-bold text-slate-800 mb-1">Nicht ganz – der rationale Gefangene denkt weiter.</h3>
+        <p class="text-sm text-slate-600">
+            Durch Rückwärtsinduktion schließt er systematisch <em>alle</em> Tage aus –
+            und kommt zu dem Schluss: Die Hinrichtung kann überhaupt nicht stattfinden.
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Der Twist -->
+    <div class="bg-red-50 border-2 border-red-300 rounded-xl p-5 mb-5">
+        <div class="flex items-center gap-3 mb-3">
+            <span class="text-3xl">😱</span>
+            <div>
+                <p class="font-bold text-red-800 text-lg">Mittwochmorgen – Klopfen an der Tür.</p>
+                <p class="text-sm text-red-700">Der Henker ist da. Der Gefangene ist <strong>vollständig überrascht</strong>.</p>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg p-3 text-sm text-slate-600 border border-red-200">
+            <p>Der Richter hatte in beiden Teilen Recht:</p>
+            <ul class="mt-1.5 space-y-1 text-xs">
+                <li>✓ Die Hinrichtung fand statt (nächste Woche, Werktag)</li>
+                <li>✓ Der Gefangene war vollständig überrascht (er hatte sich bewiesen, dass es unmöglich ist)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Rückwärtsinduktion Schritt für Schritt -->
+    <div class="mb-5">
+        <h4 class="font-bold text-slate-800 mb-1">Die Rückwärtsinduktion des Gefangenen</h4>
+        <p class="text-sm text-slate-500 mb-4">Er eliminiert die Tage von hinten nach vorne:</p>
+
+        <div class="space-y-2">
+            {% for step in steps %}
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50 border border-slate-200">
+                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-red-100 border border-red-200 flex items-center justify-center font-bold text-red-600 text-sm line-through decoration-red-400">
+                    {{ step.tagkurz }}
+                </div>
+                <div class="text-xs text-slate-600 leading-relaxed">
+                    <span class="font-medium text-slate-700">{{ step.tag }}:</span>
+                    {{ step.reasoning }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-3 p-3 rounded-lg bg-red-100 border-2 border-red-300 text-sm font-bold text-red-800 text-center">
+            Schluss: Alle 5 Tage sind ausgeschlossen → Die Hinrichtung ist logisch unmöglich. ✗
+        </div>
+    </div>
+
+    <!-- Wo liegt der Fehler? -->
+    <div class="mb-5">
+        <h4 class="font-bold text-slate-800 mb-3">Wo liegt der Denkfehler?</h4>
+        <div class="space-y-3 text-sm">
+
+            <div class="p-4 rounded-xl bg-violet-50 border border-violet-200">
+                <p class="font-semibold text-violet-800 mb-1">1. Selbstaufhebung des Arguments</p>
+                <p class="text-violet-700 text-xs">
+                    Das Argument zerstört sich selbst: Wenn der Gefangene <em>beweist</em>, dass die Hinrichtung nicht kommen kann,
+                    vergisst er die Möglichkeit, dass <em>die Hinrichtung trotzdem kommen kann</em> –
+                    weil er ja gerade glaubt, sie komme nicht. Seine eigene Überzeugung erzeugt die Überraschung.
+                </p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-indigo-50 border border-indigo-200">
+                <p class="font-semibold text-indigo-800 mb-1">2. Selbstreferenz & Episteme</p>
+                <p class="text-indigo-700 text-xs">
+                    Der Freitag-Schritt ist nur gültig, wenn der Gefangene <em>weiß</em>, dass der Richter Wort hält.
+                    Aber sobald er alle Tage ausgeschlossen hat, <em>weiß</em> er nicht mehr, ob der Richter Wort halten kann –
+                    denn das würde einen Widerspruch erzeugen. Das Wissen kollabiert.
+                </p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-amber-50 border border-amber-200">
+                <p class="font-semibold text-amber-800 mb-1">3. Das Lügner-Paradoxon als Verwandter</p>
+                <p class="text-amber-700 text-xs">
+                    „Dieser Satz ist falsch" – wahr oder falsch? Genauso enthält die Richteraussage
+                    eine selbstbezügliche Komponente über das Wissen des Gefangenen.
+                    Solche Sätze können in klassischer Logik nicht konsistent behandelt werden.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Konsens in der Literatur -->
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-5 text-sm text-slate-600">
+        <p class="font-semibold text-slate-700 mb-2">Was sagen Philosophen und Mathematiker?</p>
+        <ul class="space-y-1.5 text-xs">
+            <li>→ <strong>Kein Konsens seit über 80 Jahren</strong> – das Paradoxon ist offiziell ungelöst.</li>
+            <li>→ <strong>W.V.O. Quine (1953):</strong> Der Freitag-Schritt ist ungültig, weil das Urteil selbstbezüglich ist.</li>
+            <li>→ <strong>Epistemische Logik:</strong> Aussagen über zukünftiges Wissen können inkonsistent sein.</li>
+            <li>→ <strong>Verbindung zu Gödel:</strong> Wie Gödels Satz zeigt das Paradoxon Grenzen formaler Systeme.</li>
+        </ul>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+        <p class="font-semibold mb-1">Verhandlungsrelevanz:</p>
+        <p>Wer glaubt, alle Schritte des Gegenübers vorhersehen zu können, vergisst einen entscheidenden Faktor:
+        Das Gegenüber kann deine Vorhersage kennen – und darauf reagieren. Überraschungen entstehen genau dann,
+        wenn man sie für unmöglich hält. <strong>Rückwärtsinduktion hat Grenzen, sobald Wissen selbstreferenziell wird.</strong></p>
+    </div>
+
+    <div class="flex gap-3">
+        <a href="/raetsel/henker" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/raetsel/piraten" class="border border-amber-200 text-amber-700 px-5 py-2 rounded-lg text-sm font-medium hover:bg-amber-50">
+            Piratenspiel (Rückwärtsinduktion)
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>

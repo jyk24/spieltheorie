@@ -81,16 +81,9 @@
         <p>Schelling-Punkte ("Focal Points") helfen: Gibt es eine Option, die "natürlicher" wirkt? Wer die Erwartungen der anderen Partei versteht, kann die Koordination steuern.</p>
     </div>
 
+    {% include "partials/achievement_unlock.html" %}
+    {% set current_game_id = "koordination" %}
     {% include "partials/strategy_debrief.html" %}
-
-    <div class="flex gap-3 mt-4">
-        <a href="/spiele/koordination" class="bg-amber-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-amber-700">
-            Nochmal
-        </a>
-        <a href="/spiele" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
-            Alle Spiele
-        </a>
-    </div>
 </div>
 
 {% endif %}

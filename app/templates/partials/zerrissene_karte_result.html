@@ -1,0 +1,182 @@
+<!-- Ergebnis-Banner -->
+{% if strategy == "tear_one" and your_total >= 2.60 %}
+<div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+    <h3 class="text-xl font-bold text-emerald-800 mb-1">✂️ Optimale Strategie! Das Commitment-Device funktioniert.</h3>
+    <p class="text-sm text-emerald-700">
+        Eine Karte zerreißen + 65/35 fordern war die beste Strategie: <strong>{{ your_total }} €</strong>.
+        Du hast Knappheit demonstriert, ohne zu viele Deals zu opfern.
+    </p>
+</div>
+{% elif strategy == "accept_all" %}
+<div class="mb-5 p-4 rounded-xl bg-slate-100 border-2 border-slate-300">
+    <h3 class="text-xl font-bold text-slate-800 mb-1">🤝 Sicher – aber du lässt viel liegen.</h3>
+    <p class="text-sm text-slate-600">
+        <strong>{{ your_total }} €</strong> – du hast alle 5 Deals gemacht, aber den wenigsten für dich herausgeholt.
+        Dabei hast du ein Monopol und alle Karten in der Hand!
+    </p>
+</div>
+{% elif strategy == "aggressive" %}
+<div class="mb-5 p-4 rounded-xl bg-red-50 border-2 border-red-300">
+    <h3 class="text-xl font-bold text-red-800 mb-1">💢 Backfire! Harte Forderung ohne Commitment schlägt zurück.</h3>
+    <p class="text-sm text-red-700">
+        Nur <strong>{{ your_total }} €</strong>. Ohne glaubwürdiges Commitment-Signal verletzt du Fairness-Normen –
+        und Spieler lehnen ab, obwohl ihr BATNA 0 € ist. Das ist der Ultimatum-Effekt.
+    </p>
+</div>
+{% elif strategy == "tear_two" %}
+<div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+    <h3 class="text-xl font-bold text-amber-800 mb-1">✂️✂️ Zu viel geopfert – sinkende Erträge.</h3>
+    <p class="text-sm text-amber-700">
+        <strong>{{ your_total }} €</strong> aus nur 3 Deals. Mehr zerreißen schafft zwar höheren Preis pro Deal,
+        aber du verlierst zu viele potenzielle Einnahmen. Weniger ist manchmal mehr.
+    </p>
+</div>
+{% else %}
+<div class="mb-5 p-4 rounded-xl bg-indigo-50 border-2 border-indigo-300">
+    <h3 class="text-xl font-bold text-indigo-800 mb-1">⚖️ Solid – aber nicht optimal.</h3>
+    <p class="text-sm text-indigo-700">
+        <strong>{{ your_total }} €</strong>. Gleichteilung ist fair und alle akzeptieren –
+        aber als Monopolist könntest du mehr verlangen.
+    </p>
+</div>
+{% endif %}
+
+<!-- Detailtabelle -->
+<div class="bg-white rounded-xl border border-slate-200 overflow-hidden mb-5">
+    <div class="bg-slate-50 px-4 py-2.5 border-b border-slate-200">
+        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ergebnis je Spieler – {{ chosen.label }}</p>
+    </div>
+    {% for pr in player_results %}
+    <div class="flex items-center gap-3 px-4 py-3 {% if not loop.last %}border-b border-slate-100{% endif %}
+                {% if pr.excluded %}bg-red-50{% elif not pr.accepted %}bg-amber-50{% endif %}">
+        <span class="text-xl w-8 text-center">{{ pr.icon }}</span>
+        <span class="text-sm font-medium text-slate-700 w-24">{{ pr.name }}</span>
+        <div class="flex-1">
+            {% if pr.excluded %}
+                <span class="inline-flex items-center gap-1 text-xs text-red-700 font-medium bg-red-100 px-2 py-0.5 rounded-full">
+                    ✂️ Karte zerrissen – ausgeschlossen
+                </span>
+            {% elif pr.accepted %}
+                <div class="flex items-center gap-2">
+                    <div class="w-24 h-3 rounded-full overflow-hidden bg-slate-200 flex">
+                        <div class="bg-indigo-500 h-3" style="width: {{ (pr.your_share * 100)|round }}%"></div>
+                        <div class="bg-blue-300 h-3" style="width: {{ (pr.their_share * 100)|round }}%"></div>
+                    </div>
+                    <span class="text-xs text-slate-600">
+                        <span class="font-bold text-indigo-700">{{ "%.0f"|format(pr.your_share * 100) }}¢</span> /
+                        <span class="text-blue-600">{{ "%.0f"|format(pr.their_share * 100) }}¢</span>
+                    </span>
+                </div>
+            {% else %}
+                <span class="inline-flex items-center gap-1 text-xs text-amber-700 font-medium bg-amber-100 px-2 py-0.5 rounded-full">
+                    ❌ Abgelehnt (Fairness-Reflex)
+                </span>
+            {% endif %}
+        </div>
+        <div class="text-right">
+            <span class="font-bold text-sm {% if pr.your_share > 0 %}text-indigo-700{% else %}text-slate-300{% endif %}">
+                {{ "+%.2f €"|format(pr.your_share) if pr.your_share > 0 else "0 €" }}
+            </span>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="flex items-center justify-between px-4 py-3 bg-indigo-50 border-t border-indigo-200">
+        <span class="text-sm font-bold text-indigo-800">Dein Gesamtgewinn</span>
+        <span class="text-xl font-black text-indigo-700">{{ "%.2f €"|format(your_total) }}</span>
+    </div>
+</div>
+
+<!-- Strategievergleich -->
+<div class="mb-5">
+    <h4 class="font-bold text-slate-800 mb-3">Alle Strategien im Vergleich</h4>
+    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div class="grid grid-cols-4 text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-50 px-4 py-2.5 border-b border-slate-200">
+            <div class="col-span-2">Strategie</div>
+            <div class="text-center">Deals</div>
+            <div class="text-center">Dein Gewinn</div>
+        </div>
+        {% for c in comparison %}
+        <div class="grid grid-cols-4 items-center px-4 py-3 {% if not loop.last %}border-b border-slate-100{% endif %}
+                    {% if c.is_chosen %}bg-indigo-50{% endif %}">
+            <div class="col-span-2 flex items-center gap-2">
+                <span class="text-base">{{ c.icon }}</span>
+                <div>
+                    <div class="text-xs font-medium text-slate-700 leading-tight">
+                        {{ c.label | truncate(38, True, '…') }}
+                    </div>
+                    {% if c.torn > 0 %}
+                    <div class="text-xs text-red-500">{{ c.torn }} Karte{{ 'n' if c.torn > 1 }} zerrissen</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="text-center text-sm font-bold text-slate-600">{{ c.deals }}/5</div>
+            <div class="text-center">
+                <div class="flex items-center justify-center gap-1">
+                    <!-- Bar relative to max (2.80) -->
+                    <div class="w-14 h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div class="h-2 rounded-full {% if c.id == 'tear_one' %}bg-emerald-500{% elif c.is_chosen %}bg-indigo-500{% else %}bg-slate-400{% endif %}"
+                             style="width: {{ (c.total / 2.80 * 100)|round }}%"></div>
+                    </div>
+                    <span class="text-xs font-bold {% if c.id == 'tear_one' %}text-emerald-700{% elif c.is_chosen %}text-indigo-700{% else %}text-slate-600{% endif %}">
+                        {{ "%.2f €"|format(c.total) }}
+                        {% if c.id == 'tear_one' %}<span class="text-emerald-500">★</span>{% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Analyse-Box -->
+<div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+    <p class="font-semibold mb-2">Warum funktioniert das Zerreißen – und warum scheitert bloße Aggressivität?</p>
+    <div class="space-y-2 text-xs">
+        <div class="flex items-start gap-2">
+            <span class="font-bold mt-0.5">❌</span>
+            <span><strong>Ohne Commitment:</strong> „70/30 fordern" klingt nach einer leeren Drohung. Die Spieler wissen: Du hast 5 Karten und brauchst Deals – du wirst nachgeben. Fairness-Reflex siegt, einige lehnen ab.</span>
+        </div>
+        <div class="flex items-start gap-2">
+            <span class="font-bold mt-0.5">✂️</span>
+            <span><strong>Karte zerreißen:</strong> Jetzt ist der Ausschluss <em>real und unwiderruflich</em>. Spieler E sieht: er wurde ausgeschlossen. Spieler A–D sehen: das kann mir auch passieren. Das erzeugt echten Wettbewerb unter den verbleibenden Käufern.</span>
+        </div>
+        <div class="flex items-start gap-2">
+            <span class="font-bold mt-0.5">⚖️</span>
+            <span><strong>Optimal:</strong> Eine Karte opfern reicht als Signal. Mehr zerstören senkt die Gesamtzahl möglicher Deals – und damit deinen Gesamtgewinn.</span>
+        </div>
+    </div>
+</div>
+
+<!-- Shapley Value -->
+<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-5 text-sm text-indigo-800">
+    <p class="font-semibold mb-1">Spieltheorie: Shapley-Wert und Monopol-BATNA</p>
+    <p class="mb-2">
+        Der <strong>Shapley-Wert</strong> misst den marginalen Beitrag jedes Spielers.
+        Da du alle roten Karten hast, ist dein Beitrag zu <em>jedem</em> möglichen Deal 100 % –
+        kein Paar ohne dich. Theoretisch solltest du fast alles bekommen.
+    </p>
+    <p class="text-xs text-indigo-700">
+        In der Praxis wirken aber <strong>Fairness-Normen</strong> (Ultimatum-Effekt) und
+        <strong>Informationsasymmetrien</strong> gegen dich – außer du setzt ein glaubwürdiges
+        Commitment-Signal: die zerrissene Karte.
+    </p>
+</div>
+
+<!-- Real-world examples -->
+<div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5 text-sm text-amber-800">
+    <p class="font-semibold mb-1">Reale Anwendungen:</p>
+    <ul class="space-y-1.5 text-xs mt-1">
+        <li class="flex items-start gap-2"><span>🛢️</span><span><strong>OPEC-Förderkürzungen:</strong> Ölkartell „zerreißt Karten" durch Produktionsdrosselung – reduziertes Angebot treibt Preise.</span></li>
+        <li class="flex items-start gap-2"><span>🏠</span><span><strong>Immobilien-Deadline:</strong> „Ich nehme das Angebot morgen vom Tisch" = glaubwürdige Verknappung der verfügbaren Zeit.</span></li>
+        <li class="flex items-start gap-2"><span>💼</span><span><strong>Exklusivverträge:</strong> Durch Exklusivität signalisiert man dem Vertragspartner: Wettbewerber sind dauerhaft ausgeschlossen.</span></li>
+    </ul>
+</div>
+
+<div class="flex gap-3 flex-wrap">
+    <a href="/raetsel/zerrissene-karte" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+        Andere Strategie wählen
+    </a>
+    <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+        Andere Rätsel
+    </a>
+</div>

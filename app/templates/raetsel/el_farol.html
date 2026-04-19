@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}El Farol Bar Problem – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🍺 El Farol Bar Problem</h1>
+        <p class="text-slate-500 mt-1">Wenn jeder rational denkt – kann das Ergebnis trotzdem irrational sein?</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Situation:</p>
+        <div class="space-y-2 mb-4">
+            <div class="flex items-start gap-2">
+                <span class="mt-0.5">🍺</span>
+                <span>In Santa Fe gibt es die <em>El Farol Bar</em>. Jeden Donnerstag spielen sie Live-Musik.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="mt-0.5">👥</span>
+                <span>Es gibt <strong>{{ total }} Stammgäste</strong>. Die Bar macht Spaß, wenn
+                <strong>weniger als {{ threshold }} Personen</strong> kommen – sonst ist es zu voll.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="mt-0.5">📵</span>
+                <span>Du kannst dich <em>nicht</em> mit anderen abstimmen. Jeder entscheidet alleine, basierend auf der Vergangenheit.</span>
+            </div>
+        </div>
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs">
+            <strong>Die Paradoxie:</strong> Wenn <em>alle</em> rational vorhersagen, dass weniger als {{ threshold }} kommen → gehen alle → Bar überfüllt → Vorhersage falsch! Und umgekehrt.
+        </div>
+    </div>
+
+    <!-- Historische Besucherzahlen -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-6">
+        <p class="text-sm font-medium text-slate-700 mb-3">Besucherzahlen der letzten {{ history|length }} Wochen:</p>
+        <div class="flex items-end gap-1.5 h-24 mb-1">
+            {% for h in history %}
+            <div class="flex-1 flex flex-col items-center justify-end gap-0.5">
+                <div class="w-full rounded-t-sm
+                    {% if h <= threshold %}bg-emerald-400{% else %}bg-red-400{% endif %}"
+                     style="height: {{ (h / total * 100) | round }}%"
+                     title="{{ h }} Personen">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- Threshold-Linie (CSS approximation) -->
+        <div class="relative border-t-2 border-dashed border-amber-400 -mt-1 mb-2">
+            <span class="absolute -top-4 right-0 text-xs text-amber-600 font-medium bg-white px-1">← {{ threshold }}: Kapazitätsgrenze</span>
+        </div>
+        <div class="flex justify-between text-xs text-slate-400 mt-3">
+            {% for i in range(history|length) %}
+            <span class="flex-1 text-center">Wo. {{ i+1 }}</span>
+            {% endfor %}
+        </div>
+        <div class="flex gap-3 mt-3 text-xs">
+            <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-emerald-400"></div><span class="text-slate-500">Spaßig (≤{{ threshold }})</span></div>
+            <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded bg-red-400"></div><span class="text-slate-500">Überfüllt (>{{ threshold }})</span></div>
+        </div>
+    </div>
+
+    <!-- Eingabe -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="elfarol-area">
+        <p class="font-semibold text-slate-800 mb-1">Diese Woche – deine Entscheidung:</p>
+        <p class="text-sm text-slate-500 mb-5">Schätze zunächst, wie viele heute kommen werden. Dann entscheide.</p>
+
+        <form hx-post="/raetsel/el-farol/result"
+              hx-target="#elfarol-area"
+              hx-swap="innerHTML"
+              class="space-y-5">
+
+            <!-- Vorhersage -->
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Wie viele der {{ total }} Stammgäste werden heute kommen?
+                </label>
+                <div class="flex items-center gap-3">
+                    <input type="number" name="prediction" id="pred-input"
+                           min="0" max="{{ total }}" value="55" required
+                           oninput="updatePredHint(this.value)"
+                           class="w-24 border border-slate-200 rounded-lg px-3 py-2 text-center font-bold focus:outline-none focus:border-indigo-400">
+                    <span class="text-sm" id="pred-hint">→ Vorhersage: Bar wird <strong class="text-emerald-700">spaßig</strong> sein</span>
+                </div>
+            </div>
+
+            <!-- Entscheidung -->
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-3">Und du? Gehst du hin?</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <button type="submit" name="decision" value="go"
+                            class="p-4 rounded-xl border-2 border-emerald-200 bg-emerald-50 hover:border-emerald-400 hover:bg-emerald-100 transition-all text-left">
+                        <div class="text-2xl mb-1">🍺</div>
+                        <div class="font-bold text-emerald-800">Ich gehe hin</div>
+                        <div class="text-xs text-emerald-700 mt-0.5">Ich glaube, es wird nicht zu voll.</div>
+                    </button>
+                    <button type="submit" name="decision" value="stay"
+                            class="p-4 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 hover:bg-slate-100 transition-all text-left">
+                        <div class="text-2xl mb-1">🏠</div>
+                        <div class="font-bold text-slate-800">Ich bleibe zuhause</div>
+                        <div class="text-xs text-slate-600 mt-0.5">Zu riskant – wahrscheinlich überfüllt.</div>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+const THRESHOLD = {{ threshold }};
+function updatePredHint(val) {
+    const n = parseInt(val) || 0;
+    const hint = document.getElementById('pred-hint');
+    if (n < THRESHOLD) {
+        hint.innerHTML = '→ Vorhersage: Bar wird <strong class="text-emerald-700">spaßig sein (' + n + ' Personen)</strong>';
+    } else {
+        hint.innerHTML = '→ Vorhersage: Bar wird <strong class="text-red-600">überfüllt sein (' + n + ' Personen)</strong>';
+    }
+}
+updatePredHint(55);
+</script>
+
+{% endblock %}

@@ -1,0 +1,71 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    <!-- Auflösung -->
+    {% if reaction == "exakt" %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">Exakt richtig! {{ correct }} Personen.</h3>
+        <p class="text-sm text-emerald-700">Du hast die korrekte Antwort. Bei {{ correct }} Personen liegt die Wahrscheinlichkeit bei 50,7 % – erstmals über 50 %.</p>
+    </div>
+    {% elif reaction == "nah" %}
+    <div class="mb-5 p-4 rounded-xl bg-blue-50 border-2 border-blue-300">
+        <h3 class="text-xl font-bold text-blue-800 mb-1">Fast! Du hast {{ guess }} geschätzt, richtig ist {{ correct }}.</h3>
+        <p class="text-sm text-blue-700">Deine Schätzung war nur {{ diff }} daneben – sehr gut. Bei {{ guess }} Personen liegt die Wahrscheinlichkeit bei {{ p_guess }}%.</p>
+    </div>
+    {% elif reaction == "mittel" %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-xl font-bold text-amber-800 mb-1">Nicht schlecht – aber {{ correct }} ist richtig.</h3>
+        <p class="text-sm text-amber-700">Du hast {{ guess }} geschätzt ({{ p_guess }}% Wahrscheinlichkeit). Die meisten Menschen überschätzen die nötige Personenzahl stark.</p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-slate-50 border-2 border-slate-300">
+        <h3 class="text-xl font-bold text-slate-800 mb-1">Die Antwort überrascht: nur {{ correct }} Personen!</h3>
+        <p class="text-sm text-slate-600">Du hast {{ guess }} geschätzt. Die meisten Menschen denken an 180+ (die Hälfte von 365). Das ist die Intuitionsfalle des Paradoxons.</p>
+    </div>
+    {% endif %}
+
+    <!-- Wahrscheinlichkeiten-Tabelle (Milestones) -->
+    <div class="mb-5">
+        <h4 class="font-bold text-slate-800 mb-3">Wahrscheinlichkeiten bei verschiedenen Gruppengrößen:</h4>
+        <div class="space-y-2">
+            {% for m in milestones %}
+            <div class="flex items-center gap-3">
+                <div class="w-16 text-right text-sm font-medium text-slate-600">{{ m.n }} Pers.</div>
+                <div class="flex-1 bg-slate-100 rounded-full h-4 overflow-hidden">
+                    <div class="h-full rounded-full {% if m.prob >= 50 %}bg-emerald-500{% else %}bg-blue-400{% endif %}"
+                         style="width: {{ [m.prob, 100] | min }}%"></div>
+                </div>
+                <div class="w-16 text-sm font-bold {% if m.prob >= 50 %}text-emerald-700{% else %}text-blue-700{% endif %}">
+                    {{ m.prob }}%
+                    {% if m.n == 23 %}<span class="text-xs font-normal text-slate-500">← !</span>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Erklärung -->
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-800">
+        <p class="font-semibold mb-2">Warum erscheint es paradox?</p>
+        <p class="mb-2">Wir denken intuitiv: "Jeder meiner Geburtstage hat eine 1/365 Chance – also brauche ich viele Menschen." Das stimmt <em>für einen bestimmten Geburtstag</em>.</p>
+        <p class="mb-2">Aber hier fragen wir: <strong>Gibt es irgendein Paar mit gleichem Geburtstag?</strong> Mit n Personen gibt es <em>n(n-1)/2</em> Paare. Bei 23 Personen = 253 Paare!</p>
+        <p class="text-xs font-mono bg-white rounded p-2 mt-2">
+            P(kein Match) = (365/365) × (364/365) × (363/365) × ... × (343/365)<br>
+            P(Match) = 1 − P(kein Match) ≈ 50,7% bei n=23
+        </p>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+        <p class="font-semibold mb-1">Verhandlungs- und Entscheidungsrelevanz:</p>
+        <p class="mb-1">Das Geburtstagsparadoxon illustriert, wie schlecht Menschen Wahrscheinlichkeiten kombinierter Ereignisse einschätzen. In Risikoanalysen, Sicherheitssystemen (z.B. Kollisionen in Hashfunktionen) und Portfolio-Diversifikation führt dieselbe Fehleinschätzung zu falschen Schlussfolgerungen.</p>
+        <p><strong>Regel:</strong> Paarweise Wahrscheinlichkeiten wachsen quadratisch – nicht linear. Systeme werden schneller anfällig als erwartet.</p>
+    </div>
+
+    <div class="flex gap-3">
+        <a href="/raetsel/geburtstag" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>

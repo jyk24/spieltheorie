@@ -1,0 +1,30 @@
+{% if is_correct %}
+<div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-400">
+    <h3 class="text-xl font-bold text-emerald-800 mb-1">Gefunden! Münze {{ found }} ist die schwere.</h3>
+    <p class="text-sm text-emerald-700">In exakt 2 Wägungen – das ist die optimale Lösung.</p>
+</div>
+{% else %}
+<div class="mb-5 p-4 rounded-xl bg-red-50 border-2 border-red-400">
+    <h3 class="text-xl font-bold text-red-800 mb-1">Falsch! Die schwere Münze war {{ heavy }}.</h3>
+    <p class="text-sm text-red-700">Du hast {{ found }} identifiziert. Schau dir die Wägungslogik nochmal an.</p>
+</div>
+{% endif %}
+
+<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+    <p class="font-semibold mb-2">Warum reichen 2 Wägungen für 9 Münzen?</p>
+    <ul class="space-y-1 text-xs text-indigo-700">
+        <li>→ Mit einer Balkenwaage gibt es 3 mögliche Ergebnisse: Links schwerer / Rechts schwerer / Gleich</li>
+        <li>→ Mit 2 Wägungen: 3² = <strong>9 unterscheidbare Kombinationen</strong></li>
+        <li>→ Genau genug für 9 Münzen! Für 27 Münzen würden 3 Wägungen reichen (3³ = 27).</li>
+    </ul>
+</div>
+
+<div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+    <p class="font-semibold mb-1">Das Prinzip:</p>
+    <p>Die Balkenwaage kodiert Information im Terzär-System (Basis 3). Mit <em>k</em> Wägungen kannst du 3^k Münzen durchsuchen. Das ist <strong>exponentielles Suchen</strong> – dasselbe Prinzip wie bei den vergifteten Fässern.</p>
+</div>
+
+<div class="flex gap-3">
+    <a href="/raetsel/muenzwaegen" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal</a>
+    <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">Andere Rätsel</a>
+</div>

@@ -1,0 +1,57 @@
+{% set ns = namespace(total_profit=0) %}
+<div class="overflow-x-auto">
+<table class="w-full text-sm">
+    <thead>
+        <tr class="text-slate-500 border-b border-slate-100 text-xs uppercase tracking-wide">
+            <th class="text-left pb-2 pr-3">Runde</th>
+            <th class="text-right pb-2 pr-3">Dein Wert</th>
+            <th class="text-right pb-2 pr-3">Dein Gebot</th>
+            <th class="text-right pb-2 pr-3">Abweichung</th>
+            <th class="text-right pb-2 pr-3">Gewonnen</th>
+            <th class="text-right pb-2">Gewinn</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in moves %}
+        {% set ns.total_profit = ns.total_profit + m.profit %}
+        <tr class="border-b border-slate-50
+            {% if m.player_wins and m.profit > 0 %}bg-emerald-50
+            {% elif m.player_wins and m.profit < 0 %}bg-red-50
+            {% endif %}">
+            <td class="py-2 pr-3 text-slate-500 text-xs">{{ m.round }}</td>
+            <td class="py-2 pr-3 text-right text-amber-700 font-semibold">{{ m.player_value }}€</td>
+            <td class="py-2 pr-3 text-right text-slate-700">{{ m.player_bid }}€</td>
+            <td class="py-2 pr-3 text-right text-xs
+                {% if m.bid_deviation == 0 %}text-emerald-600 font-bold
+                {% elif m.bid_deviation <= 15 %}text-amber-600
+                {% else %}text-red-500{% endif %}">
+                {% if m.bid_deviation == 0 %}= Wert ✓
+                {% elif m.player_bid > m.player_value %}+{{ m.bid_deviation }}€
+                {% else %}-{{ m.bid_deviation }}€{% endif %}
+            </td>
+            <td class="py-2 pr-3 text-right text-xs font-semibold
+                {% if m.player_wins %}text-emerald-700{% else %}text-slate-400{% endif %}">
+                {% if m.player_wins %}🏆 Ja ({{ m.second_price }}€){% else %}–{% endif %}
+            </td>
+            <td class="py-2 text-right font-bold
+                {% if m.profit > 0 %}text-emerald-700
+                {% elif m.profit < 0 %}text-red-600
+                {% else %}text-slate-400{% endif %}">
+                {% if m.profit >= 0 %}+{% endif %}{{ m.profit }}€
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr class="border-t-2 border-slate-200">
+            <td colspan="5" class="pt-2 text-xs text-slate-400 font-medium">Gesamtgewinn</td>
+            <td class="pt-2 text-right font-bold
+                {% if ns.total_profit > 0 %}text-emerald-700
+                {% elif ns.total_profit < 0 %}text-red-600
+                {% else %}text-slate-500{% endif %}">
+                {% if ns.total_profit >= 0 %}+{% endif %}{{ ns.total_profit }}€
+            </td>
+        </tr>
+    </tfoot>
+</table>
+</div>

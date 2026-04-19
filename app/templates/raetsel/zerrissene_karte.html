@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Die zerrissene Karte – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🃏 Die zerrissene Karte</h1>
+        <p class="text-slate-500 mt-1">Ein Monopol-Experiment – Macht durch Knappheit und Commitment.</p>
+    </div>
+
+    <!-- Spielregeln -->
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Situation:</p>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="bg-red-50 border border-red-200 rounded-xl p-3 text-center">
+                <div class="text-3xl mb-1">🟥🟥🟥🟥🟥</div>
+                <div class="font-bold text-red-800 text-lg">Du</div>
+                <div class="text-xs text-red-600">5 rote Karten – Monopol</div>
+            </div>
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-center">
+                <div class="text-3xl mb-1">🟦 🟦 🟦 🟦 🟦</div>
+                <div class="font-bold text-blue-800 text-lg">5 Spieler</div>
+                <div class="text-xs text-blue-600">Je 1 blaue Karte</div>
+            </div>
+        </div>
+        <div class="space-y-2 mb-4">
+            <div class="flex items-start gap-2">
+                <span class="mt-0.5 text-emerald-600 font-bold">1 €</span>
+                <span>Ein <strong>Paar</strong> (1 rote + 1 blaue Karte) ist <strong>1 € wert</strong>. Ohne Paarung: 0 €.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="mt-0.5">💡</span>
+                <span>Du hast alle roten Karten – <strong>kein Deal entsteht ohne dich</strong>. Die BATNA jedes Spielers ist 0 €.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="mt-0.5">✂️</span>
+                <span>Du kannst Karten <strong>zerreißen</strong> – öffentlich, unwiderruflich. Das reduziert Angebot und ändert das Machtgefüge.</span>
+            </div>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs">
+            <strong>Deine Aufgabe:</strong> Die Spieler machen dir ihre Angebote (wie die 1 € aufgeteilt wird). Welche Strategie bringt dir das meiste?
+        </div>
+    </div>
+
+    <!-- Die Angebote -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-6">
+        <p class="text-sm font-semibold text-slate-700 mb-3">Eingehende Angebote der 5 Spieler:</p>
+        <div class="space-y-2">
+            {% for p in players %}
+            <div class="flex items-center gap-3 p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                <span class="text-xl w-8 text-center">{{ p.icon }}</span>
+                <span class="font-medium text-slate-700 text-sm w-24">{{ p.name }}</span>
+                <div class="flex-1 flex items-center gap-2">
+                    <!-- Bar -->
+                    <div class="flex-1 h-4 rounded-full overflow-hidden bg-slate-200 flex">
+                        <div class="bg-indigo-500 h-4 rounded-l-full flex items-center justify-center"
+                             style="width: {{ (p.offer * 100)|round }}%">
+                        </div>
+                        <div class="bg-blue-300 h-4 rounded-r-full" style="width: {{ ((1 - p.offer) * 100)|round }}%"></div>
+                    </div>
+                    <div class="text-xs text-slate-500 w-32 text-right">
+                        <span class="font-bold text-indigo-700">{{ "%.0f"|format(p.offer * 100) }}¢</span> für dich /
+                        <span class="text-blue-600">{{ "%.0f"|format((1 - p.offer) * 100) }}¢</span> für sie
+                    </div>
+                </div>
+                <span class="text-xs text-slate-400 w-32 text-right hidden sm:block">{{ p.note }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="mt-3 text-xs text-slate-500 flex justify-between border-t border-slate-100 pt-2">
+            <span>Ø Angebot an dich: <strong class="text-slate-700">
+                {{ "%.0f"|format(players | map(attribute='offer') | sum / players|length * 100) }}¢
+            </strong></span>
+            <span>Bei allen annehmen: <strong class="text-slate-700">
+                {{ "%.2f"|format(players | map(attribute='offer') | sum) }} €
+            </strong></span>
+        </div>
+    </div>
+
+    <!-- Strategie-Auswahl -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="karte-area">
+        <p class="font-semibold text-slate-800 mb-1">Deine Strategie:</p>
+        <p class="text-sm text-slate-500 mb-5">Wähle, bevor du das Ergebnis siehst. Denke daran: Du hast das Monopol.</p>
+
+        <form hx-post="/raetsel/zerrissene-karte/result"
+              hx-target="#karte-area"
+              hx-swap="innerHTML"
+              class="space-y-3">
+
+            {% for sid, s in strategies %}
+            <button type="submit" name="strategy" value="{{ sid }}"
+                    class="w-full text-left p-4 rounded-xl border-2 transition-all
+                        {% if s.color == 'slate' %}border-slate-200 bg-slate-50 hover:border-slate-400 hover:bg-slate-100
+                        {% elif s.color == 'indigo' %}border-indigo-200 bg-indigo-50 hover:border-indigo-400 hover:bg-indigo-100
+                        {% elif s.color == 'amber' %}border-amber-200 bg-amber-50 hover:border-amber-400 hover:bg-amber-100
+                        {% elif s.color == 'emerald' %}border-emerald-200 bg-emerald-50 hover:border-emerald-400 hover:bg-emerald-100
+                        {% else %}border-red-200 bg-red-50 hover:border-red-400 hover:bg-red-100{% endif %}">
+                <div class="flex items-start gap-3">
+                    <span class="text-xl mt-0.5">{{ s.icon }}</span>
+                    <div>
+                        <div class="font-bold text-sm
+                            {% if s.color == 'slate' %}text-slate-800
+                            {% elif s.color == 'indigo' %}text-indigo-800
+                            {% elif s.color == 'amber' %}text-amber-800
+                            {% elif s.color == 'emerald' %}text-emerald-800
+                            {% else %}text-red-800{% endif %}">
+                            {{ s.label }}
+                        </div>
+                        <div class="text-xs mt-0.5
+                            {% if s.color == 'slate' %}text-slate-500
+                            {% elif s.color == 'indigo' %}text-indigo-600
+                            {% elif s.color == 'amber' %}text-amber-600
+                            {% elif s.color == 'emerald' %}text-emerald-600
+                            {% else %}text-red-600{% endif %}">
+                            {{ s.description }}
+                        </div>
+                    </div>
+                </div>
+            </button>
+            {% endfor %}
+        </form>
+    </div>
+</div>
+
+{% endblock %}

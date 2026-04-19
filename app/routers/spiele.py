@@ -583,9 +583,10 @@ def gefangenendilemma_zug(
     strategy_info = None
     player_analysis = None
     evaluation = None
+    new_achievements: list = []
     if is_final and final:
         evaluation = _gd_evaluate_response(strategy, history)
-        save_game_session(
+        _, new_achievements = save_game_session(
             db,
             game_type="gefangenendilemma",
             ai_strategy=strategy,
@@ -611,6 +612,7 @@ def gefangenendilemma_zug(
             "strategy_info": strategy_info,
             "player_analysis": player_analysis,
             "evaluation": evaluation,
+            "new_achievements": new_achievements,
         },
     )
 
@@ -687,6 +689,7 @@ def ultimatum_zug(
     total_ai = sum(r["ai_score"] for r in history)
 
     strategy_info = None
+    new_achievements: list = []
     efficiency = 0
     proposer_accepted = proposer_total = responder_accepted = responder_total = 0
     result = None
@@ -702,7 +705,7 @@ def ultimatum_zug(
         max_possible = 500
         efficiency = round(total_player / max_possible * 100)
         result = "win" if efficiency >= 55 else ("draw" if efficiency >= 30 else "loss")
-        save_game_session(
+        _, new_achievements = save_game_session(
             db,
             game_type="ultimatum",
             ai_strategy=strategy,
@@ -735,6 +738,7 @@ def ultimatum_zug(
             "next_is_proposer": next_is_proposer,
             "next_ai_offer": ultimatum_ai_offer(strategy, len(history)) if not next_is_proposer else None,
             "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
         },
     )
 
@@ -780,8 +784,9 @@ def vertrauen_zug(
     final = trust_final_result(history) if is_final else None
 
     strategy_info = None
+    new_achievements: list = []
     if is_final and final:
-        save_game_session(
+        _, new_achievements = save_game_session(
             db,
             game_type="vertrauen",
             ai_strategy=strategy,
@@ -805,6 +810,7 @@ def vertrauen_zug(
             "cumulative_player": sum(r["player_net"] for r in history),
             "cumulative_ai": sum(r["ai_net"] for r in history),
             "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
         },
     )
 
@@ -853,10 +859,11 @@ def verhandlung_zug(
     is_final = ai_result["deal"] or len(history) >= scenario["max_rounds"]
     score_data = None
 
+    new_achievements: list = []
     if is_final:
         final_price = ai_result["final_price"] or round((player_offer + ai_result["offer"]) / 2)
         score_data = verhandlung_score(scenario, final_price, round_num)
-        save_game_session(
+        _, new_achievements = save_game_session(
             db,
             game_type="verhandlung",
             ai_strategy="nash_rubinstein",
@@ -878,6 +885,7 @@ def verhandlung_zug(
             "scenario": scenario,
             "is_final": is_final,
             "score_data": score_data,
+            "new_achievements": new_achievements,
         },
     )
 
@@ -924,8 +932,9 @@ def chicken_zug(
     final = chicken_final_result(history) if is_final else None
 
     strategy_info = None
+    new_achievements: list = []
     if is_final and final:
-        save_game_session(
+        _, new_achievements = save_game_session(
             db,
             game_type="chicken",
             ai_strategy=strategy,
@@ -948,6 +957,7 @@ def chicken_zug(
             "final": final,
             "max_rounds": 8,
             "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
         },
     )
 
@@ -995,8 +1005,9 @@ def public_goods_zug(
     final = public_goods_final_result(history) if is_final else None
 
     strategy_info = None
+    new_achievements: list = []
     if is_final and final:
-        save_game_session(
+        _, new_achievements = save_game_session(
             db,
             game_type="public_goods",
             ai_strategy=strategy,
@@ -1020,6 +1031,7 @@ def public_goods_zug(
             "max_rounds": 8,
             "tokens_per_round": 10,
             "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
         },
     )
 
@@ -1098,8 +1110,9 @@ def beauty_contest_zug(
     final = beauty_contest_final_result(history) if is_final else None
 
     strategy_info = None
+    new_achievements: list = []
     if is_final and final:
-        save_game_session(
+        _, new_achievements = save_game_session(
             db,
             game_type="beauty_contest",
             ai_strategy=strategy,
@@ -1122,6 +1135,7 @@ def beauty_contest_zug(
             "final": final,
             "max_rounds": 6,
             "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
         },
     )
 
@@ -1199,8 +1213,9 @@ def stag_hunt_zug(
     final = stag_final_result(history) if is_final else None
 
     strategy_info = None
+    new_achievements: list = []
     if is_final and final:
-        save_game_session(
+        _, new_achievements = save_game_session(
             db,
             game_type="stag_hunt",
             ai_strategy=strategy,
@@ -1223,6 +1238,7 @@ def stag_hunt_zug(
             "final": final,
             "max_rounds": 8,
             "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
         },
     )
 
@@ -1301,9 +1317,10 @@ def centipede_zug(
     final = None
     strategy_info = None
 
+    new_achievements: list = []
     if is_final:
         final = centipede_final_result(events, turn_result["final_player"], turn_result["final_ai"])
-        save_game_session(
+        _, new_achievements = save_game_session(
             db,
             game_type="centipede",
             ai_strategy=strategy,
@@ -1327,6 +1344,7 @@ def centipede_zug(
             "next_node_idx": turn_result["next_node_idx"],
             "nodes": CENTIPEDE_NODES,
             "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
         },
     )
 
@@ -1398,8 +1416,9 @@ def rps_zug(
     is_final = len(history) >= 7
     final = rps_final_result(history) if is_final else None
     strategy_info = None
+    new_achievements: list = []
     if is_final:
-        save_game_session(
+        _, new_achievements = save_game_session(
             db,
             game_type="rps",
             ai_strategy=strategy,
@@ -1421,6 +1440,7 @@ def rps_zug(
             "final": final,
             "max_rounds": 7,
             "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
         },
     )
 
@@ -1492,8 +1512,9 @@ def koordination_zug(
     is_final = len(history) >= 8
     final = coord_final_result(history) if is_final else None
     strategy_info = None
+    new_achievements: list = []
     if is_final:
-        save_game_session(
+        _, new_achievements = save_game_session(
             db,
             game_type="koordination",
             ai_strategy=strategy,
@@ -1515,6 +1536,7 @@ def koordination_zug(
             "final": final,
             "max_rounds": 8,
             "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
         },
     )
 
@@ -1595,9 +1617,10 @@ def auktion_zug(
     is_final = len(history) >= 5
     final = auction_final_result(history) if is_final else None
     strategy_info = None
+    new_achievements: list = []
     next_value = _random.randint(20, 100) if not is_final else None
     if is_final:
-        save_game_session(
+        _, new_achievements = save_game_session(
             db,
             game_type="auktion",
             ai_strategy=strategy,
@@ -1621,6 +1644,7 @@ def auktion_zug(
             "next_value": next_value,
             "next_round_num": round_num + 1,
             "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
         },
     )
 
@@ -1693,8 +1717,9 @@ def diktator_zug(
     is_final = len(history) >= 8
     final = diktator_final_result(history) if is_final else None
     strategy_info = None
+    new_achievements: list = []
     if is_final:
-        save_game_session(
+        _, new_achievements = save_game_session(
             db,
             game_type="diktator",
             ai_strategy=strategy,
@@ -1716,6 +1741,7 @@ def diktator_zug(
             "final": final,
             "max_rounds": 8,
             "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
         },
     )
 
@@ -1791,15 +1817,16 @@ def dollarauktion_zug(
     turn = dollar_process_turn(player_bid, quit_flag, strategy, ai_last_bid, round_num)
     is_final = turn["game_over"]
     strategy_info = None
+    new_achievements: list = []
     if is_final:
         result = "win" if turn["winner"] == "player" else "loss"
-        save_game_session(
+        _, new_achievements = save_game_session(
             db,
             game_type="dollarauktion",
             ai_strategy=strategy,
             moves=[turn],
             result=result,
-            score=max(0, turn["player_payoff"] or 0),
+            score=turn["player_payoff"] if turn["player_payoff"] is not None else 0,
             ai_score=max(0, turn["ai_payoff"] or 0),
         )
         strategy_info = DOLLAR_STRATEGY_INFO.get(strategy)
@@ -1813,6 +1840,7 @@ def dollarauktion_zug(
             "prize": DOLLAR_PRIZE,
             "round_num": round_num,
             "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
         },
     )
 
@@ -1884,8 +1912,9 @@ def minderheit_zug(
     is_final = len(history) >= 8
     final = minority_final_result(history) if is_final else None
     strategy_info = None
+    new_achievements: list = []
     if is_final:
-        save_game_session(
+        _, new_achievements = save_game_session(
             db,
             game_type="minderheit",
             ai_strategy=strategy,
@@ -1907,5 +1936,6 @@ def minderheit_zug(
             "final": final,
             "max_rounds": 8,
             "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
         },
     )

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}100-Gefangenen-Problem – VerhandlungsTrainer{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">📦 Das 100-Gefangenen-Problem</h1>
+        <p class="text-slate-500 mt-1">Zwei Strategien – ein unglaublicher Unterschied.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Situation:</p>
+        <ul class="space-y-2">
+            <li class="flex gap-2"><span class="text-indigo-500 mt-0.5">➊</span><span>100 Gefangene sind nummeriert (1–100).</span></li>
+            <li class="flex gap-2"><span class="text-indigo-500 mt-0.5">➋</span><span>100 Boxen stehen in einem Raum. Jede enthält eine zufällige Nummer (1–100), alle Nummern einmalig.</span></li>
+            <li class="flex gap-2"><span class="text-indigo-500 mt-0.5">➌</span><span>Jeder Gefangene betritt den Raum einzeln und darf <strong>50 Boxen</strong> öffnen.</span></li>
+            <li class="flex gap-2"><span class="text-indigo-500 mt-0.5">➍</span><span>Findet ein Gefangener seine eigene Nummer nicht: <strong>alle sterben</strong>.</span></li>
+            <li class="flex gap-2"><span class="text-indigo-500 mt-0.5">➎</span><span>Die Gefangenen dürfen sich vorher besprechen, aber im Raum nicht kommunizieren und nichts verschieben.</span></li>
+        </ul>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="spiel-area">
+        <p class="font-semibold text-slate-800 mb-2">Welche Strategie würdest du wählen?</p>
+        <p class="text-sm text-slate-500 mb-5">Entscheide dich, bevor du die Auflösung siehst. Die Simulation läuft live (2.000 Durchläufe).</p>
+
+        <div class="space-y-3">
+            <button hx-post="/raetsel/hundert-gefangene/result"
+                    hx-target="#spiel-area"
+                    hx-swap="innerHTML"
+                    hx-vals='{"strategy": "random"}'
+                    hx-indicator="#loading"
+                    class="w-full text-left p-5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-red-300 hover:bg-red-50 transition-all">
+                <div class="flex items-start gap-4">
+                    <span class="text-3xl">🎲</span>
+                    <div>
+                        <div class="font-bold text-slate-800 text-lg">Zufällige Strategie</div>
+                        <div class="text-sm text-slate-600 mt-1">Jeder Gefangene öffnet 50 zufällig gewählte Boxen. Keine Absprache nötig.</div>
+                    </div>
+                </div>
+            </button>
+
+            <button hx-post="/raetsel/hundert-gefangene/result"
+                    hx-target="#spiel-area"
+                    hx-swap="innerHTML"
+                    hx-vals='{"strategy": "loop"}'
+                    hx-indicator="#loading"
+                    class="w-full text-left p-5 rounded-xl border-2 border-indigo-200 bg-indigo-50 hover:border-indigo-400 hover:bg-indigo-100 transition-all">
+                <div class="flex items-start gap-4">
+                    <span class="text-3xl">🔁</span>
+                    <div>
+                        <div class="font-bold text-indigo-800 text-lg">Schleifen-Strategie</div>
+                        <div class="text-sm text-indigo-700 mt-1">Gefangener N öffnet Box N, dann die Box mit der darin gefundenen Nummer – immer weiter, max. 50 Mal.</div>
+                    </div>
+                </div>
+            </button>
+        </div>
+
+        <div id="loading" class="htmx-indicator text-center text-slate-400 text-sm mt-4">
+            Simuliere 2.000 Durchläufe…
+        </div>
+    </div>
+</div>
+{% endblock %}

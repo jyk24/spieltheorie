@@ -1,0 +1,14 @@
+{% if new_achievements %}
+<div class="mt-5 space-y-2">
+    {% for ach in new_achievements %}
+    <div class="flex items-center gap-3 bg-gradient-to-r from-yellow-50 to-amber-50 border border-amber-300 rounded-xl p-3.5 shadow-sm">
+        <div class="text-3xl flex-shrink-0">{{ ach.icon }}</div>
+        <div class="flex-1 min-w-0">
+            <div class="text-xs font-bold text-amber-600 uppercase tracking-wide mb-0.5">🏅 Neue Errungenschaft freigeschaltet!</div>
+            <div class="font-bold text-amber-900 text-sm">{{ ach.title }}</div>
+            <div class="text-xs text-amber-700">{{ ach.desc }}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}

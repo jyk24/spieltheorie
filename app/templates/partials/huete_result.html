@@ -1,0 +1,59 @@
+{% if is_correct %}
+<div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-400">
+    <h3 class="text-xl font-bold text-emerald-800 mb-1">Richtig! Dein Hut ist weiß.</h3>
+    <p class="text-sm text-emerald-700">Du hast die Kette der Schlussfolgerungen korrekt durchgeführt.</p>
+</div>
+{% else %}
+<div class="mb-5 p-4 rounded-xl bg-red-50 border-2 border-red-400">
+    <h3 class="text-xl font-bold text-red-800 mb-1">Falsch – dein Hut ist weiß!</h3>
+    <p class="text-sm text-red-700">Die logische Kette der Schlussfolgerungen führt eindeutig zu weiß. Hier ist warum:</p>
+</div>
+{% endif %}
+
+<!-- Aufdeckung -->
+<div class="flex justify-center gap-8 mb-5">
+    <div class="text-center">
+        <div class="text-4xl mb-1">{{ "⬜" if guess == "weiß" else "🟥" }}</div>
+        <div class="text-sm font-bold text-slate-700">Dein Hut (A)</div>
+        <div class="text-xs text-slate-500">weiß</div>
+    </div>
+    <div class="text-center">
+        <div class="text-4xl mb-1">{{ "⬜" if hat_b == "weiß" else "🟥" }}</div>
+        <div class="text-sm font-bold text-slate-700">B's Hut</div>
+        <div class="text-xs text-slate-500">{{ hat_b }}</div>
+    </div>
+    <div class="text-center">
+        <div class="text-4xl mb-1">{{ "⬜" if hat_c == "weiß" else "🟥" }}</div>
+        <div class="text-sm font-bold text-slate-700">C's Hut</div>
+        <div class="text-xs text-slate-500">{{ hat_c }}</div>
+    </div>
+</div>
+
+<!-- Logische Kette -->
+<div class="bg-slate-50 rounded-xl p-4 mb-4 text-sm text-slate-700">
+    <p class="font-semibold mb-3">Die Schlussfolgerungskette:</p>
+    <div class="space-y-3">
+        <div class="flex gap-3 items-start">
+            <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-1 rounded-full shrink-0">C sagt "weiß nicht"</span>
+            <span class="text-xs text-slate-600">C sieht A und B. Wären <em>beide</em> rot, wüsste C sofort (nur 2 rote Hüte). Da C nicht weiß: A und B sind <strong>nicht beide rot</strong>.</span>
+        </div>
+        <div class="flex gap-3 items-start">
+            <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-1 rounded-full shrink-0">B sagt "weiß nicht"</span>
+            <span class="text-xs text-slate-600">B weiß aus C's Antwort: (A,B) ≠ (rot,rot). B sieht A's Hut ({{ hat_b }}). Wenn A <em>rot</em> wäre, würde B aus C's Antwort ableiten: <em>B ≠ rot → B = weiß</em>. Da B nicht weiß: <strong>A ist nicht rot</strong>.</span>
+        </div>
+        <div class="flex gap-3 items-start">
+            <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-full shrink-0">Du schlussfolgert</span>
+            <span class="text-xs text-slate-600">Beide wissen es nicht → A ≠ rot → <strong>A ist weiß</strong>. Dies gilt unabhängig von B's und C's Hutfarben – solange beide Antworten "weiß nicht" fallen.</span>
+        </div>
+    </div>
+</div>
+
+<div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+    <p class="font-semibold mb-1">Das Wichtige:</p>
+    <p>Die Schlussfolgerung funktioniert in <strong>allen</strong> Fällen – egal welche Hüte B und C tragen. Wenn beide sagen "ich weiß nicht", ist A immer weiß. Das nennt man <em>epistemic reasoning</em>: Schließen aus der Unwissenheit anderer.</p>
+</div>
+
+<div class="flex gap-3">
+    <a href="/raetsel/huete-spiel" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal</a>
+    <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">Andere Rätsel</a>
+</div>

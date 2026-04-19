@@ -1,0 +1,57 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    <!-- Auflösung -->
+    {% if decision == "stay" %}
+    <div class="mb-5 p-4 rounded-xl bg-indigo-50 border-2 border-indigo-300">
+        <h3 class="text-xl font-bold text-indigo-800 mb-1">Behalten – du hast das Paradoxon gespürt!</h3>
+        <p class="text-sm text-indigo-700">Dein Instinkt war richtig: Das Tausch-Argument hat tatsächlich einen versteckten Fehler. Es ist nicht immer sinnvoll zu tauschen.</p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-xl font-bold text-amber-800 mb-1">Tauschen – logisch, aber das Argument ist fehlerhaft!</h3>
+        <p class="text-sm text-amber-700">Das Tausch-Argument erscheint überzeugend, enthält aber einen subtilen Fehler. Wenn du immer tauschen solltest – dann auch nach dem Tausch wieder tauschen – was zu einem Widerspruch führt.</p>
+    </div>
+    {% endif %}
+
+    <!-- Der Fehler im Argument -->
+    <div class="bg-slate-50 rounded-xl p-4 mb-4 text-sm text-slate-700">
+        <p class="font-semibold mb-2">Wo steckt der Fehler?</p>
+        <p class="mb-2">Das Tausch-Argument behandelt {{ amount }}€ als <em>beliebigen</em> Betrag X und sagt: Der andere Umschlag enthält X/2 oder 2X. Aber:</p>
+        <ul class="space-y-1 text-xs text-slate-600">
+            <li>→ Wenn dein Umschlag <strong>der kleinere</strong> ist ({{ amount }}€), enthält der andere {{ amount * 2 }}€. Tausch: +{{ amount }}€</li>
+            <li>→ Wenn dein Umschlag <strong>der größere</strong> ist ({{ amount }}€), enthält der andere {{ (amount / 2) | int }}€. Tausch: -{{ (amount / 2) | int }}€</li>
+            <li>→ Diese zwei Szenarien sind <em>nicht symmetrisch</em>: Du gewinnst {{ amount }} aber verlierst nur {{ (amount / 2) | int }}</li>
+        </ul>
+        <div class="bg-white rounded-lg p-3 mt-3 font-mono text-xs">
+            Echter EV: 0.5 × (+{{ amount }}) + 0.5 × (-{{ (amount / 2) | int }}) = +{{ ((amount * 0.5) - ((amount / 2) * 0.5)) | round(1) }}€
+        </div>
+        <p class="mt-2 text-xs">Das Problem: Ohne Verteilung der möglichen Beträge zu kennen, kannst du den Erwartungswert nicht korrekt berechnen. Das Argument enthält eine verdeckte Annahme über die Vorverteilung.</p>
+    </div>
+
+    <!-- Technische Erklärung -->
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-800">
+        <p class="font-semibold mb-2">Die tiefere Erklärung:</p>
+        <p class="mb-2">Sei X der kleinere Betrag (den weder du noch der andere Spieler kennt). Die Umschläge enthalten X und 2X. Du siehst entweder X oder 2X:</p>
+        <ul class="space-y-1 text-xs">
+            <li>→ Wenn du X siehst: Tausch gibt +X (Gewinn)</li>
+            <li>→ Wenn du 2X siehst: Tausch gibt −X (Verlust)</li>
+            <li>→ Symmetrisch: EV(Tausch) = EV(Behalten) = 1.5X</li>
+        </ul>
+        <p class="mt-2 text-xs">Der Fehler im ursprünglichen Argument: Es behandelt den gesehenen Betrag als <em>fixen Ausgangspunkt</em>, statt als <em>zufällige Variable</em>. Damit doppelt es die Unsicherheit auf falsche Weise.</p>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+        <p class="font-semibold mb-1">Verhandlungsrelevanz:</p>
+        <p class="mb-1">Das Zwei-Umschlag-Problem zeigt: Wenn eine Entscheidung "immer vorteilhaft" erscheint, ist fast sicher ein Denkfehler im Spiel. <strong>In Verhandlungen</strong> taucht das auf, wenn jemand sagt: "Egal was du tust, dieses Angebot ist besser."</p>
+        <p><strong>Regel:</strong> Beachte, welche Referenzpunkte das Argument nutzt. Argumente, die aus beliebigen Ausgangspunkten "immer" zu einer Schlussfolgerung führen, enthalten fast immer einen verdeckten Fehler.</p>
+    </div>
+
+    <div class="flex gap-3">
+        <a href="/raetsel/zwei-umschlag" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>

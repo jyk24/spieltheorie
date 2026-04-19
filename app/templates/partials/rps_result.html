@@ -100,16 +100,9 @@
         <p>Das Nash-Gleichgewicht in Schere-Stein-Papier ist die <strong>gemischte Strategie: 1/3 / 1/3 / 1/3</strong>. Jede Abweichung davon ist ausnutzbar – sobald jemand dein Muster kennt, kann er immer gewinnen. Der Schlüssel ist echte Zufälligkeit.</p>
     </div>
 
+    {% include "partials/achievement_unlock.html" %}
+    {% set current_game_id = "rps" %}
     {% include "partials/strategy_debrief.html" %}
-
-    <div class="flex gap-3 mt-4">
-        <a href="/spiele/rps" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
-            Nochmal
-        </a>
-        <a href="/spiele" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
-            Alle Spiele
-        </a>
-    </div>
 </div>
 
 {% endif %}

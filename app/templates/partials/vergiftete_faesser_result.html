@@ -1,0 +1,61 @@
+{% if is_correct %}
+<div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-400">
+    <h3 class="text-xl font-bold text-emerald-800 mb-1">Richtig! Exakt {{ correct }} Tester.</h3>
+    <p class="text-sm text-emerald-700">Du hast das Prinzip der Binärkodierung erkannt.</p>
+</div>
+{% else %}
+<div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-400">
+    <h3 class="text-xl font-bold text-amber-800 mb-1">Du hast {{ guess }} geraten – die Antwort ist {{ correct }}.</h3>
+    <p class="text-sm text-amber-700">Weniger als du vielleicht erwartet hast? Das Geheimnis liegt in der Binärkodierung.</p>
+</div>
+{% endif %}
+
+<!-- Erklärung mit Binärkodierung -->
+<div class="bg-slate-50 rounded-xl p-5 mb-4 text-sm text-slate-700">
+    <p class="font-semibold mb-3">Wie funktioniert das mit 10 Testern?</p>
+    <p class="mb-3">Nummeriere die 1.000 Fässer binär (0 bis 999). Jede Bitstelle bekommt einen Tester:</p>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-xs font-mono">
+            <thead>
+                <tr class="text-slate-500">
+                    <th class="text-left pb-2 pr-4">Fass</th>
+                    <th class="text-left pb-2 pr-2">T10</th>
+                    <th class="text-left pb-2 pr-2">T9</th>
+                    <th class="text-left pb-2 pr-2">T8</th>
+                    <th class="text-left pb-2 pr-2">T7</th>
+                    <th class="text-left pb-2 pr-2">T6</th>
+                    <th class="text-left pb-2 pr-2">T5</th>
+                    <th class="text-left pb-2 pr-2">T4</th>
+                    <th class="text-left pb-2 pr-2">T3</th>
+                    <th class="text-left pb-2 pr-2">T2</th>
+                    <th class="text-left pb-2">T1</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fass in [1, 2, 3, 42, 100, 500, 999] %}
+                <tr class="border-t border-slate-200">
+                    <td class="py-1 pr-4 text-slate-600">Nr. {{ fass }}</td>
+                    {% for bit in range(9, -1, -1) %}
+                    <td class="py-1 pr-2 {% if (fass >> bit) & 1 %}text-red-600 font-bold{% else %}text-slate-300{% endif %}">
+                        {{ (fass >> bit) & 1 }}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <p class="mt-3 text-xs text-slate-500">Tester <em>k</em> trinkt aus allen Fässern, deren Binärdarstellung an Stelle <em>k</em> eine 1 hat. Das Muster der toten Tester ergibt binär die Nummer des vergifteten Fasses.</p>
+</div>
+
+<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+    <p class="font-semibold mb-1">Die Formel:</p>
+    <p class="font-mono text-center my-2">Tester = ⌈log₂(N)⌉ = ⌈log₂(1000)⌉ = 10</p>
+    <p class="text-xs">Für 2¹⁰ = 1024 ≥ 1000 reichen 10 Bit – also 10 Tester. Für 1 Million Fässer wären es nur 20.</p>
+</div>
+
+<div class="flex gap-3">
+    <a href="/raetsel/vergiftete-faesser" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal</a>
+    <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">Andere Rätsel</a>
+</div>

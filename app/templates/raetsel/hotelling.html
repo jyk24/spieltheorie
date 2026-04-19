@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}Hotelling-Gesetz – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🏖️ Hotelling-Gesetz</h1>
+        <p class="text-slate-500 mt-1">Warum stehen alle Fastfood-Ketten nebeneinander – und Parteien immer in der Mitte?</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Situation:</p>
+        <div class="space-y-2 mb-4">
+            <div class="flex items-start gap-2">
+                <span class="mt-0.5">🏖️</span>
+                <span>Ein gerader Strand mit <strong>101 gleichmäßig verteilten Kunden</strong> (Position 0 bis 100).</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="mt-0.5">🍦</span>
+                <span><strong>Eiswagen A</strong> steht bereits fest bei Position <strong>{{ vendor_a }}</strong>.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="mt-0.5">🛒</span>
+                <span>Du platzierst <strong>Eiswagen B</strong>. Jeder Kunde geht zum nächsten Wagen.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="mt-0.5">🎯</span>
+                <span>Ziel: So viele Kunden wie möglich für Wagen B gewinnen.</span>
+            </div>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs">
+            <strong>Frage:</strong> Wo stellst du Eiswagen B auf – und was passiert danach mit Wagen A?
+        </div>
+    </div>
+
+    <!-- Strand-Visualisierung -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-6">
+        <p class="text-sm text-slate-600 font-medium mb-3">Aktueller Strand (Wagen A bei Position {{ vendor_a }}):</p>
+        <div class="relative h-10 bg-amber-100 rounded-lg border border-amber-200 overflow-hidden mb-2">
+            <!-- Wagen A -->
+            <div class="absolute top-0 bottom-0 flex items-center justify-center"
+                 style="left: {{ vendor_a }}%; transform: translateX(-50%);">
+                <div class="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded shadow">A</div>
+            </div>
+            <!-- Mittellinie -->
+            <div class="absolute top-0 bottom-0 border-l border-dashed border-slate-300" style="left: 50%"></div>
+        </div>
+        <div class="flex justify-between text-xs text-slate-400">
+            <span>0</span>
+            <span>25</span>
+            <span class="text-slate-500 font-medium">50 (Mitte)</span>
+            <span>75</span>
+            <span>100</span>
+        </div>
+    </div>
+
+    <!-- Eingabe -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="hotelling-area">
+        <p class="font-semibold text-slate-800 mb-1">Wo stellst du Eiswagen B auf?</p>
+        <p class="text-sm text-slate-500 mb-5">Wähle eine Position zwischen 0 und 100.</p>
+
+        <form hx-post="/raetsel/hotelling/result"
+              hx-target="#hotelling-area"
+              hx-swap="innerHTML"
+              id="hotelling-form">
+
+            <div class="mb-4">
+                <div class="flex items-center gap-4 mb-2">
+                    <label class="text-sm font-medium text-slate-700 w-32">Position B:</label>
+                    <input type="number" name="position_b" id="pos-input"
+                           min="0" max="100" value="75" required
+                           oninput="updatePreview(this.value)"
+                           class="w-24 border border-slate-200 rounded-lg px-3 py-2 text-center font-bold focus:outline-none focus:border-indigo-400">
+                    <span class="text-sm text-slate-400">von 100</span>
+                </div>
+
+                <!-- Live-Vorschau -->
+                <div class="relative h-10 bg-amber-100 rounded-lg border border-amber-200 overflow-hidden mb-2 mt-3">
+                    <div class="absolute top-0 bottom-0 flex items-center justify-center"
+                         id="vendor-a-marker" style="left: {{ vendor_a }}%; transform: translateX(-50%);">
+                        <div class="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded shadow">A</div>
+                    </div>
+                    <div class="absolute top-0 bottom-0 flex items-center justify-center"
+                         id="vendor-b-marker" style="left: 75%; transform: translateX(-50%);">
+                        <div class="bg-emerald-600 text-white text-xs font-bold px-2 py-1 rounded shadow">B</div>
+                    </div>
+                    <div class="absolute top-0 bottom-0 border-l border-dashed border-slate-300" style="left: 50%"></div>
+                    <!-- Split indicator -->
+                    <div id="split-line" class="absolute top-0 bottom-0 border-l-2 border-red-400 border-dashed" style="left: 62%"></div>
+                </div>
+                <div class="flex justify-between text-xs text-slate-400">
+                    <span>0</span><span>25</span><span class="text-slate-500">50</span><span>75</span><span>100</span>
+                </div>
+
+                <div class="mt-3 flex gap-6 text-sm">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded bg-blue-500"></div>
+                        <span class="text-slate-600">Wagen A: <strong id="cust-a">~{{ vendor_a }}</strong> Kunden (geschätzt)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded bg-emerald-500"></div>
+                        <span class="text-slate-600">Wagen B: <strong id="cust-b">~{{ 101 - vendor_a }}</strong> Kunden (geschätzt)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schnellauswahl -->
+            <div class="flex gap-2 mb-5 flex-wrap">
+                <span class="text-xs text-slate-500 self-center">Schnell:</span>
+                {% for pos in [0, 26, 50, 74, 100] %}
+                <button type="button" onclick="setPos({{ pos }})"
+                        class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-600 transition-colors">
+                    {{ pos }}
+                </button>
+                {% endfor %}
+            </div>
+
+            <button type="submit"
+                    class="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                Aufstellen & Ergebnis sehen
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+const VENDOR_A = {{ vendor_a }};
+
+function setPos(val) {
+    document.getElementById('pos-input').value = val;
+    updatePreview(val);
+}
+
+function updatePreview(rawVal) {
+    const val = Math.max(0, Math.min(100, parseInt(rawVal) || 0));
+    document.getElementById('vendor-b-marker').style.left = val + '%';
+
+    // Compute split
+    let custA, custB;
+    if (VENDOR_A === val) {
+        custB = 50;
+        custA = 51;
+    } else {
+        const lo = Math.min(VENDOR_A, val);
+        const hi = Math.max(VENDOR_A, val);
+        const boundary = Math.floor((lo + hi) / 2);
+        const leftCust = boundary + 1;
+        const rightCust = 101 - leftCust;
+        if (VENDOR_A < val) {
+            custA = leftCust;
+            custB = rightCust;
+        } else {
+            custB = leftCust;
+            custA = rightCust;
+        }
+    }
+
+    document.getElementById('cust-a').textContent = custA;
+    document.getElementById('cust-b').textContent = custB;
+
+    // Split line
+    const splitPos = (Math.min(VENDOR_A, val) + Math.max(VENDOR_A, val)) / 2;
+    document.getElementById('split-line').style.left = splitPos + '%';
+}
+
+updatePreview(75);
+</script>
+
+{% endblock %}

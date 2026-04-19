@@ -83,12 +83,8 @@
         {% endif %}
     </div>
 
-    <div class="flex gap-3 mb-2">
-        <a href="/spiele/ultimatum" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
-            Nochmal spielen
-        </a>
-    </div>
-
+    {% include "partials/achievement_unlock.html" %}
+    {% set current_game_id = "ultimatum" %}
     {% include "partials/strategy_debrief.html" %}
 </div>
 {% endif %}

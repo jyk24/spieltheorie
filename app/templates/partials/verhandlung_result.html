@@ -64,9 +64,20 @@
     <p class="text-sm text-slate-500 mb-4">Die Verhandlung ist gescheitert. Beide Parteien müssen auf ihre BATNA zurückgreifen.</p>
     {% endif %}
 
-    <div class="flex gap-3">
-        <a href="/spiele/verhandlung" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal</a>
-        <a href="/lektionen/batna" class="border border-indigo-300 text-indigo-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50">BATNA-Theorie</a>
+    {% include "partials/achievement_unlock.html" %}
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2">
+        <a href="/spiele/verhandlung"
+           class="flex items-center justify-center gap-2 border border-slate-200 text-slate-600 px-4 py-3 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors">
+            🔄 Nochmal spielen
+        </a>
+        <a href="/lektionen/batna"
+           class="flex items-center justify-center gap-2 border border-indigo-200 text-indigo-600 px-4 py-3 rounded-xl text-sm font-medium hover:bg-indigo-50 transition-colors">
+            📖 BATNA-Theorie
+        </a>
+        <a href="/spiele/minderheit"
+           class="flex items-center justify-center gap-2 bg-indigo-600 text-white px-4 py-3 rounded-xl text-sm font-bold hover:bg-indigo-700 transition-colors">
+            🔢 Minderheitsspiel →
+        </a>
     </div>
 </div>
 {% endif %}

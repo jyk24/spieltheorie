@@ -1,0 +1,48 @@
+{% if is_correct %}
+<div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-400">
+    <h3 class="text-xl font-bold text-emerald-800 mb-1">Richtig! Position {{ survivor }} überlebt.</h3>
+    <p class="text-sm text-emerald-700">Du hast die sichere Position gefunden.</p>
+</div>
+{% else %}
+<div class="mb-5 p-4 rounded-xl bg-red-50 border-2 border-red-400">
+    <h3 class="text-xl font-bold text-red-800 mb-1">Position {{ position }} wird eliminiert!</h3>
+    <p class="text-sm text-red-700">Die sichere Position ist <strong>{{ survivor }}</strong>.</p>
+</div>
+{% endif %}
+
+<!-- Eliminierungsreihenfolge -->
+<div class="bg-slate-50 rounded-xl p-4 mb-4">
+    <p class="font-semibold text-slate-700 mb-3 text-sm">Eliminierungsreihenfolge:</p>
+    <div class="flex flex-wrap gap-2">
+        {% for person in order %}
+        <div class="flex items-center gap-1">
+            <span class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold
+                {% if person == position and not is_correct %}bg-red-200 text-red-800
+                {% else %}bg-slate-200 text-slate-600{% endif %}">
+                {{ person }}
+            </span>
+            {% if not loop.last %}<span class="text-slate-300 text-xs">→</span>{% endif %}
+        </div>
+        {% endfor %}
+        <div class="flex items-center gap-1">
+            <span class="text-slate-300 text-xs">→</span>
+            <span class="w-8 h-8 rounded-full bg-emerald-200 text-emerald-800 flex items-center justify-center text-xs font-bold">{{ survivor }}</span>
+            <span class="text-xs text-emerald-600 font-medium">✓</span>
+        </div>
+    </div>
+</div>
+
+<!-- Erklärung -->
+<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+    <p class="font-semibold mb-2">Das Muster dahinter:</p>
+    <p class="mb-2">Für <em>n</em> Personen mit jedem 2. eliminiert gilt: J(n) = 2L + 1, wobei n = 2^m + L.</p>
+    <div class="font-mono text-xs bg-white rounded p-2 mt-2">
+        n = 10 = 2³ + 2 → L = 2 → J(10) = 2×2 + 1 = <strong>5</strong>
+    </div>
+    <p class="mt-2 text-xs text-indigo-700">Für Potenzen von 2 (n=8, 16, 32...) überlebt immer Position 1. Die Antwort ist immer ungerade.</p>
+</div>
+
+<div class="flex gap-3">
+    <a href="/raetsel/josephus" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal</a>
+    <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">Andere Rätsel</a>
+</div>

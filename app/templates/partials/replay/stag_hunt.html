@@ -1,0 +1,52 @@
+{% set ns = namespace(player_total=0, ai_total=0) %}
+<div class="overflow-x-auto">
+<table class="w-full text-sm">
+    <thead>
+        <tr class="text-slate-500 border-b border-slate-100 text-xs uppercase tracking-wide">
+            <th class="text-left pb-2 pr-3">Runde</th>
+            <th class="text-center pb-2 pr-3">Du</th>
+            <th class="text-center pb-2 pr-3">KI</th>
+            <th class="text-center pb-2 pr-3">Koordiniert</th>
+            <th class="text-right pb-2 pr-3">Runde</th>
+            <th class="text-right pb-2">Gesamt</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in moves %}
+        {% set ns.player_total = ns.player_total + m.player_score %}
+        {% set ns.ai_total = ns.ai_total + m.ai_score %}
+        <tr class="border-b border-slate-50
+            {% if m.player == 'S' and m.ai == 'S' %}bg-emerald-50
+            {% elif m.player == 'S' and m.ai == 'H' %}bg-red-50{% endif %}">
+            <td class="py-2 pr-3 text-slate-500 text-xs">{{ m.round }}</td>
+            <td class="py-2 pr-3 text-center font-semibold
+                {% if m.player == 'S' %}text-emerald-700{% else %}text-slate-600{% endif %}">
+                {{ m.player_label }}
+            </td>
+            <td class="py-2 pr-3 text-center text-slate-600">{{ m.ai_label }}</td>
+            <td class="py-2 pr-3 text-center text-xs">
+                {% if m.player == m.ai %}
+                <span class="text-emerald-600 font-semibold">✓ Ja</span>
+                {% else %}
+                <span class="text-slate-400">–</span>
+                {% endif %}
+            </td>
+            <td class="py-2 pr-3 text-right font-medium
+                {% if m.player_score == 8 %}text-emerald-600
+                {% elif m.player_score == 3 %}text-amber-600
+                {% else %}text-red-500{% endif %}">
+                +{{ m.player_score }}
+            </td>
+            <td class="py-2 text-right font-bold text-indigo-700">{{ ns.player_total }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr class="border-t-2 border-slate-200">
+            <td colspan="4" class="pt-2 text-xs text-slate-400 font-medium">Gesamt</td>
+            <td class="pt-2 text-right font-bold text-indigo-700">{{ ns.player_total }}</td>
+            <td class="pt-2 text-right text-xs text-slate-400">KI: {{ ns.ai_total }}</td>
+        </tr>
+    </tfoot>
+</table>
+</div>

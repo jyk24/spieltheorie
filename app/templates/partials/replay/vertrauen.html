@@ -1,0 +1,54 @@
+{% set ns = namespace(player_total=0, ai_total=0, round=0) %}
+<div class="overflow-x-auto">
+<table class="w-full text-sm">
+    <thead>
+        <tr class="text-slate-500 border-b border-slate-100 text-xs uppercase tracking-wide">
+            <th class="text-left pb-2 pr-3">Runde</th>
+            <th class="text-right pb-2 pr-3">Investiert</th>
+            <th class="text-right pb-2 pr-3">Topf (×3)</th>
+            <th class="text-right pb-2 pr-3">Zurück</th>
+            <th class="text-right pb-2 pr-3">Dein +/-</th>
+            <th class="text-right pb-2">Gesamt</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in moves %}
+        {% set ns.round = ns.round + 1 %}
+        {% set ns.player_total = ns.player_total + m.player_net %}
+        {% set ns.ai_total = ns.ai_total + m.ai_net %}
+        <tr class="border-b border-slate-50
+            {% if m.player_net > 0 %}bg-emerald-50
+            {% elif m.player_net < 0 %}bg-red-50{% endif %}">
+            <td class="py-2 pr-3 text-slate-500 text-xs">{{ ns.round }}</td>
+            <td class="py-2 pr-3 text-right text-slate-600">{{ m.invested }}</td>
+            <td class="py-2 pr-3 text-right text-slate-500">{{ m.pot }}</td>
+            <td class="py-2 pr-3 text-right font-medium
+                {% if m.returned / m.pot >= 0.5 %}text-emerald-600
+                {% elif m.returned / m.pot >= 0.3 %}text-amber-600
+                {% else %}text-red-500{% endif %}">
+                {{ m.returned }}
+            </td>
+            <td class="py-2 pr-3 text-right font-bold
+                {% if m.player_net > 0 %}text-emerald-700
+                {% elif m.player_net < 0 %}text-red-600
+                {% else %}text-slate-400{% endif %}">
+                {% if m.player_net > 0 %}+{% endif %}{{ m.player_net }}
+            </td>
+            <td class="py-2 text-right font-bold text-indigo-700">{{ ns.player_total }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr class="border-t-2 border-slate-200">
+            <td colspan="4" class="pt-2 text-xs text-slate-400 font-medium">Gesamt</td>
+            <td class="pt-2 text-right font-bold
+                {% if ns.player_total > 0 %}text-emerald-700
+                {% elif ns.player_total < 0 %}text-red-600
+                {% else %}text-slate-400{% endif %}">
+                {% if ns.player_total > 0 %}+{% endif %}{{ ns.player_total }}
+            </td>
+            <td class="pt-2 text-right text-xs text-slate-400">KI: {{ ns.ai_total }}</td>
+        </tr>
+    </tfoot>
+</table>
+</div>

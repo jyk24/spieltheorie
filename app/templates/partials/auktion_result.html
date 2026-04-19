@@ -101,16 +101,9 @@
         <p><strong>Fazit:</strong> In welchem Szenario auch immer – Abweichungen vom wahren Wert können nur schaden, nie helfen.</p>
     </div>
 
+    {% include "partials/achievement_unlock.html" %}
+    {% set current_game_id = "auktion" %}
     {% include "partials/strategy_debrief.html" %}
-
-    <div class="flex gap-3 mt-4">
-        <a href="/spiele/auktion" class="bg-emerald-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-emerald-700">
-            Nochmal
-        </a>
-        <a href="/spiele" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
-            Alle Spiele
-        </a>
-    </div>
 </div>
 
 {% endif %}

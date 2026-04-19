@@ -171,18 +171,11 @@
         <p>Das Minderheitsspiel zeigt, warum Kontrarisierung und Antizyklizität strategisch wertvoll sind. Wer immer das tut, was alle anderen tun, landet in der Mehrheit und verliert. <strong>In Verhandlungen:</strong> Wer auf die übliche Strategie setzt, findet sich im Wettbewerb – wer die Minderheitsstrategie findet, schafft Alleinstellung.</p>
     </div>
 
+    {% include "partials/achievement_unlock.html" %}
     {% if strategy_info %}
+    {% set current_game_id = "minderheit" %}
     {% include "partials/strategy_debrief.html" %}
     {% endif %}
-
-    <div class="flex gap-3">
-        <a href="/spiele/minderheit" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
-            Nochmal
-        </a>
-        <a href="/spiele" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
-            Andere Spiele
-        </a>
-    </div>
 </div>
 
 {% endif %}

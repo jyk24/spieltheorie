@@ -5,6 +5,7 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 
 from .models import GameSession, Lesson, UserProgress
+from .achievements import check_achievements
 
 
 def save_game_session(
@@ -16,7 +17,7 @@ def save_game_session(
     score: int,
     ai_score: int,
     scenario: str | None = None,
-) -> GameSession:
+) -> tuple[GameSession, list[dict]]:
     session = GameSession(
         game_type=game_type,
         ai_strategy=ai_strategy,
@@ -31,7 +32,8 @@ def save_game_session(
     db.commit()
     db.refresh(session)
     _update_progress(db, game_type, score)
-    return session
+    new_achievements = check_achievements(db, game_type, moves, result, score, ai_score)
+    return session, new_achievements
 
 
 def _update_progress(db: Session, game_type: str, score: int) -> None:

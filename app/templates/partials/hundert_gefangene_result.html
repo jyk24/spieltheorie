@@ -1,0 +1,49 @@
+{% if strategy == "loop" %}
+<div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-400">
+    <h3 class="text-xl font-bold text-emerald-800 mb-1">Schleifen-Strategie – überraschend gut!</h3>
+    <p class="text-sm text-emerald-700">Du hast die richtige Strategie gewählt. Die Simulation bestätigt die Theorie.</p>
+</div>
+{% else %}
+<div class="mb-5 p-4 rounded-xl bg-red-50 border-2 border-red-400">
+    <h3 class="text-xl font-bold text-red-800 mb-1">Zufallsstrategie – praktisch keine Chance!</h3>
+    <p class="text-sm text-red-700">Bei 100 Gefangenen mit Zufallsstrategie beträgt die Wahrscheinlichkeit, dass alle überleben, (½)^100 ≈ 0,0000000000000000000000000001 %.</p>
+</div>
+{% endif %}
+
+<!-- Simulations-Ergebnis -->
+<div class="bg-slate-50 rounded-xl p-5 mb-5">
+    <div class="grid grid-cols-2 gap-4 text-center">
+        <div class="bg-white rounded-xl p-4 border border-emerald-200">
+            <div class="text-3xl font-bold text-emerald-600">{{ loop_rate }}%</div>
+            <div class="text-xs text-slate-500 mt-1">Schleifen-Strategie</div>
+            <div class="text-xs text-slate-400">(Simulation, {{ n_trials }} Läufe)</div>
+        </div>
+        <div class="bg-white rounded-xl p-4 border border-red-200">
+            <div class="text-3xl font-bold text-red-500">≈0%</div>
+            <div class="text-xs text-slate-500 mt-1">Zufallsstrategie</div>
+            <div class="text-xs text-slate-400">(theoretisch)</div>
+        </div>
+    </div>
+    <div class="text-center mt-3 text-xs text-slate-500">Theoretischer Wert Schleife: {{ theoretical }}%</div>
+</div>
+
+<!-- Erklärung -->
+<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+    <p class="font-semibold mb-2">Warum funktioniert die Schleifen-Strategie?</p>
+    <p class="mb-2">Jeder Gefangene <em>N</em> öffnet Box <em>N</em>, dann die Box mit der darin gefundenen Nummer usw. Er folgt einer <strong>Permutationskette</strong>.</p>
+    <ul class="space-y-1 text-xs text-indigo-700">
+        <li>→ Alle Gefangenen überleben genau dann, wenn <strong>kein Zyklus länger als 50</strong> ist.</li>
+        <li>→ Die Wahrscheinlichkeit dafür beträgt: 1 − Σ(1/k) für k=51 bis 100 ≈ <strong>30,7%</strong></li>
+        <li>→ Zufallsstrategie: Unabhängige Ereignisse mit P=0,5 → (0,5)¹⁰⁰ ≈ 0</li>
+    </ul>
+</div>
+
+<div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+    <p class="font-semibold mb-1">Verhandlungsrelevanz:</p>
+    <p>Die Schleifen-Strategie zeigt: <strong>Korrelierte Strategien</strong> können dramatisch besser sein als unabhängige. In Verhandlungen: koordinierte Positionen eines Teams schlagen individuelle Improvisation weit.</p>
+</div>
+
+<div class="flex gap-3">
+    <a href="/raetsel/hundert-gefangene" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal</a>
+    <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">Andere Rätsel</a>
+</div>

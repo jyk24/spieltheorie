@@ -45,3 +45,11 @@ class UserProgress(Base):
     best_score: Mapped[int] = mapped_column(Integer, default=0)
     lessons_viewed_json: Mapped[str] = mapped_column(Text, default="[]")
     last_played: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+
+
+class UserAchievement(Base):
+    __tablename__ = "user_achievements"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    slug: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
+    unlocked_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

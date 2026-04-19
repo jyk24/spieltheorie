@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Partie #{{ session.id }} – {{ game_label }} – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="mb-6">
+    <a href="/fortschritt" class="text-sm text-indigo-600 hover:underline">← Zurück zum Fortschritt</a>
+</div>
+
+<!-- Session-Kopfzeile -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
+                Partie #{{ session.id }}
+            </div>
+            <h1 class="text-2xl font-bold text-slate-800">{{ game_label }}</h1>
+            <div class="text-sm text-slate-500 mt-1">
+                {{ session.created_at.strftime("%d. %B %Y, %H:%M Uhr") if session.created_at else "" }}
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            {% if session.result %}
+            <div class="text-center">
+                <div class="text-xs text-slate-400 mb-1">Ergebnis</div>
+                <span class="text-sm font-bold px-3 py-1.5 rounded-full
+                    {% if session.result == 'win' %}bg-emerald-100 text-emerald-700
+                    {% elif session.result == 'loss' %}bg-red-100 text-red-700
+                    {% else %}bg-amber-100 text-amber-700{% endif %}">
+                    {{ result_labels.get(session.result, session.result) }}
+                </span>
+            </div>
+            {% endif %}
+            <div class="text-center">
+                <div class="text-xs text-slate-400 mb-1">Score</div>
+                <div class="text-2xl font-black text-indigo-700">{{ session.score }}</div>
+            </div>
+            {% if session.ai_score %}
+            <div class="text-center">
+                <div class="text-xs text-slate-400 mb-1">KI-Score</div>
+                <div class="text-2xl font-black text-slate-500">{{ session.ai_score }}</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Replay-Tabelle -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <h2 class="font-semibold text-slate-700 mb-4">Rundenprotokoll</h2>
+    {% if moves %}
+        {% include "partials/replay/" + session.game_type + ".html" %}
+    {% else %}
+    <p class="text-sm text-slate-400">Keine Zugdaten verfügbar.</p>
+    {% endif %}
+</div>
+
+<!-- Nochmal spielen -->
+<div class="mt-6 flex gap-3">
+    <a href="/spiele/{{ session.game_type }}"
+       class="flex items-center gap-2 bg-indigo-600 text-white px-5 py-3 rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors">
+        🔄 Nochmal spielen
+    </a>
+    <a href="/fortschritt"
+       class="flex items-center gap-2 border border-slate-200 text-slate-600 px-5 py-3 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors">
+        ← Alle Partien
+    </a>
+</div>
+
+{% endblock %}

@@ -188,18 +188,11 @@
         <p>Auch in echten Verhandlungen haben Menschen Machtpositionen, die sie nicht ausschöpfen. Wer immer das Maximum herausquetscht, beschädigt die Beziehung – selbst wenn das Gegenüber formal nicht ablehnen kann. Fairness hat einen strategischen Wert jenseits der Spieltheorie.</p>
     </div>
 
+    {% include "partials/achievement_unlock.html" %}
     {% if strategy_info %}
+    {% set current_game_id = "diktator" %}
     {% include "partials/strategy_debrief.html" %}
     {% endif %}
-
-    <div class="flex gap-3">
-        <a href="/spiele/diktator" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
-            Nochmal
-        </a>
-        <a href="/spiele" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
-            Andere Spiele
-        </a>
-    </div>
 </div>
 
 {% endif %}

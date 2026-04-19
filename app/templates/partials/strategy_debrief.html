@@ -1,40 +1,117 @@
 {% if strategy_info %}
-<div class="mt-6 border-t border-slate-100 pt-5">
-    <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">— Aufgelöst —</div>
 
+{# ── Lernpfad-Reihenfolge für "Nächstes Spiel" ── #}
+{% set pfad_order = [
+    "gefangenendilemma","ultimatum","vertrauen",
+    "chicken","stag-hunt","koordination","rps",
+    "public-goods","diktator","auktion",
+    "beauty-contest","centipede","dollarauktion","verhandlung",
+    "minderheit"
+] %}
+{% set ns = namespace(next_game=none, next_icon="🎮", next_name="Nächstes Spiel") %}
+{% set game_meta = {
+    "gefangenendilemma": {"icon":"🔒","name":"Gefangenendilemma"},
+    "ultimatum":         {"icon":"⚖️","name":"Ultimatumspiel"},
+    "vertrauen":         {"icon":"🤝","name":"Vertrauensspiel"},
+    "chicken":           {"icon":"🚗","name":"Feiglingsspiel"},
+    "stag-hunt":         {"icon":"🦌","name":"Hirschjagd"},
+    "koordination":      {"icon":"🎯","name":"Koordinationsspiel"},
+    "rps":               {"icon":"✂️","name":"Schere-Stein-Papier"},
+    "public-goods":      {"icon":"🏛️","name":"Öffentliche Güter"},
+    "diktator":          {"icon":"👑","name":"Diktatorspiel"},
+    "auktion":           {"icon":"🔨","name":"Vickrey-Auktion"},
+    "beauty-contest":    {"icon":"🎯","name":"Schönheitswettbewerb"},
+    "centipede":         {"icon":"🐛","name":"Centipede-Spiel"},
+    "dollarauktion":     {"icon":"💸","name":"Dollarauktion"},
+    "verhandlung":       {"icon":"💼","name":"Verhandlung"},
+    "minderheit":        {"icon":"🔢","name":"Minderheitsspiel"},
+} %}
+{% for i in range(pfad_order | length - 1) %}
+    {% if pfad_order[i] == current_game_id %}
+        {% set ns.next_game = pfad_order[i+1] %}
+        {% set ns.next_icon = game_meta[pfad_order[i+1]].icon %}
+        {% set ns.next_name = game_meta[pfad_order[i+1]].name %}
+    {% endif %}
+{% endfor %}
+
+<div class="mt-6 border-t border-slate-100 pt-5">
+    <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-4">— Auflösung & Analyse —</div>
+
+    {# ── KI-Strategie ── #}
     <div class="bg-gradient-to-br from-indigo-50 to-slate-50 border border-indigo-100 rounded-xl p-5 mb-4">
+        <div class="text-xs text-indigo-500 font-semibold uppercase tracking-wide mb-2">Die KI spielte:</div>
         <div class="flex items-center gap-3 mb-3">
             <span class="text-3xl">{{ strategy_info.icon }}</span>
-            <div>
-                <div class="text-xs text-indigo-500 font-semibold uppercase tracking-wide">KI-Strategie war</div>
-                <div class="text-xl font-bold text-slate-800">{{ strategy_info.name }}</div>
-            </div>
+            <div class="text-xl font-bold text-slate-800">{{ strategy_info.name }}</div>
         </div>
         <p class="text-sm text-slate-600 mb-3">{{ strategy_info.verhalten }}</p>
         <div class="bg-white rounded-lg p-3 border border-indigo-100">
-            <div class="text-xs font-semibold text-indigo-600 mb-1">Optimale Gegenstrategie:</div>
+            <div class="text-xs font-semibold text-indigo-600 mb-1">Optimale Gegenstrategie wäre gewesen:</div>
             <p class="text-sm text-slate-700">{{ strategy_info.gegencheck }}</p>
         </div>
     </div>
 
+    {# ── Spieler-Analyse (wenn vorhanden) ── #}
     {% if player_analysis %}
-    <div class="bg-slate-50 rounded-xl p-4 mb-4 text-sm">
-        <div class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Dein Spielmuster</div>
-        <p class="text-slate-600">{{ player_analysis.pattern }}</p>
-        <div class="flex gap-4 mt-2 text-xs text-slate-500">
+    <div class="bg-slate-50 rounded-xl p-4 mb-4 text-sm border border-slate-200">
+        <div class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Dein Spielmuster:</div>
+        <p class="text-slate-700 font-medium mb-2">{{ player_analysis.pattern }}</p>
+        <div class="flex flex-wrap gap-4 text-xs text-slate-500">
+            {% if player_analysis.coop_rate is defined %}
             <span>Kooperationsrate: <strong class="text-slate-700">{{ player_analysis.coop_rate }}%</strong></span>
-            {% if player_analysis.first_defect %}
-            <span>Erster Verrat: <strong class="text-slate-700">Runde {{ player_analysis.first_defect }}</strong></span>
-            {% else %}
-            <span>Erster Verrat: <strong class="text-emerald-600">keiner</strong></span>
+            {% endif %}
+            {% if player_analysis.first_defect is defined %}
+                {% if player_analysis.first_defect %}
+                <span>Erster Verrat: <strong class="text-slate-700">Runde {{ player_analysis.first_defect }}</strong></span>
+                {% else %}
+                <span>Erster Verrat: <strong class="text-emerald-600">nie</strong></span>
+                {% endif %}
             {% endif %}
         </div>
     </div>
     {% endif %}
 
-    <a href="/lektionen/{{ strategy_info.lesson_slug }}"
-       class="inline-flex items-center gap-2 text-sm text-indigo-600 border border-indigo-200 px-4 py-2 rounded-lg hover:bg-indigo-50 transition-colors">
-        📖 {{ strategy_info.lesson_title }} lesen →
-    </a>
+    {# ── Evaluation (win/draw/loss) ── #}
+    {% if evaluation %}
+    <div class="rounded-xl p-4 mb-4 text-sm border
+        {% if evaluation.result == 'win' %}bg-emerald-50 border-emerald-200
+        {% elif evaluation.result == 'draw' %}bg-amber-50 border-amber-200
+        {% else %}bg-red-50 border-red-200{% endif %}">
+        <div class="font-bold mb-1
+            {% if evaluation.result == 'win' %}text-emerald-800
+            {% elif evaluation.result == 'draw' %}text-amber-800
+            {% else %}text-red-800{% endif %}">
+            {% if evaluation.result == 'win' %}✅ {{ evaluation.title }}
+            {% elif evaluation.result == 'draw' %}🔶 {{ evaluation.title }}
+            {% else %}❌ {{ evaluation.title }}{% endif %}
+        </div>
+        <p class="text-sm text-slate-600">{{ evaluation.explanation }}</p>
+    </div>
+    {% endif %}
+
+    {# ── Navigation ── #}
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
+        <a href="/spiele/{{ current_game_id }}"
+           class="flex items-center justify-center gap-2 border border-slate-200 text-slate-600 px-4 py-3 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors">
+            🔄 Nochmal spielen
+        </a>
+
+        <a href="/lektionen/{{ strategy_info.lesson_slug }}"
+           class="flex items-center justify-center gap-2 border border-indigo-200 text-indigo-600 px-4 py-3 rounded-xl text-sm font-medium hover:bg-indigo-50 transition-colors">
+            📖 Lektion lesen
+        </a>
+
+        {% if ns.next_game %}
+        <a href="/spiele/{{ ns.next_game }}"
+           class="flex items-center justify-center gap-2 bg-indigo-600 text-white px-4 py-3 rounded-xl text-sm font-bold hover:bg-indigo-700 transition-colors">
+            {{ ns.next_icon }} {{ ns.next_name }} →
+        </a>
+        {% else %}
+        <a href="/spielpfad"
+           class="flex items-center justify-center gap-2 bg-violet-600 text-white px-4 py-3 rounded-xl text-sm font-bold hover:bg-violet-700 transition-colors">
+            🗺️ Zum Lernpfad
+        </a>
+        {% endif %}
+    </div>
 </div>
 {% endif %}
