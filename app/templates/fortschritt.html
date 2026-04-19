@@ -39,7 +39,23 @@
 
 <!-- Pro-Spiel Statistiken -->
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-    {% set icons = {"gefangenendilemma": "🔒", "ultimatum": "⚖️", "vertrauen": "🤝", "verhandlung": "💼"} %}
+    {% set icons = {
+        "gefangenendilemma": "🔒",
+        "ultimatum": "⚖️",
+        "vertrauen": "🤝",
+        "verhandlung": "💼",
+        "chicken": "🚗",
+        "public-goods": "🏛️",
+        "beauty-contest": "🎯",
+        "stag-hunt": "🦌",
+        "centipede": "🐛",
+        "rps": "✂️",
+        "koordination": "🤝",
+        "auktion": "🔨",
+        "diktator": "👑",
+        "dollarauktion": "💸",
+        "minderheit": "🔢"
+    } %}
     {% for game_type, data in stats.per_game.items() %}
     <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
         <div class="flex items-center justify-between mb-3">
@@ -68,6 +84,47 @@
     </div>
     {% endfor %}
 </div>
+
+<!-- Errungenschaften -->
+{% include "partials/achievements_gallery.html" %}
+
+<!-- Letzte Spielpartien -->
+{% if recent_sessions %}
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-8">
+    <h2 class="font-semibold text-slate-700 mb-4">Letzte Partien</h2>
+    <div class="space-y-2">
+        {% for s in recent_sessions %}
+        {% set color = result_colors.get(s.result, "slate") %}
+        <a href="/fortschritt/session/{{ s.id }}"
+           class="flex items-center justify-between p-3 rounded-lg border border-slate-100 hover:bg-slate-50 hover:border-slate-200 transition-colors group">
+            <div class="flex items-center gap-3">
+                <span class="text-slate-400 text-xs w-8">#{{ s.id }}</span>
+                <div>
+                    <div class="text-sm font-medium text-slate-700 group-hover:text-indigo-700 transition-colors">
+                        {{ game_labels.get(s.game_type, s.game_type) }}
+                    </div>
+                    <div class="text-xs text-slate-400">
+                        {{ s.created_at.strftime("%d.%m.%Y %H:%M") if s.created_at else "" }}
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-slate-600">{{ s.score }} Pkt.</span>
+                {% if s.result %}
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full
+                    {% if s.result == 'win' %}bg-emerald-100 text-emerald-700
+                    {% elif s.result == 'loss' %}bg-red-100 text-red-700
+                    {% else %}bg-amber-100 text-amber-700{% endif %}">
+                    {{ result_labels.get(s.result, s.result) }}
+                </span>
+                {% endif %}
+                <span class="text-slate-300 group-hover:text-indigo-400 transition-colors text-xs">→</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
 
 <!-- Lektionsfortschritt -->
 <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">

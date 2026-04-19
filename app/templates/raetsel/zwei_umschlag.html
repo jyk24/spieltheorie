@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Zwei-Umschlag-Problem – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">✉️ Zwei-Umschlag-Problem</h1>
+        <p class="text-slate-500 mt-1">Tauschen oder behalten? Das Argument sagt immer tauschen – aber das kann nicht stimmen.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Situation:</p>
+        <div class="space-y-2 mb-4">
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 mt-0.5">✉️</span>
+                <span>Du bekommst einen von zwei Umschlägen. Du öffnest ihn und siehst <strong class="text-indigo-700">{{ amount }} €</strong>.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-slate-400 mt-0.5">✉️</span>
+                <span>Der andere Umschlag enthält entweder <strong>{{ amount * 2 }} €</strong> (doppelt) oder <strong>{{ (amount / 2) | int }} €</strong> (halb so viel).</span>
+            </div>
+        </div>
+        <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-3 text-xs text-indigo-700">
+            <p class="font-semibold mb-1">Das Argument fürs Tauschen:</p>
+            <p>Mit 50 % Wahrscheinlichkeit verdoppelst du: {{ amount }} → {{ amount * 2 }} (+{{ amount }}€)</p>
+            <p>Mit 50 % Wahrscheinlichkeit halbierst du: {{ amount }} → {{ (amount / 2) | int }} (-{{ (amount / 2) | int }}€)</p>
+            <p class="mt-1 font-medium">Erwartungswert beim Tausch: 0,5 × {{ amount * 2 }} + 0,5 × {{ (amount / 2) | int }} = {{ (amount * 2 * 0.5 + (amount / 2) * 0.5) | round(1) }}€ > {{ amount }}€</p>
+            <p class="mt-1">→ Also: immer tauschen?</p>
+        </div>
+    </div>
+
+    <div id="spiel-area">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+        <p class="font-semibold text-slate-800 mb-2">Deine Entscheidung:</p>
+        <p class="text-sm text-slate-500 mb-5">Du hast {{ amount }} € im Umschlag. Was machst du?</p>
+
+        <input type="hidden" id="umschlag-amount" name="amount" value="{{ amount }}">
+
+        <div class="space-y-4">
+            <button hx-post="/raetsel/zwei-umschlag/result"
+                    hx-target="#spiel-area"
+                    hx-swap="innerHTML"
+                    hx-include="#umschlag-amount"
+                    hx-vals='{"decision": "switch"}'
+                    class="w-full text-left p-5 rounded-xl border-2 border-amber-200 bg-amber-50 hover:border-amber-400 hover:bg-amber-100 transition-all">
+                <div class="flex items-start gap-4">
+                    <span class="text-3xl">🔄</span>
+                    <div>
+                        <div class="font-bold text-amber-800 text-lg">Tauschen</div>
+                        <div class="text-sm text-amber-700 mt-1">Der Erwartungswert beim Tausch beträgt
+                            {{ (amount * 2 * 0.5 + (amount / 2) * 0.5) | round(1) }}€ – mehr als {{ amount }}€.</div>
+                    </div>
+                </div>
+            </button>
+
+            <button hx-post="/raetsel/zwei-umschlag/result"
+                    hx-target="#spiel-area"
+                    hx-swap="innerHTML"
+                    hx-include="#umschlag-amount"
+                    hx-vals='{"decision": "stay"}'
+                    class="w-full text-left p-5 rounded-xl border-2 border-indigo-200 bg-indigo-50 hover:border-indigo-400 hover:bg-indigo-100 transition-all">
+                <div class="flex items-start gap-4">
+                    <span class="text-3xl">✋</span>
+                    <div>
+                        <div class="font-bold text-indigo-800 text-lg">Behalten</div>
+                        <div class="text-sm text-indigo-700 mt-1">Du hast {{ amount }}€ sicher. Das Tausch-Argument hat irgendwo einen Fehler.</div>
+                    </div>
+                </div>
+            </button>
+        </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
