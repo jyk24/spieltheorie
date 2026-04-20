@@ -8,37 +8,12 @@ from sqlalchemy.orm import Session
 
 from ..achievements import ACHIEVEMENTS
 from ..database import get_db
+from ..game_registry import GAME_ICONS, GAME_LABELS
 from ..models import GameSession, Lesson, UserAchievement, UserProgress
 from ..services import get_all_progress
 
 router = APIRouter(prefix="/fortschritt")
 templates = Jinja2Templates(directory="app/templates")
-
-GAME_LABELS = {
-    "gefangenendilemma": "Gefangenendilemma",
-    "ultimatum": "Ultimatumspiel",
-    "vertrauen": "Vertrauensspiel",
-    "verhandlung": "Verhandlungssimulation",
-    "chicken": "Feiglingsspiel",
-    "public_goods": "Öffentliche Güter",
-    "beauty_contest": "Schönheitswettbewerb",
-    "centipede": "Centipede-Spiel",
-    "stag_hunt": "Hirschjagd",
-    "rps": "Schere-Stein-Papier",
-    "koordination": "Koordinationsspiel",
-    "diktator": "Diktatorspiel",
-    "auktion": "Vickrey-Auktion",
-    "dollarauktion": "Dollarauktion",
-    "minderheit": "Minderheitsspiel",
-    "habicht-taube": "Habicht-Taube-Spiel",
-    "geschlechter-kampf": "Koordinationsdilemma",
-    "freiwilligen-dilemma": "Freiwilligen-Dilemma",
-    "gleiche-muenzen": "Gleiche Münzen",
-    "gewinner-fluch": "Fluch des Gewinners",
-    "hollaendische-auktion": "Holländische Auktion",
-    "englische-auktion": "Englische Auktion",
-    "cournot": "Cournot-Duopol",
-}
 
 RESULT_LABELS = {"win": "Gewonnen", "loss": "Verloren", "draw": "Unentschieden"}
 RESULT_COLORS = {"win": "emerald", "loss": "red", "draw": "amber"}
@@ -97,6 +72,7 @@ def fortschritt(request: Request, db: Session = Depends(get_db)):
             "chart_games": json.dumps(chart_games),
             "lessons_with_status": lessons_with_status,
             "game_labels": GAME_LABELS,
+            "game_icons": GAME_ICONS,
             "recent_sessions": recent_sessions,
             "result_labels": RESULT_LABELS,
             "result_colors": RESULT_COLORS,

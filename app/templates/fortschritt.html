@@ -39,39 +39,16 @@
 
 <!-- Pro-Spiel Statistiken -->
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-    {% set icons = {
-        "gefangenendilemma": "🔒",
-        "ultimatum": "⚖️",
-        "vertrauen": "🤝",
-        "verhandlung": "💼",
-        "chicken": "🚗",
-        "public-goods": "🏛️",
-        "beauty-contest": "🎯",
-        "stag-hunt": "🦌",
-        "centipede": "🐛",
-        "rps": "✂️",
-        "koordination": "🤝",
-        "auktion": "🔨",
-        "diktator": "👑",
-        "dollarauktion": "💸",
-        "minderheit": "🔢",
-        "habicht-taube": "🦅",
-        "geschlechter-kampf": "🎭",
-        "freiwilligen-dilemma": "🙋",
-        "gleiche-muenzen": "🪙",
-        "gewinner-fluch": "🏆",
-        "hollaendische-auktion": "🌷",
-        "englische-auktion": "🔔",
-        "cournot": "🏭"
-    } %}
     {% for game_type, data in stats.per_game.items() %}
+    {% set meta = game_icons.get(game_type, "🎮") %}
+    {% set slug = game_type | replace("_", "-") %}
     <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
         <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
-                <span class="text-xl">{{ icons.get(game_type, "🎮") }}</span>
+                <span class="text-xl">{{ game_icons.get(game_type, "🎮") }}</span>
                 <span class="font-semibold text-slate-800">{{ game_labels.get(game_type, game_type) }}</span>
             </div>
-            <a href="/spiele/{{ game_type }}" class="text-xs text-indigo-600 hover:underline">Spielen →</a>
+            <a href="/spiele/{{ slug }}" class="text-xs text-indigo-600 hover:underline">Spielen →</a>
         </div>
         <div class="grid grid-cols-3 gap-2 text-center text-sm">
             <div>
@@ -107,6 +84,7 @@
            class="flex items-center justify-between p-3 rounded-lg border border-slate-100 hover:bg-slate-50 hover:border-slate-200 transition-colors group">
             <div class="flex items-center gap-3">
                 <span class="text-slate-400 text-xs w-8">#{{ s.id }}</span>
+                <span class="text-lg">{{ game_icons.get(s.game_type, "🎮") }}</span>
                 <div>
                     <div class="text-sm font-medium text-slate-700 group-hover:text-indigo-700 transition-colors">
                         {{ game_labels.get(s.game_type, s.game_type) }}
