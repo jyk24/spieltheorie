@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Wason-Auswahlaufgabe – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🃏 Wason-Auswahlaufgabe</h1>
+        <p class="text-slate-500 mt-1">Wason (1968) + Cosmides (1989) · Warum lösen fast alle die soziale Version, aber kaum jemand die abstrakte?</p>
+    </div>
+
+    <div id="wason-area">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+
+            <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-5 text-sm text-indigo-800">
+                <p class="font-semibold mb-1">Aufgabe:</p>
+                <p>Du siehst vier Karten. Jede Karte hat auf einer Seite einen <strong>Buchstaben</strong>, auf der anderen eine <strong>Zahl</strong>.</p>
+                <p class="mt-2 font-semibold text-indigo-900">Regel: <em>{{ task.rule }}</em></p>
+                <p class="mt-2">Welche Karte(n) musst du mindestens umdrehen, um zu <strong>prüfen, ob die Regel verletzt wird</strong>?</p>
+            </div>
+
+            <!-- Karten -->
+            <div class="grid grid-cols-4 gap-3 mb-5" id="card-grid">
+                {% for card in task.cards %}
+                <button type="button"
+                        onclick="toggleCard('{{ card }}')"
+                        id="card-{{ card }}"
+                        class="h-24 rounded-xl border-2 border-slate-200 bg-white font-black text-2xl text-slate-700 shadow-sm hover:shadow-md hover:border-indigo-400 transition-all focus:outline-none"
+                        data-selected="false">
+                    {{ card }}
+                </button>
+                {% endfor %}
+            </div>
+
+            <input type="hidden" id="selected-cards" value="">
+
+            <div id="selection-hint" class="text-xs text-slate-400 text-center mb-4">
+                Klicke auf Karten um sie auszuwählen (mehrere möglich)
+            </div>
+
+            <form hx-post="/raetsel/wason/result" hx-target="#wason-area" hx-swap="innerHTML" id="wason-form">
+                <input type="hidden" name="cards" id="cards-input">
+                <button type="submit" id="submit-btn"
+                        onclick="document.getElementById('cards-input').value = document.getElementById('selected-cards').value"
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold transition-colors">
+                    Antwort prüfen →
+                </button>
+            </form>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 text-xs text-slate-500 text-center">
+            In Studien lösen nur ~10% der Teilnehmer diese abstrakte Version korrekt.
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleCard(card) {
+    const btn = document.getElementById('card-' + card);
+    const isSelected = btn.dataset.selected === 'true';
+    btn.dataset.selected = isSelected ? 'false' : 'true';
+
+    if (!isSelected) {
+        btn.classList.remove('border-slate-200', 'bg-white', 'text-slate-700');
+        btn.classList.add('border-indigo-500', 'bg-indigo-50', 'text-indigo-800', 'ring-2', 'ring-indigo-300');
+    } else {
+        btn.classList.remove('border-indigo-500', 'bg-indigo-50', 'text-indigo-800', 'ring-2', 'ring-indigo-300');
+        btn.classList.add('border-slate-200', 'bg-white', 'text-slate-700');
+    }
+
+    const selected = [];
+    document.querySelectorAll('[id^="card-"]').forEach(b => {
+        if (b.dataset.selected === 'true') selected.push(b.textContent.trim());
+    });
+    document.getElementById('selected-cards').value = selected.join(',');
+    const hint = document.getElementById('selection-hint');
+    hint.textContent = selected.length > 0 ? `Ausgewählt: ${selected.join(', ')}` : 'Klicke auf Karten um sie auszuwählen';
+}
+</script>
+
+{% endblock %}

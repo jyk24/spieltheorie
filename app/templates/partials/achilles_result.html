@@ -1,0 +1,110 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    {% if prediction == "schliesslich" %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-lg font-bold text-emerald-800 mb-1">✅ Richtig – Achilles holt sie ein!</h3>
+        <p class="text-sm text-emerald-700">Du hattest die richtige Intuition. Zenons Argument klingt logisch, enthält aber einen mathematischen Fehler.</p>
+    </div>
+    {% elif prediction == "niemals" %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-lg font-bold text-amber-800 mb-1">🤔 Wie Zenon – aber die Mathematik sagt anderes.</h3>
+        <p class="text-sm text-amber-700">Zenons Argument ist täuschend überzeugend. Doch unendlich viele Schritte bedeuten nicht unendlich viel Zeit.</p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-slate-50 border-2 border-slate-300">
+        <h3 class="text-lg font-bold text-slate-800 mb-1">📐 Die Mathematik entscheidet eindeutig.</h3>
+        <p class="text-sm text-slate-600">Es gibt keinen Widerspruch zwischen Mathematik und Realität – Zenons Fehler liegt in einer falschen Annahme über Unendlichkeit.</p>
+    </div>
+    {% endif %}
+
+    <!-- Schrittweise Annäherung -->
+    <div class="mb-5">
+        <p class="font-semibold text-slate-700 mb-3 text-sm">Zenons unendliche Schrittfolge:</p>
+        <div class="overflow-x-auto">
+            <table class="w-full text-xs">
+                <thead>
+                    <tr class="text-slate-500 border-b border-slate-100">
+                        <th class="text-left pb-2">Schritt</th>
+                        <th class="text-right pb-2">Abstand</th>
+                        <th class="text-right pb-2">Δ Zeit</th>
+                        <th class="text-right pb-2">Gesamtzeit</th>
+                        <th class="text-right pb-2">🏃 Position</th>
+                        <th class="text-right pb-2">🐢 Position</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in steps %}
+                    <tr class="border-b border-slate-50">
+                        <td class="py-1 text-slate-600">{{ s.step }}</td>
+                        <td class="py-1 text-right font-mono text-amber-700">{{ s.gap }}m</td>
+                        <td class="py-1 text-right font-mono text-slate-600">{{ s.dt }}s</td>
+                        <td class="py-1 text-right font-bold text-indigo-700">{{ s.total_time }}s</td>
+                        <td class="py-1 text-right font-mono text-emerald-700">{{ s.achilles_pos }}m</td>
+                        <td class="py-1 text-right font-mono text-slate-500">{{ s.turtle_pos }}m</td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="border-b border-indigo-100 bg-indigo-50">
+                        <td class="py-1 text-indigo-700 font-bold">∞ → ∑</td>
+                        <td class="py-1 text-right font-mono text-red-600 font-bold">0m</td>
+                        <td class="py-1 text-right font-mono text-indigo-600">→ 0s</td>
+                        <td class="py-1 text-right font-black text-indigo-800">{{ meeting_time }}s</td>
+                        <td class="py-1 text-right font-black text-emerald-800">{{ meeting_pos }}m</td>
+                        <td class="py-1 text-right font-black text-slate-700">{{ meeting_pos }}m</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="text-xs text-slate-500 mt-2 text-center">Die Abstände halbieren sich nicht genau – sie schrumpfen um Faktor 1/10. Die Zeitschritte konvergieren gegen 0.</p>
+    </div>
+
+    <!-- Mathematische Auflösung -->
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+        <p class="font-semibold mb-2">Zenons versteckter Fehler: Unendlich ≠ grenzenlos</p>
+        <div class="space-y-2 text-xs mb-3">
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 font-bold mt-0.5">→</span>
+                <span>Zenon nahm implizit an: <em>unendlich viele Schritte = unendlich viel Zeit</em>.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 font-bold mt-0.5">→</span>
+                <span>Aber die Zeitschritte werden immer kleiner: 10s + 1s + 0,1s + 0,01s + ...</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-emerald-600 font-bold mt-0.5">→</span>
+                <span>Das ist eine <strong>geometrische Reihe</strong> mit Konvergenz: ∑ₙ₌₀^∞ 10 · (1/10)ⁿ = 10 / (1 − 1/10) = <strong>100/9 ≈ 11,11s</strong></span>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg p-3 border border-indigo-100 text-center text-xs">
+            <div class="font-semibold text-indigo-800 mb-2">Analytische Lösung (ohne Paradoxon):</div>
+            <div class="font-mono text-slate-700">
+                <div>Treffen wenn: 10t = 100 + t</div>
+                <div>→ 9t = 100</div>
+                <div>→ t = <strong class="text-indigo-700">100/9 ≈ 11,11 Sekunden</strong></div>
+                <div class="mt-1">→ Position: 10 × 100/9 = <strong class="text-emerald-700">1000/9 ≈ 111,11 Meter</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-4 text-sm text-violet-800">
+        <p class="font-semibold mb-2">Historische Bedeutung:</p>
+        <p class="mb-2">Zenons Paradoxa (~450 v.Chr.) haben die Mathematik über 2000 Jahre beschäftigt.
+        Die vollständige Auflösung gelang erst mit dem Konzept der <strong>Grenzwerte</strong> (Newton & Leibniz, 17. Jh.)
+        und der formalen Analysis (<strong>Cauchy & Weierstraß</strong>, 19. Jh.).</p>
+        <p class="text-xs text-violet-600">Weitere Zenon-Paradoxa: „Der Pfeil" (ein fliegender Pfeil ist in jedem Moment still),
+        „Die Dichotomie" (um einen Punkt zu erreichen, muss man erst die Hälfte des Weges zurücklegen – und davor die Hälfte davon...).</p>
+    </div>
+
+    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-4 text-sm text-emerald-800">
+        <p class="font-semibold mb-1">Verhandlungsrelevanz:</p>
+        <p>Zenons Fehler – <em>unendlich viele Schritte = unendlich viel Ressourcen</em> – taucht in Verhandlungen auf:
+        „Wir müssen alle Eventualitäten klären bevor wir unterschreiben" führt oft zu Endlosverhandlungen.
+        Die richtige Antwort: Einzelschritte können geometrisch kleiner werden und trotzdem zu einem Abschluss konvergieren.
+        <strong>Convergence, not completeness.</strong></p>
+    </div>
+
+    <div class="text-xs text-slate-400 border-t border-slate-100 pt-3">
+        Zenon von Elea (~490–430 v.Chr.), griechischer Philosoph. Schüler des Parmenides.
+        Mathematische Auflösung: geometrische Reihen (Grenzwerttheorie, 17.–19. Jh.).
+        Moderne Fassung: Achilles holt die Schildkröte bei t = d/(v_A − v_T) ein.
+    </div>
+</div>

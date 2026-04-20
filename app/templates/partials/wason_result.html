@@ -1,0 +1,119 @@
+{% set correct_set = task.correct | join(', ') %}
+{% set selected_str = selected | join(', ') if selected else 'keine' %}
+
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+
+    {% if is_correct %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-lg font-bold text-emerald-800 mb-1">🎯 Richtig! Du bist unter den ~10%!</h3>
+        <p class="text-sm text-emerald-700">Die meisten Menschen wählen E und 4 – du hast das Richtige erkannt.</p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-lg font-bold text-amber-800 mb-1">🤔 Nicht ganz – du bist in guter Gesellschaft.</h3>
+        <p class="text-sm text-amber-700">
+            Du wähltest: <strong>{{ selected_str }}</strong>. Richtig wären: <strong>{{ correct_set }}</strong>.
+            Nur ~10% der Studienteilnehmer lösen die abstrakte Version korrekt.
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Erklärung jeder Karte -->
+    <div class="mb-5">
+        <p class="font-semibold text-slate-700 mb-3 text-sm">Warum welche Karte?</p>
+        <div class="space-y-2">
+            {% for card in task.cards %}
+            <div class="flex items-start gap-3 p-3 rounded-lg {% if card in task.correct %}bg-emerald-50 border border-emerald-200{% else %}bg-slate-50 border border-slate-200{% endif %}">
+                <div class="w-10 h-10 rounded-lg font-black text-lg flex items-center justify-center flex-shrink-0
+                    {% if card in task.correct %}bg-emerald-200 text-emerald-800{% else %}bg-slate-200 text-slate-600{% endif %}">
+                    {{ card }}
+                </div>
+                <div class="text-sm">
+                    <div class="font-semibold {% if card in task.correct %}text-emerald-800{% else %}text-slate-700{% endif %} mb-0.5">
+                        {% if card in task.correct %}✓ Umdrehen{% else %}✗ Nicht nötig{% endif %}
+                    </div>
+                    <div class="text-xs text-slate-600">{{ task.explanation[card] }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Warum scheitern die meisten? -->
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+        <p class="font-semibold mb-2">Warum wählen die meisten E und 4?</p>
+        <div class="space-y-2 text-xs">
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 font-bold mt-0.5">→</span>
+                <span><strong>Bestätigungsfehler (confirmation bias):</strong> Wir suchen nach Belegen, die die Regel bestätigen – nicht nach Gegenbeispielen, die sie widerlegen.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 font-bold mt-0.5">→</span>
+                <span>Die Karte „4" scheint die Regel zu bestätigen (gerade Zahl → vielleicht Vokal auf der Rückseite). Aber das bringt nichts: die Regel sagt nicht „gerade → Vokal".</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-red-500 font-bold mt-0.5">→</span>
+                <span>Die Karte „7" wird übersehen, obwohl sie das Gegenbeispiel liefern kann: Vokal + ungerade Zahl = Regelverstoß.</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Jetzt die soziale Version -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+    <div class="bg-violet-50 border border-violet-200 rounded-lg p-4 mb-5 text-sm text-violet-800">
+        <p class="font-semibold mb-1">Jetzt dasselbe Problem – sozial formuliert:</p>
+        <p class="font-semibold text-violet-900 mt-2">Regel: <em>{{ social_task.rule }}</em></p>
+        <p class="mt-2 text-xs">Cosmides (1989): <em>Leda Cosmides, Psychological adaptations: The psychological design of the human mind</em></p>
+    </div>
+
+    <p class="text-sm text-slate-600 mb-4">Du arbeitest in einer Bar. Vier Personen sitzen am Tisch – welche Karte(n) musst du prüfen?</p>
+
+    <div class="grid grid-cols-4 gap-3 mb-5" id="social-card-grid">
+        {% for card in social_task.cards %}
+        <button type="button"
+                onclick="toggleSocialCard('{{ card }}')"
+                id="social-card-{{ card }}"
+                class="h-24 rounded-xl border-2 border-slate-200 bg-white font-bold text-lg text-slate-700 shadow-sm hover:shadow-md hover:border-violet-400 transition-all focus:outline-none"
+                data-selected="false">
+            {{ card }}
+        </button>
+        {% endfor %}
+    </div>
+
+    <input type="hidden" id="social-selected-cards" value="">
+    <div id="social-hint" class="text-xs text-slate-400 text-center mb-4">Klicke auf Karten um sie auszuwählen</div>
+
+    <form hx-post="/raetsel/wason/social" hx-target="#wason-area" hx-swap="innerHTML">
+        <input type="hidden" name="cards" id="social-cards-input">
+        <button type="submit"
+                onclick="document.getElementById('social-cards-input').value = document.getElementById('social-selected-cards').value"
+                class="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-xl font-bold transition-colors">
+            Auflösung →
+        </button>
+    </form>
+</div>
+
+<script>
+function toggleSocialCard(card) {
+    const btn = document.getElementById('social-card-' + card);
+    const isSelected = btn.dataset.selected === 'true';
+    btn.dataset.selected = isSelected ? 'false' : 'true';
+
+    if (!isSelected) {
+        btn.classList.remove('border-slate-200', 'bg-white', 'text-slate-700');
+        btn.classList.add('border-violet-500', 'bg-violet-50', 'text-violet-800', 'ring-2', 'ring-violet-300');
+    } else {
+        btn.classList.remove('border-violet-500', 'bg-violet-50', 'text-violet-800', 'ring-2', 'ring-violet-300');
+        btn.classList.add('border-slate-200', 'bg-white', 'text-slate-700');
+    }
+
+    const selected = [];
+    document.querySelectorAll('[id^="social-card-"]').forEach(b => {
+        if (b.dataset.selected === 'true') selected.push(b.textContent.trim());
+    });
+    document.getElementById('social-selected-cards').value = selected.join(',');
+    const hint = document.getElementById('social-hint');
+    hint.textContent = selected.length > 0 ? `Ausgewählt: ${selected.join(', ')}` : 'Klicke auf Karten um sie auszuwählen';
+}
+</script>

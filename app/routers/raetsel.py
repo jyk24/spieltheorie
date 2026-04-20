@@ -226,6 +226,33 @@ RAETSEL_META = [
         "schwierigkeit": "Mittel",
         "dauer": "5 min",
     },
+    {
+        "id": "framing",
+        "name": "Framing-Effekt",
+        "icon": "🖼️",
+        "beschreibung": "600 Menschen sind in Gefahr. Zwei Programme, zwei Formulierungen. Kahneman & Tversky zeigten 1981: Wie eine Entscheidung beschrieben wird, ändert das Ergebnis – auch wenn die Zahlen identisch sind.",
+        "typ": "Verhaltens-Experiment",
+        "schwierigkeit": "Einsteiger",
+        "dauer": "4 min",
+    },
+    {
+        "id": "achilles",
+        "name": "Achilles und die Schildkröte",
+        "icon": "🐢",
+        "beschreibung": "Achilles läuft 10× schneller als eine Schildkröte. Dennoch behauptete Zenon (~450 v.Chr.), er könne sie nie einholen – wegen unendlich vieler Zwischenschritte. Wer hat recht?",
+        "typ": "Mathematik-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+    },
+    {
+        "id": "wason",
+        "name": "Wason-Auswahlaufgabe",
+        "icon": "🃏",
+        "beschreibung": "Vier Karten, eine Regel. Welche musst du umdrehen? Nur ~10% lösen die abstrakte Version – aber fast alle die soziale Version. Cosmides (1989) entdeckte: Unser Gehirn ist für soziale Regeln optimiert.",
+        "typ": "Kognitions-Experiment",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+    },
 ]
 
 
@@ -1733,5 +1760,180 @@ def ellsberg_result(
             "choice1_label": choice1_label,
             "choice2_label": choice2_label,
             "inconsistent": inconsistent,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Framing-Effekt (Kahneman & Tversky 1981, Science 211)
+# ---------------------------------------------------------------------------
+
+@router.get("/framing", response_class=HTMLResponse)
+def framing_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/framing.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/framing/phase2", response_class=HTMLResponse)
+def framing_phase2(request: Request, choice1: str = Form(...)):
+    return templates.TemplateResponse(
+        request, "partials/framing_phase2.html", {"choice1": choice1}
+    )
+
+
+@router.post("/framing/result", response_class=HTMLResponse)
+def framing_result(
+    request: Request,
+    choice1: str = Form(...),
+    choice2: str = Form(...),
+):
+    # A=C (200 saved = 400 die) and B=D (1/3 all / 2/3 none = same)
+    # Typical: 72% choose A (gain frame), 78% choose D (loss frame) → A+D inconsistent
+    inconsistent = (choice1 == "A" and choice2 == "D") or (choice1 == "B" and choice2 == "C")
+    choice1_label = "A – 200 Menschen sicher gerettet" if choice1 == "A" else "B – Risiko: 1/3 alle gerettet, 2/3 niemand"
+    choice2_label = "D – Risiko: 1/3 niemand stirbt, 2/3 alle sterben" if choice2 == "D" else "C – 400 Menschen sterben sicher"
+    return templates.TemplateResponse(
+        request,
+        "partials/framing_result.html",
+        {
+            "choice1": choice1,
+            "choice2": choice2,
+            "choice1_label": choice1_label,
+            "choice2_label": choice2_label,
+            "inconsistent": inconsistent,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Achilles und die Schildkröte (Zenon, ~450 v.Chr.)
+# ---------------------------------------------------------------------------
+
+_ACHILLES_STEPS = []
+_time = 0.0
+_achilles_pos = 0.0
+_turtle_pos = 100.0
+_achilles_speed = 10.0
+_turtle_speed = 1.0
+for _i in range(7):
+    _gap = _turtle_pos - _achilles_pos
+    _dt = _gap / _achilles_speed
+    _time += _dt
+    _achilles_pos = _turtle_pos
+    _turtle_pos += _dt * _turtle_speed
+    _ACHILLES_STEPS.append({
+        "step": _i + 1,
+        "gap": round(_gap, 4),
+        "dt": round(_dt, 4),
+        "total_time": round(_time, 4),
+        "achilles_pos": round(_achilles_pos, 4),
+        "turtle_pos": round(_turtle_pos, 4),
+    })
+
+_ACHILLES_MEETING_TIME = round(100 / 9, 4)    # = 100/(v_a - v_t) * v_a/v_a ... exact: 100/9
+_ACHILLES_MEETING_POS = round(1000 / 9, 4)    # = v_a * t_meet
+
+
+@router.get("/achilles", response_class=HTMLResponse)
+def achilles_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/achilles.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/achilles/result", response_class=HTMLResponse)
+def achilles_result(
+    request: Request,
+    prediction: str = Form(...),   # "niemals" | "schliesslich" | "unentscheidbar"
+):
+    correct = prediction == "schliesslich"
+    return templates.TemplateResponse(
+        request,
+        "partials/achilles_result.html",
+        {
+            "prediction": prediction,
+            "correct": correct,
+            "steps": _ACHILLES_STEPS,
+            "meeting_time": _ACHILLES_MEETING_TIME,
+            "meeting_pos": _ACHILLES_MEETING_POS,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Wason-Auswahlaufgabe (Wason 1968 + Cosmides 1989)
+# ---------------------------------------------------------------------------
+
+_WASON_ABSTRACT = {
+    "cards": ["E", "K", "4", "7"],
+    "rule": "Wenn eine Karte auf einer Seite einen Vokal zeigt, zeigt sie auf der anderen Seite eine gerade Zahl.",
+    "correct": ["E", "7"],
+    "explanation": {
+        "E": "Muss umgedreht werden – wenn keine gerade Zahl auf der Rückseite, ist die Regel verletzt.",
+        "K": "Muss NICHT umgedreht werden – K ist kein Vokal, egal was auf der Rückseite ist.",
+        "4": "Muss NICHT umgedreht werden – selbst wenn ein Vokal auf der Rückseite: Vokal → gerade ist erfüllt.",
+        "7": "Muss umgedreht werden – wenn ein Vokal auf der Rückseite, wäre die Regel verletzt (Vokal → gerade, aber 7 ist ungerade).",
+    },
+}
+
+_WASON_SOCIAL = {
+    "cards": ["Bier", "Cola", "16", "25"],
+    "rule": "Wer Alkohol trinkt, muss mindestens 18 Jahre alt sein.",
+    "correct": ["Bier", "16"],
+    "explanation": {
+        "Bier": "Muss umgedreht werden – das Alter auf der Rückseite muss ≥ 18 sein.",
+        "Cola": "Muss NICHT umgedreht werden – Cola ist kein Alkohol, Alter irrelevant.",
+        "16": "Muss umgedreht werden – wenn auf der Rückseite Alkohol steht, ist die Regel verletzt.",
+        "25": "Muss NICHT umgedreht werden – Person ist volljährig, darf Alkohol trinken.",
+    },
+}
+
+
+@router.get("/wason", response_class=HTMLResponse)
+def wason_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/wason.html",
+        {"active_page": "raetsel", "task": _WASON_ABSTRACT}
+    )
+
+
+@router.post("/wason/result", response_class=HTMLResponse)
+def wason_result(
+    request: Request,
+    cards: str = Form(default=""),
+):
+    selected = [c.strip() for c in cards.split(",") if c.strip()] if cards else []
+    correct_set = set(_WASON_ABSTRACT["correct"])
+    selected_set = set(selected)
+    is_correct = selected_set == correct_set
+    return templates.TemplateResponse(
+        request,
+        "partials/wason_result.html",
+        {
+            "selected": selected,
+            "task": _WASON_ABSTRACT,
+            "is_correct": is_correct,
+            "social_task": _WASON_SOCIAL,
+        },
+    )
+
+
+@router.post("/wason/social", response_class=HTMLResponse)
+def wason_social(
+    request: Request,
+    cards: str = Form(default=""),
+):
+    selected = [c.strip() for c in cards.split(",") if c.strip()] if cards else []
+    correct_set = set(_WASON_SOCIAL["correct"])
+    selected_set = set(selected)
+    is_correct = selected_set == correct_set
+    return templates.TemplateResponse(
+        request,
+        "partials/wason_social_result.html",
+        {
+            "selected": selected,
+            "task": _WASON_SOCIAL,
+            "is_correct": is_correct,
         },
     )

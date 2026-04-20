@@ -1,0 +1,94 @@
+{% set correct_set = task.correct | join(', ') %}
+{% set selected_str = selected | join(', ') if selected else 'keine' %}
+
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    {% if is_correct %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-lg font-bold text-emerald-800 mb-1">✅ Richtig – und das überrascht niemanden.</h3>
+        <p class="text-sm text-emerald-700">
+            Über <strong>75% der Menschen</strong> lösen die soziale Version korrekt –
+            obwohl die logische Struktur mit der abstrakten Version identisch ist.
+        </p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-lg font-bold text-amber-800 mb-1">🤔 Knapp daneben.</h3>
+        <p class="text-sm text-amber-700">Du wähltest: <strong>{{ selected_str }}</strong>. Richtig: <strong>{{ correct_set }}</strong>.</p>
+    </div>
+    {% endif %}
+
+    <!-- Erklärung der Karten -->
+    <div class="mb-5">
+        <p class="font-semibold text-slate-700 mb-3 text-sm">Warum welche Karte?</p>
+        <div class="space-y-2">
+            {% for card in task.cards %}
+            <div class="flex items-start gap-3 p-3 rounded-lg {% if card in task.correct %}bg-emerald-50 border border-emerald-200{% else %}bg-slate-50 border border-slate-200{% endif %}">
+                <div class="w-10 h-10 rounded-lg font-bold text-sm flex items-center justify-center flex-shrink-0
+                    {% if card in task.correct %}bg-emerald-200 text-emerald-800{% else %}bg-slate-200 text-slate-600{% endif %}">
+                    {{ card }}
+                </div>
+                <div class="text-sm">
+                    <div class="font-semibold {% if card in task.correct %}text-emerald-800{% else %}text-slate-700{% endif %} mb-0.5">
+                        {% if card in task.correct %}✓ Prüfen{% else %}✗ Irrelevant{% endif %}
+                    </div>
+                    <div class="text-xs text-slate-600">{{ task.explanation[card] }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Der Kern-Befund -->
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+        <p class="font-semibold mb-3">Warum ist die soziale Version so viel leichter?</p>
+        <div class="grid grid-cols-2 gap-3 text-xs mb-3">
+            <div class="bg-white rounded-lg p-3 border border-indigo-100 text-center">
+                <div class="font-bold text-red-700 text-xl">~10%</div>
+                <div class="text-slate-600">lösen die abstrakte Version</div>
+                <div class="text-xs text-slate-400 mt-1">Karten E, K, 4, 7</div>
+            </div>
+            <div class="bg-white rounded-lg p-3 border border-indigo-100 text-center">
+                <div class="font-bold text-emerald-700 text-xl">&gt;75%</div>
+                <div class="text-slate-600">lösen die soziale Version</div>
+                <div class="text-xs text-slate-400 mt-1">Bier, Cola, 16, 25</div>
+            </div>
+        </div>
+        <div class="space-y-2 text-xs">
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 font-bold mt-0.5">→</span>
+                <span><strong>Cosmides (1989):</strong> Das menschliche Gehirn ist für die Erkennung von <em>sozialen Regelbrüchen</em> (cheater detection) evolutionär optimiert – nicht für abstrakte Logik.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 font-bold mt-0.5">→</span>
+                <span>Wir haben ein spezialisiertes kognitives Modul für „Wer verstößt gegen eine soziale Norm?" – aber nicht für allgemeine Konditionallogik.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-violet-600 font-bold mt-0.5">→</span>
+                <span>Die logische Struktur ist identisch: abstrakt = „Vokal → gerade", sozial = „Alkohol → volljährig". Nur der Inhalt ändert die Performance dramatisch.</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-4 text-sm text-violet-800">
+        <p class="font-semibold mb-2">Evolutionäre Psychologie:</p>
+        <p class="mb-2">Cosmides und Tooby (1992) interpretierten dies als Beleg für <strong>modulare Kognition</strong>:
+        Unser Gehirn ist nicht ein universeller Logikrechner, sondern eine Sammlung spezialisierter Module –
+        darunter ein hocheffizientes Modul für soziale Tauschregeln und Betrugserkennung.</p>
+        <p class="text-xs text-violet-600">Kritik: Andere Forscher (z.B. Cheng & Holyoak, 1985) erklären den Effekt durch „pragmatische Denkschemata" statt evolutionärer Module. Die Debatte ist nicht abgeschlossen.</p>
+    </div>
+
+    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-4 text-sm text-emerald-800">
+        <p class="font-semibold mb-1">Verhandlungsrelevanz:</p>
+        <p>Wenn du willst, dass dein Gegenüber eine Bedingung nachvollzieht: formuliere sie als <strong>soziale Norm oder Verpflichtung</strong>, nicht als abstrakte Konditionallogik.
+        „Wenn du X bekommst, gibst du Y" aktiviert das soziale Regelmodul –
+        und wird intuitiv verstanden und kontrolliert.
+        Abstrakte Vertragsformulierungen scheitern genau hier.</p>
+    </div>
+
+    <div class="text-xs text-slate-400 border-t border-slate-100 pt-3">
+        Wason, P.C. (1968). „Reasoning about a rule". <em>Quarterly Journal of Experimental Psychology</em>, 20, 273–281.
+        Cosmides, L. (1989). „The logic of social exchange". <em>Cognition</em>, 31, 187–276.
+        Cosmides, L. & Tooby, J. (1992). <em>The adapted mind</em>. Oxford University Press.
+    </div>
+</div>
