@@ -1,0 +1,95 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    {% if intuition == "paradox" %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-lg font-bold text-emerald-800 mb-1">🎯 Richtig – du hast das Paradoxon erkannt!</h3>
+        <p class="text-sm text-emerald-700">Volumen = π (endlich), Oberfläche = ∞ (unendlich). Torricelli selbst war schockiert von seiner eigenen Entdeckung.</p>
+    </div>
+    {% elif intuition == "unendlich_beide" %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-lg font-bold text-amber-800 mb-1">🤔 Intuitive Antwort – aber falsch.</h3>
+        <p class="text-sm text-amber-700">Das Volumen ist endlich: genau π ≈ 3,14159 Einheiten³. Die Oberfläche hingegen ist wirklich unendlich.</p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-slate-50 border-2 border-slate-300">
+        <h3 class="text-lg font-bold text-slate-800 mb-1">💡 Die überraschende Antwort.</h3>
+        <p class="text-sm text-slate-600">Volumen = π (endlich!), Oberfläche = ∞. Das ist mathematisch bewiesen und physikalisch interpretierbar.</p>
+    </div>
+    {% endif %}
+
+    <!-- Das Ergebnis -->
+    <div class="grid grid-cols-2 gap-4 mb-5">
+        <div class="bg-indigo-50 rounded-xl p-4 text-center border-2 border-indigo-200">
+            <div class="text-xs text-indigo-600 mb-1 font-medium">Volumen</div>
+            <div class="text-3xl font-black text-indigo-800">π</div>
+            <div class="text-sm text-indigo-700 mt-1">≈ 3,14159...</div>
+            <div class="text-xs text-indigo-500 mt-1">endlich ✓</div>
+        </div>
+        <div class="bg-red-50 rounded-xl p-4 text-center border-2 border-red-200">
+            <div class="text-xs text-red-600 mb-1 font-medium">Oberfläche</div>
+            <div class="text-3xl font-black text-red-700">∞</div>
+            <div class="text-sm text-red-600 mt-1">unendlich groß</div>
+            <div class="text-xs text-red-400 mt-1">divergiert ✗</div>
+        </div>
+    </div>
+
+    <!-- Mathematischer Beweis -->
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+        <p class="font-semibold mb-3">Der Beweis (Integralrechnung):</p>
+        <div class="space-y-3 text-xs">
+            <div class="bg-white rounded-lg p-3 border border-indigo-100">
+                <div class="font-semibold text-indigo-700 mb-1">Volumen (Rotationsintegral):</div>
+                <div class="font-mono text-slate-700">
+                    V = π · ∫₁^∞ (1/x)² dx = π · ∫₁^∞ x⁻² dx<br>
+                    = π · [−x⁻¹]₁^∞ = π · (0 − (−1)) = <strong class="text-indigo-800">π</strong>
+                </div>
+                <div class="text-emerald-600 mt-1">Das Integral konvergiert → endliches Volumen.</div>
+            </div>
+            <div class="bg-white rounded-lg p-3 border border-indigo-100">
+                <div class="font-semibold text-red-700 mb-1">Oberfläche (Rotationsintegral):</div>
+                <div class="font-mono text-slate-700">
+                    S = 2π · ∫₁^∞ (1/x) · √(1 + 1/x⁴) dx<br>
+                    ≥ 2π · ∫₁^∞ (1/x) dx = 2π · [ln x]₁^∞ = <strong class="text-red-700">∞</strong>
+                </div>
+                <div class="text-red-600 mt-1">Das Integral divergiert → unendliche Oberfläche.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Farbenparadoxon -->
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-800">
+        <p class="font-semibold mb-2">🎨 Das Farbenparadoxon (Torricelli's Paradox):</p>
+        <div class="space-y-2 text-xs">
+            <div class="flex items-start gap-2">
+                <span class="text-emerald-600 font-bold mt-0.5">✓</span>
+                <span>Du kannst die Trompete mit <strong>π Einheiten³ Farbe füllen</strong> – das Volumen ist endlich.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-red-600 font-bold mt-0.5">✗</span>
+                <span>Du kannst sie <strong>nicht anstreichen</strong> – die Oberfläche, auf die du Farbe auftragen müsstest, ist unendlich.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-amber-600 font-bold mt-0.5">→</span>
+                <span>Wenn du sie aber mit Farbe <em>füllst</em>, ist die Innenwand ja auch beschichtet – aber mit unendlich dünner Schicht (Schichtdicke → 0 für großes x).</span>
+            </div>
+        </div>
+        <p class="text-xs text-amber-600 mt-2">Die Auflösung: „Anstreichen" bedeutet eine <em>konstante Farbschichtdicke</em>. Das erfordert unendlich viel Farbe. „Füllen" erfordert nur das Volumen – und das ist endlich.</p>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-4 text-sm text-violet-800">
+        <p class="font-semibold mb-2">Historische Bedeutung:</p>
+        <p class="mb-2">Torricelli entdeckte 1643 dieses Objekt und war selbst bestürzt. Es war das erste Mal, dass ein mathematisches Objekt mit endlichem Volumen und unendlicher Oberfläche beschrieben wurde.</p>
+        <p class="text-xs text-violet-600">Der Jesuit und Philosoph Mersenne nannte es „einen Skandal der Mathematik". Thomas Hobbes schrieb: Es sei absurd, einem solchen Ding ein endliches Volumen zuzuschreiben. Und doch ist es beweisbar wahr.</p>
+    </div>
+
+    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-4 text-sm text-emerald-800">
+        <p class="font-semibold mb-1">Das tiefere Prinzip:</p>
+        <p>Die Kurve 1/x fällt langsam genug, damit das Volumen (x⁻²-Integral) konvergiert, aber schnell genug, dass die Oberfläche (x⁻¹-Integral, harmonische Reihe) divergiert. Das zeigt: In der Mathematik führt unsere geometrische Intuition systematisch in die Irre – besonders bei Unendlichkeit. <strong>Das gleiche Objekt kann gleichzeitig „klein" (Volumen) und „riesig" (Oberfläche) sein.</strong></p>
+    </div>
+
+    <div class="text-xs text-slate-400 border-t border-slate-100 pt-3">
+        Evangelista Torricelli (1608–1647), italienischer Mathematiker und Physiker. Entdeckte das Barometer.
+        Original: „De solido hyperbolico acuto" (1643). Auch bekannt als Torricellis Trompete oder Gabriels Horn.
+        Gabriels Trompete bezieht sich auf die Vorstellung, der Erzengel Gabriel bläst beim Jüngsten Gericht eine unendliche Trompete.
+    </div>
+</div>

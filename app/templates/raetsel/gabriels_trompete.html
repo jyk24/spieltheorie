@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}Gabriels Trompete – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🎺 Gabriels Trompete</h1>
+        <p class="text-slate-500 mt-1">Evangelista Torricelli, 1643 · Unendliche Oberfläche, endliches Volumen.</p>
+    </div>
+
+    <div id="gabriel-area">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+
+            <!-- Visualisierung -->
+            <div class="flex justify-center mb-5">
+                <div class="relative w-64 h-32">
+                    <svg viewBox="0 0 300 120" class="w-full h-full">
+                        <!-- Trumpet shape: y = 1/x rotated around x-axis -->
+                        <defs>
+                            <linearGradient id="trumpetGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#6366f1;stop-opacity:0.8"/>
+                                <stop offset="100%" style="stop-color:#a5b4fc;stop-opacity:0.2"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Upper curve: y = 50/x (scaled) from x=20 to x=290 -->
+                        <path d="M20,10 Q40,20 60,28 Q100,38 150,44 Q200,47 250,49 L290,50 L290,70 L250,71 Q200,73 150,76 Q100,82 60,92 Q40,100 20,110 Z"
+                              fill="url(#trumpetGrad)" stroke="#6366f1" stroke-width="1.5"/>
+                        <!-- X axis -->
+                        <line x1="20" y1="60" x2="290" y2="60" stroke="#cbd5e1" stroke-width="0.5" stroke-dasharray="4,4"/>
+                        <!-- Labels -->
+                        <text x="22" y="56" font-size="9" fill="#6366f1" font-weight="bold">x=1</text>
+                        <text x="275" y="56" font-size="9" fill="#94a3b8">x→∞</text>
+                        <text x="140" y="15" font-size="8" fill="#4f46e5">y = 1/x</text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-5 text-sm text-amber-800">
+                <p class="font-semibold mb-2">Das Objekt:</p>
+                <p>Drehe die Kurve <strong>y = 1/x</strong> (für x ≥ 1) um die x-Achse. Es entsteht ein unendlich langer trompetenförmiger Körper.</p>
+                <p class="mt-2 text-amber-700 text-xs">Torricelli nannte es <em>acutus hyperbolicus</em> – heute: Gabriels Trompete oder Torricellis Trompete.</p>
+            </div>
+
+            <!-- Konvergenztabelle -->
+            <div class="mb-5">
+                <p class="font-semibold text-slate-700 text-sm mb-3">Was passiert, wenn x bis N geht?</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs">
+                        <thead>
+                            <tr class="text-slate-500 border-b border-slate-100">
+                                <th class="text-left pb-2">Bis x = N</th>
+                                <th class="text-right pb-2">Volumen ≈</th>
+                                <th class="text-right pb-2">Oberfläche &gt;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in partial_volumes %}
+                            <tr class="border-b border-slate-50">
+                                <td class="py-1.5 font-mono text-slate-600">{{ row.N }}</td>
+                                <td class="py-1.5 text-right font-mono text-indigo-700">{{ row.volume }} ≈ π·(1−1/{{ row.N }})</td>
+                                <td class="py-1.5 text-right font-mono text-red-600">{{ row.surface_lower }} (Untergrenze)</td>
+                            </tr>
+                            {% endfor %}
+                            <tr class="bg-indigo-50 border-b border-indigo-100">
+                                <td class="py-1.5 font-mono font-bold text-indigo-700">∞</td>
+                                <td class="py-1.5 text-right font-black text-indigo-800">{{ pi }} = π ✓</td>
+                                <td class="py-1.5 text-right font-black text-red-700">→ ∞</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <p class="font-semibold text-slate-700 mb-4 text-center text-sm">Was erwartest du intuitiv?</p>
+
+            <form hx-post="/raetsel/gabriels-trompete/result" hx-target="#gabriel-area" hx-swap="innerHTML">
+                <div class="grid grid-cols-1 gap-3 mb-5">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="intuition" value="endlich_beide" class="sr-only peer" required>
+                        <div class="border-2 border-slate-200 rounded-xl p-3.5 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 transition-all">
+                            <div class="flex items-center gap-3">
+                                <div class="text-lg">📦</div>
+                                <p class="text-sm font-medium text-slate-800">Volumen endlich, Oberfläche endlich – beides hört irgendwo auf.</p>
+                            </div>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="intuition" value="unendlich_beide" class="sr-only peer" required>
+                        <div class="border-2 border-slate-200 rounded-xl p-3.5 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 transition-all">
+                            <div class="flex items-center gap-3">
+                                <div class="text-lg">♾️</div>
+                                <p class="text-sm font-medium text-slate-800">Beides unendlich – unendlich lang = unendlich alles.</p>
+                            </div>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="intuition" value="paradox" class="sr-only peer" required>
+                        <div class="border-2 border-slate-200 rounded-xl p-3.5 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all">
+                            <div class="flex items-center gap-3">
+                                <div class="text-lg">🤯</div>
+                                <p class="text-sm font-medium text-slate-800">Volumen endlich, Oberfläche unendlich – das Paradoxon.</p>
+                            </div>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="intuition" value="weiss_nicht" class="sr-only peer" required>
+                        <div class="border-2 border-slate-200 rounded-xl p-3.5 peer-checked:border-slate-500 peer-checked:bg-slate-100 transition-all">
+                            <div class="flex items-center gap-3">
+                                <div class="text-lg">🤷</div>
+                                <p class="text-sm font-medium text-slate-800">Ich habe keine Ahnung.</p>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+                <button type="submit"
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold transition-colors">
+                    Auflösung →
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -253,6 +253,24 @@ RAETSEL_META = [
         "schwierigkeit": "Mittel",
         "dauer": "5 min",
     },
+    {
+        "id": "geschwindigkeit",
+        "name": "Durchschnittsgeschwindigkeit-Paradoxon",
+        "icon": "🚗",
+        "beschreibung": "Du fährst die erste Hälfte einer Strecke mit 50 km/h. Wie schnell muss die zweite Hälfte sein, damit du 100 km/h Durchschnitt erreichst? Die Antwort ist unmöglich – und mathematisch beweisbar.",
+        "typ": "Mathematik-Paradox",
+        "schwierigkeit": "Einsteiger",
+        "dauer": "4 min",
+    },
+    {
+        "id": "gabriels-trompete",
+        "name": "Gabriels Trompete",
+        "icon": "🎺",
+        "beschreibung": "Ein Körper mit unendlicher Oberfläche – aber endlichem Volumen. Er kann mit Farbe gefüllt, aber nicht angestrichen werden. Torricelli (1643) entdeckte das erste mathematische Objekt dieser Art.",
+        "typ": "Mathematik-Paradox",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "5 min",
+    },
 ]
 
 
@@ -1936,4 +1954,100 @@ def wason_social(
             "task": _WASON_SOCIAL,
             "is_correct": is_correct,
         },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Durchschnittsgeschwindigkeit-Paradoxon (harmonisches Mittel)
+# ---------------------------------------------------------------------------
+
+@router.get("/geschwindigkeit", response_class=HTMLResponse)
+def geschwindigkeit_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/geschwindigkeit.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/geschwindigkeit/result", response_class=HTMLResponse)
+def geschwindigkeit_result(
+    request: Request,
+    v1: int = Form(...),
+    v_target: int = Form(...),
+):
+    import math as _m
+    # v_avg = 2*v1*v2 / (v1 + v2) => v2 = v_avg*v1 / (2*v1 - v_avg)
+    denom = 2 * v1 - v_target
+    if denom <= 0:
+        impossible = True
+        v2 = None
+        time_first = round(50 / v1, 2)
+        time_total_needed = round(100 / v_target, 2)
+        time_deficit = round(time_first - time_total_needed, 4)
+    else:
+        impossible = False
+        v2 = round(v_target * v1 / denom, 1)
+        time_first = round(50 / v1, 2)
+        time_second = round(50 / v2, 2)
+        time_total = round(time_first + time_second, 3)
+        v_actual = round(100 / time_total, 1)
+        time_deficit = None
+
+    return templates.TemplateResponse(
+        request,
+        "partials/geschwindigkeit_result.html",
+        {
+            "v1": v1,
+            "v_target": v_target,
+            "impossible": impossible,
+            "v2": v2,
+            "time_first": time_first if impossible else time_first,
+            "time_second": None if impossible else round(50 / v2, 2),
+            "time_total": None if impossible else round(50 / v1 + 50 / v2, 3),
+            "v_actual": None if impossible else round(100 / (50 / v1 + 50 / v2), 1),
+            "time_deficit": time_deficit,
+            "time_total_needed": round(100 / v_target, 2) if impossible else None,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Gabriels Trompete (Torricelli 1643)
+# ---------------------------------------------------------------------------
+
+@router.get("/gabriels-trompete", response_class=HTMLResponse)
+def gabriels_trompete_page(request: Request):
+    import math as _m
+    # Precompute: volume = pi, surface area diverges
+    # V = pi * integral(1/x^2, 1, inf) = pi
+    # S = 2*pi * integral(1/x * sqrt(1 + 1/x^4), 1, inf) > 2*pi * integral(1/x, 1, N) -> inf
+    # Show partial sums for illustration
+    partial_volumes = []
+    partial_surfaces = []
+    intervals = [2, 5, 10, 50, 100, 1000]
+    for N in intervals:
+        # V approx = pi*(1 - 1/N)
+        v = round(_m.pi * (1 - 1/N), 6)
+        # S lower bound = 2*pi*ln(N)
+        s_lower = round(2 * _m.pi * _m.log(N), 3)
+        partial_volumes.append({"N": N, "volume": v, "surface_lower": s_lower})
+    return templates.TemplateResponse(
+        request,
+        "raetsel/gabriels_trompete.html",
+        {
+            "active_page": "raetsel",
+            "partial_volumes": partial_volumes,
+            "pi": round(_m.pi, 6),
+        },
+    )
+
+
+@router.post("/gabriels-trompete/result", response_class=HTMLResponse)
+def gabriels_trompete_result(
+    request: Request,
+    intuition: str = Form(...),   # "endlich_beide" | "unendlich_beide" | "paradox" | "weiss_nicht"
+):
+    return templates.TemplateResponse(
+        request,
+        "partials/gabriels_trompete_result.html",
+        {"intuition": intuition},
     )

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Durchschnittsgeschwindigkeit-Paradoxon – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🚗 Durchschnittsgeschwindigkeit-Paradoxon</h1>
+        <p class="text-slate-500 mt-1">Ein klassisches Missverständnis über Mittelwerte – mit überraschenden Konsequenzen.</p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-5 text-sm text-amber-800">
+            <p class="font-semibold mb-1">Das Szenario:</p>
+            <p>Du fährst eine <strong>100 km lange Strecke</strong> – die erste Hälfte (50 km) mit einer bestimmten Geschwindigkeit. Für die zweite Hälfte (50 km) willst du einen bestimmten <strong>Gesamtdurchschnitt</strong> erreichen.</p>
+            <p class="mt-2 text-amber-700 text-xs">Tipp: Probiere v₁ = 50 km/h und Ziel = 100 km/h.</p>
+        </div>
+
+        <!-- Live Calculator -->
+        <div class="mb-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Erste Hälfte (v₁): <span id="v1-display" class="text-indigo-700 font-bold">50</span> km/h
+                    </label>
+                    <input type="range" id="v1-slider" min="10" max="200" value="50" step="5"
+                           oninput="updateCalc()" class="w-full accent-indigo-600">
+                    <div class="flex justify-between text-xs text-slate-400 mt-1">
+                        <span>10</span><span>200 km/h</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Ziel-Durchschnitt (v̄): <span id="vtarget-display" class="text-indigo-700 font-bold">100</span> km/h
+                    </label>
+                    <input type="range" id="vtarget-slider" min="10" max="200" value="100" step="5"
+                           oninput="updateCalc()" class="w-full accent-indigo-600">
+                    <div class="flex justify-between text-xs text-slate-400 mt-1">
+                        <span>10</span><span>200 km/h</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Result Box -->
+            <div id="live-result" class="rounded-xl p-4 border-2 text-center transition-all bg-slate-50 border-slate-200">
+                <div class="text-xs text-slate-500 mb-1">Benötigte Geschwindigkeit für 2. Hälfte</div>
+                <div id="v2-value" class="text-3xl font-black text-slate-800">–</div>
+                <div id="v2-sub" class="text-xs text-slate-500 mt-1"></div>
+            </div>
+
+            <div id="time-breakdown" class="mt-3 grid grid-cols-3 gap-2 text-xs text-center hidden">
+                <div class="bg-indigo-50 rounded-lg p-2 border border-indigo-100">
+                    <div class="text-indigo-600">Zeit 1. Hälfte</div>
+                    <div id="t1-val" class="font-bold text-indigo-800"></div>
+                </div>
+                <div class="bg-emerald-50 rounded-lg p-2 border border-emerald-100">
+                    <div class="text-emerald-600">Zeit 2. Hälfte</div>
+                    <div id="t2-val" class="font-bold text-emerald-800"></div>
+                </div>
+                <div class="bg-slate-50 rounded-lg p-2 border border-slate-200">
+                    <div class="text-slate-500">Tatsächl. Ø</div>
+                    <div id="vreal-val" class="font-bold text-slate-700"></div>
+                </div>
+            </div>
+        </div>
+
+        <form id="speed-form" hx-post="/raetsel/geschwindigkeit/result" hx-target="#geschwindigkeit-area" hx-swap="innerHTML">
+            <input type="hidden" name="v1" id="v1-hidden" value="50">
+            <input type="hidden" name="v_target" id="vtarget-hidden" value="100">
+            <button type="submit"
+                    onclick="document.getElementById('v1-hidden').value=document.getElementById('v1-slider').value; document.getElementById('vtarget-hidden').value=document.getElementById('vtarget-slider').value"
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold transition-colors">
+                Vollständige Erklärung →
+            </button>
+        </form>
+    </div>
+
+    <div id="geschwindigkeit-area"></div>
+</div>
+
+<script>
+function updateCalc() {
+    const v1 = parseInt(document.getElementById('v1-slider').value);
+    const vt = parseInt(document.getElementById('vtarget-slider').value);
+    document.getElementById('v1-display').textContent = v1;
+    document.getElementById('vtarget-display').textContent = vt;
+
+    const box = document.getElementById('live-result');
+    const v2Val = document.getElementById('v2-value');
+    const v2Sub = document.getElementById('v2-sub');
+    const breakdown = document.getElementById('time-breakdown');
+
+    const denom = 2 * v1 - vt;
+    if (denom <= 0) {
+        // Impossible
+        box.className = 'rounded-xl p-4 border-2 text-center transition-all bg-red-50 border-red-300';
+        v2Val.textContent = '∞ km/h';
+        v2Val.className = 'text-3xl font-black text-red-700';
+        const t1 = (50 / v1).toFixed(2);
+        const needed = (100 / vt).toFixed(2);
+        v2Sub.textContent = `Unmöglich! Zeit 1. Hälfte (${t1}h) ≥ Gesamtzeit benötigt (${needed}h)`;
+        breakdown.classList.add('hidden');
+    } else {
+        const v2 = vt * v1 / denom;
+        if (v2 > 9999) {
+            box.className = 'rounded-xl p-4 border-2 text-center transition-all bg-red-50 border-red-300';
+            v2Val.textContent = '> 9999 km/h';
+            v2Val.className = 'text-3xl font-black text-red-700';
+            v2Sub.textContent = 'Praktisch unmöglich – physikalisch unrealistisch.';
+            breakdown.classList.add('hidden');
+        } else {
+            box.className = 'rounded-xl p-4 border-2 text-center transition-all bg-emerald-50 border-emerald-300';
+            v2Val.textContent = Math.round(v2 * 10) / 10 + ' km/h';
+            v2Val.className = 'text-3xl font-black text-emerald-800';
+            const t1 = (50 / v1).toFixed(2);
+            const t2 = (50 / v2).toFixed(2);
+            const vreal = (100 / (50/v1 + 50/v2)).toFixed(1);
+            v2Sub.textContent = `Durchschnitt wird: ${vreal} km/h`;
+            document.getElementById('t1-val').textContent = t1 + 'h';
+            document.getElementById('t2-val').textContent = t2 + 'h';
+            document.getElementById('vreal-val').textContent = vreal + ' km/h';
+            breakdown.classList.remove('hidden');
+        }
+    }
+}
+updateCalc();
+</script>
+
+{% endblock %}

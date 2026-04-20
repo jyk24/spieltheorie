@@ -1,0 +1,102 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+
+    {% if impossible %}
+    <div class="mb-5 p-4 rounded-xl bg-red-50 border-2 border-red-300">
+        <h3 class="text-xl font-bold text-red-800 mb-1">⚡ Unmöglich – mathematisch bewiesen.</h3>
+        <p class="text-sm text-red-700">
+            Mit v₁ = {{ v1 }} km/h und Ziel {{ v_target }} km/h ist die zweite Hälfte <strong>physikalisch nicht realisierbar</strong> –
+            nicht mal mit Lichtgeschwindigkeit.
+        </p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">✅ Mit {{ v2 }} km/h erreichbar.</h3>
+        <p class="text-sm text-emerald-700">
+            Bei v₁ = {{ v1 }} km/h und Ziel {{ v_target }} km/h brauchst du für die zweite Hälfte <strong>{{ v2 }} km/h</strong>.
+            {% if v2 > 300 %}Physikalisch unrealistisch, aber mathematisch möglich.{% endif %}
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Zeitanalyse -->
+    <div class="bg-slate-50 rounded-xl p-4 mb-5 text-sm">
+        <p class="font-semibold text-slate-700 mb-3">Warum ist das so? – Die Zeitrechnung:</p>
+        <div class="space-y-2 text-xs font-mono">
+            <div class="flex justify-between border-b border-slate-200 pb-1">
+                <span class="text-slate-600">Zeit 1. Hälfte (50 km / {{ v1 }} km/h):</span>
+                <span class="font-bold text-indigo-700">{{ time_first }} h</span>
+            </div>
+            {% if not impossible %}
+            <div class="flex justify-between border-b border-slate-200 pb-1">
+                <span class="text-slate-600">Zeit 2. Hälfte (50 km / {{ v2 }} km/h):</span>
+                <span class="font-bold text-emerald-700">{{ time_second }} h</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-200 pb-1">
+                <span class="text-slate-600">Gesamtzeit:</span>
+                <span class="font-bold text-slate-800">{{ time_total }} h</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-slate-600">Tatsächlicher Durchschnitt (100 / {{ time_total }}):</span>
+                <span class="font-bold text-indigo-800">{{ v_actual }} km/h</span>
+            </div>
+            {% else %}
+            <div class="flex justify-between border-b border-slate-200 pb-1">
+                <span class="text-slate-600">Benötigte Gesamtzeit (100 km / {{ v_target }} km/h):</span>
+                <span class="font-bold text-red-700">{{ time_total_needed }} h</span>
+            </div>
+            <div class="flex justify-between bg-red-50 rounded p-2 mt-1">
+                <span class="text-red-700 font-semibold">Bereits verbrauchte Zeit:</span>
+                <span class="font-bold text-red-800">{{ time_first }} h ≥ {{ time_total_needed }} h</span>
+            </div>
+            <div class="text-red-600 text-xs mt-2 text-center font-semibold">
+                Die Zeit ist bereits aufgebraucht – 0 Sekunden für 50 km = ∞ km/h
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Das mathematische Prinzip -->
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+        <p class="font-semibold mb-2">Das mathematische Prinzip: Harmonisches Mittel</p>
+        <div class="space-y-2 text-xs mb-3">
+            <div class="flex items-start gap-2">
+                <span class="text-red-500 font-bold mt-0.5">✗</span>
+                <span><strong>Falscher Ansatz (arithmetisches Mittel):</strong> (50 + 100) / 2 = 75 km/h → falsch!</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-emerald-600 font-bold mt-0.5">✓</span>
+                <span><strong>Richtig:</strong> Durchschnitt = Gesamtweg / Gesamtzeit = 100 km / (50/v₁ + 50/v₂)</span>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg p-3 border border-indigo-100 text-xs font-mono">
+            <div class="text-center text-slate-700 space-y-1">
+                <div>v̄ = 2·v₁·v₂ / (v₁ + v₂)</div>
+                <div class="text-indigo-600 font-semibold">← harmonisches Mittel, nicht arithmetisch!</div>
+                <div class="mt-2 text-slate-500">Umgestellt: v₂ = v̄·v₁ / (2·v₁ − v̄)</div>
+                {% if impossible %}
+                <div class="text-red-600 mt-1">Bei v₁={{ v1 }}, v̄={{ v_target }}: 2·{{ v1 }}−{{ v_target }} = {{ 2*v1 - v_target }} ≤ 0 → keine Lösung</div>
+                {% else %}
+                <div class="text-emerald-700 mt-1">v₂ = {{ v_target }}·{{ v1 }} / (2·{{ v1 }}−{{ v_target }}) = {{ v2 }} km/h</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-4 text-sm text-violet-800">
+        <p class="font-semibold mb-2">Der unmögliche Spezialfall: v₁ = 50, Ziel = 100</p>
+        <p class="mb-2 text-xs">Dies ist der bekannteste Fall. Für 100 km/h Durchschnitt brauchst du insgesamt <strong>1 Stunde</strong> für 100 km.
+        Aber für die erste Hälfte hast du bereits <strong>1 Stunde</strong> verbraucht (50 km / 50 km/h = 1h).
+        Für die zweite Hälfte bleibt <strong>0 Sekunden</strong> – also ∞ km/h.</p>
+        <p class="text-xs text-violet-600">Allgemein: Das Ziel wird unmöglich, sobald v̄ ≥ 2·v₁. Dann hat man das gesamte Zeitbudget schon in der ersten Hälfte aufgebraucht.</p>
+    </div>
+
+    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-4 text-sm text-emerald-800">
+        <p class="font-semibold mb-1">Verhandlungsrelevanz:</p>
+        <p>Das harmonische Mittel taucht immer auf, wenn man <em>gleiche Mengen zu verschiedenen Raten</em> berechnet: Preise ($/Einheit), Renditen (Zins auf gleiches Kapital), Produktionszeiten. In Verhandlungen: wer Durchschnittswerte falsch berechnet (arithmetisch statt harmonisch), überschätzt systematisch Renditen und unterschätzt Kosten – ein häufiger Fehler in Dealmodellen.</p>
+    </div>
+
+    <div class="text-xs text-slate-400 border-t border-slate-100 pt-3">
+        Klassisches Problem der Analysis. Das harmonische Mittel H(a,b) = 2ab/(a+b) wird bei gleichen Strecken- oder Mengenanteilen verwendet.
+        Gegenteil: arithmetisches Mittel bei gleichen Zeitanteilen. Verwechslung dieser beiden ist eine häufige Quelle von Berechnungsfehlern.
+    </div>
+</div>
