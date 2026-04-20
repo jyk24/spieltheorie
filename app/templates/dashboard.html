@@ -2,48 +2,163 @@
 {% block title %}Dashboard – VerhandlungsTrainer{% endblock %}
 {% block content %}
 
-<div class="mb-8">
-    <h1 class="text-3xl font-bold text-slate-800">Willkommen zurück</h1>
-    <p class="text-slate-500 mt-1">Werde besser in Verhandlungen – durch Spieltheorie und Praxis.</p>
-</div>
-
-<!-- Statistik-Kacheln -->
-<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-    <div class="bg-white rounded-xl shadow-sm p-5 border border-slate-100">
-        <div class="text-3xl font-bold text-indigo-600">{{ stats.total_games }}</div>
-        <div class="text-sm text-slate-500 mt-1">Spiele gespielt</div>
-    </div>
-    <div class="bg-white rounded-xl shadow-sm p-5 border border-slate-100">
-        <div class="text-3xl font-bold text-emerald-600">{{ stats.total_score }}</div>
-        <div class="text-sm text-slate-500 mt-1">Gesamtpunkte</div>
-    </div>
-    <div class="bg-white rounded-xl shadow-sm p-5 border border-slate-100">
-        <div class="text-3xl font-bold text-violet-600">{{ stats.lessons_viewed }}</div>
-        <div class="text-sm text-slate-500 mt-1">von {{ stats.total_lessons }} Lektionen</div>
-    </div>
-    <div class="bg-white rounded-xl shadow-sm p-5 border border-slate-100">
-        <div class="text-3xl font-bold text-amber-600">
-            {% if stats.total_games > 0 %}
-                {{ (stats.total_score / stats.total_games)|round|int }}
-            {% else %}–{% endif %}
+{% if is_new_user %}
+<!-- ═══════════════════ HERO (Erstbesucher) ═══════════════════ -->
+<div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-800 text-white mb-10 shadow-xl">
+    <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px); background-size: 40px 40px;"></div>
+    <div class="relative px-6 py-10 sm:px-10 sm:py-14 max-w-3xl">
+        <div class="inline-flex items-center gap-2 bg-white/15 rounded-full px-3 py-1 text-xs font-semibold mb-4 tracking-wide">🎓 Spieltheorie trifft Praxis</div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight mb-4">
+            Lerne, warum du in Verhandlungen verlierst –<br class="hidden sm:block"> und wie du es änderst.
+        </h1>
+        <p class="text-indigo-100 text-base sm:text-lg mb-6 max-w-xl">
+            Über 20 interaktive Spiele und Rätsel, von Spieltheorie-Forschern destilliert. Jedes Spiel erklärt, was Menschen wirklich antreibt – und welche Strategie gewinnt.
+        </p>
+        <div class="flex flex-wrap gap-3">
+            <a href="/spielpfad" class="bg-white text-indigo-700 font-bold px-6 py-3 rounded-xl hover:bg-indigo-50 transition-colors shadow-md text-sm sm:text-base">
+                🗺️ Lernpfad starten →
+            </a>
+            <a href="/spiele/gefangenendilemma" class="bg-indigo-500/50 hover:bg-indigo-500/70 text-white font-semibold px-5 py-3 rounded-xl transition-colors text-sm sm:text-base border border-white/20">
+                🔒 Erstes Spiel spielen
+            </a>
         </div>
-        <div class="text-sm text-slate-500 mt-1">Ø Punkte/Spiel</div>
     </div>
 </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Empfohlene Lektion -->
+<!-- Feature-Kacheln -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+    <div class="bg-white rounded-xl border border-slate-100 p-5 shadow-sm">
+        <div class="text-2xl mb-2">🎮</div>
+        <div class="font-semibold text-slate-800 mb-1">20+ interaktive Spiele</div>
+        <p class="text-sm text-slate-500">Gefangenendilemma, Ultimatumspiel, Auktionen, evolutionäre Spiele – jedes mit KI-Gegner und akademischem Debrief.</p>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-100 p-5 shadow-sm">
+        <div class="text-2xl mb-2">🧩</div>
+        <div class="font-semibold text-slate-800 mb-1">Paradoxe & Rätsel</div>
+        <p class="text-sm text-slate-500">Hilberts Hotel, Wason-Test, Framing-Effekt – Denkexperimente aus Mathematik und Verhaltensökonomik.</p>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-100 p-5 shadow-sm">
+        <div class="text-2xl mb-2">📚</div>
+        <div class="font-semibold text-slate-800 mb-1">Akademische Tiefe</div>
+        <p class="text-sm text-slate-500">Nash, Kahneman, Maynard Smith – jedes Spiel erklärt die dahinterstehende Forschung verständlich und zitiert die Originalquellen.</p>
+    </div>
+</div>
+
+{% else %}
+<!-- ═══════════════════ RETURNING USER HEADER ═══════════════════ -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
+    <div>
+        <h1 class="text-2xl sm:text-3xl font-bold text-slate-800">Willkommen zurück</h1>
+        <p class="text-slate-500 mt-0.5 text-sm">Werde besser in Verhandlungen – durch Spieltheorie und Praxis.</p>
+    </div>
+    <a href="/spielpfad" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-colors self-start sm:self-auto">
+        🗺️ Lernpfad
+    </a>
+</div>
+{% endif %}
+
+<!-- ═══════════════════ STATS KACHELN ═══════════════════ -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+    <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
+        <div class="text-2xl sm:text-3xl font-bold text-indigo-600">{{ stats.total_games }}</div>
+        <div class="text-xs sm:text-sm text-slate-500 mt-0.5">Spiele gespielt</div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
+        <div class="text-2xl sm:text-3xl font-bold text-emerald-600">{{ stats.total_score }}</div>
+        <div class="text-xs sm:text-sm text-slate-500 mt-0.5">Gesamtpunkte</div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
+        <div class="text-2xl sm:text-3xl font-bold text-violet-600">{{ stats.lessons_viewed }}</div>
+        <div class="text-xs sm:text-sm text-slate-500 mt-0.5">von {{ stats.total_lessons }} Lektionen</div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
+        <div class="text-2xl sm:text-3xl font-bold text-amber-600">{{ unlocked_count }}</div>
+        <div class="text-xs sm:text-sm text-slate-500 mt-0.5">von {{ total_achievements }} Badges</div>
+    </div>
+</div>
+
+<!-- ═══════════════════ LEVEL + BADGES ═══════════════════ -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+
+    <!-- Level Card -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+        <div class="flex items-center gap-3 mb-3">
+            <span class="text-3xl">{{ player_level.icon }}</span>
+            <div>
+                <div class="text-xs text-slate-400 font-medium uppercase tracking-wide">Level {{ player_level.level }}</div>
+                <div class="font-bold text-slate-800">{{ player_level.title }}</div>
+            </div>
+        </div>
+        <div class="bg-slate-100 rounded-full h-2.5 overflow-hidden mb-2">
+            <div class="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-700"
+                 style="width: {{ player_level.progress }}%"></div>
+        </div>
+        <div class="flex justify-between text-xs text-slate-400">
+            <span>{{ stats.total_games }} Spiele</span>
+            {% if player_level.games_to_next > 0 %}
+            <span>noch {{ player_level.games_to_next }} bis Level {{ player_level.level + 1 }}</span>
+            {% else %}
+            <span class="text-violet-600 font-semibold">Max. Level!</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recent Badges -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+        <div class="flex items-center justify-between mb-3">
+            <span class="font-semibold text-slate-700 text-sm">Zuletzt freigeschaltet</span>
+            <a href="/fortschritt" class="text-xs text-indigo-500 hover:underline">Alle →</a>
+        </div>
+        {% if recent_badges %}
+        <div class="space-y-2">
+            {% for badge in recent_badges %}
+            <div class="flex items-center gap-3">
+                <span class="text-xl w-7 text-center">{{ badge.icon }}</span>
+                <div class="min-w-0">
+                    <div class="text-sm font-medium text-slate-700 truncate">{{ badge.title }}</div>
+                    <div class="text-xs text-slate-400">{{ badge.unlocked_at.strftime('%d.%m.%Y') if badge.unlocked_at else '' }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-sm text-slate-400 py-2">Noch keine Badges – spiel los! 🚀</div>
+        {% endif %}
+    </div>
+
+    <!-- Next Badge -->
+    <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl shadow-sm border border-amber-100 p-5">
+        <div class="text-xs text-amber-600 font-semibold uppercase tracking-wide mb-2">🎯 Nächster Badge</div>
+        {% if next_badge %}
+        <div class="flex items-start gap-3">
+            <span class="text-3xl">{{ next_badge.icon }}</span>
+            <div>
+                <div class="font-bold text-slate-800 text-sm">{{ next_badge.title }}</div>
+                <div class="text-xs text-slate-500 mt-0.5 leading-relaxed">{{ next_badge.desc }}</div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-sm text-slate-500">Alle Badges freigeschaltet! 🏆</div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- ═══════════════════ EMPFOHLENE LEKTION + SPIELE ═══════════════════ -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+
     {% if next_lesson %}
     <div class="lg:col-span-1">
-        <div class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-xl shadow-md p-6 text-white">
-            <div class="text-xs font-semibold uppercase tracking-wide opacity-75 mb-1">📚 Empfohlene Lektion</div>
-            <h2 class="text-xl font-bold mb-2">{{ next_lesson.title }}</h2>
-            <div class="flex items-center gap-2 mb-4">
-                <span class="text-xs bg-white/20 rounded-full px-3 py-1">{{ next_lesson.category }}</span>
-                <span class="text-xs bg-white/20 rounded-full px-3 py-1">{{ next_lesson.difficulty }}</span>
+        <div class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-xl shadow-md p-5 sm:p-6 text-white h-full flex flex-col justify-between">
+            <div>
+                <div class="text-xs font-semibold uppercase tracking-wide opacity-75 mb-2">📚 Empfohlene Lektion</div>
+                <h2 class="text-lg sm:text-xl font-bold mb-2 leading-snug">{{ next_lesson.title }}</h2>
+                <div class="flex flex-wrap items-center gap-2 mb-4">
+                    <span class="text-xs bg-white/20 rounded-full px-3 py-1">{{ next_lesson.category }}</span>
+                    <span class="text-xs bg-white/20 rounded-full px-3 py-1">{{ next_lesson.difficulty }}</span>
+                </div>
             </div>
             <a href="/lektionen/{{ next_lesson.slug }}"
-               class="inline-block bg-white text-indigo-700 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-indigo-50 transition-colors">
+               class="inline-block bg-white text-indigo-700 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-indigo-50 transition-colors self-start">
                 Jetzt lesen →
             </a>
         </div>
@@ -51,57 +166,60 @@
     {% endif %}
 
     <!-- Spiele-Schnellzugriff -->
-    <div class="lg:col-span-2">
-        <h2 class="text-lg font-semibold text-slate-700 mb-3">Spiele starten</h2>
-        <div class="grid grid-cols-2 gap-3">
-            {% for game in [
-                ("gefangenendilemma", "🔒", "Gefangenendilemma", "Kooperieren oder Verraten?"),
-                ("ultimatum", "⚖️", "Ultimatumspiel", "Faire Angebote machen"),
-                ("vertrauen", "🤝", "Vertrauensspiel", "Investiere in Vertrauen"),
-                ("verhandlung", "💼", "Verhandlung", "Echte Szenarien meistern")
+    <div class="{% if next_lesson %}lg:col-span-2{% else %}lg:col-span-3{% endif %}">
+        <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Schnellzugriff</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {% for slug, label, desc in [
+                ("gefangenendilemma", "Gefangenendilemma", "Kooperieren oder Verraten?"),
+                ("ultimatum",         "Ultimatumspiel",    "Faire Angebote machen"),
+                ("stag-hunt",         "Hirschjagd",        "Koordination unter Risiko"),
+                ("habicht-taube",     "Habicht-Taube",     "ESS & Aggression")
             ] %}
-            <a href="/spiele/{{ game[0] }}"
-               class="bg-white border border-slate-100 rounded-xl p-4 hover:border-indigo-300 hover:shadow-md transition-all group">
-                <div class="text-2xl mb-1">{{ game[1] }}</div>
-                <div class="font-semibold text-slate-800 text-sm group-hover:text-indigo-600">{{ game[2] }}</div>
-                <div class="text-xs text-slate-400 mt-0.5">{{ game[3] }}</div>
+            <a href="/spiele/{{ slug }}"
+               class="bg-white border border-slate-100 rounded-xl p-3 sm:p-4 hover:border-indigo-300 hover:shadow-md transition-all group flex flex-col">
+                {% set gtype = slug | replace('-','_') %}
+                <div class="text-2xl mb-1.5">{{ game_icons.get(gtype, game_icons.get(slug, '🎮')) }}</div>
+                <div class="font-semibold text-slate-800 text-xs sm:text-sm group-hover:text-indigo-600 leading-snug">{{ label }}</div>
+                <div class="text-xs text-slate-400 mt-0.5 hidden sm:block">{{ desc }}</div>
             </a>
             {% endfor %}
         </div>
     </div>
 </div>
 
-<!-- Letzte Spiele -->
+<!-- ═══════════════════ LETZTE SPIELE ═══════════════════ -->
 {% if stats.recent_sessions %}
-<div class="mt-8">
-    <h2 class="text-lg font-semibold text-slate-700 mb-3">Zuletzt gespielt</h2>
-    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <table class="w-full text-sm">
-            <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wide">
-                <tr>
-                    <th class="px-4 py-3 text-left">Spiel</th>
-                    <th class="px-4 py-3 text-left">KI-Strategie</th>
-                    <th class="px-4 py-3 text-center">Ergebnis</th>
-                    <th class="px-4 py-3 text-right">Punkte</th>
-                    <th class="px-4 py-3 text-right">Datum</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-50">
-                {% for s in stats.recent_sessions %}
-                <tr class="hover:bg-slate-50">
-                    <td class="px-4 py-3 font-medium text-slate-700">{{ s.game_type|title }}</td>
-                    <td class="px-4 py-3 text-slate-500">{{ s.ai_strategy }}</td>
-                    <td class="px-4 py-3 text-center">
-                        {% if s.result == 'win' %}<span class="text-emerald-600 font-medium">Gewonnen</span>
-                        {% elif s.result == 'loss' %}<span class="text-red-500 font-medium">Verloren</span>
-                        {% else %}<span class="text-slate-400">Unentschieden</span>{% endif %}
-                    </td>
-                    <td class="px-4 py-3 text-right font-semibold text-indigo-600">{{ s.score }}</td>
-                    <td class="px-4 py-3 text-right text-slate-400">{{ s.created_at.strftime('%d.%m.%Y') }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="mt-2">
+    <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wide">Zuletzt gespielt</h2>
+        <a href="/fortschritt" class="text-xs text-indigo-500 hover:underline">Vollständige Historie →</a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {% for s in stats.recent_sessions %}
+        <a href="/fortschritt/session/{{ s.id }}"
+           class="bg-white border border-slate-100 rounded-xl p-4 hover:border-indigo-200 hover:shadow-sm transition-all flex items-center gap-3 group">
+            <span class="text-2xl flex-shrink-0">{{ game_icons.get(s.game_type, '🎮') }}</span>
+            <div class="min-w-0 flex-1">
+                <div class="font-medium text-slate-700 text-sm group-hover:text-indigo-600 truncate">
+                    {{ game_labels.get(s.game_type, s.game_type) }}
+                </div>
+                <div class="text-xs text-slate-400 mt-0.5">
+                    {{ s.created_at.strftime('%d.%m.%Y') if s.created_at else '' }}
+                </div>
+            </div>
+            <div class="flex flex-col items-end flex-shrink-0">
+                <span class="font-bold text-sm
+                    {% if s.result == 'win' %}text-emerald-600
+                    {% elif s.result == 'loss' %}text-red-500
+                    {% else %}text-slate-400{% endif %}">
+                    {% if s.result == 'win' %}Gewonnen
+                    {% elif s.result == 'loss' %}Verloren
+                    {% else %}Unentsch.{% endif %}
+                </span>
+                <span class="text-xs text-indigo-600 font-semibold">{{ s.score }} Pkt.</span>
+            </div>
+        </a>
+        {% endfor %}
     </div>
 </div>
 {% endif %}
