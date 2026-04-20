@@ -1,0 +1,56 @@
+<!-- Preis fiel – Spiel läuft weiter -->
+<form id="game-form">
+    <input type="hidden" name="history_json" value="{{ history_json }}">
+    <input type="hidden" name="item_json" value="{{ item_json }}">
+
+    <div class="flex justify-between items-center mb-5">
+        <span class="text-sm text-slate-500">Auktion {{ round_num }} / {{ max_rounds }}</span>
+        <span class="text-sm text-slate-600">Profit bisher: <strong>0</strong></span>
+    </div>
+
+    <div class="text-center mb-6">
+        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4">
+            <p class="text-xs text-indigo-600 mb-1">Dein privater Wert:</p>
+            <p class="text-4xl font-bold text-indigo-800">{{ item.private_value }}</p>
+        </div>
+
+        <div class="bg-orange-50 border-2 border-orange-300 rounded-xl p-5 mb-2">
+            <p class="text-xs text-orange-600 mb-1">Aktueller Preis:</p>
+            <p class="text-5xl font-bold text-orange-700">{{ tick_result.new_price }}</p>
+            <p class="text-xs text-orange-500 mt-1">Fällt um {{ item.step }} · {{ item.ticks }} Runden gewartet</p>
+        </div>
+
+        <div class="text-xs text-slate-400 mb-5">
+            {% if tick_result.new_price < item.private_value %}
+            <span class="text-emerald-600 font-semibold">✓ Preis unter deinem Wert – kaufen lohnt sich!</span>
+            {% else %}
+            <span class="text-amber-600">Preis noch über deinem Wert ({{ item.private_value }})</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+        <button type="button"
+                hx-post="/spiele/hollaendische-auktion/tick"
+                hx-target="#spiel-area"
+                hx-swap="innerHTML"
+                hx-include="#game-form"
+                hx-vals='{"action": "kaufen"}'
+                class="p-5 rounded-xl border-2 border-emerald-300 bg-emerald-50 hover:border-emerald-500 hover:bg-emerald-100 transition-all text-center">
+            <div class="text-3xl mb-1">🛒</div>
+            <div class="font-bold text-emerald-800">Jetzt kaufen!</div>
+            <div class="text-xs text-emerald-600 mt-1">Zum Preis {{ tick_result.new_price }}</div>
+        </button>
+        <button type="button"
+                hx-post="/spiele/hollaendische-auktion/tick"
+                hx-target="#spiel-area"
+                hx-swap="innerHTML"
+                hx-include="#game-form"
+                hx-vals='{"action": "warten"}'
+                class="p-5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 hover:bg-slate-100 transition-all text-center">
+            <div class="text-3xl mb-1">⏳</div>
+            <div class="font-bold text-slate-700">Warten</div>
+            <div class="text-xs text-slate-500 mt-1">Preis fällt auf {{ tick_result.new_price - item.step }}</div>
+        </button>
+    </div>
+</form>

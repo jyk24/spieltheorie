@@ -1,0 +1,63 @@
+<!-- Auswertung des Anker-Experiments -->
+<div class="mb-5">
+    <h3 class="text-xl font-bold text-slate-800 mb-1">Auswertung: Wie stark hat der Anker gewirkt?</h3>
+    <p class="text-sm text-slate-500">Vergleiche deine Schätzungen mit den Ankern und den wahren Werten.</p>
+</div>
+
+{% set ns = namespace(anker_einfluss=0) %}
+{% for a in answers %}
+{% set abw_anker = (a.schaetzung - a.anchor) %}
+{% set abw_wahrheit = (a.wahrheit - a.anchor) %}
+<div class="bg-white border border-slate-200 rounded-xl p-4 mb-4">
+    <p class="font-semibold text-slate-800 text-sm mb-3">{{ a.frage }}</p>
+    <div class="grid grid-cols-3 gap-3 text-center text-xs mb-3">
+        <div class="bg-slate-100 rounded-lg p-2">
+            <div class="text-slate-500 mb-1">Anker</div>
+            <div class="text-2xl font-bold text-slate-700">{{ a.anchor }}</div>
+        </div>
+        <div class="bg-indigo-50 rounded-lg p-2 border border-indigo-200">
+            <div class="text-indigo-500 mb-1">Deine Schätzung</div>
+            <div class="text-2xl font-bold text-indigo-700">{{ a.schaetzung }}</div>
+        </div>
+        <div class="bg-emerald-50 rounded-lg p-2 border border-emerald-200">
+            <div class="text-emerald-600 mb-1">Wahrer Wert</div>
+            <div class="text-2xl font-bold text-emerald-700">{{ a.wahrheit }}</div>
+        </div>
+    </div>
+
+    <!-- Visueller Vergleich: Anker → Schätzung → Wahrheit -->
+    <div class="relative h-3 bg-slate-100 rounded-full mb-2 overflow-hidden">
+        {% set min_val = [a.anchor, a.schaetzung, a.wahrheit] | min %}
+        {% set max_val = [a.anchor, a.schaetzung, a.wahrheit] | max %}
+        {% set span = max_val - min_val if max_val != min_val else 1 %}
+        {% set p_anker = ((a.anchor - min_val) / span * 100) | int %}
+        {% set p_schaetz = ((a.schaetzung - min_val) / span * 100) | int %}
+        {% set p_wahrheit = ((a.wahrheit - min_val) / span * 100) | int %}
+        <div class="absolute top-0 bottom-0 w-1 bg-slate-400 rounded" style="left: {{ p_anker }}%"></div>
+        <div class="absolute top-0 bottom-0 w-1.5 bg-indigo-500 rounded" style="left: {{ p_schaetz }}%"></div>
+        <div class="absolute top-0 bottom-0 w-1.5 bg-emerald-500 rounded" style="left: {{ p_wahrheit }}%"></div>
+    </div>
+    <div class="flex justify-between text-xs text-slate-400 mb-2">
+        <span>◼ Anker &nbsp; <span class="text-indigo-500">◼ Du</span> &nbsp; <span class="text-emerald-600">◼ Wahrheit</span></span>
+    </div>
+
+    <p class="text-xs text-slate-500 italic">{{ a.erklaerung }}</p>
+</div>
+{% endfor %}
+
+<!-- Erklärung des Effekts -->
+<div class="bg-amber-50 border border-amber-300 rounded-xl p-5 mb-5">
+    <p class="font-bold text-amber-800 mb-2">⚓ Der Anker-Effekt in Verhandlungen</p>
+    <p class="text-sm text-amber-700 mb-3">Tversky & Kahneman (1974) zeigten: Selbst eine offensichtlich zufällige Zahl (Glücksrad) zieht Schätzungen zu sich hin. In Verhandlungen gilt:</p>
+    <ul class="text-sm text-amber-700 space-y-1">
+        <li>🎯 <strong>Wer zuerst anbietet, setzt den Anker.</strong> Aggressive erste Angebote werden oft als Maßstab akzeptiert.</li>
+        <li>🔢 <strong>Präzise Zahlen ankern stärker.</strong> „47.300 €" wirkt vertrauenswürdiger als „50.000 €" und wird weniger weit verhandelt.</li>
+        <li>🛡️ <strong>Gegenanker setzen.</strong> Wer zu einem Anker reagiert, ohne einen eigenen zu setzen, verliert die Kontrolle über den Verhandlungsrahmen.</li>
+    </ul>
+</div>
+
+<div class="flex gap-3">
+    <a href="/raetsel/anker-experiment" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal</a>
+    <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">Andere Rätsel</a>
+    <a href="/lektionen/ankern-erste-angebote" class="border border-indigo-200 text-indigo-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50">📖 Lektion: Ankern</a>
+</div>

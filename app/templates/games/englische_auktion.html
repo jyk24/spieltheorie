@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Englische Auktion – VerhandlungsTrainer{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🔔 Englische Auktion</h1>
+        <p class="text-slate-500 mt-1">Klassisches Aufwärtsbieten – wann steigst du aus?</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-2">So funktioniert's:</p>
+        <ul class="space-y-1 text-slate-600">
+            <li>📈 Der Preis steigt jede Runde um {{ item.step }} Punkte.</li>
+            <li>👥 3 KI-Bieter haben <strong>unbekannte</strong> private Werte.</li>
+            <li>🏆 Letzter Bieter gewinnt – zahlt den aktuellen Preis.</li>
+            <li>💡 Dominante Strategie: biete bis der Preis deinen Wert erreicht, dann aussteigen.</li>
+        </ul>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="spiel-area">
+        <form id="game-form">
+            <input type="hidden" name="history_json" value="[]">
+            <input type="hidden" name="item_json" value="{{ item_json }}">
+
+            <div class="flex justify-between items-center mb-5">
+                <span class="text-sm text-slate-500">Auktion 1 / {{ max_rounds }}</span>
+                <span class="text-sm text-slate-600">Profit: <strong>0</strong></span>
+            </div>
+
+            <div class="text-center mb-6">
+                <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4">
+                    <p class="text-xs text-indigo-600 mb-1">Dein privater Wert für dieses Objekt:</p>
+                    <p class="text-4xl font-bold text-indigo-800">{{ item.private_value }}</p>
+                    <p class="text-xs text-indigo-500 mt-1">Verkaufe nicht unter diesem Wert weiter</p>
+                </div>
+
+                <div class="bg-blue-50 border-2 border-blue-300 rounded-xl p-5 mb-2">
+                    <p class="text-xs text-blue-600 mb-1">Aktueller Preis:</p>
+                    <p class="text-5xl font-bold text-blue-700">{{ item.current_price }}</p>
+                    <p class="text-xs text-blue-500 mt-1">Steigt um {{ item.step }} pro Runde</p>
+                </div>
+                <div class="flex justify-center gap-3 text-xs text-slate-500 mb-5">
+                    <span>👥 Noch aktiv: <strong>{{ item.active_bots | length }} KI-Bieter</strong></span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <button type="button"
+                        hx-post="/spiele/englische-auktion/tick"
+                        hx-target="#spiel-area"
+                        hx-swap="innerHTML"
+                        hx-include="#game-form"
+                        hx-vals='{"action": "mitbieten"}'
+                        class="p-5 rounded-xl border-2 border-blue-300 bg-blue-50 hover:border-blue-500 hover:bg-blue-100 transition-all text-center">
+                    <div class="text-3xl mb-1">🙋</div>
+                    <div class="font-bold text-blue-800">Mitbieten</div>
+                    <div class="text-xs text-blue-600 mt-1">Nächster Preis: {{ item.current_price + item.step }}</div>
+                </button>
+                <button type="button"
+                        hx-post="/spiele/englische-auktion/tick"
+                        hx-target="#spiel-area"
+                        hx-swap="innerHTML"
+                        hx-include="#game-form"
+                        hx-vals='{"action": "aussteigen"}'
+                        class="p-5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 hover:bg-slate-100 transition-all text-center">
+                    <div class="text-3xl mb-1">🚪</div>
+                    <div class="font-bold text-slate-700">Aussteigen</div>
+                    <div class="text-xs text-slate-500 mt-1">Kein Profit, kein Verlust</div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

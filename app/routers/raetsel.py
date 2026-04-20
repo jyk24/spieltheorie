@@ -1,4 +1,5 @@
 """Rätsel & Paradoxe – einmalige spieltheoretische Denkexperimente."""
+import json
 import random as _random
 
 from fastapi import APIRouter, Form, Request
@@ -206,6 +207,15 @@ RAETSEL_META = [
         "typ": "Logik-Puzzle",
         "schwierigkeit": "Einsteiger",
         "dauer": "5 min",
+    },
+    {
+        "id": "anker-experiment",
+        "name": "Der Anker-Effekt",
+        "icon": "⚓",
+        "beschreibung": "Sieh eine zufällige Zahl – und schätze dann etwas völlig anderes. Am Ende siehst du, wie stark der Anker deine Schätzungen verzerrt hat. Das Experiment an dir selbst.",
+        "typ": "Verhaltens-Experiment",
+        "schwierigkeit": "Einsteiger",
+        "dauer": "4 min",
     },
 ]
 
@@ -1552,4 +1562,125 @@ def muenzwaegen_weigh2(
         request,
         "partials/muenzwaegen_result.html",
         {"heavy": heavy, "found": found, "result": result, "is_correct": found == heavy},
+    )
+
+
+# ---------------------------------------------------------------------------
+# Anker-Experiment
+# ---------------------------------------------------------------------------
+
+ANKER_FRAGEN = [
+    {
+        "id": 0,
+        "frage": "Wie viel Prozent der Weltbevölkerung lebt in Asien?",
+        "einheit": "%",
+        "wahrheit": 59,
+        "erklaerung": "Etwa 59 % der Weltbevölkerung (ca. 4,7 Mrd.) leben in Asien – China und Indien allein machen über 35 % aus.",
+        "anker_lo": [8, 15, 22],
+        "anker_hi": [72, 80, 88],
+    },
+    {
+        "id": 1,
+        "frage": "Wie viele Länder sind Mitglied der Vereinten Nationen?",
+        "einheit": "Länder",
+        "wahrheit": 193,
+        "erklaerung": "Die UN hat 193 Mitgliedstaaten (Stand 2024). Fast alle souveränen Staaten der Erde.",
+        "anker_lo": [35, 42, 58],
+        "anker_hi": [230, 248, 265],
+    },
+    {
+        "id": 2,
+        "frage": "In welchem Jahr wurde das erste Smartphone (iPhone) vorgestellt?",
+        "einheit": "Jahr",
+        "wahrheit": 2007,
+        "erklaerung": "Steve Jobs stellte das erste iPhone am 9. Januar 2007 auf der Macworld Conference vor.",
+        "anker_lo": [1988, 1993, 1998],
+        "anker_hi": [2013, 2016, 2019],
+    },
+    {
+        "id": 3,
+        "frage": "Wie hoch ist der Frauenanteil in nationalen Parlamenten weltweit (%)? ",
+        "einheit": "%",
+        "wahrheit": 26,
+        "erklaerung": "Laut IPU-Daten 2023 betrug der globale Frauenanteil in Parlamenten ca. 26 %.",
+        "anker_lo": [4, 7, 11],
+        "anker_hi": [48, 55, 63],
+    },
+    {
+        "id": 4,
+        "frage": "Wie viele km ist der Äquator lang (gerundet auf 1.000 km)?",
+        "einheit": "km",
+        "wahrheit": 40075,
+        "erklaerung": "Der Erdumfang am Äquator beträgt exakt 40.075 km.",
+        "anker_lo": [12000, 18000, 24000],
+        "anker_hi": [52000, 61000, 74000],
+    },
+]
+
+
+def _anker_generate(frage_idx: int) -> tuple[dict, int]:
+    """Gibt Frage + zufälligen Anker zurück."""
+    frage = ANKER_FRAGEN[frage_idx]
+    use_hi = _random.random() < 0.5
+    pool = frage["anker_hi"] if use_hi else frage["anker_lo"]
+    anchor = _random.choice(pool)
+    return frage, anchor
+
+
+@router.get("/anker-experiment", response_class=HTMLResponse)
+def anker_experiment_page(request: Request):
+    frage, anchor = _anker_generate(0)
+    return templates.TemplateResponse(
+        request,
+        "raetsel/anker_experiment.html",
+        {
+            "active_page": "raetsel",
+            "frage": frage,
+            "anchor": anchor,
+            "frage_num": 1,
+            "total": len(ANKER_FRAGEN),
+            "answers_json": "[]",
+        },
+    )
+
+
+@router.post("/anker-experiment/naechste", response_class=HTMLResponse)
+def anker_experiment_naechste(
+    request: Request,
+    frage_idx: int = Form(...),
+    anchor: int = Form(...),
+    schaetzung: int = Form(...),
+    answers_json: str = Form(default="[]"),
+):
+    answers = json.loads(answers_json)
+    frage = ANKER_FRAGEN[frage_idx]
+    answers.append({
+        "frage": frage["frage"],
+        "einheit": frage["einheit"],
+        "wahrheit": frage["wahrheit"],
+        "erklaerung": frage["erklaerung"],
+        "anchor": anchor,
+        "schaetzung": schaetzung,
+    })
+
+    next_idx = frage_idx + 1
+    if next_idx >= len(ANKER_FRAGEN):
+        # Auswertung
+        return templates.TemplateResponse(
+            request,
+            "partials/anker_result.html",
+            {"answers": answers},
+        )
+
+    next_frage, next_anchor = _anker_generate(next_idx)
+    return templates.TemplateResponse(
+        request,
+        "partials/anker_frage.html",
+        {
+            "frage": next_frage,
+            "anchor": next_anchor,
+            "frage_num": next_idx + 1,
+            "total": len(ANKER_FRAGEN),
+            "answers_json": json.dumps(answers, ensure_ascii=False),
+        },
     )

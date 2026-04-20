@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Der Anker-Effekt – VerhandlungsTrainer{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">⚓ Der Anker-Effekt</h1>
+        <p class="text-slate-500 mt-1">Sieh eine Zahl – und schätze dann etwas völlig anderes.</p>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-6 text-sm text-amber-800">
+        <p class="font-semibold mb-2">Das Experiment:</p>
+        <p>Kahneman & Tversky (1974) zeigten: Eine völlig <em>zufällige</em> Zahl beeinflusst unsere Schätzungen – auch wenn wir wissen, dass sie zufällig ist. Erlebe es selbst an {{ total }} Fragen.</p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="spiel-area">
+        {% include "partials/anker_frage.html" %}
+    </div>
+</div>
+{% endblock %}

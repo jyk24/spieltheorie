@@ -35,6 +35,8 @@ GAME_LABELS = {
     "freiwilligen-dilemma": "Freiwilligen-Dilemma",
     "gleiche-muenzen": "Gleiche Münzen",
     "gewinner-fluch": "Fluch des Gewinners",
+    "hollaendische-auktion": "Holländische Auktion",
+    "englische-auktion": "Englische Auktion",
 }
 
 RESULT_LABELS = {"win": "Gewonnen", "loss": "Verloren", "draw": "Unentschieden"}

@@ -45,6 +45,12 @@ from ..game_engine import (
     ultimatum_ai_offer,
     ultimatum_ai_response,
     ultimatum_score,
+    da_final_result,
+    da_generate_item,
+    da_tick,
+    ea_final_result,
+    ea_generate_item,
+    ea_tick,
     vd_final_result,
     vd_play_round,
     verhandlung_ai_offer,
@@ -581,6 +587,24 @@ GAME_META = [
         "schwierigkeit": "Fortgeschritten",
         "runden": 5,
         "konzept": "Fluch des Gewinners, Common Value Auction, Bayesianisches Schließen",
+    },
+    {
+        "id": "hollaendische-auktion",
+        "name": "Holländische Auktion",
+        "icon": "🌷",
+        "beschreibung": "Der Preis fällt jede Runde. Warte auf den optimalen Moment – aber zögere nicht zu lang, sonst kauft ein anderer Bieter.",
+        "schwierigkeit": "Fortgeschritten",
+        "runden": 5,
+        "konzept": "Holländische Auktion, Erstpreisauktion, Strategisches Warten",
+    },
+    {
+        "id": "englische-auktion",
+        "name": "Englische Auktion",
+        "icon": "🔔",
+        "beschreibung": "Klassisches Aufwärtsbieten gegen 3 KI-Bieter. Wann steigst du aus, bevor der Preis deinen Wert übersteigt?",
+        "schwierigkeit": "Einsteiger",
+        "runden": 5,
+        "konzept": "Englische Auktion, Privatwertauktion, Dominante Strategie",
     },
 ]
 
@@ -2479,3 +2503,160 @@ def gewinner_fluch_zug(
             "new_achievements": new_achievements,
         },
     )
+
+
+# ---------------------------------------------------------------------------
+# Holländische Auktion (Dutch Auction)
+# ---------------------------------------------------------------------------
+
+@router.get("/hollaendische-auktion", response_class=HTMLResponse)
+def hollaendische_auktion_page(request: Request):
+    first_item = da_generate_item(1)
+    return templates.TemplateResponse(
+        request,
+        "games/hollaendische_auktion.html",
+        {
+            "active_page": "spiele",
+            "max_rounds": 5,
+            "item": first_item,
+            "item_json": json.dumps(first_item),
+        },
+    )
+
+
+@router.post("/hollaendische-auktion/tick", response_class=HTMLResponse)
+def hollaendische_auktion_tick(
+    request: Request,
+    action: str = Form(...),
+    item_json: str = Form(...),
+    history_json: str = Form(default="[]"),
+    db: Session = Depends(get_db),
+):
+    item = json.loads(item_json)
+    history = json.loads(history_json)
+    tick_result = da_tick(item, action)
+
+    if tick_result["done"]:
+        history.append(tick_result)
+        is_final = len(history) >= 5
+        final = da_final_result(history) if is_final else None
+        next_item = da_generate_item(len(history) + 1) if not is_final else None
+        new_achievements: list = []
+        if is_final:
+            _, new_achievements = save_game_session(
+                db,
+                game_type="hollaendische-auktion",
+                ai_strategy="dutch",
+                moves=history,
+                result=final["result"],
+                score=final["total_profit"],
+                ai_score=0,
+            )
+        return templates.TemplateResponse(
+            request,
+            "partials/hollaendische_auktion_result.html",
+            {
+                "tick_result": tick_result,
+                "item": item,
+                "history": history,
+                "history_json": json.dumps(history),
+                "is_final": is_final,
+                "final": final,
+                "max_rounds": 5,
+                "next_item": next_item,
+                "next_item_json": json.dumps(next_item) if next_item else "null",
+                "new_achievements": new_achievements,
+            },
+        )
+    else:
+        # Preis fällt weiter – zeige aktualisierten Zustand
+        return templates.TemplateResponse(
+            request,
+            "partials/hollaendische_auktion_tick.html",
+            {
+                "item": item,
+                "item_json": json.dumps(item),
+                "history_json": history_json,
+                "tick_result": tick_result,
+                "max_rounds": 5,
+                "round_num": len(history) + 1,
+            },
+        )
+
+
+# ---------------------------------------------------------------------------
+# Englische Auktion (English / Ascending Auction)
+# ---------------------------------------------------------------------------
+
+@router.get("/englische-auktion", response_class=HTMLResponse)
+def englische_auktion_page(request: Request):
+    first_item = ea_generate_item(1)
+    return templates.TemplateResponse(
+        request,
+        "games/englische_auktion.html",
+        {
+            "active_page": "spiele",
+            "max_rounds": 5,
+            "item": first_item,
+            "item_json": json.dumps(first_item),
+        },
+    )
+
+
+@router.post("/englische-auktion/tick", response_class=HTMLResponse)
+def englische_auktion_tick(
+    request: Request,
+    action: str = Form(...),
+    item_json: str = Form(...),
+    history_json: str = Form(default="[]"),
+    db: Session = Depends(get_db),
+):
+    item = json.loads(item_json)
+    history = json.loads(history_json)
+    tick_result = ea_tick(item, action)
+
+    if tick_result["done"]:
+        history.append(tick_result)
+        is_final = len(history) >= 5
+        final = ea_final_result(history) if is_final else None
+        next_item = ea_generate_item(len(history) + 1) if not is_final else None
+        new_achievements: list = []
+        if is_final:
+            _, new_achievements = save_game_session(
+                db,
+                game_type="englische-auktion",
+                ai_strategy="english",
+                moves=history,
+                result=final["result"],
+                score=final["total_profit"],
+                ai_score=0,
+            )
+        return templates.TemplateResponse(
+            request,
+            "partials/englische_auktion_result.html",
+            {
+                "tick_result": tick_result,
+                "item": item,
+                "history": history,
+                "history_json": json.dumps(history),
+                "is_final": is_final,
+                "final": final,
+                "max_rounds": 5,
+                "next_item": next_item,
+                "next_item_json": json.dumps(next_item) if next_item else "null",
+                "new_achievements": new_achievements,
+            },
+        )
+    else:
+        return templates.TemplateResponse(
+            request,
+            "partials/englische_auktion_tick.html",
+            {
+                "item": item,
+                "item_json": json.dumps(item),
+                "history_json": history_json,
+                "tick_result": tick_result,
+                "max_rounds": 5,
+                "round_num": len(history) + 1,
+            },
+        )

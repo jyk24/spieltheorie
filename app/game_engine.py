@@ -1513,3 +1513,158 @@ def wc_final_result(history: list[dict]) -> dict:
         "overpaid": overpaid,
         "total_rounds": len(history),
     }
+
+
+# ---------------------------------------------------------------------------
+# Holländische Auktion (Dutch Auction – fallender Preis)
+# ---------------------------------------------------------------------------
+
+DA_N_BOTS = 2
+
+
+def da_generate_item(round_num: int) -> dict:
+    private_value = random.randint(40, 80)
+    start_price = private_value + random.randint(22, 38)
+    step = random.randint(4, 7)
+    bot_values = [random.randint(30, 80) for _ in range(DA_N_BOTS)]
+    return {
+        "round": round_num,
+        "private_value": private_value,
+        "start_price": start_price,
+        "current_price": start_price,
+        "step": step,
+        "bot_values": bot_values,
+        "ticks": 0,
+    }
+
+
+def da_tick(item: dict, action: str) -> dict:
+    current_price = item["current_price"]
+
+    if action == "kaufen":
+        profit = item["private_value"] - current_price
+        return {
+            "action": "player_buys",
+            "price": current_price,
+            "profit": profit,
+            "done": True,
+            "overpaid": profit < 0,
+        }
+
+    # Warten – Bots kaufen mit steigender Wahrscheinlichkeit wenn Preis <= ihr Wert
+    for i, bv in enumerate(item["bot_values"]):
+        if current_price <= bv and random.random() < 0.28:
+            return {
+                "action": "ai_buys",
+                "bot": i + 1,
+                "price": current_price,
+                "profit": 0,
+                "done": True,
+                "overpaid": False,
+            }
+
+    new_price = max(current_price - item["step"], 1)
+    item["current_price"] = new_price
+    item["ticks"] = item.get("ticks", 0) + 1
+
+    if new_price <= 1:
+        return {"action": "unsold", "price": new_price, "profit": 0, "done": True, "overpaid": False}
+
+    return {"action": "continues", "new_price": new_price, "profit": None, "done": False, "overpaid": False}
+
+
+def da_final_result(history: list[dict]) -> dict:
+    total_profit = sum(r["profit"] for r in history)
+    wins = sum(1 for r in history if r.get("action") == "player_buys")
+    overpaid = sum(1 for r in history if r.get("overpaid"))
+    result = "win" if total_profit > 0 else ("draw" if total_profit == 0 else "loss")
+    return {
+        "result": result,
+        "total_profit": total_profit,
+        "wins": wins,
+        "overpaid": overpaid,
+        "total_rounds": len(history),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Englische Auktion (English / Ascending Auction)
+# ---------------------------------------------------------------------------
+
+EA_N_BOTS = 3
+EA_STEP = 5
+
+
+def ea_generate_item(round_num: int) -> dict:
+    private_value = random.randint(40, 90)
+    start_price = random.randint(5, 15)
+    bot_values = sorted([random.randint(20, 95) for _ in range(EA_N_BOTS)])
+    return {
+        "round": round_num,
+        "private_value": private_value,
+        "start_price": start_price,
+        "current_price": start_price,
+        "bot_values": bot_values,
+        "active_bots": list(range(EA_N_BOTS)),
+        "step": EA_STEP,
+    }
+
+
+def ea_tick(item: dict, action: str) -> dict:
+    current_price = item["current_price"]
+
+    if action == "aussteigen":
+        remaining = item["active_bots"]
+        winner_val = max((item["bot_values"][i] for i in remaining), default=0)
+        return {
+            "action": "player_out",
+            "price": current_price,
+            "profit": 0,
+            "done": True,
+            "winner_value": winner_val,
+            "overpaid": False,
+        }
+
+    # Mitbieten → Preis steigt
+    new_price = current_price + item["step"]
+    item["current_price"] = new_price
+
+    dropped = [i for i in item["active_bots"] if item["bot_values"][i] < new_price]
+    for i in dropped:
+        item["active_bots"].remove(i)
+
+    if not item["active_bots"]:
+        profit = item["private_value"] - new_price
+        return {
+            "action": "player_wins",
+            "price": new_price,
+            "profit": profit,
+            "done": True,
+            "overpaid": profit < 0,
+            "dropped": len(dropped),
+            "n_active_bots": 0,
+        }
+
+    return {
+        "action": "continues",
+        "new_price": new_price,
+        "n_active_bots": len(item["active_bots"]),
+        "dropped": len(dropped),
+        "profit": None,
+        "done": False,
+        "overpaid": False,
+    }
+
+
+def ea_final_result(history: list[dict]) -> dict:
+    total_profit = sum(r["profit"] for r in history)
+    wins = sum(1 for r in history if r.get("action") == "player_wins")
+    overpaid = sum(1 for r in history if r.get("overpaid"))
+    result = "win" if total_profit > 0 else ("draw" if total_profit == 0 else "loss")
+    return {
+        "result": result,
+        "total_profit": total_profit,
+        "wins": wins,
+        "overpaid": overpaid,
+        "total_rounds": len(history),
+    }

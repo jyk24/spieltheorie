@@ -1,0 +1,60 @@
+<!-- Preis stieg, Bots evtl. ausgestiegen – Spiel läuft weiter -->
+<form id="game-form">
+    <input type="hidden" name="history_json" value="{{ history_json }}">
+    <input type="hidden" name="item_json" value="{{ item_json }}">
+
+    <div class="flex justify-between items-center mb-5">
+        <span class="text-sm text-slate-500">Auktion {{ round_num }} / {{ max_rounds }}</span>
+        <span class="text-sm text-slate-600">Profit bisher: <strong>0</strong></span>
+    </div>
+
+    {% if tick_result.dropped > 0 %}
+    <div class="bg-slate-100 rounded-lg px-3 py-2 text-xs text-slate-600 mb-4 text-center">
+        {{ tick_result.dropped }} KI-Bieter ist/sind ausgestiegen.
+    </div>
+    {% endif %}
+
+    <div class="text-center mb-6">
+        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4">
+            <p class="text-xs text-indigo-600 mb-1">Dein privater Wert:</p>
+            <p class="text-4xl font-bold text-indigo-800">{{ item.private_value }}</p>
+        </div>
+
+        <div class="bg-blue-50 border-2 border-blue-300 rounded-xl p-5 mb-2">
+            <p class="text-xs text-blue-600 mb-1">Aktueller Preis:</p>
+            <p class="text-5xl font-bold text-blue-700">{{ tick_result.new_price }}</p>
+            <p class="text-xs text-blue-500 mt-1">Steigt um {{ item.step }} pro Runde</p>
+        </div>
+        <div class="text-xs text-slate-500 mb-5">
+            👥 Noch aktiv: <strong>{{ tick_result.n_active_bots }} KI-Bieter</strong>
+            {% if tick_result.new_price > item.private_value %}
+            &nbsp;·&nbsp; <span class="text-red-500 font-semibold">⚠️ Preis über deinem Wert!</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+        <button type="button"
+                hx-post="/spiele/englische-auktion/tick"
+                hx-target="#spiel-area"
+                hx-swap="innerHTML"
+                hx-include="#game-form"
+                hx-vals='{"action": "mitbieten"}'
+                class="p-5 rounded-xl border-2 border-blue-300 bg-blue-50 hover:border-blue-500 hover:bg-blue-100 transition-all text-center">
+            <div class="text-3xl mb-1">🙋</div>
+            <div class="font-bold text-blue-800">Mitbieten</div>
+            <div class="text-xs text-blue-600 mt-1">Nächster Preis: {{ tick_result.new_price + item.step }}</div>
+        </button>
+        <button type="button"
+                hx-post="/spiele/englische-auktion/tick"
+                hx-target="#spiel-area"
+                hx-swap="innerHTML"
+                hx-include="#game-form"
+                hx-vals='{"action": "aussteigen"}'
+                class="p-5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 hover:bg-slate-100 transition-all text-center">
+            <div class="text-3xl mb-1">🚪</div>
+            <div class="font-bold text-slate-700">Aussteigen</div>
+            <div class="text-xs text-slate-500 mt-1">Kein Profit, kein Verlust</div>
+        </button>
+    </div>
+</form>

@@ -1,0 +1,87 @@
+<!-- Ergebnis dieser Auktionsrunde -->
+<div class="mb-5 rounded-xl p-4 text-sm
+    {% if tick_result.action == 'player_wins' and not tick_result.overpaid %}bg-emerald-50 border-2 border-emerald-400
+    {% elif tick_result.overpaid %}bg-amber-50 border-2 border-amber-400
+    {% elif tick_result.action == 'player_out' %}bg-slate-50 border-2 border-slate-300
+    {% else %}bg-slate-50 border-2 border-slate-200{% endif %}">
+
+    {% if tick_result.action == "player_wins" and not tick_result.overpaid %}
+    <p class="font-bold text-emerald-800 mb-1">✅ Gewonnen! Profit: +{{ tick_result.profit }}</p>
+    <p class="text-emerald-700 text-xs">Alle anderen Bieter haben aufgegeben. Gezahlt: {{ tick_result.price }}, Wert: {{ item.private_value }}.</p>
+    {% elif tick_result.overpaid %}
+    <p class="font-bold text-amber-800 mb-1">⚠️ Gewonnen – aber zu teuer! Verlust: {{ tick_result.profit }}</p>
+    <p class="text-amber-700 text-xs">Du hast {{ tick_result.price }} bezahlt, obwohl dein Wert nur {{ item.private_value }} ist. Rationaler wäre Aussteigen gewesen.</p>
+    {% else %}
+    <p class="font-bold text-slate-700 mb-1">Du bist ausgestiegen. Kein Gewinn, kein Verlust.</p>
+    <p class="text-slate-600 text-xs">Preis bei Ausstieg: {{ tick_result.price }}. Dein Wert war {{ item.private_value }}.</p>
+    {% endif %}
+</div>
+
+{% if not is_final %}
+<form id="game-form">
+    <input type="hidden" name="history_json" value="{{ history_json }}">
+    <input type="hidden" name="item_json" value="{{ next_item_json }}">
+
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-center">
+        <p class="text-xs text-indigo-600 mb-1">Nächste Auktion – dein privater Wert:</p>
+        <p class="text-4xl font-bold text-indigo-800">{{ next_item.private_value }}</p>
+    </div>
+    <div class="bg-blue-50 border-2 border-blue-300 rounded-xl p-5 mb-4 text-center">
+        <p class="text-xs text-blue-600 mb-1">Startpreis:</p>
+        <p class="text-5xl font-bold text-blue-700">{{ next_item.current_price }}</p>
+        <p class="text-xs text-blue-500 mt-1">Steigt um {{ next_item.step }} · {{ next_item.active_bots | length }} KI-Bieter</p>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+        <button type="button"
+                hx-post="/spiele/englische-auktion/tick"
+                hx-target="#spiel-area"
+                hx-swap="innerHTML"
+                hx-include="#game-form"
+                hx-vals='{"action": "mitbieten"}'
+                class="p-5 rounded-xl border-2 border-blue-300 bg-blue-50 hover:border-blue-500 transition-all text-center">
+            <div class="text-3xl mb-1">🙋</div>
+            <div class="font-bold text-blue-800">Mitbieten</div>
+        </button>
+        <button type="button"
+                hx-post="/spiele/englische-auktion/tick"
+                hx-target="#spiel-area"
+                hx-swap="innerHTML"
+                hx-include="#game-form"
+                hx-vals='{"action": "aussteigen"}'
+                class="p-5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 transition-all text-center">
+            <div class="text-3xl mb-1">🚪</div>
+            <div class="font-bold text-slate-700">Aussteigen</div>
+        </button>
+    </div>
+</form>
+
+{% else %}
+<div class="mb-5 p-4 rounded-xl
+    {{ 'bg-emerald-50 border-2 border-emerald-400' if final.result == 'win' else ('bg-red-50 border-2 border-red-400' if final.result == 'loss' else 'bg-slate-50 border-2 border-slate-300') }}">
+    {% if final.result == "win" %}
+    <h3 class="text-xl font-bold text-emerald-800 mb-1">Gewinnbringend! Profit: +{{ final.total_profit }} 🎉</h3>
+    <p class="text-sm text-emerald-700">{{ final.wins }} von {{ max_rounds }} Auktionen gewonnen.</p>
+    {% elif final.result == "loss" %}
+    <h3 class="text-xl font-bold text-red-800 mb-1">Verlust: {{ final.total_profit }}</h3>
+    <p class="text-sm text-red-700">{{ final.overpaid }}× über dem eigenen Wert geboten – der Wettbewerb hat dich mitgerissen.</p>
+    {% else %}
+    <h3 class="text-xl font-bold text-slate-700 mb-1">Ausgeglichen: {{ final.total_profit }}</h3>
+    {% endif %}
+</div>
+
+<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-5 text-sm text-indigo-900">
+    <p class="font-semibold mb-2">Die dominante Strategie der Englischen Auktion:</p>
+    <p class="text-indigo-700">Bleib so lange, bis der Preis deinen privaten Wert erreicht – dann steig aus. Das ist eine <strong>dominante Strategie</strong>: Sie ist unabhängig vom Verhalten der anderen immer optimal. Wer früher aussteigt, verpasst mögliche Gewinne; wer länger bleibt, zahlt zu viel.</p>
+</div>
+
+{% for ach in new_achievements %}
+<div class="bg-amber-50 border border-amber-300 rounded-xl p-3 mb-2 text-sm text-amber-800 font-semibold">🏅 {{ ach }}</div>
+{% endfor %}
+
+<div class="flex gap-3">
+    <a href="/spiele/englische-auktion" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal</a>
+    <a href="/spiele" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">Alle Spiele</a>
+    <a href="/lektionen/auktionstheorie" class="border border-indigo-200 text-indigo-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50">📖 Auktionstheorie</a>
+</div>
+{% endif %}
