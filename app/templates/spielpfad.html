@@ -13,18 +13,21 @@
     {% set ns_pc = namespace(count=0) %}
     {% for v in played.values() %}{% if v > 0 %}{% set ns_pc.count = ns_pc.count + 1 %}{% endif %}{% endfor %}
     {% set played_count = ns_pc.count %}
+    {% set ns_total = namespace(count=0) %}
+    {% for level in lernpfad %}{% set ns_total.count = ns_total.count + (level.games | length) %}{% endfor %}
+    {% set total_games = ns_total.count %}
     <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-4 mb-8 flex items-center gap-4">
         <div class="flex-1">
             <div class="flex justify-between text-xs text-slate-500 mb-1">
                 <span>Gesamt-Fortschritt</span>
-                <span>{{ played_count }} / 15 Spiele gespielt</span>
+                <span>{{ played_count }} / {{ total_games }} Spiele gespielt</span>
             </div>
             <div class="bg-slate-100 rounded-full h-3 overflow-hidden">
                 <div class="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all"
-                     style="width: {{ (played_count / 15 * 100) | round }}%"></div>
+                     style="width: {{ (played_count / total_games * 100) | round }}%"></div>
             </div>
         </div>
-        <div class="text-2xl font-black text-indigo-700">{{ (played_count / 15 * 100) | round | int }}%</div>
+        <div class="text-2xl font-black text-indigo-700">{{ (played_count / total_games * 100) | round | int }}%</div>
     </div>
 
     <!-- Lernpfad Levels -->
@@ -37,6 +40,7 @@
         "amber":   {"bg": "bg-amber-500",   "light": "bg-amber-50",   "border": "border-amber-200",   "text": "text-amber-700",   "badge": "bg-amber-100 text-amber-800",  "ring": "ring-amber-400"},
         "orange":  {"bg": "bg-orange-500",  "light": "bg-orange-50",  "border": "border-orange-200",  "text": "text-orange-700",  "badge": "bg-orange-100 text-orange-800","ring": "ring-orange-400"},
         "violet":  {"bg": "bg-violet-500",  "light": "bg-violet-50",  "border": "border-violet-200",  "text": "text-violet-700",  "badge": "bg-violet-100 text-violet-800","ring": "ring-violet-400"},
+        "rose":    {"bg": "bg-rose-500",    "light": "bg-rose-50",    "border": "border-rose-200",    "text": "text-rose-700",    "badge": "bg-rose-100 text-rose-800",    "ring": "ring-rose-400"},
     } %}
     {% set c = color_map[level.color] %}
 
