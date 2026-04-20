@@ -81,24 +81,32 @@
                 </div>
             </div>
 
-            <form hx-post="/spiele/centipede/zug"
-                  hx-target="#result-area"
-                  hx-swap="innerHTML"
-                  id="move-form"
-                  class="grid grid-cols-2 gap-4">
+            <form id="move-form">
                 <input type="hidden" name="strategy" id="strategy-hidden">
                 <input type="hidden" name="events_json" id="events-hidden" value="[]">
                 <input type="hidden" name="node_idx" id="node-idx-hidden" value="0">
-                <button type="submit" name="action" value="take"
+                <div class="grid grid-cols-2 gap-4">
+                <button type="button"
+                        hx-post="/spiele/centipede/zug"
+                        hx-target="#result-area"
+                        hx-swap="innerHTML"
+                        hx-include="#move-form"
+                        hx-vals='{"action": "take"}'
                         class="bg-indigo-500 hover:bg-indigo-600 text-white py-6 rounded-xl font-bold text-lg transition-colors">
                     💰 Nehmen
                     <div class="text-xs font-normal mt-1 opacity-80">Spiel endet sofort</div>
                 </button>
-                <button type="submit" name="action" value="pass"
+                <button type="button"
+                        hx-post="/spiele/centipede/zug"
+                        hx-target="#result-area"
+                        hx-swap="innerHTML"
+                        hx-include="#move-form"
+                        hx-vals='{"action": "pass"}'
                         class="bg-emerald-500 hover:bg-emerald-600 text-white py-6 rounded-xl font-bold text-lg transition-colors">
                     ➡️ Weitergeben
                     <div class="text-xs font-normal mt-1 opacity-80">Topf wächst – KI entscheidet</div>
                 </button>
+                </div>
             </form>
         </div>
 

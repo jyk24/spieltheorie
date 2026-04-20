@@ -68,26 +68,33 @@
 
             <div class="text-center text-slate-500 text-sm mb-5 italic">Wohin gehst du?</div>
 
-            <form hx-post="/spiele/koordination/zug"
-                  hx-target="#result-area"
-                  hx-swap="innerHTML"
-                  id="move-form"
-                  class="grid grid-cols-2 gap-4">
+            <form id="move-form">
                 <input type="hidden" name="strategy" id="strategy-hidden">
                 <input type="hidden" name="history_json" id="history-hidden" value="[]">
-
-                <button type="submit" name="move" value="A"
+                <div class="grid grid-cols-2 gap-4">
+                <button type="button"
+                        hx-post="/spiele/koordination/zug"
+                        hx-target="#result-area"
+                        hx-swap="innerHTML"
+                        hx-include="#move-form"
+                        hx-vals='{"move": "A"}'
                         class="bg-violet-50 hover:bg-violet-100 border-2 border-violet-200 hover:border-violet-400 text-violet-700 py-8 rounded-xl font-bold text-lg transition-all">
                     🎵 Konzert
                     <div class="text-xs font-normal mt-1 opacity-70">Deine Präferenz</div>
                     <div class="text-xs font-normal opacity-60">3 Pkt. wenn koordiniert</div>
                 </button>
-                <button type="submit" name="move" value="B"
+                <button type="button"
+                        hx-post="/spiele/koordination/zug"
+                        hx-target="#result-area"
+                        hx-swap="innerHTML"
+                        hx-include="#move-form"
+                        hx-vals='{"move": "B"}'
                         class="bg-orange-50 hover:bg-orange-100 border-2 border-orange-200 hover:border-orange-400 text-orange-700 py-8 rounded-xl font-bold text-lg transition-all">
                     ⚽ Sport
                     <div class="text-xs font-normal mt-1 opacity-70">KI-Präferenz</div>
                     <div class="text-xs font-normal opacity-60">2 Pkt. wenn koordiniert</div>
                 </button>
+                </div>
             </form>
         </div>
 

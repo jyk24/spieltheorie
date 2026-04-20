@@ -48,12 +48,14 @@
             Sollte die Stadt die Straße bauen?
         </p>
 
-        <form hx-post="/raetsel/braess/result"
-              hx-target="#spiel-area"
-              hx-swap="innerHTML"
-              class="space-y-4">
+        <form id="braess-form" class="space-y-4">
 
-            <button type="submit" name="choice" value="yes_new_road"
+            <button type="button"
+                    hx-post="/raetsel/braess/result"
+                    hx-target="#spiel-area"
+                    hx-swap="innerHTML"
+                    hx-include="#braess-form"
+                    hx-vals='{"choice": "yes_new_road"}'
                     class="w-full text-left p-5 rounded-xl border-2 border-emerald-200 bg-emerald-50 hover:border-emerald-400 hover:bg-emerald-100 transition-all">
                 <div class="flex items-start gap-4">
                     <span class="text-3xl">🏗️</span>
@@ -64,7 +66,12 @@
                 </div>
             </button>
 
-            <button type="submit" name="choice" value="no_new_road"
+            <button type="button"
+                    hx-post="/raetsel/braess/result"
+                    hx-target="#spiel-area"
+                    hx-swap="innerHTML"
+                    hx-include="#braess-form"
+                    hx-vals='{"choice": "no_new_road"}'
                     class="w-full text-left p-5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 hover:bg-slate-100 transition-all">
                 <div class="flex items-start gap-4">
                     <span class="text-3xl">🚫</span>

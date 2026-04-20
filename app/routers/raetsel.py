@@ -217,6 +217,15 @@ RAETSEL_META = [
         "schwierigkeit": "Einsteiger",
         "dauer": "4 min",
     },
+    {
+        "id": "ellsberg",
+        "name": "Ellsberg-Paradoxon",
+        "icon": "🪬",
+        "beschreibung": "Eine Urne, 90 Kugeln – 30 rot, 60 schwarz oder gelb (Verhältnis unbekannt). Zwei Wetten. Deine Wahl widerspricht der Erwartungsnutzentheorie – und zeigt, dass Ambiguität anders wirkt als Risiko.",
+        "typ": "Entscheidungsparadox",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+    },
 ]
 
 
@@ -1682,5 +1691,47 @@ def anker_experiment_naechste(
             "frage_num": next_idx + 1,
             "total": len(ANKER_FRAGEN),
             "answers_json": json.dumps(answers, ensure_ascii=False),
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Ellsberg-Paradoxon
+# ---------------------------------------------------------------------------
+
+@router.get("/ellsberg", response_class=HTMLResponse)
+def ellsberg_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/ellsberg.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/ellsberg/phase2", response_class=HTMLResponse)
+def ellsberg_phase2(request: Request, choice1: str = Form(...)):
+    return templates.TemplateResponse(
+        request, "partials/ellsberg_phase2.html", {"choice1": choice1}
+    )
+
+
+@router.post("/ellsberg/result", response_class=HTMLResponse)
+def ellsberg_result(
+    request: Request,
+    choice1: str = Form(...),
+    choice2: str = Form(...),
+):
+    # A+D und B+C verletzen die Erwartungsnutzentheorie (Ambiguitätsaversion)
+    # A+C oder B+D sind konsistent mit EU
+    inconsistent = (choice1 == "A" and choice2 == "D") or (choice1 == "B" and choice2 == "C")
+    choice1_label = "A (Rote Kugel – 1/3 bekannt)" if choice1 == "A" else "B (Schwarze Kugel – Wahrscheinlichkeit unbekannt)"
+    choice2_label = "D (Schwarz oder Gelb – 2/3 bekannt)" if choice2 == "D" else "C (Rot oder Gelb – Wahrscheinlichkeit unbekannt)"
+    return templates.TemplateResponse(
+        request,
+        "partials/ellsberg_result.html",
+        {
+            "choice1": choice1,
+            "choice2": choice2,
+            "choice1_label": choice1_label,
+            "choice2_label": choice2_label,
+            "inconsistent": inconsistent,
         },
     )

@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}Cournot-Duopol – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🏭 Cournot-Duopol</h1>
+        <p class="text-slate-500 mt-1">6 Runden – Wähle deine Produktionsmenge. Mehr produzieren drückt den Preis.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="italic text-slate-500 mb-3">"Du und die KI sind die einzigen Anbieter auf dem Markt. Jeder wählt gleichzeitig, wie viel er produziert – ohne den anderen zu kennen."</p>
+        <div class="space-y-2 text-xs">
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 font-bold mt-0.5">→</span>
+                <span><strong>Marktpreis:</strong> P = 100 − (deine Menge + KI-Menge). Je mehr beide produzieren, desto niedriger der Preis.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 font-bold mt-0.5">→</span>
+                <span><strong>Dein Gewinn:</strong> (Preis − 10) × deine Menge. Die Grenzkosten betragen 10 €/Einheit.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-amber-500 font-bold mt-0.5">→</span>
+                <span><strong>Nash-Gleichgewicht:</strong> Beide produzieren 30 → Preis = 40 → Gewinn = 900 je Runde. Aber gemeinsam weniger zu produzieren wäre noch besser...</span>
+            </div>
+        </div>
+        <div class="mt-3 grid grid-cols-3 gap-2 text-xs">
+            <div class="bg-white rounded-lg p-2 border border-slate-200 text-center">
+                <div class="font-bold text-slate-700">Nash-GGW</div>
+                <div class="text-slate-500">q=30, P=40</div>
+                <div class="text-indigo-600 font-semibold">Gewinn: 900</div>
+            </div>
+            <div class="bg-white rounded-lg p-2 border border-emerald-200 text-center">
+                <div class="font-bold text-emerald-700">Kollusion</div>
+                <div class="text-slate-500">q=22, P=56</div>
+                <div class="text-emerald-600 font-semibold">Gewinn: ~1012</div>
+            </div>
+            <div class="bg-white rounded-lg p-2 border border-red-200 text-center">
+                <div class="font-bold text-red-700">Krieg</div>
+                <div class="text-slate-500">q=50, P=0-10</div>
+                <div class="text-red-600 font-semibold">Gewinn: 0–gering</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mystery-Start -->
+    <div id="start-form" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+        <input type="hidden" id="strategy-preset" value="{{ hidden_strategy }}">
+
+        <div class="flex items-start gap-4 mb-5">
+            <div class="text-5xl">🤖</div>
+            <div>
+                <h2 class="font-bold text-slate-800 text-lg">Unbekannte Konkurrenz</h2>
+                <p class="text-slate-500 text-sm mt-1">Produziert die KI wettbewerblich (Nash), aggressiv (Überproduktion) oder kooperativ (niedrige Menge)? Beobachte ihr Verhalten – und reagiere klug.</p>
+                <p class="text-slate-400 text-xs mt-2">Die Strategie wird nach Spielende aufgedeckt.</p>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 rounded-lg p-3 text-xs text-slate-500 mb-5 flex gap-4 flex-wrap">
+            <span>🏭 6 Runden Mengenentscheidung</span>
+            <span>📊 Marktpreis = 100 − Gesamtmenge</span>
+            <span>🧠 Erkenne die KI-Strategie</span>
+        </div>
+
+        <button type="button" onclick="startGame()"
+                class="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+            Markt betreten
+        </button>
+    </div>
+
+    <!-- Spielfeld -->
+    <div id="play-area" class="hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+            <div class="flex justify-between items-center mb-5">
+                <div>
+                    <span class="text-sm text-slate-500">Runde</span>
+                    <span id="round-display" class="text-xl font-bold text-indigo-600 ml-1">1</span>
+                    <span class="text-sm text-slate-500"> / {{ max_rounds }}</span>
+                </div>
+                <div class="flex gap-6 text-sm">
+                    <div class="text-center">
+                        <div class="text-xs text-slate-400">Dein Gewinn</div>
+                        <div id="player-total" class="text-lg font-bold text-emerald-600">0</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs text-slate-400">KI-Gewinn</div>
+                        <div id="ai-total" class="text-lg font-bold text-slate-500">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slider -->
+            <div class="mb-5">
+                <label class="block text-sm font-medium text-slate-700 mb-3">
+                    Wie viele Einheiten produzierst du?
+                </label>
+                <div class="flex items-center gap-4">
+                    <span class="text-xs text-slate-400 w-4">0</span>
+                    <input type="range" id="quantity-slider" min="0" max="70" value="30"
+                           oninput="updateQuantityHint(this.value)"
+                           class="flex-1 accent-indigo-600">
+                    <span class="text-xs text-slate-400 w-6">70</span>
+                </div>
+                <div class="mt-3 text-center">
+                    <span class="text-3xl font-black text-indigo-700" id="qty-display">30</span>
+                    <span class="text-slate-500 ml-1">Einheiten</span>
+                </div>
+                <div id="qty-hint" class="mt-2 text-xs text-center text-slate-500">
+                    → Nash-Gleichgewicht (bei KI=30): Preis ≈ 40, dein Gewinn ≈ 900
+                </div>
+            </div>
+
+            <form id="move-form">
+                <input type="hidden" name="strategy" id="strategy-hidden">
+                <input type="hidden" name="history_json" id="history-hidden" value="[]">
+                <input type="hidden" name="player_q" id="qty-hidden" value="30">
+                <button type="button"
+                        onclick="submitMove()"
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold text-lg transition-colors">
+                    Entscheidung festlegen
+                </button>
+            </form>
+        </div>
+
+        <div id="result-area"></div>
+    </div>
+</div>
+
+<script>
+function startGame() {
+    document.getElementById('strategy-hidden').value = document.getElementById('strategy-preset').value;
+    document.getElementById('start-form').classList.add('hidden');
+    document.getElementById('play-area').classList.remove('hidden');
+}
+
+function updateQuantityHint(val) {
+    const q = parseInt(val);
+    document.getElementById('qty-display').textContent = q;
+    document.getElementById('qty-hidden').value = q;
+    // Estimate with KI at Nash (30) as baseline
+    const estP = Math.max(0, 100 - q - 30);
+    const estProfit = Math.max(0, estP - 10) * q;
+    const hint = document.getElementById('qty-hint');
+    if (q < 22) {
+        hint.textContent = `→ Sehr wenig – wenn die KI ähnlich denkt: Preis ≈ ${Math.max(0,100-q-22)}, geschätzter Gewinn ~${Math.max(0,Math.max(0,100-q-22)-10)*q}`;
+    } else if (q <= 25) {
+        hint.textContent = `→ Kollusions-Bereich: Bei KI=22 → Preis ≈ ${Math.max(0,100-q-22)}, Gewinn ~${Math.max(0,Math.max(0,100-q-22)-10)*q}`;
+    } else if (q <= 35) {
+        hint.textContent = `→ Nash-Bereich: Bei KI=30 → Preis ≈ ${estP}, Gewinn ~${estProfit}`;
+    } else if (q <= 50) {
+        hint.textContent = `→ Aggressiv: Bei KI=30 → Preis ≈ ${estP}, Gewinn ~${estProfit} (Preis sinkt stark)`;
+    } else {
+        hint.textContent = `→ Sehr aggressiv: Bei KI=30 → Preis ≈ ${estP}, Gewinn ~${estProfit}`;
+    }
+}
+
+function submitMove() {
+    const form = document.getElementById('move-form');
+    htmx.ajax('POST', '/spiele/cournot/zug', {
+        source: form,
+        target: '#result-area',
+        swap: 'innerHTML'
+    });
+}
+
+document.body.addEventListener('htmx:afterSwap', function() {
+    const hEl = document.getElementById('history-data');
+    const rEl = document.getElementById('round-data');
+    const ptEl = document.getElementById('player-total-data');
+    const atEl = document.getElementById('ai-total-data');
+
+    if (hEl) document.getElementById('history-hidden').value = hEl.dataset.value;
+    if (rEl) document.getElementById('round-display').textContent = rEl.dataset.value;
+    if (ptEl) document.getElementById('player-total').textContent = ptEl.dataset.value;
+    if (atEl) document.getElementById('ai-total').textContent = atEl.dataset.value;
+
+    // Reset slider to Nash default for next round
+    const slider = document.getElementById('quantity-slider');
+    if (slider) { slider.value = 30; updateQuantityHint(30); }
+});
+</script>
+
+{% endblock %}

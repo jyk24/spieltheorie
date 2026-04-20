@@ -101,18 +101,25 @@
                     <div id="ai-offer-display" class="text-4xl font-bold text-indigo-600 mb-1">–</div>
                     <div class="text-xs text-slate-500">von 100 Punkten</div>
                 </div>
-                <form hx-post="/spiele/ultimatum/zug"
-                      hx-target="#result-area"
-                      hx-swap="innerHTML"
-                      class="flex gap-3">
+                <form id="responder-form-inputs" class="flex gap-3">
                     <input type="hidden" name="strategy" id="strategy-hidden-r">
                     <input type="hidden" name="history_json" id="history-hidden-r" value="[]">
                     <input type="hidden" name="ai_offer_amount" id="ai-offer-hidden">
-                    <button type="submit" name="player_response" value="accept"
+                    <button type="button"
+                            hx-post="/spiele/ultimatum/zug"
+                            hx-target="#result-area"
+                            hx-swap="innerHTML"
+                            hx-include="#responder-form-inputs"
+                            hx-vals='{"player_response": "accept"}'
                             class="flex-1 bg-emerald-500 text-white py-3 rounded-xl font-bold hover:bg-emerald-600">
                         ✓ Akzeptieren
                     </button>
-                    <button type="submit" name="player_response" value="reject"
+                    <button type="button"
+                            hx-post="/spiele/ultimatum/zug"
+                            hx-target="#result-area"
+                            hx-swap="innerHTML"
+                            hx-include="#responder-form-inputs"
+                            hx-vals='{"player_response": "reject"}'
                             class="flex-1 bg-red-500 text-white py-3 rounded-xl font-bold hover:bg-red-600">
                         ✗ Ablehnen
                     </button>

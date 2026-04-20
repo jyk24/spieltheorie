@@ -83,13 +83,15 @@
         <p class="font-semibold text-slate-800 mb-1">Deine Strategie:</p>
         <p class="text-sm text-slate-500 mb-5">Wähle, bevor du das Ergebnis siehst. Denke daran: Du hast das Monopol.</p>
 
-        <form hx-post="/raetsel/zerrissene-karte/result"
-              hx-target="#karte-area"
-              hx-swap="innerHTML"
-              class="space-y-3">
+        <form id="karte-form" class="space-y-3">
 
             {% for sid, s in strategies %}
-            <button type="submit" name="strategy" value="{{ sid }}"
+            <button type="button"
+                    hx-post="/raetsel/zerrissene-karte/result"
+                    hx-target="#karte-area"
+                    hx-swap="innerHTML"
+                    hx-include="#karte-form"
+                    hx-vals='{"strategy": "{{ sid }}"}'
                     class="w-full text-left p-4 rounded-xl border-2 transition-all
                         {% if s.color == 'slate' %}border-slate-200 bg-slate-50 hover:border-slate-400 hover:bg-slate-100
                         {% elif s.color == 'indigo' %}border-indigo-200 bg-indigo-50 hover:border-indigo-400 hover:bg-indigo-100

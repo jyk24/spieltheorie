@@ -78,23 +78,31 @@
                 Ihr fahrt aufeinander zu. Was tust du?
             </div>
 
-            <form hx-post="/spiele/chicken/zug"
-                  hx-target="#result-area"
-                  hx-swap="innerHTML"
-                  id="move-form"
-                  class="flex gap-4">
+            <form id="move-form">
                 <input type="hidden" name="strategy" id="strategy-hidden">
                 <input type="hidden" name="history_json" id="history-hidden" value="[]">
-                <button type="submit" name="move" value="H"
+                <div class="flex gap-4">
+                <button type="button"
+                        hx-post="/spiele/chicken/zug"
+                        hx-target="#result-area"
+                        hx-swap="innerHTML"
+                        hx-include="#move-form"
+                        hx-vals='{"move": "H"}'
                         class="flex-1 bg-red-500 hover:bg-red-600 text-white py-5 rounded-xl font-bold text-lg transition-colors">
                     🚗 Halten
                     <div class="text-xs font-normal mt-1 opacity-80">Nicht nachgeben</div>
                 </button>
-                <button type="submit" name="move" value="S"
+                <button type="button"
+                        hx-post="/spiele/chicken/zug"
+                        hx-target="#result-area"
+                        hx-swap="innerHTML"
+                        hx-include="#move-form"
+                        hx-vals='{"move": "S"}'
                         class="flex-1 bg-slate-500 hover:bg-slate-600 text-white py-5 rounded-xl font-bold text-lg transition-colors">
                     🔀 Ausweichen
                     <div class="text-xs font-normal mt-1 opacity-80">Konflikt vermeiden</div>
                 </button>
+                </div>
             </form>
         </div>
 

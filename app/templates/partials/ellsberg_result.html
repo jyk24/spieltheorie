@@ -1,0 +1,76 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    {% if inconsistent %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-lg font-bold text-amber-800 mb-1">🎯 Willkommen im Paradoxon!</h3>
+        <p class="text-sm text-amber-700">
+            Du hast wie die <strong>Mehrheit aller Menschen</strong> entschieden –
+            und genau diese Kombination verletzt die Erwartungsnutzentheorie.
+        </p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-slate-50 border-2 border-slate-300">
+        <h3 class="text-lg font-bold text-slate-800 mb-1">📐 Konsistente Wahl</h3>
+        <p class="text-sm text-slate-600">
+            Deine Wahl ist <strong>konsistent</strong> mit der Erwartungsnutzentheorie –
+            du bist in der Minderheit! Trotzdem wirst du verstehen, warum fast alle anders entscheiden.
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Deine Wahl -->
+    <div class="grid grid-cols-2 gap-3 mb-5">
+        <div class="bg-slate-50 rounded-xl p-3 text-center border border-slate-200">
+            <div class="text-xs text-slate-500 mb-1">Problem 1</div>
+            <div class="text-2xl font-black text-indigo-700">{{ choice1 }}</div>
+            <div class="text-xs text-slate-500 mt-1">{{ choice1_label }}</div>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-3 text-center border border-slate-200">
+            <div class="text-xs text-slate-500 mb-1">Problem 2</div>
+            <div class="text-2xl font-black text-indigo-700">{{ choice2 }}</div>
+            <div class="text-xs text-slate-500 mt-1">{{ choice2_label }}</div>
+        </div>
+    </div>
+
+    <!-- Auflösung -->
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+        <p class="font-semibold mb-2">Warum ist A+D widersprüchlich?</p>
+        <div class="space-y-2 text-xs">
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 font-bold mt-0.5">→</span>
+                <span>Wenn du A bevorzugst (Rot &gt; Schwarz), dann glaubst du implizit: P(rot) &gt; P(schwarz).</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 font-bold mt-0.5">→</span>
+                <span>Wenn du D bevorzugst (Schwarz+Gelb &gt; Rot+Gelb), dann gilt: P(schwarz)+P(gelb) &gt; P(rot)+P(gelb).</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-red-500 font-bold mt-0.5">✗</span>
+                <span>Das bedeutet: P(schwarz) &gt; P(rot) – der direkte Widerspruch zur ersten Wahl!</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-4 text-sm text-violet-800">
+        <p class="font-semibold mb-2">Der echte Grund: Ambiguitätsaversion (Ellsberg 1961)</p>
+        <p class="mb-2">Menschen behandeln <strong>Risiko</strong> (bekannte Wahrscheinlichkeit) und
+        <strong>Ambiguität</strong> (unbekannte Wahrscheinlichkeit) grundlegend verschieden –
+        auch wenn die Erwartungsnutzentheorie keinen Unterschied machen würde.</p>
+        <p class="text-xs text-violet-600">In Problem 1: Rot hat eine <em>bekannte</em> 1/3-Chance → bevorzugt.<br>
+        In Problem 2: Schwarz+Gelb hat eine <em>bekannte</em> 2/3-Chance → bevorzugt.<br>
+        Die unbekannte Komponente wird in beiden Fällen <em>gemieden</em>.</p>
+    </div>
+
+    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-4 text-sm text-emerald-800">
+        <p class="font-semibold mb-2">Verhandlungsrelevanz:</p>
+        <p>Ambiguitätsaversion erklärt, warum Entscheider oft zu <strong>bekannten Optionen</strong> greifen –
+        auch wenn eine weniger bekannte Alternative rational besser wäre. In Verhandlungen:
+        Ein Angebot mit klaren Wahrscheinlichkeiten (&bdquo;80% Chance auf X&ldquo;) wird oft bevorzugt
+        gegenüber einem mit unsicherem Ausgang – selbst wenn der Erwartungswert identisch ist.</p>
+    </div>
+
+    <div class="text-xs text-slate-400 border-t border-slate-100 pt-3">
+        Quelle: Daniel Ellsberg (1961), „Risk, Ambiguity, and the Savage Axioms", Quarterly Journal of Economics.
+        Ellsberg war auch bekannt für die Veröffentlichung der Pentagon Papers (1971).
+    </div>
+</div>

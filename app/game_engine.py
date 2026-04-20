@@ -1668,3 +1668,66 @@ def ea_final_result(history: list[dict]) -> dict:
         "overpaid": overpaid,
         "total_rounds": len(history),
     }
+
+
+# ---------------------------------------------------------------------------
+# Cournot-Duopol
+# ---------------------------------------------------------------------------
+# Markt: P = max(0, 100 - Q),  Q = q_spieler + q_ki,  Grenzkosten c = 10
+# Nash-Gleichgewicht: q* = 30 je Firma, P = 40, Gewinn = 900 je Firma
+# Kollusions-Optimum: je 22–23 Einheiten, P ≈ 55, Gewinn ≈ 1035 je Firma
+
+def cournot_ai_move(strategy: str, history: list[dict]) -> int:
+    """KI wählt Produktionsmenge."""
+    if strategy == "nash":
+        return 30
+    elif strategy == "aggressive":
+        return random.randint(40, 50)
+    elif strategy == "colluding":
+        return 22
+    elif strategy == "tit_for_tat":
+        if not history:
+            return 30
+        return history[-1]["player_q"]
+    return 30
+
+
+def cournot_play_round(player_q: int, strategy: str, history: list[dict], round_num: int) -> dict:
+    """Spielt eine Runde Cournot-Duopol und gibt Ergebnis zurück."""
+    ai_q = cournot_ai_move(strategy, history)
+    Q = player_q + ai_q
+    P = max(0, 100 - Q)
+    c = 10
+    player_profit = max(0, P - c) * player_q
+    ai_profit = max(0, P - c) * ai_q
+    return {
+        "round": round_num + 1,
+        "player_q": player_q,
+        "ai_q": ai_q,
+        "Q": Q,
+        "P": P,
+        "player_profit": player_profit,
+        "ai_profit": ai_profit,
+    }
+
+
+def cournot_final_result(history: list[dict]) -> dict:
+    total_player = sum(r["player_profit"] for r in history)
+    total_ai = sum(r["ai_profit"] for r in history)
+    n = len(history)
+    nash_total = 900 * n
+    avg_player_q = round(sum(r["player_q"] for r in history) / n)
+    avg_ai_q = round(sum(r["ai_q"] for r in history) / n)
+    avg_P = round(sum(r["P"] for r in history) / n, 1)
+    efficiency = round(total_player / nash_total * 100) if nash_total > 0 else 0
+    result = "win" if efficiency >= 110 else ("draw" if efficiency >= 80 else "loss")
+    return {
+        "result": result,
+        "total_player": total_player,
+        "total_ai": total_ai,
+        "avg_player_q": avg_player_q,
+        "avg_ai_q": avg_ai_q,
+        "avg_P": avg_P,
+        "efficiency": efficiency,
+        "nash_total": nash_total,
+    }

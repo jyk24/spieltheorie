@@ -40,12 +40,14 @@
             Nur die Gesamtstatistik liegt vor. Welche empfiehlst du?
         </p>
 
-        <form hx-post="/raetsel/simpson/result"
-              hx-target="#spiel-area"
-              hx-swap="innerHTML"
-              class="grid grid-cols-2 gap-4">
+        <form id="simpson-form" class="grid grid-cols-2 gap-4">
 
-            <button type="submit" name="choice" value="A"
+            <button type="button"
+                    hx-post="/raetsel/simpson/result"
+                    hx-target="#spiel-area"
+                    hx-swap="innerHTML"
+                    hx-include="#simpson-form"
+                    hx-vals='{"choice": "A"}'
                     class="p-5 rounded-xl border-2 border-blue-200 bg-blue-50 hover:border-blue-400 hover:bg-blue-100 transition-all">
                 <div class="text-3xl mb-2">💊</div>
                 <div class="font-bold text-blue-800 text-lg">Behandlung A</div>
@@ -53,7 +55,12 @@
                 <div class="text-xs text-blue-500 mt-1">(gesamte Studie)</div>
             </button>
 
-            <button type="submit" name="choice" value="B"
+            <button type="button"
+                    hx-post="/raetsel/simpson/result"
+                    hx-target="#spiel-area"
+                    hx-swap="innerHTML"
+                    hx-include="#simpson-form"
+                    hx-vals='{"choice": "B"}'
                     class="p-5 rounded-xl border-2 border-emerald-200 bg-emerald-50 hover:border-emerald-400 hover:bg-emerald-100 transition-all">
                 <div class="text-3xl mb-2">💊</div>
                 <div class="font-bold text-emerald-800 text-lg">Behandlung B</div>

@@ -1,0 +1,171 @@
+{% set r = round_result %}
+
+<!-- Rundenauswertung -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-3">
+    <!-- Hidden state for next round -->
+    <span id="history-data" data-value="{{ history_json }}" class="hidden"></span>
+    <span id="round-data" data-value="{{ (history|length + 1) if not is_final else history|length }}" class="hidden"></span>
+    <span id="player-total-data" data-value="{{ total_player }}" class="hidden"></span>
+    <span id="ai-total-data" data-value="{{ total_ai }}" class="hidden"></span>
+
+    <div class="flex justify-between items-start mb-4">
+        <div>
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Runde {{ r.round }} von {{ max_rounds }}</span>
+            <p class="font-semibold text-slate-800 mt-0.5">Du: {{ r.player_q }} Einh. · KI: {{ r.ai_q }} Einh.</p>
+        </div>
+        <div class="text-right">
+            <div class="text-xs text-slate-500">Marktpreis</div>
+            <div class="text-xl font-bold text-indigo-700">{{ r.P }} €</div>
+        </div>
+    </div>
+
+    <!-- Gewinne dieser Runde -->
+    <div class="grid grid-cols-2 gap-3 mb-4">
+        <div class="bg-emerald-50 rounded-xl p-3 text-center border border-emerald-200">
+            <div class="text-xs text-emerald-600 mb-1">Dein Gewinn</div>
+            <div class="text-2xl font-black text-emerald-800">{{ r.player_profit }}</div>
+            <div class="text-xs text-emerald-600">q={{ r.player_q }}</div>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-3 text-center border border-slate-200">
+            <div class="text-xs text-slate-500 mb-1">KI-Gewinn</div>
+            <div class="text-2xl font-black text-slate-700">{{ r.ai_profit }}</div>
+            <div class="text-xs text-slate-500">q={{ r.ai_q }}</div>
+        </div>
+    </div>
+
+    <!-- Markt-Visualisierung -->
+    <div class="bg-indigo-50 rounded-lg p-3 text-xs text-indigo-800 mb-3">
+        <div class="flex justify-between mb-1.5">
+            <span>Gesamtmenge Q = {{ r.Q }}</span>
+            <span>Preis P = 100 − {{ r.Q }} = <strong>{{ r.P }}</strong></span>
+        </div>
+        <div class="flex items-center gap-2">
+            <div class="flex-1 h-3 bg-slate-200 rounded-full overflow-hidden flex">
+                <div class="bg-emerald-500 h-3" style="width: {{ (r.player_q / 90 * 100)|round }}%"></div>
+                <div class="bg-red-400 h-3" style="width: {{ (r.ai_q / 90 * 100)|round }}%"></div>
+            </div>
+            <span class="text-indigo-600 font-medium w-16 text-right">{{ r.Q }}/90</span>
+        </div>
+        <div class="flex gap-4 mt-1.5">
+            <span><span class="inline-block w-2 h-2 bg-emerald-500 rounded-sm mr-1"></span>Du ({{ r.player_q }})</span>
+            <span><span class="inline-block w-2 h-2 bg-red-400 rounded-sm mr-1"></span>KI ({{ r.ai_q }})</span>
+        </div>
+    </div>
+
+    <!-- Nash-Vergleich -->
+    {% set nash_diff = r.player_profit - 900 %}
+    {% if nash_diff > 50 %}
+    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-xs text-emerald-700">
+        🏆 Besser als Nash! +{{ nash_diff }} gegenüber dem Gleichgewichtsgewinn (900).
+    </div>
+    {% elif nash_diff < -100 %}
+    <div class="bg-red-50 border border-red-200 rounded-lg p-2 text-xs text-red-700">
+        📉 Unter Nash-Niveau. Zu viel produziert – Preis war {{ r.P }} statt idealem ~40.
+    </div>
+    {% else %}
+    <div class="bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs text-slate-600">
+        ≈ Nash-Niveau. Cournot-Gleichgewicht bei q=30 je Firma → Preis=40 → Gewinn=900.
+    </div>
+    {% endif %}
+</div>
+
+{% if not is_final %}
+<div class="bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm text-slate-600 text-center">
+    KI hat <strong>{{ r.ai_q }}</strong> Einheiten produziert. Passe deinen Slider oben an und mach deinen nächsten Zug!
+</div>
+
+{% else %}
+
+<!-- Endauswertung -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    {% if final.result == "win" %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">🏆 Überdurchschnittlich! {{ final.total_player }} Punkte Gesamtgewinn.</h3>
+        <p class="text-sm text-emerald-700">Du hast besser als das Nash-Gleichgewicht abgeschnitten – vermutlich durch Kollusion oder strategische Mengenreduktion.</p>
+    </div>
+    {% elif final.result == "draw" %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-xl font-bold text-amber-800 mb-1">📊 Solide – Nash-Niveau. {{ final.total_player }} Punkte.</h3>
+        <p class="text-sm text-amber-700">Das ist das stabile Cournot-Gleichgewicht. Gemeinsame Mengenreduktion hätte mehr gebracht – aber war auch riskanter.</p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-slate-50 border-2 border-slate-300">
+        <h3 class="text-xl font-bold text-slate-800 mb-1">📉 Unter Nash-Niveau. {{ final.total_player }} Punkte.</h3>
+        <p class="text-sm text-slate-600">Beide haben zu viel produziert, der Preis war dauerhaft niedrig. Das ist der klassische Preiskampf im Duopol.</p>
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-4 gap-3 mb-5">
+        <div class="bg-indigo-50 rounded-xl p-3 text-center">
+            <div class="text-xs text-indigo-600 mb-1">Gesamtgewinn</div>
+            <div class="text-2xl font-black text-indigo-800">{{ final.total_player }}</div>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-3 text-center">
+            <div class="text-xs text-slate-500 mb-1">Ø Deine Menge</div>
+            <div class="text-2xl font-black text-slate-700">{{ final.avg_player_q }}</div>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-3 text-center">
+            <div class="text-xs text-slate-500 mb-1">Ø KI-Menge</div>
+            <div class="text-2xl font-black text-slate-700">{{ final.avg_ai_q }}</div>
+        </div>
+        <div class="bg-slate-50 rounded-xl p-3 text-center">
+            <div class="text-xs text-slate-500 mb-1">Ø Preis</div>
+            <div class="text-2xl font-black text-slate-700">{{ final.avg_P }}</div>
+        </div>
+    </div>
+
+    <!-- Verlaufshistorie -->
+    <div class="mb-5 overflow-x-auto">
+        <table class="w-full text-xs">
+            <thead>
+                <tr class="text-slate-500 border-b border-slate-100">
+                    <th class="text-left pb-2">Runde</th>
+                    <th class="text-center pb-2">Du (q)</th>
+                    <th class="text-center pb-2">KI (q)</th>
+                    <th class="text-center pb-2">Preis</th>
+                    <th class="text-right pb-2">Dein Gewinn</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in history %}
+                <tr class="border-b border-slate-50">
+                    <td class="py-1 text-slate-600">{{ h.round }}</td>
+                    <td class="py-1 text-center font-bold text-indigo-700">{{ h.player_q }}</td>
+                    <td class="py-1 text-center text-slate-600">{{ h.ai_q }}</td>
+                    <td class="py-1 text-center text-slate-600">{{ h.P }}</td>
+                    <td class="py-1 text-right font-bold {% if h.player_profit >= 900 %}text-emerald-700{% elif h.player_profit >= 600 %}text-amber-600{% else %}text-red-600{% endif %}">
+                        {{ h.player_profit }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+        <p class="font-semibold mb-2">Das Cournot-Gleichgewicht (Antoine Augustin Cournot, 1838):</p>
+        <p class="mb-2">Jede Firma maximiert ihren Gewinn gegeben die erwartete Menge der anderen Firma.
+        Das stabile Gleichgewicht: q* = (a − c) / (3b) = 30, P = 40, Gewinn = 900.
+        Das gesellschaftliche Optimum (Kollusion) liegt bei ~22 Einheiten je Firma – aber Kollusion ist instabil,
+        da jede Firma einen Anreiz hat, die Menge zu erhöhen.</p>
+        <p class="text-xs text-indigo-600">Das ist das Gefangenendilemma in Märkten:
+        Individuell rational → kollektiv suboptimal.</p>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+        <p class="font-semibold mb-1">Verhandlungsrelevanz:</p>
+        <p>Das Cournot-Modell erklärt, warum <strong>Kartellvereinbarungen</strong> instabil sind.
+        Beide Seiten profitieren von Kooperation, aber jeder hat einen kurzfristigen Anreiz zu defektieren.
+        In Verhandlungen: gemeinsame Werterstellung lohnt sich nur, wenn beide Seiten langfristig denken
+        und glaubwürdig commitment zeigen können.</p>
+    </div>
+
+    {% include "partials/achievement_unlock.html" %}
+    {% if strategy_info %}
+    {% set current_game_id = "cournot" %}
+    {% include "partials/strategy_debrief.html" %}
+    {% endif %}
+</div>
+
+{% endif %}

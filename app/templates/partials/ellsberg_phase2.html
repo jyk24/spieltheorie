@@ -1,0 +1,59 @@
+<input type="hidden" id="choice1-store" value="{{ choice1 }}">
+
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <div class="flex items-center gap-2 mb-2">
+        <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-full">Problem 2 von 2</span>
+        <span class="text-xs text-slate-400">(unabhängig vom ersten Problem)</span>
+    </div>
+    <p class="font-semibold text-slate-800 mb-1 mt-3">Jetzt mit einer neuen Auszahlungsregel:</p>
+    <p class="text-sm text-slate-500 mb-5">Gewinne 100 €, wenn die gezogene Kugel <em>eine der beiden genannten Farben</em> hat.</p>
+
+    <form id="ellsberg-phase2-form" class="space-y-3">
+        <input type="hidden" name="choice1" value="{{ choice1 }}">
+
+        <button type="button"
+                hx-post="/raetsel/ellsberg/result"
+                hx-target="#ellsberg-area"
+                hx-swap="innerHTML"
+                hx-include="#ellsberg-phase2-form"
+                hx-vals='{"choice2": "C"}'
+                class="w-full text-left p-5 rounded-xl border-2 border-amber-200 bg-amber-50 hover:border-amber-400 hover:bg-amber-100 transition-all">
+            <div class="flex items-start gap-4">
+                <span class="text-2xl font-black text-amber-700 mt-0.5">C</span>
+                <div class="flex-1">
+                    <div class="font-bold text-amber-800 mb-1">Wette auf Rot oder Gelb</div>
+                    <div class="flex items-center gap-3 text-sm mb-1">
+                        <div class="w-32 bg-slate-200 rounded-full h-4 overflow-hidden flex">
+                            <div class="bg-red-400 h-4" style="width:33.3%"></div>
+                            <div class="bg-yellow-300 h-4" style="width:30%"></div>
+                        </div>
+                        <span class="text-slate-600">Rot (1/3) + Gelb (unbekannt)</span>
+                    </div>
+                    <p class="text-xs text-amber-700">Gesamtwahrscheinlichkeit: <strong>unbekannt</strong> (abhängig von Gelbanteil).</p>
+                </div>
+            </div>
+        </button>
+
+        <button type="button"
+                hx-post="/raetsel/ellsberg/result"
+                hx-target="#ellsberg-area"
+                hx-swap="innerHTML"
+                hx-include="#ellsberg-phase2-form"
+                hx-vals='{"choice2": "D"}'
+                class="w-full text-left p-5 rounded-xl border-2 border-indigo-200 bg-indigo-50 hover:border-indigo-400 hover:bg-indigo-100 transition-all">
+            <div class="flex items-start gap-4">
+                <span class="text-2xl font-black text-indigo-700 mt-0.5">D</span>
+                <div class="flex-1">
+                    <div class="font-bold text-indigo-800 mb-1">Wette auf Schwarz oder Gelb</div>
+                    <div class="flex items-center gap-3 text-sm mb-1">
+                        <div class="w-32 bg-slate-200 rounded-full h-4 overflow-hidden">
+                            <div class="bg-indigo-500 h-4 rounded-full" style="width:66.7%"></div>
+                        </div>
+                        <span class="text-slate-600">Genau <strong>2/3</strong> Chance (= 60 von 90)</span>
+                    </div>
+                    <p class="text-xs text-indigo-700">Wahrscheinlichkeit ist exakt bekannt.</p>
+                </div>
+            </div>
+        </button>
+    </form>
+</div>

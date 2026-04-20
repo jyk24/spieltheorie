@@ -78,23 +78,31 @@
                 Was jagst du heute?
             </div>
 
-            <form hx-post="/spiele/stag-hunt/zug"
-                  hx-target="#result-area"
-                  hx-swap="innerHTML"
-                  id="move-form"
-                  class="grid grid-cols-2 gap-4">
+            <form id="move-form">
                 <input type="hidden" name="strategy" id="strategy-hidden">
                 <input type="hidden" name="history_json" id="history-hidden" value="[]">
-                <button type="submit" name="move" value="S"
+                <div class="grid grid-cols-2 gap-4">
+                <button type="button"
+                        hx-post="/spiele/stag-hunt/zug"
+                        hx-target="#result-area"
+                        hx-swap="innerHTML"
+                        hx-include="#move-form"
+                        hx-vals='{"move": "S"}'
                         class="bg-emerald-500 hover:bg-emerald-600 text-white py-6 rounded-xl font-bold text-lg transition-colors">
                     🦌 Hirsch jagen
                     <div class="text-xs font-normal mt-1 opacity-80">8 Punkte – aber nur gemeinsam</div>
                 </button>
-                <button type="submit" name="move" value="H"
+                <button type="button"
+                        hx-post="/spiele/stag-hunt/zug"
+                        hx-target="#result-area"
+                        hx-swap="innerHTML"
+                        hx-include="#move-form"
+                        hx-vals='{"move": "H"}'
                         class="bg-amber-500 hover:bg-amber-600 text-white py-6 rounded-xl font-bold text-lg transition-colors">
                     🐇 Hase jagen
                     <div class="text-xs font-normal mt-1 opacity-80">3 Punkte – immer sicher</div>
                 </button>
+                </div>
             </form>
         </div>
 

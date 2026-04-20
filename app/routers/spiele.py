@@ -58,6 +58,8 @@ from ..game_engine import (
     wc_final_result,
     wc_generate_item,
     wc_play_round,
+    cournot_final_result,
+    cournot_play_round,
 )
 from ..services import save_game_session
 
@@ -606,6 +608,15 @@ GAME_META = [
         "runden": 5,
         "konzept": "Englische Auktion, Privatwertauktion, Dominante Strategie",
     },
+    {
+        "id": "cournot",
+        "name": "Cournot-Duopol",
+        "icon": "🏭",
+        "beschreibung": "Zwei Firmen wählen gleichzeitig ihre Produktionsmenge. Mehr produzieren drückt den Preis – weniger produzieren schafft Monopolgewinne. Das klassische Oligopolmodell.",
+        "schwierigkeit": "Fortgeschritten",
+        "runden": 6,
+        "konzept": "Cournot-Gleichgewicht, Oligopol, Kollusion vs. Wettbewerb",
+    },
 ]
 
 
@@ -731,6 +742,7 @@ def ultimatum_zug(
     player_offer: int | None = Form(default=None),
     # Responder-Modus: KI macht Angebot, Spieler antwortet
     player_response: str | None = Form(default=None),
+    ai_offer_amount: int | None = Form(default=None),
     db: Session = Depends(get_db),
 ):
     history = json.loads(history_json)
@@ -750,7 +762,7 @@ def ultimatum_zug(
             "ai_score": ai_score,
         }
     else:
-        ai_offer = ultimatum_ai_offer(strategy, round_num)
+        ai_offer = ai_offer_amount if ai_offer_amount is not None else ultimatum_ai_offer(strategy, round_num)
         accepted = player_response == "accept"
         p_score, ai_score = ultimatum_score(ai_offer, accepted, is_proposer=False)
         entry = {
@@ -2660,3 +2672,112 @@ def englische_auktion_tick(
                 "round_num": len(history) + 1,
             },
         )
+
+
+# ---------------------------------------------------------------------------
+# Cournot-Duopol
+# ---------------------------------------------------------------------------
+
+COURNOT_STRATEGY_POOL = ["nash", "aggressive", "colluding", "tit_for_tat"]
+COURNOT_STRATEGY_WEIGHTS = [30, 25, 20, 25]
+
+COURNOT_STRATEGY_INFO = {
+    "nash": {
+        "name": "Nash-Gleichgewicht",
+        "icon": "⚖️",
+        "verhalten": "Die KI spielte konsequent die Nash-GGW-Menge (30 Einheiten). Kein Anreiz zur einseitigen Abweichung – das ist das stabile Cournot-Gleichgewicht.",
+        "gegencheck": "Gegen Nash: auch 30 produzieren. Jede Menge, die du darunter setzt, schadet dir; jede darüber drückt den Preis.",
+        "lesson_slug": "nash-gleichgewicht",
+        "lesson_title": "Nash-Gleichgewicht",
+    },
+    "aggressive": {
+        "name": "Überproduktion",
+        "icon": "⚡",
+        "verhalten": "Die KI produzierte aggressiv mehr als Nash (40–50 Einheiten), um Marktanteile zu gewinnen – auf Kosten des Marktpreises für beide.",
+        "gegencheck": "Wenn die KI zu viel produziert, lohnt es sich, deine Menge zu reduzieren. Weniger Menge = höherer Preis für dich.",
+        "lesson_slug": "oligopol-wettbewerb",
+        "lesson_title": "Oligopol & Marktmacht",
+    },
+    "colluding": {
+        "name": "Kollusionsversuch",
+        "icon": "🤝",
+        "verhalten": "Die KI versuchte implizit zu kooperieren: sie produzierte nur 22 Einheiten, um den Preis hochzuhalten. Du hättest mitziehen sollen.",
+        "gegencheck": "Beide bei ~22–23 Einheiten → Preis ≈ 55 → Gewinn ≈ 1035 pro Runde. Das ist deutlich besser als das Nash-GGW.",
+        "lesson_slug": "kollusion-kartell",
+        "lesson_title": "Kollusion & Kartelle",
+    },
+    "tit_for_tat": {
+        "name": "Tit-for-Tat (Menge)",
+        "icon": "🔄",
+        "verhalten": "Die KI spiegelte exakt deine Produktionsmenge aus der Vorrunde. Viel produziert → KI produziert viel → Preis sinkt. Wenig produziert → KI folgt → Preis steigt.",
+        "gegencheck": "Schrittweise Mengensenkung: Wenn du auf 22 gehst, folgt die KI. So konvergiert ihr zum Kollusions-Gleichgewicht.",
+        "lesson_slug": "wiederholte-spiele-reputation",
+        "lesson_title": "Wiederholte Spiele & Reputation",
+    },
+}
+
+
+@router.get("/cournot", response_class=HTMLResponse)
+def cournot_page(request: Request):
+    hidden_strategy = _random.choices(COURNOT_STRATEGY_POOL, weights=COURNOT_STRATEGY_WEIGHTS)[0]
+    return templates.TemplateResponse(
+        request,
+        "games/cournot.html",
+        {
+            "active_page": "spiele",
+            "hidden_strategy": hidden_strategy,
+            "max_rounds": 6,
+        },
+    )
+
+
+@router.post("/cournot/zug", response_class=HTMLResponse)
+def cournot_zug(
+    request: Request,
+    player_q: int = Form(...),
+    strategy: str = Form(...),
+    history_json: str = Form(default="[]"),
+    db: Session = Depends(get_db),
+):
+    history = json.loads(history_json)
+    round_num = len(history)
+    round_result = cournot_play_round(player_q, strategy, history, round_num)
+    history.append(round_result)
+
+    is_final = len(history) >= 6
+    final = cournot_final_result(history) if is_final else None
+
+    strategy_info = None
+    new_achievements: list = []
+    if is_final:
+        _, new_achievements = save_game_session(
+            db,
+            game_type="cournot",
+            ai_strategy=strategy,
+            moves=history,
+            result=final["result"],
+            score=final["total_player"],
+            ai_score=final["total_ai"],
+        )
+        strategy_info = COURNOT_STRATEGY_INFO.get(strategy)
+
+    total_player = sum(r["player_profit"] for r in history)
+    total_ai = sum(r["ai_profit"] for r in history)
+
+    return templates.TemplateResponse(
+        request,
+        "partials/cournot_result.html",
+        {
+            "round_result": round_result,
+            "history": history,
+            "history_json": json.dumps(history),
+            "strategy": strategy,
+            "is_final": is_final,
+            "final": final,
+            "max_rounds": 6,
+            "total_player": total_player,
+            "total_ai": total_ai,
+            "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
+        },
+    )

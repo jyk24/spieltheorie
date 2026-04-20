@@ -28,26 +28,33 @@
             <p class="font-semibold text-slate-800 mb-2">Runde 1 von {{ max_rounds }}</p>
             <p class="text-sm text-slate-500 mb-6">Wähle eine Gruppe – A oder B. Die KI-Bots entscheiden gleichzeitig.</p>
 
-            <form hx-post="/spiele/minderheit/zug"
-                  hx-target="#spiel-area"
-                  hx-swap="innerHTML"
-                  class="grid grid-cols-2 gap-4">
+            <form id="minderheit-form">
                 <input type="hidden" name="strategy" value="{{ hidden_strategy }}">
                 <input type="hidden" name="history_json" value="[]">
-
-                <button type="submit" name="choice" value="0"
+                <div class="grid grid-cols-2 gap-4">
+                <button type="button"
+                        hx-post="/spiele/minderheit/zug"
+                        hx-target="#spiel-area"
+                        hx-swap="innerHTML"
+                        hx-include="#minderheit-form"
+                        hx-vals='{"choice": "0"}'
                         class="p-6 rounded-xl border-2 border-blue-200 bg-blue-50 hover:border-blue-400 hover:bg-blue-100 transition-all text-center">
                     <div class="text-4xl mb-2">🅰️</div>
                     <div class="font-bold text-blue-800 text-xl">Gruppe A</div>
                     <div class="text-xs text-blue-600 mt-2">Wähle A und hoffe auf die Minderheit</div>
                 </button>
-
-                <button type="submit" name="choice" value="1"
+                <button type="button"
+                        hx-post="/spiele/minderheit/zug"
+                        hx-target="#spiel-area"
+                        hx-swap="innerHTML"
+                        hx-include="#minderheit-form"
+                        hx-vals='{"choice": "1"}'
                         class="p-6 rounded-xl border-2 border-amber-200 bg-amber-50 hover:border-amber-400 hover:bg-amber-100 transition-all text-center">
                     <div class="text-4xl mb-2">🅱️</div>
                     <div class="font-bold text-amber-800 text-xl">Gruppe B</div>
                     <div class="text-xs text-amber-600 mt-2">Wähle B und hoffe auf die Minderheit</div>
                 </button>
+                </div>
             </form>
         </div>
     </div>

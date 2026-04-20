@@ -8,13 +8,15 @@
     </div>
     <p class="font-semibold text-slate-800 mb-5">Und jetzt: Welche Lotterie bevorzugst du?</p>
 
-    <form hx-post="/raetsel/allais/result"
-          hx-target="#allais-area"
-          hx-swap="innerHTML"
-          class="grid grid-cols-1 gap-4">
+    <form id="allais-phase2-form" class="grid grid-cols-1 gap-4">
         <input type="hidden" name="choice1" value="{{ choice1 }}">
 
-        <button type="submit" name="choice2" value="C"
+        <button type="button"
+                hx-post="/raetsel/allais/result"
+                hx-target="#allais-area"
+                hx-swap="innerHTML"
+                hx-include="#allais-phase2-form"
+                hx-vals='{"choice2": "C"}'
                 class="text-left p-5 rounded-xl border-2 border-violet-200 bg-violet-50 hover:border-violet-400 hover:bg-violet-100 transition-all">
             <div class="flex items-start gap-4">
                 <span class="text-2xl font-black text-violet-700 mt-0.5">C</span>
@@ -38,7 +40,12 @@
             </div>
         </button>
 
-        <button type="submit" name="choice2" value="D"
+        <button type="button"
+                hx-post="/raetsel/allais/result"
+                hx-target="#allais-area"
+                hx-swap="innerHTML"
+                hx-include="#allais-phase2-form"
+                hx-vals='{"choice2": "D"}'
                 class="text-left p-5 rounded-xl border-2 border-amber-200 bg-amber-50 hover:border-amber-400 hover:bg-amber-100 transition-all">
             <div class="flex items-start gap-4">
                 <span class="text-2xl font-black text-amber-700 mt-0.5">D</span>

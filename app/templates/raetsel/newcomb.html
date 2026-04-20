@@ -38,12 +38,14 @@
         <p class="font-semibold text-slate-800 mb-2">Deine Entscheidung:</p>
         <p class="text-sm text-slate-500 mb-5">Was machst du – wissend, dass der Vorhersager fast immer richtig liegt?</p>
 
-        <form hx-post="/raetsel/newcomb/result"
-              hx-target="#spiel-area"
-              hx-swap="innerHTML"
-              class="space-y-4">
+        <form id="newcomb-form" class="space-y-4">
 
-            <button type="submit" name="choice" value="b_only"
+            <button type="button"
+                    hx-post="/raetsel/newcomb/result"
+                    hx-target="#spiel-area"
+                    hx-swap="innerHTML"
+                    hx-include="#newcomb-form"
+                    hx-vals='{"choice": "b_only"}'
                     class="w-full text-left p-5 rounded-xl border-2 border-amber-200 bg-amber-50 hover:border-amber-400 hover:bg-amber-100 transition-all">
                 <div class="flex items-start gap-4">
                     <span class="text-3xl mt-0.5">📦</span>
@@ -56,7 +58,12 @@
                 </div>
             </button>
 
-            <button type="submit" name="choice" value="both"
+            <button type="button"
+                    hx-post="/raetsel/newcomb/result"
+                    hx-target="#spiel-area"
+                    hx-swap="innerHTML"
+                    hx-include="#newcomb-form"
+                    hx-vals='{"choice": "both"}'
                     class="w-full text-left p-5 rounded-xl border-2 border-indigo-200 bg-indigo-50 hover:border-indigo-400 hover:bg-indigo-100 transition-all">
                 <div class="flex items-start gap-4">
                     <span class="text-3xl mt-0.5">📦📦</span>

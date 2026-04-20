@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Ellsberg-Paradoxon – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🪬 Ellsberg-Paradoxon</h1>
+        <p class="text-slate-500 mt-1">Risiko vs. Ambiguität – warum wir Ungewissheit stärker fürchten als Zufall.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Urne:</p>
+        <div class="flex gap-3 items-center mb-4">
+            <div class="flex gap-1 flex-wrap w-40">
+                {% for _ in range(30) %}
+                <div class="w-4 h-4 rounded-full bg-red-500 border border-red-700"></div>
+                {% endfor %}
+            </div>
+            <div class="flex gap-1 flex-wrap w-40">
+                {% for _ in range(60) %}
+                <div class="w-4 h-4 rounded-full bg-slate-600 border border-slate-800"></div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-3">
+            <div class="bg-red-50 border border-red-200 rounded-lg p-3 text-center">
+                <div class="text-2xl font-black text-red-700">30</div>
+                <div class="text-xs text-red-600 font-semibold">Rote Kugeln</div>
+                <div class="text-xs text-red-500 mt-1">Wahrscheinlichkeit: genau 1/3</div>
+            </div>
+            <div class="bg-slate-100 border border-slate-300 rounded-lg p-3 text-center">
+                <div class="text-2xl font-black text-slate-700">60</div>
+                <div class="text-xs text-slate-600 font-semibold">Schwarze + Gelbe Kugeln</div>
+                <div class="text-xs text-slate-500 mt-1">Verhältnis: völlig unbekannt</div>
+            </div>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800">
+            <strong>Wichtig:</strong> Du weißt nicht, wie viele der 60 Kugeln schwarz und wie viele gelb sind.
+            Es könnten 0 und 60 sein – oder 30 und 30 – oder irgendein anderes Verhältnis.
+        </div>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 text-sm text-slate-600">
+        Entscheide in jedem Problem ehrlich – so als würdest du wirklich spielen. Es gibt noch keine richtige Antwort.
+    </div>
+
+    <div id="ellsberg-area">
+        <!-- Problem 1 -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <div class="flex items-center gap-2 mb-5">
+                <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-full">Problem 1 von 2</span>
+                <span class="text-xs text-slate-400">Eine einzelne Kugel wird gezogen</span>
+            </div>
+            <p class="font-semibold text-slate-800 mb-1">Welche Wette bevorzugst du?</p>
+            <p class="text-sm text-slate-500 mb-5">Gewinne 100 €, wenn die gezogene Kugel die gesuchte Farbe hat.</p>
+
+            <form id="ellsberg-phase1-form" class="space-y-3">
+                <button type="button"
+                        hx-post="/raetsel/ellsberg/phase2"
+                        hx-target="#ellsberg-area"
+                        hx-swap="innerHTML"
+                        hx-include="#ellsberg-phase1-form"
+                        hx-vals='{"choice1": "A"}'
+                        class="w-full text-left p-5 rounded-xl border-2 border-red-200 bg-red-50 hover:border-red-400 hover:bg-red-100 transition-all">
+                    <div class="flex items-start gap-4">
+                        <span class="text-2xl font-black text-red-700 mt-0.5">A</span>
+                        <div class="flex-1">
+                            <div class="font-bold text-red-800 mb-1">Wette auf Rot</div>
+                            <div class="flex items-center gap-3 text-sm">
+                                <div class="w-32 bg-slate-200 rounded-full h-4 overflow-hidden">
+                                    <div class="bg-red-500 h-4 rounded-full" style="width:33.3%"></div>
+                                </div>
+                                <span class="text-slate-600">Genau <strong>1/3</strong> Chance (= 30 von 90)</span>
+                            </div>
+                            <p class="text-xs text-red-600 mt-1.5">Wahrscheinlichkeit ist exakt bekannt.</p>
+                        </div>
+                    </div>
+                </button>
+
+                <button type="button"
+                        hx-post="/raetsel/ellsberg/phase2"
+                        hx-target="#ellsberg-area"
+                        hx-swap="innerHTML"
+                        hx-include="#ellsberg-phase1-form"
+                        hx-vals='{"choice1": "B"}'
+                        class="w-full text-left p-5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 hover:bg-slate-100 transition-all">
+                    <div class="flex items-start gap-4">
+                        <span class="text-2xl font-black text-slate-700 mt-0.5">B</span>
+                        <div class="flex-1">
+                            <div class="font-bold text-slate-800 mb-1">Wette auf Schwarz</div>
+                            <div class="flex items-center gap-3 text-sm">
+                                <div class="w-32 bg-slate-200 rounded-full h-4 overflow-hidden">
+                                    <div class="bg-slate-500 h-4 rounded-full" style="width:50%">
+                                        <div class="h-4 rounded-full border-r-2 border-dashed border-slate-300" style="width:100%"></div>
+                                    </div>
+                                </div>
+                                <span class="text-slate-600">Irgendwo zwischen <strong>0 und 2/3</strong></span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1.5">Wahrscheinlichkeit ist unbekannt.</p>
+                        </div>
+                    </div>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

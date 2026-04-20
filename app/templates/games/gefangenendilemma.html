@@ -74,21 +74,29 @@
                 </div>
             </div>
 
-            <form hx-post="/spiele/gefangenendilemma/zug"
-                  hx-target="#result-area"
-                  hx-swap="innerHTML"
-                  id="move-form"
-                  class="flex gap-4">
+            <form id="move-form">
                 <input type="hidden" name="strategy" id="strategy-hidden">
                 <input type="hidden" name="history_json" id="history-hidden" value="[]">
-                <button type="submit" name="move" value="C"
+                <div class="flex gap-4">
+                <button type="button"
+                        hx-post="/spiele/gefangenendilemma/zug"
+                        hx-target="#result-area"
+                        hx-swap="innerHTML"
+                        hx-include="#move-form"
+                        hx-vals='{"move": "C"}'
                         class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-xl font-bold text-lg transition-colors">
                     🤝 Kooperieren
                 </button>
-                <button type="submit" name="move" value="D"
+                <button type="button"
+                        hx-post="/spiele/gefangenendilemma/zug"
+                        hx-target="#result-area"
+                        hx-swap="innerHTML"
+                        hx-include="#move-form"
+                        hx-vals='{"move": "D"}'
                         class="flex-1 bg-red-500 hover:bg-red-600 text-white py-4 rounded-xl font-bold text-lg transition-colors">
                     🗡️ Verraten
                 </button>
+                </div>
             </form>
         </div>
 

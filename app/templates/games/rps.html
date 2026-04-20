@@ -68,32 +68,44 @@
 
             <div class="text-center text-slate-500 text-sm mb-5 italic">Dein Zug:</div>
 
-            <form hx-post="/spiele/rps/zug"
-                  hx-target="#result-area"
-                  hx-swap="innerHTML"
-                  id="move-form"
-                  class="grid grid-cols-3 gap-3">
+            <form id="move-form">
                 <input type="hidden" name="strategy" id="strategy-hidden">
                 <input type="hidden" name="history_json" id="history-hidden" value="[]">
-
-                <button type="submit" name="move" value="S"
+                <div class="grid grid-cols-3 gap-3">
+                <button type="button"
+                        hx-post="/spiele/rps/zug"
+                        hx-target="#result-area"
+                        hx-swap="innerHTML"
+                        hx-include="#move-form"
+                        hx-vals='{"move": "S"}'
                         class="bg-red-50 hover:bg-red-100 border-2 border-red-200 hover:border-red-400 text-red-700 py-8 rounded-xl font-bold text-xl transition-all">
                     ✂️
                     <div class="text-sm font-semibold mt-1">Schere</div>
                     <div class="text-xs font-normal opacity-70 mt-0.5">schlägt Papier</div>
                 </button>
-                <button type="submit" name="move" value="T"
+                <button type="button"
+                        hx-post="/spiele/rps/zug"
+                        hx-target="#result-area"
+                        hx-swap="innerHTML"
+                        hx-include="#move-form"
+                        hx-vals='{"move": "T"}'
                         class="bg-slate-50 hover:bg-slate-100 border-2 border-slate-200 hover:border-slate-400 text-slate-700 py-8 rounded-xl font-bold text-xl transition-all">
                     🪨
                     <div class="text-sm font-semibold mt-1">Stein</div>
                     <div class="text-xs font-normal opacity-70 mt-0.5">schlägt Schere</div>
                 </button>
-                <button type="submit" name="move" value="P"
+                <button type="button"
+                        hx-post="/spiele/rps/zug"
+                        hx-target="#result-area"
+                        hx-swap="innerHTML"
+                        hx-include="#move-form"
+                        hx-vals='{"move": "P"}'
                         class="bg-blue-50 hover:bg-blue-100 border-2 border-blue-200 hover:border-blue-400 text-blue-700 py-8 rounded-xl font-bold text-xl transition-all">
                     📄
                     <div class="text-sm font-semibold mt-1">Papier</div>
                     <div class="text-xs font-normal opacity-70 mt-0.5">schlägt Stein</div>
                 </button>
+                </div>
             </form>
         </div>
 
