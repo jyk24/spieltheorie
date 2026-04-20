@@ -30,6 +30,11 @@ GAME_LABELS = {
     "auktion": "Vickrey-Auktion",
     "dollarauktion": "Dollarauktion",
     "minderheit": "Minderheitsspiel",
+    "habicht-taube": "Habicht-Taube-Spiel",
+    "geschlechter-kampf": "Koordinationsdilemma",
+    "freiwilligen-dilemma": "Freiwilligen-Dilemma",
+    "gleiche-muenzen": "Gleiche Münzen",
+    "gewinner-fluch": "Fluch des Gewinners",
 }
 
 RESULT_LABELS = {"win": "Gewonnen", "loss": "Verloren", "draw": "Unentschieden"}

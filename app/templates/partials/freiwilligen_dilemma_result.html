@@ -1,0 +1,97 @@
+{% if not is_final %}
+<form id="game-form">
+    <input type="hidden" name="strategy" value="{{ strategy }}">
+    <input type="hidden" name="history_json" value="{{ history_json }}">
+
+    <div class="flex justify-between items-center mb-4">
+        <span class="text-sm text-slate-500">Runde {{ round_result.round }} / {{ max_rounds }} gespielt</span>
+        <span class="text-sm text-slate-700">Punkte: <strong>{{ round_result.player_total }}</strong></span>
+    </div>
+
+    <div class="rounded-xl p-4 mb-4 text-sm
+        {{ 'bg-amber-50 border border-amber-200' if round_result.all_nv else ('bg-emerald-50 border border-emerald-200' if round_result.player_score > 0 else 'bg-blue-50 border border-blue-200') }}">
+        <div class="font-semibold mb-2 {{ 'text-amber-700' if round_result.all_nv else ('text-emerald-700' if round_result.player_score > 0 else 'text-blue-700') }}">
+            {% if round_result.all_nv %}
+            ⚠️ Niemand hat geholfen – alle bekommen 0!
+            {% elif round_result.player == "V" %}
+            🙋 Du hast geholfen – {{ round_result.player_score }} Punkte.
+            {% else %}
+            🎁 {{ round_result.bot_helpers }} Bot(s) haben geholfen – du bekommst 5 Punkte!
+            {% endif %}
+        </div>
+        <div class="flex gap-3 text-xs text-slate-500 flex-wrap">
+            <span>Du: {{ "🙋 Geholfen" if round_result.player == "V" else "🤷 Nicht geholfen" }}</span>
+            <span>Bots geholfen: {{ round_result.bot_helpers }}/4</span>
+        </div>
+    </div>
+
+    <div class="flex gap-3 justify-center">
+        <button type="button"
+                hx-post="/spiele/freiwilligen-dilemma/zug"
+                hx-target="#spiel-area"
+                hx-swap="innerHTML"
+                hx-include="#game-form"
+                hx-vals='{"choice": "V"}'
+                class="flex-1 p-4 rounded-xl border-2 border-emerald-200 bg-emerald-50 hover:border-emerald-400 transition-all text-center">
+            <div class="text-2xl">🙋</div>
+            <div class="font-bold text-emerald-800 text-sm">Helfen</div>
+        </button>
+        <button type="button"
+                hx-post="/spiele/freiwilligen-dilemma/zug"
+                hx-target="#spiel-area"
+                hx-swap="innerHTML"
+                hx-include="#game-form"
+                hx-vals='{"choice": "NV"}'
+                class="flex-1 p-4 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 transition-all text-center">
+            <div class="text-2xl">🤷</div>
+            <div class="font-bold text-slate-700 text-sm">Nicht helfen</div>
+        </button>
+    </div>
+</form>
+
+{% else %}
+<div class="mb-5 p-4 rounded-xl
+    {{ 'bg-emerald-50 border-2 border-emerald-400' if final.result == 'win' else ('bg-red-50 border-2 border-red-400' if final.result == 'loss' else 'bg-slate-50 border-2 border-slate-300') }}">
+    {% if final.result == "win" %}
+    <h3 class="text-xl font-bold text-emerald-800 mb-1">Stark gespielt! {{ final.efficiency }}% Effizienz.</h3>
+    <p class="text-sm text-emerald-700">{{ final.player_total }} Punkte in {{ max_rounds }} Runden.</p>
+    {% elif final.result == "loss" %}
+    <h3 class="text-xl font-bold text-red-800 mb-1">Zu viel riskiert. {{ final.efficiency }}% Effizienz.</h3>
+    <p class="text-sm text-red-700">{{ final.player_total }} Punkte. {{ final.all_nv_rounds }} Runden ohne Helfer.</p>
+    {% else %}
+    <h3 class="text-xl font-bold text-slate-700 mb-1">Solide. {{ final.efficiency }}% Effizienz.</h3>
+    <p class="text-sm text-slate-600">{{ final.player_total }} Punkte.</p>
+    {% endif %}
+</div>
+
+<div class="bg-slate-50 rounded-xl p-4 mb-4 text-sm">
+    <p class="font-semibold text-slate-700 mb-2">Deine Entscheidungen:</p>
+    <div class="flex gap-4">
+        <span>🙋 Geholfen: {{ final.v_rounds }}×</span>
+        <span>🤷 Nicht: {{ final.nv_rounds }}×</span>
+        <span class="text-amber-600">⚠️ Keine half: {{ final.all_nv_rounds }}×</span>
+    </div>
+</div>
+
+{% if strategy_info %}
+<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-900">
+    <p class="font-semibold mb-1">{{ strategy_info.icon }} Die Bots spielten: {{ strategy_info.name }}</p>
+    <p class="text-indigo-700 mb-2">{{ strategy_info.verhalten }}</p>
+    <p class="font-semibold text-indigo-800">Gegencheck: <span class="font-normal">{{ strategy_info.gegencheck }}</span></p>
+</div>
+{% endif %}
+
+{% for ach in new_achievements %}
+<div class="bg-amber-50 border border-amber-300 rounded-xl p-3 mb-2 text-sm text-amber-800 font-semibold">
+    🏅 Achievement: {{ ach }}
+</div>
+{% endfor %}
+
+<div class="flex gap-3">
+    <a href="/spiele/freiwilligen-dilemma" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal</a>
+    <a href="/spiele" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">Alle Spiele</a>
+    {% if strategy_info %}
+    <a href="/lektionen/{{ strategy_info.lesson_slug }}" class="border border-indigo-200 text-indigo-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50">📖 {{ strategy_info.lesson_title }}</a>
+    {% endif %}
+</div>
+{% endif %}

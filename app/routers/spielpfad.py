@@ -81,6 +81,24 @@ LERNPFAD = [
              "subtitle": "Gegen den Strom schwimmen", "runden": 8},
         ],
     },
+    {
+        "level": 6,
+        "title": "Experte",
+        "subtitle": "Evolution, Nullsumme und Information",
+        "color": "rose",
+        "games": [
+            {"id": "habicht-taube", "name": "Habicht-Taube-Spiel", "icon": "🦅",
+             "subtitle": "Aggression vs. Kooperation – ESS", "runden": 10},
+            {"id": "geschlechter-kampf", "name": "Koordinationsdilemma", "icon": "🎭",
+             "subtitle": "Wer gibt nach – Battle of the Sexes", "runden": 8},
+            {"id": "freiwilligen-dilemma", "name": "Freiwilligen-Dilemma", "icon": "🙋",
+             "subtitle": "Trittbrettfahren oder helfen?", "runden": 8},
+            {"id": "gleiche-muenzen", "name": "Gleiche Münzen", "icon": "🪙",
+             "subtitle": "Matching Pennies – reines Nullsummenspiel", "runden": 10},
+            {"id": "gewinner-fluch", "name": "Fluch des Gewinners", "icon": "🏆",
+             "subtitle": "Wer gewinnt, zahlt zu viel", "runden": 5},
+        ],
+    },
 ]
 
 # Flache Liste der Reihenfolge aller Spiele im Pfad

@@ -543,5 +543,72 @@
       }
     ],
     "content_md": "## Centipede-Spiel & Rückwärtsinduktions-Paradox\n\n### Das Spiel\n\nRosenthal (1981) erfand das Centipede-Spiel: Zwei Spieler wechseln sich ab. In jeder Runde kann der aktuelle Spieler *nehmen* (Spiel endet) oder *weitergeben* (Topf wächst).\n\nDer Topf wächst mit jedem Weitergeben fast doppelt so groß – aber wer zuerst nimmt, bekommt den größeren Anteil.\n\n### Rückwärtsinduktion: Die logische Antwort\n\nBetrachte das Spiel von hinten:\n\n1. **Letzter Knoten (KI):** KI erhält mehr wenn sie nimmt (64 statt 32). → KI nimmt.\n2. **Vorletzter Knoten (Spieler):** Weiß, dass KI am nächsten Knoten nimmt. Nimmt jetzt (32) statt später (16 durch KI). → Spieler nimmt.\n3. **Knoten davor (KI):** Weiß, dass Spieler nehmen wird. Nimmt jetzt. → KI nimmt.\n4. **...und so weiter zurück bis Knoten 1.**\n\n**Ergebnis der Rückwärtsinduktion:** Beide nehmen sofort an Knoten 1. Spieler bekommt 4, KI bekommt 1.\n\n### Das Paradox\n\nWenn beide sofort nehmen, ist das suboptimal! Das gemeinsame Optimum wäre, bis zum Ende zu passen: (64, 32).\n\nExperimentell: **Fast niemand nimmt sofort.** Spieler warten oft bis Knoten 5–7, bevor sie nehmen – und beide profitieren davon.\n\n### Warum die Theorie versagt\n\n**Common Knowledge of Rationality (CKR):** Rückwärtsinduktion setzt voraus, dass beide Spieler vollständig rational sind *und* wissen, dass der andere vollständig rational ist *und* wissen, dass der andere weiß, dass... – eine unendliche Kette.\n\nIn der Realität:\n- Spieler zweifeln an der Rationalität des Gegenübers\n- Ein kleines Vertrauenssignal ändert den Anreiz komplett\n- Menschen schätzen Kooperation intrinsisch\n\n### Verhandlungsrelevanz\n\n**Sofortige Einigung vs. Kooperation:** In vielen Verhandlungen empfiehlt die Rückwärtsinduktion sofort abzuschließen – aber Geduld und Vertrauensaufbau können beide Seiten besser stellen.\n\n**Chain-Store Paradox:** Ähnlich: Ein monopolistisches Unternehmen sollte laut Theorie niemals kämpfen – aber in der Praxis kämpfen Firmen, um Reputation aufzubauen.\n\n**Lesson:** Rückwärtsinduktion ist ein nützliches Analysetool, aber kein universell gültiges Verhaltensmodell. Menschliches Verhalten weicht systematisch ab – und das schafft Raum für kooperative Verhandlungsstrategien."
+  },
+  {
+    "slug": "evolutionaere-stabilitaet",
+    "title": "Evolutionär Stabile Strategien (ESS)",
+    "category": "Fortgeschritten",
+    "difficulty": "fortgeschritten",
+    "order_index": 26,
+    "related_game": "habicht-taube",
+    "sources": [
+      {"autor": "John Maynard Smith", "werk": "Evolution and the Theory of Games", "jahr": 1982, "verlag": "Cambridge University Press"},
+      {"autor": "John Maynard Smith & G. R. Price", "werk": "The Logic of Animal Conflict", "jahr": 1973, "journal": "Nature"}
+    ],
+    "content_md": "## Evolutionär Stabile Strategien (ESS)\n\n### Das Habicht-Taube-Modell\n\nMaynard Smith (1973) fragte: Warum kämpfen Tiere nicht immer bis zum Tod? Die Antwort liegt in der evolutionären Spieltheorie.\n\n**Die zwei Strategien:**\n- **Hawk (Habicht):** Kämpft immer, bis er siegt oder verletzt wird.\n- **Dove (Taube):** Droht, weicht aber zurück, wenn der Gegner kämpft.\n\n**Payoff-Matrix** (V = Ressourcenwert = 4, C = Kampfkosten = 6):\n- H vs H: (V−C)/2 = −1 (beide riskieren Verletzung)\n- H vs D: Hawk: V=4, Dove: 0\n- D vs D: V/2 = 2 (friedliche Aufteilung)\n\n### Was ist eine ESS?\n\nEine Strategie *S* ist evolutionär stabil, wenn eine Population, die *S* spielt, nicht durch eine kleine Menge von Mutanten mit einer anderen Strategie *T* invadiert werden kann.\n\n**Formal:** S ist ESS, wenn für alle T ≠ S:\n- u(S,S) > u(T,S), oder\n- u(S,S) = u(T,S) und u(S,T) > u(T,T)\n\n### Das gemischte Gleichgewicht\n\nIm Hawk-Dove-Spiel ist weder reines Hawk noch reines Dove eine ESS:\n- **Nur Hawke:** Hawk vs. Hawk = −1. Eine Dove-Mutante bekommt 0 > −1. → Dove invadiert.\n- **Nur Doves:** Dove vs. Dove = 2. Eine Hawk-Mutante bekommt 4 > 2. → Hawk invadiert.\n\n**ESS = gemischte Strategie:** p*(Hawk) = V/C = 4/6 = 2/3\n\nBei dieser Mischung sind die erwarteten Payoffs für Hawk und Dove gleich:\n- E(Hawk) = (2/3)×(−1) + (1/3)×4 = 2/3\n- E(Dove) = (2/3)×0 + (1/3)×2 = 2/3 ✓\n\n### Anwendungen\n\n**Biologie:** Tierkämpfe enden oft mit Rückzug, weil echte Verletzungsrisiken die Hawk-Strategie teuer machen.\n\n**Wirtschaft:** Preiskämpfe (Preissenkungskrieg = H vs H), Markteintrittsstrategien, Arbeitskonflikte.\n\n**Verhandlung:** Aggressive Verhandlungsführung vs. kooperative Ansätze folgen der gleichen Logik. Wenn alle aggressiv sind, sinkt der Gesamtgewinn."
+  },
+  {
+    "slug": "auktionstheorie",
+    "title": "Auktionstheorie & Winner's Curse",
+    "category": "Fortgeschritten",
+    "difficulty": "fortgeschritten",
+    "order_index": 27,
+    "related_game": "gewinner-fluch",
+    "sources": [
+      {"autor": "William Vickrey", "werk": "Counterspeculation, Auctions, and Competitive Sealed Tenders", "jahr": 1961, "journal": "Journal of Finance"},
+      {"autor": "Paul Milgrom & Robert Weber", "werk": "A Theory of Auctions and Competitive Bidding", "jahr": 1982, "journal": "Econometrica"},
+      {"autor": "Richard Thaler", "werk": "The Winner's Curse", "jahr": 1988, "journal": "Journal of Economic Perspectives"}
+    ],
+    "content_md": "## Auktionstheorie & Winner's Curse\n\n### Die vier Auktionsformen\n\n1. **Englische Auktion:** Offenes Bieten aufwärts. Höchstbietender gewinnt zum eigenen Preis.\n2. **Holländische Auktion:** Preis sinkt, wer zuerst zuschlägt gewinnt.\n3. **Erstpreis-Siegelgebot:** Alle bieten verdeckt, Höchstbietender zahlt sein Gebot.\n4. **Vickrey-Auktion (Zweitpreis):** Höchstbietender gewinnt, zahlt aber das zweithöchste Gebot. → Wahre Wertschätzung bieten ist dominante Strategie!\n\n### Revenue Equivalence Theorem\n\nMilgrom & Weber (1982) zeigten: Unter Standardbedingungen erzeugen alle vier Auktionsformen **denselben erwarteten Erlös** für den Verkäufer. Praktische Unterschiede entstehen durch Risikoaversion, Asymmetrien und Common Values.\n\n### Winner's Curse – der Fluch des Gewinners\n\nBei **Common Value Auctions** (unbekannter, gemeinsamer wahrer Wert) bekommen alle Bieter private Signale:\n- Jeder schätzt den Wert leicht anders\n- Wer gewinnt, hatte tendenziell das **höchste Signal** – und damit die optimistischste Schätzung\n- Der wahre Wert liegt meist unter dem Gewinngebot!\n\n**Mathematisch:** Bei n Bietern und normalverteilten Signalen um Wert v:\n- Erwartungswert des Maximums von n Signalen > v\n- Rationale Strategie: Biet **Signal × (n−1)/n**\n\n### Empirische Belege\n\nThaler (1988) dokumentierte den Winner's Curse in:\n- Ölfeld-Lizenzversteigerungen (Capen et al. 1971)\n- Unternehmensübernahmen (Akquisitionsperformance)\n- Sportdraft-Picks (NFL)\n- Bookpublishing-Advances\n\n### Verhandlungsrelevanz\n\n**M&A:** Übernahmeprämien liegen durchschnittlich 20–30% über dem Marktwert. Viele Akquisitionen zerstören Wert – Winner's Curse at scale.\n\n**Ausschreibungen:** Wer systematisch gewinnt, zahlt zu viel. Biete konservativ, lass aggressive Bieter den Fluch erfahren.\n\n**Gegenmaßnahmen:** Rationale Abschlagsformel, mehr Information sammeln vor dem Bieten, Synergiepotenziale realistic einschätzen."
+  },
+  {
+    "slug": "mechanismus-design",
+    "title": "Mechanismus-Design & Anreizkompatibilität",
+    "category": "Fortgeschritten",
+    "difficulty": "fortgeschritten",
+    "order_index": 28,
+    "related_game": "auktion",
+    "sources": [
+      {"autor": "Leonid Hurwicz", "werk": "On Informationally Decentralized Systems", "jahr": 1972, "verlag": "Decision and Organization"},
+      {"autor": "Roger Myerson", "werk": "Optimal Auction Design", "jahr": 1981, "journal": "Mathematics of Operations Research"},
+      {"autor": "Eric Maskin", "werk": "Nash Equilibrium and Welfare Optimality", "jahr": 1999, "journal": "Review of Economic Studies"}
+    ],
+    "content_md": "## Mechanismus-Design – Die umgekehrte Spieltheorie\n\n### Das Designproblem\n\nNormale Spieltheorie: **Gegebene Regeln → Analysiere Verhalten.**\n\nMechanismus-Design (auch: *Reverse Game Theory*): **Gewünschtes Ergebnis → Designe die Regeln.**\n\nHurwicz, Maskin und Myerson erhielten 2007 den Nobelpreis für diese Idee.\n\n### Anreizkompatibilität (IC)\n\nEin Mechanismus ist **anreizkompatibel**, wenn es für jeden Teilnehmer optimal ist, seine wahren Präferenzen zu offenbaren.\n\n**Revelation Principle (Myerson):** Für jeden Mechanismus mit Gleichgewichtsverhalten gibt es einen äquivalenten direkten Mechanismus, in dem Wahrheit-Sagen eine dominante Strategie ist.\n\n### Das Vickrey-Auktions-Beispiel\n\nWarum zahlt der Gewinner das zweithöchste Gebot?\n\n- **Überbietung schadet:** Wenn du mehr bietest als deine wahre Wertschätzung v und gewinnst, zahlst du möglicherweise mehr als v.\n- **Unterbietung schadet:** Wenn du weniger bietest, könntest du verlieren, obwohl du bereit wärst, das Zweithöchste zu zahlen.\n- → v bieten ist dominant! Die Vickrey-Auktion ist **anreizkompatibel**.\n\n### Weitere Anwendungen\n\n**Schulzuweisung (Deferred Acceptance):** Gale-Shapley-Algorithmus. Wenn Schüler und Schulen Präferenzen angeben und der DA-Mechanismus genutzt wird, ist ehrliche Angabe für Schüler optimal.\n\n**Organallokation:** Kidney-Exchange-Programme (Roth, 2012 Nobelpreis) sind so designt, dass ehrliche Angabe und stabile Zuweisung kompatibel sind.\n\n**Carbontax vs. Cap-and-Trade:** Verschiedene Mechanismen zur CO₂-Reduktion – unterschiedliche Anreizstrukturen.\n\n### Revelation vs. Implementation\n\nNicht jedes soziale Ziel ist implementierbar. Maskins Theorem (1999) charakterisiert, welche sozialen Wahlregeln implementierbar sind – eine fundamentale Grenze der Mechanismus-Designs."
+  },
+  {
+    "slug": "shapley-wert",
+    "title": "Shapley-Wert & faire Aufteilung",
+    "category": "Fortgeschritten",
+    "difficulty": "fortgeschritten",
+    "order_index": 29,
+    "related_game": null,
+    "sources": [
+      {"autor": "Lloyd Shapley", "werk": "A Value for n-Person Games", "jahr": 1953, "verlag": "Contributions to the Theory of Games"},
+      {"autor": "Alvin Roth", "werk": "The Shapley Value", "jahr": 1988, "verlag": "Cambridge University Press"}
+    ],
+    "content_md": "## Shapley-Wert – Der faire Anteil an Kooperation\n\n### Das Problem\n\nDrei Firmen A, B und C kooperieren und erzeugen gemeinsam Gewinne:\n- Nur A: 0, Nur B: 0, Nur C: 0\n- A+B: 60, A+C: 70, B+C: 40\n- A+B+C: 100\n\nWie sollen die 100 aufgeteilt werden? Das ist die Kernfrage der **kooperativen Spieltheorie**.\n\n### Der Shapley-Wert\n\nLloyd Shapley (1953) definierte eine eindeutige, faire Lösung: Jeder Spieler erhält seinen **durchschnittlichen marginalen Beitrag** über alle möglichen Koalitionsreihenfolgen.\n\n**Berechnung für Spieler i:**\n\nφᵢ = Σ [|S|!(n−|S|−1)!/n!] × [v(S∪{i}) − v(S)]\n\nFür obiges Beispiel:\n- φ(A) ≈ 40, φ(B) ≈ 30, φ(C) ≈ 30\n\n### Die vier Axiome\n\nShapley zeigte: Sein Wert ist die einzige Aufteilung, die diese vier fairen Eigenschaften erfüllt:\n\n1. **Effizienz:** Alle Gewinne werden verteilt: Σφᵢ = v(N)\n2. **Symmetrie:** Spieler mit gleichen Beiträgen erhalten gleich viel\n3. **Null-Spieler:** Wer nichts beiträgt, bekommt nichts\n4. **Additivität:** Aufteilung in zwei Spiele und Addition ergibt dasselbe wie gemeinsame Aufteilung\n\n### Praktische Anwendungen\n\n**Kostenaufteilung:** Flughafen-Landegebühren, Wasserinfrastruktur, Gemeinschaftsprojekte.\n\n**AI & Machine Learning:** Shapley-Werte messen den Beitrag einzelner Features zur Vorhersage (SHAP-Algorithmus).\n\n**Lobbying & Politik:** Voting Power – wie viel Einfluss hat ein kleines Land in der EU?\n\n**Verhandlung:** Gibt eine prinzipienbasierte Antwort auf die Frage: 'Was ist mein fairer Anteil am Kooperationsgewinn?'"
+  },
+  {
+    "slug": "bayesianische-spiele",
+    "title": "Bayesianische Spiele & Unvollständige Information",
+    "category": "Fortgeschritten",
+    "difficulty": "fortgeschritten",
+    "order_index": 30,
+    "related_game": "gewinner-fluch",
+    "sources": [
+      {"autor": "John C. Harsanyi", "werk": "Games with Incomplete Information Played by Bayesian Players", "jahr": 1967, "journal": "Management Science"},
+      {"autor": "Roger Myerson", "werk": "Game Theory: Analysis of Conflict", "jahr": 1991, "verlag": "Harvard University Press"}
+    ],
+    "content_md": "## Bayesianische Spiele – Wenn Information fehlt\n\n### Das Problem unvollständiger Information\n\nIn realen Verhandlungen wissen wir selten, was der andere wirklich will:\n- Welchen Reservationspreis hat der Käufer?\n- Wie dringend braucht das Unternehmen den Deal?\n- Kennt die Gegenseite unsere BATNA?\n\nHarsanyi (1967–68) formalisierte diese Situation: Spieler haben **Typen**, die ihnen bekannt sind, dem Gegner aber nicht.\n\n### Typen, Beliefs und Bayes-Nash-Gleichgewicht\n\n**Typ θᵢ** repräsentiert private Information (z.B. eigene Wertschätzung, Kosten, Risikobereitschaft).\n\n**Belief** μᵢ(θ₋ᵢ) ist die Wahrscheinlichkeitsverteilung über die Typen des Gegners.\n\n**Bayes-Nash-Gleichgewicht:** Jeder Typ jedes Spielers wählt eine Strategie, die angesichts seiner Beliefs und der Strategien aller anderen Typen optimal ist.\n\n### Beispiel: Zweiseitiger Handel\n\nVerkäufer hat Kosten c (privat), Käufer hat Wert v (privat). Handel ist effizient wenn v > c.\n\n**Unmöglichkeitstheorem (Myerson-Satterthwaite, 1983):** Bei unvollständiger Information auf beiden Seiten gibt es keinen Mechanismus, der:\n- Immer dann handelt wenn es effizient ist\n- Anreizkompatibel ist\n- Budgetausgeglichen ist\n\n→ **Informationsasymmetrie kostet immer Effizienz.**\n\n### Signaling als Ausweg\n\nSpence (1973, Nobelpreis 2001): Bildung als kostspieliges Signal der Produktivität. Hoch-Typ-Arbeitnehmer können sich durch Bildung glaubwürdig von Niedrig-Typen unterscheiden – auch wenn Bildung selbst keine Produktivität steigert.\n\n### Verhandlungsrelevanz\n\n**Screening:** Angebote so gestalten, dass die Gegenseite ihren Typ preisgibt (z.B. gestaffelte Preise, Paketangebote).\n\n**Cheap Talk:** Kommunikation ohne Kosten ist nur glaubwürdig, wenn die Interessen ausreichend aligned sind (Crawford-Sobel, 1982).\n\n**Due Diligence:** Mehr Information reduziert Informationsasymmetrien und verbessert Handelsmöglichkeiten."
   }
 ]

@@ -15,6 +15,8 @@ from ..game_engine import (
     auction_play_round,
     beauty_contest_final_result,
     beauty_contest_play_round,
+    bots_final_result,
+    bots_play_round,
     centipede_final_result,
     centipede_process_turn,
     chicken_final_result,
@@ -26,8 +28,12 @@ from ..game_engine import (
     dollar_process_turn,
     gd_final_result,
     gd_play_round,
+    hd_final_result,
+    hd_play_round,
     minority_final_result,
     minority_play_round,
+    mp_final_result,
+    mp_play_round,
     public_goods_final_result,
     public_goods_play_round,
     rps_final_result,
@@ -39,8 +45,13 @@ from ..game_engine import (
     ultimatum_ai_offer,
     ultimatum_ai_response,
     ultimatum_score,
+    vd_final_result,
+    vd_play_round,
     verhandlung_ai_offer,
     verhandlung_score,
+    wc_final_result,
+    wc_generate_item,
+    wc_play_round,
 )
 from ..services import save_game_session
 
@@ -525,6 +536,51 @@ GAME_META = [
         "schwierigkeit": "Fortgeschritten",
         "runden": 8,
         "konzept": "El Farol Problem, Minderheitskoordination, Emergenz",
+    },
+    {
+        "id": "habicht-taube",
+        "name": "Habicht-Taube-Spiel",
+        "icon": "🦅",
+        "beschreibung": "Sei aggressiv (Habicht) oder nachgebend (Taube)? Das Grundmodell der evolutionären Spieltheorie zeigt, warum Aggressivität nicht immer gewinnt.",
+        "schwierigkeit": "Fortgeschritten",
+        "runden": 10,
+        "konzept": "Evolutionär Stabile Strategie, ESS, Hawk-Dove",
+    },
+    {
+        "id": "geschlechter-kampf",
+        "name": "Koordinationsdilemma",
+        "icon": "🎭",
+        "beschreibung": "Zwei Spieler wollen zusammen sein, bevorzugen aber verschiedene Aktivitäten. Wer gibt nach? Das klassische Battle-of-the-Sexes-Modell.",
+        "schwierigkeit": "Einsteiger",
+        "runden": 8,
+        "konzept": "Multiple Nash-Gleichgewichte, Koordination, gemischte Strategien",
+    },
+    {
+        "id": "freiwilligen-dilemma",
+        "name": "Freiwilligen-Dilemma",
+        "icon": "🙋",
+        "beschreibung": "Jemand muss sich opfern – aber wer? 5 Spieler, eine unangenehme Aufgabe. Das Volunteer's Dilemma zeigt die Logik des Trittbrettfahrens.",
+        "schwierigkeit": "Fortgeschritten",
+        "runden": 8,
+        "konzept": "Freiwilligen-Dilemma, Trittbrettfahrer, Gruppenentscheidung",
+    },
+    {
+        "id": "gleiche-muenzen",
+        "name": "Gleiche Münzen",
+        "icon": "🪙",
+        "beschreibung": "Wähle Kopf oder Zahl. Das reinste Nullsummenspiel der Spieltheorie – kein Nash-Gleichgewicht in reinen Strategien. Nur Zufall gewinnt.",
+        "schwierigkeit": "Einsteiger",
+        "runden": 10,
+        "konzept": "Nullsummenspiel, Gemischte Strategien, Minimax",
+    },
+    {
+        "id": "gewinner-fluch",
+        "name": "Der Fluch des Gewinners",
+        "icon": "🏆",
+        "beschreibung": "Biete auf ein Objekt mit unbekanntem Wert. Wer gewinnt, hat meist zu viel geboten – der Fluch des Gewinners trifft fast jeden.",
+        "schwierigkeit": "Fortgeschritten",
+        "runden": 5,
+        "konzept": "Fluch des Gewinners, Common Value Auction, Bayesianisches Schließen",
     },
 ]
 
@@ -1935,6 +1991,490 @@ def minderheit_zug(
             "is_final": is_final,
             "final": final,
             "max_rounds": 8,
+            "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Habicht-Taube-Spiel (Hawk-Dove / ESS)
+# ---------------------------------------------------------------------------
+
+HD_STRATEGY_POOL = ["ess_mixed", "always_hawk", "always_dove", "adaptive"]
+HD_STRATEGY_WEIGHTS = [3, 2, 2, 3]
+
+HD_STRATEGY_INFO = {
+    "ess_mixed": {
+        "icon": "🧬",
+        "name": "ESS-Gemischt-Population",
+        "verhalten": "Die KI spielte die evolutionär stabile Strategie: 2/3 Hawk, 1/3 Dove. Gegen diese Mischung kann keine reine Strategie langfristig besser abschneiden.",
+        "gegencheck": "Gegen ESS: selbst 2/3 Hawk spielen. Jede Abweichung kostet langfristig.",
+        "lesson_slug": "evolutionaere-stabilitaet",
+        "lesson_title": "Evolutionär Stabile Strategien",
+    },
+    "always_hawk": {
+        "icon": "🦅",
+        "name": "Immer Hawk",
+        "verhalten": "Die KI war stets aggressiv. Bei H vs H entstehen hohe Kampfkosten – diese Strategie verliert gegen gemischte Spieler.",
+        "gegencheck": "Dove spielen: Du verlierst zwar einzelne Kämpfe (0 statt -1), aber sparst Kampfkosten.",
+        "lesson_slug": "evolutionaere-stabilitaet",
+        "lesson_title": "Evolutionär Stabile Strategien",
+    },
+    "always_dove": {
+        "icon": "🕊️",
+        "name": "Immer Dove",
+        "verhalten": "Die KI wich immer zurück. Hawk dominiert Dove vollständig: 4 vs 0 jede Runde.",
+        "gegencheck": "Immer Hawk spielen – maximaler Exploit gegen Dove.",
+        "lesson_slug": "dominante-strategien",
+        "lesson_title": "Dominante Strategien",
+    },
+    "adaptive": {
+        "icon": "🔄",
+        "name": "Adaptive KI",
+        "verhalten": "Spielte Hawk wenn du Dove warst, Dove wenn du Hawk warst – klassisches Ausweichen.",
+        "gegencheck": "Unberechenbar mischen: 2/3 Hawk. Dann profitiert auch die adaptive KI nicht.",
+        "lesson_slug": "gemischte-strategien",
+        "lesson_title": "Gemischte Strategien",
+    },
+}
+
+
+@router.get("/habicht-taube", response_class=HTMLResponse)
+def habicht_taube_page(request: Request):
+    hidden_strategy = _random.choices(HD_STRATEGY_POOL, weights=HD_STRATEGY_WEIGHTS)[0]
+    return templates.TemplateResponse(
+        request,
+        "games/habicht_taube.html",
+        {"active_page": "spiele", "hidden_strategy": hidden_strategy, "max_rounds": 10},
+    )
+
+
+@router.post("/habicht-taube/zug", response_class=HTMLResponse)
+def habicht_taube_zug(
+    request: Request,
+    choice: str = Form(...),
+    strategy: str = Form(...),
+    history_json: str = Form(default="[]"),
+    db: Session = Depends(get_db),
+):
+    history = json.loads(history_json)
+    round_result = hd_play_round(choice, strategy, history)
+    history.append(round_result)
+    is_final = len(history) >= 10
+    final = hd_final_result(history) if is_final else None
+    strategy_info = None
+    new_achievements: list = []
+    if is_final:
+        _, new_achievements = save_game_session(
+            db,
+            game_type="habicht-taube",
+            ai_strategy=strategy,
+            moves=history,
+            result=final["result"],
+            score=final["player_total"],
+            ai_score=final["ai_total"],
+        )
+        strategy_info = HD_STRATEGY_INFO.get(strategy)
+    return templates.TemplateResponse(
+        request,
+        "partials/habicht_taube_result.html",
+        {
+            "round_result": round_result,
+            "history": history,
+            "history_json": json.dumps(history),
+            "strategy": strategy,
+            "is_final": is_final,
+            "final": final,
+            "max_rounds": 10,
+            "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Koordinationsdilemma / Battle of the Sexes
+# ---------------------------------------------------------------------------
+
+BOTS_STRATEGY_POOL = ["stubborn_b", "mirror", "nash_mixed", "adaptive"]
+BOTS_STRATEGY_WEIGHTS = [3, 2, 3, 2]
+
+BOTS_STRATEGY_INFO = {
+    "stubborn_b": {
+        "icon": "💪",
+        "name": "Sture KI (immer B)",
+        "verhalten": "Die KI bestand auf Option B – jede Koordination erforderte, dass du nachgibst.",
+        "gegencheck": "Bei sturer KI: manchmal B spielen sichert wenigstens 1 Punkt. Reines A erzeugt nur 0er-Runden.",
+        "lesson_slug": "koordinationsspiele",
+        "lesson_title": "Koordinationsspiele",
+    },
+    "mirror": {
+        "icon": "🪞",
+        "name": "Spiegel-KI",
+        "verhalten": "Kopierte deinen letzten Zug. Einmal koordiniert → immer koordiniert.",
+        "gegencheck": "A spielen und darauf beharren – KI folgt nach einer Runde.",
+        "lesson_slug": "koordinationsspiele",
+        "lesson_title": "Koordinationsspiele",
+    },
+    "nash_mixed": {
+        "icon": "⚖️",
+        "name": "Nash-Gemischt-KI",
+        "verhalten": "Spielte die gemischte Nash-Strategie (25% A, 75% B). Gegen diese Mischung gibt es keine bessere reine Antwort.",
+        "gegencheck": "Selbst gemischt spielen (75% A, 25% B) – das ist das gemischte Nash-Gleichgewicht.",
+        "lesson_slug": "gemischte-strategien",
+        "lesson_title": "Gemischte Strategien",
+    },
+    "adaptive": {
+        "icon": "🧠",
+        "name": "Adaptive KI",
+        "verhalten": "Wiederholte koordinierte Züge, verwarf Miskoordination. Lernende Strategie.",
+        "gegencheck": "Früh A als Fokalpunkt etablieren – adaptive KI folgt stabilen Mustern.",
+        "lesson_slug": "koordinationsspiele",
+        "lesson_title": "Koordinationsspiele",
+    },
+}
+
+
+@router.get("/geschlechter-kampf", response_class=HTMLResponse)
+def geschlechter_kampf_page(request: Request):
+    hidden_strategy = _random.choices(BOTS_STRATEGY_POOL, weights=BOTS_STRATEGY_WEIGHTS)[0]
+    return templates.TemplateResponse(
+        request,
+        "games/geschlechter_kampf.html",
+        {"active_page": "spiele", "hidden_strategy": hidden_strategy, "max_rounds": 8},
+    )
+
+
+@router.post("/geschlechter-kampf/zug", response_class=HTMLResponse)
+def geschlechter_kampf_zug(
+    request: Request,
+    choice: str = Form(...),
+    strategy: str = Form(...),
+    history_json: str = Form(default="[]"),
+    db: Session = Depends(get_db),
+):
+    history = json.loads(history_json)
+    round_result = bots_play_round(choice, strategy, history)
+    history.append(round_result)
+    is_final = len(history) >= 8
+    final = bots_final_result(history) if is_final else None
+    strategy_info = None
+    new_achievements: list = []
+    if is_final:
+        _, new_achievements = save_game_session(
+            db,
+            game_type="geschlechter-kampf",
+            ai_strategy=strategy,
+            moves=history,
+            result=final["result"],
+            score=final["player_total"],
+            ai_score=final["ai_total"],
+        )
+        strategy_info = BOTS_STRATEGY_INFO.get(strategy)
+    return templates.TemplateResponse(
+        request,
+        "partials/geschlechter_kampf_result.html",
+        {
+            "round_result": round_result,
+            "history": history,
+            "history_json": json.dumps(history),
+            "strategy": strategy,
+            "is_final": is_final,
+            "final": final,
+            "max_rounds": 8,
+            "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Freiwilligen-Dilemma (Volunteer's Dilemma)
+# ---------------------------------------------------------------------------
+
+VD_STRATEGY_POOL = ["selfish", "nash_mixed", "threshold", "altruistic"]
+VD_STRATEGY_WEIGHTS = [3, 3, 2, 2]
+
+VD_STRATEGY_INFO = {
+    "selfish": {
+        "icon": "😤",
+        "name": "Egoistische Bots",
+        "verhalten": "Alle Bots spielten NV – klassisches Trittbrettfahren. Wenn du nicht hilfst, gibt es gar nichts.",
+        "gegencheck": "Manchmal helfen lohnt sich: 3 Punkte statt 0 ist besser als riskieren, leer auszugehen.",
+        "lesson_slug": "koordinationsspiele",
+        "lesson_title": "Koordinationsspiele",
+    },
+    "nash_mixed": {
+        "icon": "⚖️",
+        "name": "Nash-Gemischt-Bots",
+        "verhalten": "Bots spielten die Nash-Gleichgewichts-Mischung (~71% NV). Manchmal hilft einer, oft nicht.",
+        "gegencheck": "Selbst gemischt spielen – die Nash-Strategie ist robust gegen diese Botmischung.",
+        "lesson_slug": "gemischte-strategien",
+        "lesson_title": "Gemischte Strategien",
+    },
+    "threshold": {
+        "icon": "🚦",
+        "name": "Schwellenwert-Bots",
+        "verhalten": "Bots halfen nach zwei NV-Runden in Folge. Kollektive Reaktion auf anhaltende Inaktivität.",
+        "gegencheck": "Frühzeitig helfen verhindert Schwellenwert-Eskalation. Erkenne das Muster.",
+        "lesson_slug": "wiederholte-spiele-reputation",
+        "lesson_title": "Wiederholte Spiele & Reputation",
+    },
+    "altruistic": {
+        "icon": "💚",
+        "name": "Altruistische Bots",
+        "verhalten": "Bots halfen immer. Als Trittbrettfahrer kannst du jede Runde 5 Punkte kassieren.",
+        "gegencheck": "NV spielen und profitieren – zeigt wie Trittbrettfahrertum funktioniert.",
+        "lesson_slug": "koordinationsspiele",
+        "lesson_title": "Koordinationsspiele",
+    },
+}
+
+
+@router.get("/freiwilligen-dilemma", response_class=HTMLResponse)
+def freiwilligen_dilemma_page(request: Request):
+    hidden_strategy = _random.choices(VD_STRATEGY_POOL, weights=VD_STRATEGY_WEIGHTS)[0]
+    return templates.TemplateResponse(
+        request,
+        "games/freiwilligen_dilemma.html",
+        {"active_page": "spiele", "hidden_strategy": hidden_strategy, "max_rounds": 8},
+    )
+
+
+@router.post("/freiwilligen-dilemma/zug", response_class=HTMLResponse)
+def freiwilligen_dilemma_zug(
+    request: Request,
+    choice: str = Form(...),
+    strategy: str = Form(...),
+    history_json: str = Form(default="[]"),
+    db: Session = Depends(get_db),
+):
+    history = json.loads(history_json)
+    round_result = vd_play_round(choice, strategy, history)
+    history.append(round_result)
+    is_final = len(history) >= 8
+    final = vd_final_result(history) if is_final else None
+    strategy_info = None
+    new_achievements: list = []
+    if is_final:
+        _, new_achievements = save_game_session(
+            db,
+            game_type="freiwilligen-dilemma",
+            ai_strategy=strategy,
+            moves=history,
+            result=final["result"],
+            score=final["player_total"],
+            ai_score=0,
+        )
+        strategy_info = VD_STRATEGY_INFO.get(strategy)
+    return templates.TemplateResponse(
+        request,
+        "partials/freiwilligen_dilemma_result.html",
+        {
+            "round_result": round_result,
+            "history": history,
+            "history_json": json.dumps(history),
+            "strategy": strategy,
+            "is_final": is_final,
+            "final": final,
+            "max_rounds": 8,
+            "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Gleiche Münzen (Matching Pennies)
+# ---------------------------------------------------------------------------
+
+MP_STRATEGY_POOL = ["random", "pattern_exploit", "last_winner", "anti_last"]
+MP_STRATEGY_WEIGHTS = [2, 3, 3, 2]
+
+MP_STRATEGY_INFO = {
+    "random": {
+        "icon": "🎲",
+        "name": "Zufalls-KI",
+        "verhalten": "50/50 zufällig – das einzige Nash-Gleichgewicht im Matching-Pennies-Spiel. Nicht zu schlagen.",
+        "gegencheck": "Selbst 50/50 zufällig spielen – das ist die Minimax-Strategie.",
+        "lesson_slug": "gemischte-strategien",
+        "lesson_title": "Gemischte Strategien",
+    },
+    "pattern_exploit": {
+        "icon": "🔍",
+        "name": "Muster-Exploiter",
+        "verhalten": "Analysierte deine letzten 3 Züge und spielte die häufigere Seite. Erkannte Muster werden ausgenutzt.",
+        "gegencheck": "Kein Muster – echter Zufall (Münze werfen!) ist die einzige sichere Methode.",
+        "lesson_slug": "gemischte-strategien",
+        "lesson_title": "Gemischte Strategien",
+    },
+    "last_winner": {
+        "icon": "🏆",
+        "name": "Gewinner-Wiederholt-KI",
+        "verhalten": "Wiederholte gewinnende Züge. Vorhersagbar nach einem Gewinn – dann immer wechseln.",
+        "gegencheck": "Nach einer KI-Niederlage: spiel dasselbe wie zuvor. Nach KI-Sieg: wechsel.",
+        "lesson_slug": "gemischte-strategien",
+        "lesson_title": "Gemischte Strategien",
+    },
+    "anti_last": {
+        "icon": "↩️",
+        "name": "Anti-Letzter-Zug-KI",
+        "verhalten": "Spielte das Gegenteil deines letzten Zuges. Sobald erkannt: spielst du K, kommt Z – spiel dann Z.",
+        "gegencheck": "Erkenne das Muster: spiel immer das Gegenteil deines letzten Zuges.",
+        "lesson_slug": "gemischte-strategien",
+        "lesson_title": "Gemischte Strategien",
+    },
+}
+
+
+@router.get("/gleiche-muenzen", response_class=HTMLResponse)
+def gleiche_muenzen_page(request: Request):
+    hidden_strategy = _random.choices(MP_STRATEGY_POOL, weights=MP_STRATEGY_WEIGHTS)[0]
+    return templates.TemplateResponse(
+        request,
+        "games/gleiche_muenzen.html",
+        {"active_page": "spiele", "hidden_strategy": hidden_strategy, "max_rounds": 10},
+    )
+
+
+@router.post("/gleiche-muenzen/zug", response_class=HTMLResponse)
+def gleiche_muenzen_zug(
+    request: Request,
+    choice: str = Form(...),
+    strategy: str = Form(...),
+    history_json: str = Form(default="[]"),
+    db: Session = Depends(get_db),
+):
+    history = json.loads(history_json)
+    round_result = mp_play_round(choice, strategy, history)
+    history.append(round_result)
+    is_final = len(history) >= 10
+    final = mp_final_result(history) if is_final else None
+    strategy_info = None
+    new_achievements: list = []
+    if is_final:
+        _, new_achievements = save_game_session(
+            db,
+            game_type="gleiche-muenzen",
+            ai_strategy=strategy,
+            moves=history,
+            result=final["result"],
+            score=final["player_total"],
+            ai_score=final["ai_total"],
+        )
+        strategy_info = MP_STRATEGY_INFO.get(strategy)
+    return templates.TemplateResponse(
+        request,
+        "partials/gleiche_muenzen_result.html",
+        {
+            "round_result": round_result,
+            "history": history,
+            "history_json": json.dumps(history),
+            "strategy": strategy,
+            "is_final": is_final,
+            "final": final,
+            "max_rounds": 10,
+            "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Gewinner-Fluch (Winner's Curse / Common Value Auction)
+# ---------------------------------------------------------------------------
+
+WC_STRATEGY_POOL = ["naive", "rational", "aggressive"]
+WC_STRATEGY_WEIGHTS = [3, 3, 4]
+
+WC_STRATEGY_INFO = {
+    "naive": {
+        "icon": "😊",
+        "name": "Naive Bieter",
+        "verhalten": "Boten ungefähr ihr Signal – typisches Verhalten ohne Winner's-Curse-Bewusstsein.",
+        "gegencheck": "Biet unter deinem Signal: wahre Wert = Signal × (n-1)/n. Bei 4 Bietern: Signal × 3/4.",
+        "lesson_slug": "auktionstheorie",
+        "lesson_title": "Auktionstheorie & Winner's Curse",
+    },
+    "rational": {
+        "icon": "🧮",
+        "name": "Rationale Bieter",
+        "verhalten": "Passten ihr Signal nach unten an, um den Winner's Curse zu vermeiden. Schwerste Konkurrenz.",
+        "gegencheck": "Selbst rational bieten: Signal × (n-1)/n als Richtwert.",
+        "lesson_slug": "auktionstheorie",
+        "lesson_title": "Auktionstheorie & Winner's Curse",
+    },
+    "aggressive": {
+        "icon": "💥",
+        "name": "Aggressive Bieter",
+        "verhalten": "Boten über ihrem Signal – maximales Risiko für Winner's Curse. Wer gewinnt, zahlt oft zu viel.",
+        "gegencheck": "Konservativ bieten – lass die aggressiven Bieter sich selbst schaden.",
+        "lesson_slug": "auktionstheorie",
+        "lesson_title": "Auktionstheorie & Winner's Curse",
+    },
+}
+
+
+@router.get("/gewinner-fluch", response_class=HTMLResponse)
+def gewinner_fluch_page(request: Request):
+    hidden_strategy = _random.choices(WC_STRATEGY_POOL, weights=WC_STRATEGY_WEIGHTS)[0]
+    first_item = wc_generate_item(1)
+    return templates.TemplateResponse(
+        request,
+        "games/gewinner_fluch.html",
+        {
+            "active_page": "spiele",
+            "hidden_strategy": hidden_strategy,
+            "max_rounds": 5,
+            "item": first_item,
+            "item_json": json.dumps(first_item),
+        },
+    )
+
+
+@router.post("/gewinner-fluch/zug", response_class=HTMLResponse)
+def gewinner_fluch_zug(
+    request: Request,
+    player_bid: int = Form(...),
+    strategy: str = Form(...),
+    item_json: str = Form(...),
+    history_json: str = Form(default="[]"),
+    db: Session = Depends(get_db),
+):
+    item = json.loads(item_json)
+    history = json.loads(history_json)
+    round_result = wc_play_round(player_bid, item, strategy)
+    history.append(round_result)
+    is_final = len(history) >= 5
+    final = wc_final_result(history) if is_final else None
+    next_item = wc_generate_item(len(history) + 1) if not is_final else None
+    strategy_info = None
+    new_achievements: list = []
+    if is_final:
+        _, new_achievements = save_game_session(
+            db,
+            game_type="gewinner-fluch",
+            ai_strategy=strategy,
+            moves=history,
+            result=final["result"],
+            score=final["total_profit"],
+            ai_score=0,
+        )
+        strategy_info = WC_STRATEGY_INFO.get(strategy)
+    return templates.TemplateResponse(
+        request,
+        "partials/gewinner_fluch_result.html",
+        {
+            "round_result": round_result,
+            "history": history,
+            "history_json": json.dumps(history),
+            "strategy": strategy,
+            "is_final": is_final,
+            "final": final,
+            "max_rounds": 5,
+            "next_item": next_item,
+            "next_item_json": json.dumps(next_item) if next_item else "null",
             "strategy_info": strategy_info,
             "new_achievements": new_achievements,
         },

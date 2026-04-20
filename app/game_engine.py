@@ -1183,3 +1183,333 @@ def minority_final_result(history: list[dict]) -> dict:
         "minority_wins": minority_wins,
         "efficiency": efficiency,
     }
+
+
+# ---------------------------------------------------------------------------
+# Habicht-Taube-Spiel (Hawk-Dove)
+# ---------------------------------------------------------------------------
+
+HD_VALUE = 4   # Ressourcenwert
+HD_COST = 6    # Kampfkosten
+
+HD_PAYOFF = {
+    ("H", "H"): (-1, -1),   # (V-C)/2 each
+    ("H", "D"): (4, 0),     # Hawk nimmt alles
+    ("D", "H"): (0, 4),
+    ("D", "D"): (2, 2),     # V/2 each
+}
+
+HD_ESS_P_HAWK = HD_VALUE / HD_COST   # 2/3 Hawk
+
+
+def hd_ai_move(strategy: str, history: list[dict]) -> str:
+    if strategy == "ess_mixed":
+        return "H" if random.random() < HD_ESS_P_HAWK else "D"
+    elif strategy == "always_hawk":
+        return "H"
+    elif strategy == "always_dove":
+        return "D"
+    elif strategy == "adaptive":
+        if len(history) < 2:
+            return "D"
+        last_player = history[-1]["player"]
+        return "H" if last_player == "D" else "D"
+    return "H" if random.random() < 0.5 else "D"
+
+
+def hd_play_round(player: str, strategy: str, history: list[dict]) -> dict:
+    ai = hd_ai_move(strategy, history)
+    p_score, ai_score = HD_PAYOFF[(player, ai)]
+    prev_p = history[-1]["player_total"] if history else 0
+    prev_ai = history[-1]["ai_total"] if history else 0
+    return {
+        "round": len(history) + 1,
+        "player": player,
+        "ai": ai,
+        "player_score": p_score,
+        "ai_score": ai_score,
+        "player_total": prev_p + p_score,
+        "ai_total": prev_ai + ai_score,
+    }
+
+
+def hd_final_result(history: list[dict]) -> dict:
+    p_total = history[-1]["player_total"] if history else 0
+    ai_total = history[-1]["ai_total"] if history else 0
+    hawk_rounds = sum(1 for r in history if r["player"] == "H")
+    result = "win" if p_total > ai_total else ("draw" if p_total == ai_total else "loss")
+    return {
+        "result": result,
+        "player_total": p_total,
+        "ai_total": ai_total,
+        "hawk_rounds": hawk_rounds,
+        "dove_rounds": len(history) - hawk_rounds,
+        "ess_p_hawk": round(HD_ESS_P_HAWK * 100),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Geschlechter-Kampf / Koordinationsdilemma (Battle of the Sexes)
+# ---------------------------------------------------------------------------
+
+# Player prefers A (score 3 if both A), AI prefers B (score 3 if both B)
+# Miscoordination: 0 each
+BOTS_PAYOFF = {
+    ("A", "A"): (3, 1),
+    ("A", "B"): (0, 0),
+    ("B", "A"): (0, 0),
+    ("B", "B"): (1, 3),
+}
+BOTS_ESS_P_A = 3 / 4   # mixed Nash: player plays A with p=3/4
+
+
+def bots_ai_move(strategy: str, history: list[dict]) -> str:
+    if strategy == "stubborn_b":
+        return "B"
+    elif strategy == "mirror":
+        if not history:
+            return "B"
+        return history[-1]["player"]
+    elif strategy == "nash_mixed":
+        return "A" if random.random() < 1 / 4 else "B"
+    elif strategy == "adaptive":
+        if len(history) < 2:
+            return "B"
+        last = history[-1]
+        return last["ai"] if last["player_score"] > 0 else ("B" if last["ai"] == "A" else "A")
+    return "B"
+
+
+def bots_play_round(player: str, strategy: str, history: list[dict]) -> dict:
+    ai = bots_ai_move(strategy, history)
+    p_score, ai_score = BOTS_PAYOFF[(player, ai)]
+    prev_p = history[-1]["player_total"] if history else 0
+    prev_ai = history[-1]["ai_total"] if history else 0
+    return {
+        "round": len(history) + 1,
+        "player": player,
+        "ai": ai,
+        "player_score": p_score,
+        "ai_score": ai_score,
+        "player_total": prev_p + p_score,
+        "ai_total": prev_ai + ai_score,
+        "coordinated": player == ai,
+    }
+
+
+def bots_final_result(history: list[dict]) -> dict:
+    p_total = history[-1]["player_total"] if history else 0
+    ai_total = history[-1]["ai_total"] if history else 0
+    coord_rounds = sum(1 for r in history if r["coordinated"])
+    a_rounds = sum(1 for r in history if r["player"] == "A")
+    result = "win" if p_total > ai_total else ("draw" if p_total == ai_total else "loss")
+    return {
+        "result": result,
+        "player_total": p_total,
+        "ai_total": ai_total,
+        "coord_rounds": coord_rounds,
+        "a_rounds": a_rounds,
+        "b_rounds": len(history) - a_rounds,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Freiwilligen-Dilemma (Volunteer's Dilemma)
+# ---------------------------------------------------------------------------
+
+VD_BENEFIT = 5   # Nutzen wenn jemand hilft
+VD_COST = 2      # Kosten des Helfens
+VD_N_BOTS = 4    # Anzahl Bot-Mitspieler
+
+
+def vd_bots_play(strategy: str, history: list[dict]) -> list[str]:
+    """Gibt Entscheidungen aller Bots zurück."""
+    if strategy == "selfish":
+        return ["NV"] * VD_N_BOTS
+    elif strategy == "altruistic":
+        return ["V"] * VD_N_BOTS
+    elif strategy == "nash_mixed":
+        # Nash mixed: p(NV) = (B-C/B)^(1/(n-1)) - analytisch ca. 0.71
+        p_nv = ((VD_BENEFIT - VD_COST) / VD_BENEFIT) ** (1 / VD_N_BOTS)
+        return ["NV" if random.random() < p_nv else "V" for _ in range(VD_N_BOTS)]
+    elif strategy == "threshold":
+        if len(history) >= 2 and not any(r["someone_helped"] for r in history[-2:]):
+            return ["V"] + ["NV"] * (VD_N_BOTS - 1)
+        return ["NV"] * VD_N_BOTS
+    return ["NV" if random.random() < 0.6 else "V" for _ in range(VD_N_BOTS)]
+
+
+def vd_play_round(player: str, strategy: str, history: list[dict]) -> dict:
+    bots = vd_bots_play(strategy, history)
+    all_nv = player == "NV" and all(b == "NV" for b in bots)
+    someone_helped = player == "V" or any(b == "V" for b in bots)
+
+    if all_nv:
+        p_score = 0
+    elif player == "V":
+        p_score = VD_BENEFIT - VD_COST
+    else:
+        p_score = VD_BENEFIT
+
+    prev_p = history[-1]["player_total"] if history else 0
+    bot_helpers = sum(1 for b in bots if b == "V")
+    return {
+        "round": len(history) + 1,
+        "player": player,
+        "bots": bots,
+        "bot_helpers": bot_helpers,
+        "someone_helped": someone_helped,
+        "all_nv": all_nv,
+        "player_score": p_score,
+        "player_total": prev_p + p_score,
+    }
+
+
+def vd_final_result(history: list[dict]) -> dict:
+    p_total = history[-1]["player_total"] if history else 0
+    v_rounds = sum(1 for r in history if r["player"] == "V")
+    all_nv_rounds = sum(1 for r in history if r["all_nv"])
+    max_possible = len(history) * VD_BENEFIT
+    efficiency = round(p_total / max_possible * 100) if max_possible else 0
+    result = "win" if efficiency >= 60 else ("draw" if efficiency >= 40 else "loss")
+    return {
+        "result": result,
+        "player_total": p_total,
+        "v_rounds": v_rounds,
+        "nv_rounds": len(history) - v_rounds,
+        "all_nv_rounds": all_nv_rounds,
+        "efficiency": efficiency,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Gleiche Münzen (Matching Pennies)
+# ---------------------------------------------------------------------------
+
+MP_PAYOFF = {
+    ("K", "K"): (1, -1),
+    ("K", "Z"): (-1, 1),
+    ("Z", "K"): (-1, 1),
+    ("Z", "Z"): (1, -1),
+}
+
+
+def mp_ai_move(strategy: str, history: list[dict]) -> str:
+    if strategy == "random":
+        return random.choice(["K", "Z"])
+    elif strategy == "pattern_exploit":
+        if len(history) < 3:
+            return random.choice(["K", "Z"])
+        last3 = [r["player"] for r in history[-3:]]
+        k_count = last3.count("K")
+        return "K" if k_count >= 2 else "Z"
+    elif strategy == "last_winner":
+        if not history:
+            return "K"
+        last = history[-1]
+        return last["ai"] if last["ai_score"] > 0 else ("K" if last["ai"] == "Z" else "Z")
+    elif strategy == "anti_last":
+        if not history:
+            return "K"
+        return "K" if history[-1]["player"] == "Z" else "Z"
+    return random.choice(["K", "Z"])
+
+
+def mp_play_round(player: str, strategy: str, history: list[dict]) -> dict:
+    ai = mp_ai_move(strategy, history)
+    p_score, ai_score = MP_PAYOFF[(player, ai)]
+    prev_p = history[-1]["player_total"] if history else 0
+    prev_ai = history[-1]["ai_total"] if history else 0
+    return {
+        "round": len(history) + 1,
+        "player": player,
+        "ai": ai,
+        "player_score": p_score,
+        "ai_score": ai_score,
+        "player_total": prev_p + p_score,
+        "ai_total": prev_ai + ai_score,
+        "matched": player == ai,
+    }
+
+
+def mp_final_result(history: list[dict]) -> dict:
+    p_total = history[-1]["player_total"] if history else 0
+    ai_total = history[-1]["ai_total"] if history else 0
+    k_rounds = sum(1 for r in history if r["player"] == "K")
+    matched = sum(1 for r in history if r["matched"])
+    result = "win" if p_total > 0 else ("draw" if p_total == 0 else "loss")
+    return {
+        "result": result,
+        "player_total": p_total,
+        "ai_total": ai_total,
+        "k_rounds": k_rounds,
+        "z_rounds": len(history) - k_rounds,
+        "matched_rounds": matched,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Gewinner-Fluch (Winner's Curse / Common Value Auction)
+# ---------------------------------------------------------------------------
+
+WC_N_BIDDERS = 4   # Anzahl Bieter (inkl. Spieler)
+
+
+def wc_generate_item(round_num: int) -> dict:
+    """Generiert ein Auktionsobjekt mit verstecktem wahren Wert."""
+    true_value = random.randint(30, 80)
+    signals = [true_value + random.randint(-15, 15) for _ in range(WC_N_BIDDERS)]
+    player_signal = signals[0]
+    return {
+        "true_value": true_value,
+        "player_signal": player_signal,
+        "ai_signals": signals[1:],
+        "round": round_num,
+    }
+
+
+def wc_ai_bids(signals: list[int], strategy: str) -> list[int]:
+    if strategy == "naive":
+        return [max(0, s + random.randint(-3, 5)) for s in signals]
+    elif strategy == "rational":
+        n = WC_N_BIDDERS
+        return [max(0, round(s * (n - 1) / n + random.randint(-2, 2))) for s in signals]
+    elif strategy == "aggressive":
+        return [max(0, s + random.randint(5, 15)) for s in signals]
+    return [max(0, s + random.randint(-5, 5)) for s in signals]
+
+
+def wc_play_round(player_bid: int, item: dict, strategy: str) -> dict:
+    ai_bids = wc_ai_bids(item["ai_signals"], strategy)
+    all_bids = [player_bid] + ai_bids
+    max_bid = max(all_bids)
+    player_won = player_bid == max_bid and all_bids.count(max_bid) == 1
+    if player_won:
+        profit = item["true_value"] - player_bid
+    else:
+        profit = 0
+    return {
+        "round": item["round"],
+        "true_value": item["true_value"],
+        "player_signal": item["player_signal"],
+        "player_bid": player_bid,
+        "ai_bids": ai_bids,
+        "max_bid": max_bid,
+        "player_won": player_won,
+        "profit": profit,
+        "overpaid": player_won and profit < 0,
+    }
+
+
+def wc_final_result(history: list[dict]) -> dict:
+    wins = sum(1 for r in history if r["player_won"])
+    total_profit = sum(r["profit"] for r in history)
+    overpaid = sum(1 for r in history if r.get("overpaid"))
+    result = "win" if total_profit > 0 else ("draw" if total_profit == 0 else "loss")
+    return {
+        "result": result,
+        "wins": wins,
+        "total_profit": total_profit,
+        "overpaid": overpaid,
+        "total_rounds": len(history),
+    }

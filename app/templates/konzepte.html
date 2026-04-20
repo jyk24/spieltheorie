@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% block title %}Spieltheorie-Konzepte – VerhandlungsTrainer{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-slate-800">🧠 Spieltheorie-Konzepte</h1>
+        <p class="text-slate-500 mt-2">Tiefe Theorie, interaktive Visualisierungen und die Menschen dahinter.</p>
+    </div>
+
+    <!-- Schnell-Navigation -->
+    <div class="flex flex-wrap gap-2 mb-8">
+        <a href="#spieltypen" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-full text-sm hover:bg-indigo-100 hover:text-indigo-700 transition-colors">🎮 Spieltypen</a>
+        <a href="#nash-finder" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-full text-sm hover:bg-indigo-100 hover:text-indigo-700 transition-colors">⚖️ Nash-Finder</a>
+        <a href="#nobelpreise" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-full text-sm hover:bg-indigo-100 hover:text-indigo-700 transition-colors">🏆 Nobelpreise</a>
+        <a href="#konzept-karte" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-full text-sm hover:bg-indigo-100 hover:text-indigo-700 transition-colors">🗺️ Konzeptkarte</a>
+    </div>
+
+    <!-- Spieltypen Taxonomie -->
+    <section id="spieltypen" class="mb-12">
+        <h2 class="text-2xl font-bold text-slate-800 mb-2">🎮 Taxonomie der Spieltypen</h2>
+        <p class="text-slate-500 text-sm mb-6">Spieltheorie deckt eine Vielzahl strategischer Situationen ab – jede mit eigenen Lösungskonzepten.</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for typ in spieltypen %}
+            <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="text-3xl">{{ typ.icon }}</span>
+                    <h3 class="font-bold text-slate-800">{{ typ.name }}</h3>
+                </div>
+                <p class="text-sm text-slate-600 mb-3">{{ typ.beschreibung }}</p>
+                <div class="mb-3">
+                    <p class="text-xs text-slate-400 mb-1">Beispiele:</p>
+                    <div class="flex flex-wrap gap-1">
+                        {% for b in typ.beispiele %}
+                        <span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs rounded-full">{{ b }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="text-xs text-indigo-600 font-medium">
+                    💡 Lösung: {{ typ.loesung }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Interaktiver Nash-Finder -->
+    <section id="nash-finder" class="mb-12">
+        <h2 class="text-2xl font-bold text-slate-800 mb-2">⚖️ Interaktiver Nash-Finder</h2>
+        <p class="text-slate-500 text-sm mb-6">Wähle ein klassisches Spiel und sieh, wo die Nash-Gleichgewichte liegen.</p>
+
+        <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+            <!-- Spiel-Auswahl -->
+            <div class="flex flex-wrap gap-2 mb-6" id="nash-selector">
+                {% for ex in nash_examples %}
+                <button onclick="showNash({{ loop.index0 }})"
+                        id="nash-btn-{{ loop.index0 }}"
+                        class="px-4 py-2 rounded-lg text-sm font-medium border-2 transition-all
+                        {{ 'border-indigo-500 bg-indigo-50 text-indigo-700' if loop.first else 'border-slate-200 bg-slate-50 text-slate-600 hover:border-indigo-300' }}">
+                    {{ ex.name }}
+                </button>
+                {% endfor %}
+            </div>
+
+            <!-- Matrix-Anzeige -->
+            <div id="nash-display">
+                {% set ex = nash_examples[0] %}
+                <div class="overflow-x-auto mb-4">
+                    <table class="mx-auto text-sm">
+                        <thead>
+                            <tr>
+                                <th class="p-2"></th>
+                                {% for col in ex.cols %}
+                                <th class="p-2 text-center font-semibold text-slate-600 text-xs">KI: {{ col }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody id="nash-matrix-body">
+                            {% for row_idx in range(ex.payoffs | length) %}
+                            <tr>
+                                <td class="p-2 font-semibold text-slate-600 text-xs">Du: {{ ex.rows[row_idx] }}</td>
+                                {% for col_idx in range(ex.payoffs[row_idx] | length) %}
+                                {% set is_nash = [row_idx, col_idx] in ex.nash %}
+                                <td class="p-3 text-center rounded-lg m-1 font-mono text-sm font-bold
+                                    {{ 'bg-emerald-100 border-2 border-emerald-500 text-emerald-800' if is_nash else 'bg-slate-50 border border-slate-200 text-slate-700' }}">
+                                    {{ ex.payoffs[row_idx][col_idx][0] }}, {{ ex.payoffs[row_idx][col_idx][1] }}
+                                    {% if is_nash %}<div class="text-xs text-emerald-600 font-normal">Nash ⚖️</div>{% endif %}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-sm text-indigo-800">
+                    <strong>Erklärung:</strong> {{ ex.info }}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nobel-Zeitleiste -->
+    <section id="nobelpreise" class="mb-12">
+        <h2 class="text-2xl font-bold text-slate-800 mb-2">🏆 Nobelpreise der Spieltheorie</h2>
+        <p class="text-slate-500 text-sm mb-6">Die wichtigsten Auszeichnungen für spieltheoretische Forschung seit 1994.</p>
+
+        <div class="relative">
+            <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-slate-200"></div>
+            <div class="space-y-4 pl-12">
+                {% for entry in nobelpreis %}
+                <div class="relative bg-white rounded-xl border border-slate-100 shadow-sm p-4 hover:shadow-md transition-shadow">
+                    <div class="absolute -left-9 w-8 h-8 rounded-full bg-amber-400 border-2 border-white shadow flex items-center justify-center">
+                        <span class="text-xs font-bold text-amber-900">{{ entry.jahr | string | truncate(2, False, '') }}</span>
+                    </div>
+                    <div class="flex flex-wrap items-start gap-2 mb-1">
+                        <span class="text-amber-600 font-bold text-sm">{{ entry.jahr }}</span>
+                        <span class="text-slate-800 font-semibold text-sm">{{ entry.person }}</span>
+                    </div>
+                    <p class="text-xs text-slate-500">{{ entry.beitrag }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Konzeptkarte -->
+    <section id="konzept-karte" class="mb-12">
+        <h2 class="text-2xl font-bold text-slate-800 mb-2">🗺️ Die Konzeptkarte der Spieltheorie</h2>
+        <p class="text-slate-500 text-sm mb-6">Von den Grundlagen zu den fortgeschrittenen Konzepten – ein strukturierter Überblick.</p>
+
+        <div class="space-y-4">
+            <!-- Level 1: Grundlagen -->
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
+                <h3 class="font-bold text-emerald-800 mb-3">🌱 Grundlagen</h3>
+                <div class="flex flex-wrap gap-2">
+                    {% for k in ["Nash-Gleichgewicht", "Dominante Strategien", "Pareto-Effizienz", "Rückwärtsinduktion", "Gemischte Strategien"] %}
+                    <a href="/lektionen" class="px-3 py-1.5 bg-white border border-emerald-300 text-emerald-700 text-sm rounded-lg hover:bg-emerald-100 transition-colors">{{ k }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Level 2: Kooperation -->
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-5">
+                <h3 class="font-bold text-blue-800 mb-3">🤝 Kooperation & Wiederholung</h3>
+                <div class="flex flex-wrap gap-2">
+                    {% for k in ["Tit-for-Tat", "Wiederholte Spiele", "Grim Trigger", "Reputation", "Folk-Theorem"] %}
+                    <a href="/lektionen" class="px-3 py-1.5 bg-white border border-blue-300 text-blue-700 text-sm rounded-lg hover:bg-blue-100 transition-colors">{{ k }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Level 3: Information -->
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-5">
+                <h3 class="font-bold text-amber-800 mb-3">🔍 Information & Signaling</h3>
+                <div class="flex flex-wrap gap-2">
+                    {% for k in ["Adverse Selektion", "Signaling", "Screening", "Cheap Talk", "Bayesianische Spiele"] %}
+                    <a href="/lektionen" class="px-3 py-1.5 bg-white border border-amber-300 text-amber-700 text-sm rounded-lg hover:bg-amber-100 transition-colors">{{ k }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Level 4: Fortgeschritten -->
+            <div class="bg-violet-50 border border-violet-200 rounded-xl p-5">
+                <h3 class="font-bold text-violet-800 mb-3">🔬 Fortgeschrittene Konzepte</h3>
+                <div class="flex flex-wrap gap-2">
+                    {% for k in ["Mechanismus-Design", "Shapley-Wert", "ESS / Evolution", "Auktionstheorie", "Korreliertes Gleichgewicht", "Matching-Theorie"] %}
+                    <a href="/lektionen" class="px-3 py-1.5 bg-white border border-violet-300 text-violet-700 text-sm rounded-lg hover:bg-violet-100 transition-colors">{{ k }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Weiterführende Links -->
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-6">
+        <h3 class="font-bold text-slate-800 mb-4">📚 Weiter erkunden</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <a href="/lektionen" class="flex items-center gap-3 p-4 bg-white rounded-xl border border-slate-100 hover:border-indigo-300 hover:shadow-sm transition-all">
+                <span class="text-2xl">📖</span>
+                <div>
+                    <div class="font-semibold text-slate-800 text-sm">Lektionen</div>
+                    <div class="text-xs text-slate-500">Alle Konzepte im Detail</div>
+                </div>
+            </a>
+            <a href="/spiele" class="flex items-center gap-3 p-4 bg-white rounded-xl border border-slate-100 hover:border-indigo-300 hover:shadow-sm transition-all">
+                <span class="text-2xl">🎮</span>
+                <div>
+                    <div class="font-semibold text-slate-800 text-sm">Spiele</div>
+                    <div class="text-xs text-slate-500">Theorie interaktiv erleben</div>
+                </div>
+            </a>
+            <a href="/grundlagen" class="flex items-center gap-3 p-4 bg-white rounded-xl border border-slate-100 hover:border-indigo-300 hover:shadow-sm transition-all">
+                <span class="text-2xl">🔬</span>
+                <div>
+                    <div class="font-semibold text-slate-800 text-sm">Grundlagen</div>
+                    <div class="text-xs text-slate-500">Bibliothek & Quellen</div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+const nashData = {{ nash_examples_json | safe }};
+function showNash(idx) {
+    const ex = nashData[idx];
+    // Update button styles
+    document.querySelectorAll('[id^="nash-btn-"]').forEach((btn, i) => {
+        if (i === idx) {
+            btn.className = 'px-4 py-2 rounded-lg text-sm font-medium border-2 transition-all border-indigo-500 bg-indigo-50 text-indigo-700';
+        } else {
+            btn.className = 'px-4 py-2 rounded-lg text-sm font-medium border-2 transition-all border-slate-200 bg-slate-50 text-slate-600 hover:border-indigo-300';
+        }
+    });
+    // Build matrix
+    let html = '';
+    ex.payoffs.forEach((row, ri) => {
+        html += '<tr>';
+        html += `<td class="p-2 font-semibold text-slate-600 text-xs">Du: ${ex.rows[ri]}</td>`;
+        row.forEach((cell, ci) => {
+            const isNash = ex.nash.some(n => n[0] === ri && n[1] === ci);
+            const cls = isNash
+                ? 'bg-emerald-100 border-2 border-emerald-500 text-emerald-800'
+                : 'bg-slate-50 border border-slate-200 text-slate-700';
+            const nashTag = isNash ? '<div class="text-xs text-emerald-600 font-normal">Nash ⚖️</div>' : '';
+            html += `<td class="p-3 text-center rounded-lg m-1 font-mono text-sm font-bold ${cls}">${cell[0]}, ${cell[1]}${nashTag}</td>`;
+        });
+        html += '</tr>';
+    });
+    document.getElementById('nash-matrix-body').innerHTML = html;
+    document.querySelector('#nash-display .bg-indigo-50 strong').nextSibling.textContent = ' ' + ex.info;
+}
+</script>
+{% endblock %}

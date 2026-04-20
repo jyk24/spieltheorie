@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Koordinationsdilemma – VerhandlungsTrainer{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🎭 Koordinationsdilemma</h1>
+        <p class="text-slate-500 mt-1">Ihr wollt beide koordinieren – aber wer gibt nach?</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Situation:</p>
+        <p class="mb-3">Du präferierst <strong>Option A</strong>, die KI präferiert <strong>Option B</strong>. Ohne Koordination bekommt ihr beide nichts.</p>
+        <div class="grid grid-cols-3 gap-2 text-center text-xs font-mono mb-3">
+            <div></div>
+            <div class="font-bold text-slate-600">KI: A</div>
+            <div class="font-bold text-slate-600">KI: B</div>
+            <div class="font-bold text-slate-600">Du: A</div>
+            <div class="bg-emerald-100 rounded p-2">+3 / +1 ✓</div>
+            <div class="bg-red-50 rounded p-2">0 / 0</div>
+            <div class="font-bold text-slate-600">Du: B</div>
+            <div class="bg-red-50 rounded p-2">0 / 0</div>
+            <div class="bg-blue-100 rounded p-2">+1 / +3 ✓</div>
+        </div>
+        <p class="text-xs text-slate-500">Zwei Nash-Gleichgewichte: (A,A) und (B,B). Wer koordiniert, gewinnt.</p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="spiel-area">
+        <form id="game-form">
+            <input type="hidden" name="strategy" value="{{ hidden_strategy }}">
+            <input type="hidden" name="history_json" value="[]">
+
+            <div class="flex justify-between items-center mb-5">
+                <span class="text-sm text-slate-500">Runde <span id="round-num">1</span> / {{ max_rounds }}</span>
+                <div class="flex gap-4 text-sm">
+                    <span class="text-slate-600">Du: <strong id="player-score">0</strong></span>
+                    <span class="text-slate-400">KI: <strong id="ai-score">0</strong></span>
+                </div>
+            </div>
+
+            <p class="font-semibold text-slate-800 mb-4 text-center">Welche Option wählst du?</p>
+
+            <div class="grid grid-cols-2 gap-4">
+                <button type="button"
+                        hx-post="/spiele/geschlechter-kampf/zug"
+                        hx-target="#spiel-area"
+                        hx-swap="innerHTML"
+                        hx-include="#game-form"
+                        hx-vals='{"choice": "A"}'
+                        class="p-6 rounded-xl border-2 border-emerald-200 bg-emerald-50 hover:border-emerald-400 hover:bg-emerald-100 transition-all text-center">
+                    <div class="text-4xl mb-2">🎪</div>
+                    <div class="font-bold text-emerald-800 text-lg">Option A</div>
+                    <div class="text-xs text-emerald-600 mt-1">Deine Präferenz (+3 bei Koordination)</div>
+                </button>
+                <button type="button"
+                        hx-post="/spiele/geschlechter-kampf/zug"
+                        hx-target="#spiel-area"
+                        hx-swap="innerHTML"
+                        hx-include="#game-form"
+                        hx-vals='{"choice": "B"}'
+                        class="p-6 rounded-xl border-2 border-blue-200 bg-blue-50 hover:border-blue-400 hover:bg-blue-100 transition-all text-center">
+                    <div class="text-4xl mb-2">🎵</div>
+                    <div class="font-bold text-blue-800 text-lg">Option B</div>
+                    <div class="text-xs text-blue-600 mt-1">KI-Präferenz (+1 bei Koordination)</div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

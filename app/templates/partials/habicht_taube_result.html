@@ -1,0 +1,105 @@
+{% set player_label = {"H": "🦅 Hawk", "D": "🕊️ Dove"} %}
+{% set ai_label = {"H": "🦅 Hawk", "D": "🕊️ Dove"} %}
+
+{% if not is_final %}
+<form id="game-form">
+    <input type="hidden" name="strategy" value="{{ strategy }}">
+    <input type="hidden" name="history_json" value="{{ history_json }}">
+
+    <div class="flex justify-between items-center mb-4">
+        <span class="text-sm text-slate-500">Runde {{ round_result.round }} / {{ max_rounds }} gespielt</span>
+        <div class="flex gap-4 text-sm">
+            <span class="text-slate-700">Du: <strong>{{ round_result.player_total }}</strong></span>
+            <span class="text-slate-400">KI: <strong>{{ round_result.ai_total }}</strong></span>
+        </div>
+    </div>
+
+    <div class="bg-slate-50 rounded-xl p-4 mb-5 text-sm">
+        <div class="flex justify-center gap-8 items-center mb-2">
+            <div class="text-center">
+                <div class="text-2xl">{{ "🦅" if round_result.player == "H" else "🕊️" }}</div>
+                <div class="text-xs text-slate-500 mt-1">Du: {{ player_label[round_result.player] }}</div>
+            </div>
+            <div class="text-slate-300 text-2xl">vs</div>
+            <div class="text-center">
+                <div class="text-2xl">{{ "🦅" if round_result.ai == "H" else "🕊️" }}</div>
+                <div class="text-xs text-slate-500 mt-1">KI: {{ ai_label[round_result.ai] }}</div>
+            </div>
+        </div>
+        <div class="text-center font-semibold text-sm
+            {{ 'text-emerald-700' if round_result.player_score > round_result.ai_score else ('text-red-700' if round_result.player_score < round_result.ai_score else 'text-slate-600') }}">
+            Du: {{ "+" if round_result.player_score >= 0 else "" }}{{ round_result.player_score }} | KI: {{ "+" if round_result.ai_score >= 0 else "" }}{{ round_result.ai_score }}
+        </div>
+    </div>
+
+    <div class="flex gap-3 justify-center">
+        <button type="button"
+                hx-post="/spiele/habicht-taube/zug"
+                hx-target="#spiel-area"
+                hx-swap="innerHTML"
+                hx-include="#game-form"
+                hx-vals='{"choice": "H"}'
+                class="flex-1 p-4 rounded-xl border-2 border-red-200 bg-red-50 hover:border-red-400 transition-all text-center">
+            <div class="text-2xl">🦅</div>
+            <div class="font-bold text-red-800 text-sm">Hawk</div>
+        </button>
+        <button type="button"
+                hx-post="/spiele/habicht-taube/zug"
+                hx-target="#spiel-area"
+                hx-swap="innerHTML"
+                hx-include="#game-form"
+                hx-vals='{"choice": "D"}'
+                class="flex-1 p-4 rounded-xl border-2 border-blue-200 bg-blue-50 hover:border-blue-400 transition-all text-center">
+            <div class="text-2xl">🕊️</div>
+            <div class="font-bold text-blue-800 text-sm">Dove</div>
+        </button>
+    </div>
+</form>
+
+{% else %}
+<!-- Endergebnis -->
+<div class="mb-5 p-4 rounded-xl
+    {{ 'bg-emerald-50 border-2 border-emerald-400' if final.result == 'win' else ('bg-red-50 border-2 border-red-400' if final.result == 'loss' else 'bg-slate-50 border-2 border-slate-300') }}">
+    {% if final.result == "win" %}
+    <h3 class="text-xl font-bold text-emerald-800 mb-1">Gewonnen! 🎉</h3>
+    <p class="text-sm text-emerald-700">Du hast {{ final.player_total }} Punkte gesammelt (KI: {{ final.ai_total }}).</p>
+    {% elif final.result == "loss" %}
+    <h3 class="text-xl font-bold text-red-800 mb-1">Verloren.</h3>
+    <p class="text-sm text-red-700">Du hast {{ final.player_total }} Punkte (KI: {{ final.ai_total }}).</p>
+    {% else %}
+    <h3 class="text-xl font-bold text-slate-700 mb-1">Unentschieden.</h3>
+    <p class="text-sm text-slate-600">Beide: {{ final.player_total }} Punkte.</p>
+    {% endif %}
+</div>
+
+<div class="bg-slate-50 rounded-xl p-4 mb-4 text-sm">
+    <p class="font-semibold text-slate-700 mb-2">Deine Strategie-Verteilung:</p>
+    <div class="flex gap-4">
+        <span class="text-red-700">🦅 Hawk: {{ final.hawk_rounds }}×</span>
+        <span class="text-blue-700">🕊️ Dove: {{ final.dove_rounds }}×</span>
+        <span class="text-slate-500">ESS-Ziel: {{ final.ess_p_hawk }}% Hawk</span>
+    </div>
+</div>
+
+{% if strategy_info %}
+<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-900">
+    <p class="font-semibold mb-1">{{ strategy_info.icon }} Die KI spielte: {{ strategy_info.name }}</p>
+    <p class="text-indigo-700 mb-2">{{ strategy_info.verhalten }}</p>
+    <p class="font-semibold text-indigo-800">Gegencheck: <span class="font-normal">{{ strategy_info.gegencheck }}</span></p>
+</div>
+{% endif %}
+
+{% for ach in new_achievements %}
+<div class="bg-amber-50 border border-amber-300 rounded-xl p-3 mb-2 text-sm text-amber-800 font-semibold">
+    🏅 Achievement: {{ ach }}
+</div>
+{% endfor %}
+
+<div class="flex gap-3">
+    <a href="/spiele/habicht-taube" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal</a>
+    <a href="/spiele" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">Alle Spiele</a>
+    {% if strategy_info %}
+    <a href="/lektionen/{{ strategy_info.lesson_slug }}" class="border border-indigo-200 text-indigo-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50">📖 {{ strategy_info.lesson_title }}</a>
+    {% endif %}
+</div>
+{% endif %}

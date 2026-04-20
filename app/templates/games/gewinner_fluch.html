@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Der Fluch des Gewinners – VerhandlungsTrainer{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🏆 Der Fluch des Gewinners</h1>
+        <p class="text-slate-500 mt-1">Wer bietet am meisten, zahlt oft zu viel – der Fluch des Gewinners.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-2">So funktioniert's:</p>
+        <ul class="space-y-1 text-slate-600">
+            <li>🎯 Du siehst ein <strong>privates Signal</strong> – eine ungenaue Schätzung des wahren Wertes.</li>
+            <li>🔍 Alle 4 Bieter haben unterschiedliche Signale um den wahren Wert (±15).</li>
+            <li>🏆 Höchstes Gebot gewinnt – Profit = Wahrer Wert − dein Gebot.</li>
+            <li>⚠️ Wer gewinnt, hat tendenziell das höchste Signal gehabt → überschätzt oft den Wert!</li>
+        </ul>
+        <div class="mt-3 p-2 bg-amber-50 rounded border border-amber-200 text-xs text-amber-800">
+            💡 Rationale Strategie: Biet unter deinem Signal! Richtwert: Signal × (n−1)/n = Signal × 0,75
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="spiel-area">
+        <form id="game-form">
+            <input type="hidden" name="strategy" value="{{ hidden_strategy }}">
+            <input type="hidden" name="history_json" value="[]">
+            <input type="hidden" name="item_json" value="{{ item_json }}">
+
+            <div class="flex justify-between items-center mb-5">
+                <span class="text-sm text-slate-500">Auktion <span id="round-num">1</span> / {{ max_rounds }}</span>
+                <span class="text-sm text-slate-600">Profit: <strong id="player-score">0</strong></span>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5 text-center">
+                <p class="text-xs text-amber-700 mb-1">Dein privates Signal (Schätzung):</p>
+                <p class="text-4xl font-bold text-amber-800">{{ item.player_signal }}</p>
+                <p class="text-xs text-amber-600 mt-1">Wahrer Wert: unbekannt (zwischen 15 und 95)</p>
+            </div>
+
+            <p class="font-semibold text-slate-700 mb-3">Dein Gebot:</p>
+            <div class="flex gap-3">
+                <input type="number"
+                       name="player_bid"
+                       min="0" max="100"
+                       value="{{ item.player_signal }}"
+                       class="flex-1 border-2 border-slate-200 rounded-xl px-4 py-3 text-xl font-bold text-slate-800 focus:border-indigo-400 focus:outline-none text-center">
+                <button type="button"
+                        hx-post="/spiele/gewinner-fluch/zug"
+                        hx-target="#spiel-area"
+                        hx-swap="innerHTML"
+                        hx-include="#game-form"
+                        class="bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
+                    Bieten →
+                </button>
+            </div>
+            <p class="text-xs text-slate-400 mt-2 text-center">3 weitere Bieter konkurrieren gegen dich</p>
+        </form>
+    </div>
+</div>
+{% endblock %}

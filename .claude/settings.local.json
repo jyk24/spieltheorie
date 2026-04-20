@@ -101,7 +101,13 @@
       "Bash(curl -s http://127.0.0.1:8001/raetsel/josephus)",
       "Bash(python -c \"import sys,json; d=sys.stdin.read\\(\\); print\\(d[:500]\\)\")",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8001/raetsel/muenzwaegen)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8001/raetsel)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8001/raetsel)",
+      "Bash(python -c \"from app.routers.spiele import router; print\\('spiele.py OK'\\)\")",
+      "Bash(python -c \"from app.main import app; print\\('app OK'\\)\")",
+      "Bash(python -c \"import json; data=json.load\\(open\\('data/lektionen.json'\\)\\); print\\([d['slug'] for d in data]\\)\")",
+      "Bash(python -c \"import json; data=json.load\\(open\\('data/lektionen.json', encoding='utf-8'\\)\\); print\\([d['slug'] for d in data]\\)\")",
+      "Bash(python -c \"import json; data=json.load\\(open\\('data/lektionen.json', encoding='utf-8'\\)\\); print\\([\\(d['slug'], d['order_index']\\) for d in data[-5:]]\\)\")",
+      "Bash(python -c \"import json; data=json.load\\(open\\('data/lektionen.json', encoding='utf-8'\\)\\); print\\(data[-1]['slug']\\)\")"
     ]
   }
 }
