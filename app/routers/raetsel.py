@@ -271,6 +271,15 @@ RAETSEL_META = [
         "schwierigkeit": "Fortgeschritten",
         "dauer": "5 min",
     },
+    {
+        "id": "hilberts-hotel",
+        "name": "Hilberts Hotel",
+        "icon": "🏨",
+        "beschreibung": "Ein Hotel mit unendlich vielen Zimmern – alle belegt. Trotzdem gibt es immer Platz für neue Gäste. Hilbert (1924) zeigt: Unendlichkeit spielt nach anderen Regeln als Endlichkeit.",
+        "typ": "Mathematik-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+    },
 ]
 
 
@@ -2050,4 +2059,38 @@ def gabriels_trompete_result(
         request,
         "partials/gabriels_trompete_result.html",
         {"intuition": intuition},
+    )
+
+
+# ---------------------------------------------------------------------------
+# Hilberts Hotel (David Hilbert, 1924 / popularised by Gamow 1947)
+# ---------------------------------------------------------------------------
+
+@router.get("/hilberts-hotel", response_class=HTMLResponse)
+def hilberts_hotel_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/hilberts_hotel.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/hilberts-hotel/result", response_class=HTMLResponse)
+def hilberts_hotel_result(
+    request: Request,
+    scenario: str = Form(...),   # "one_guest" | "inf_guests" | "inf_buses"
+    answer: str = Form(...),     # "yes" | "no" | "impossible"
+):
+    correct = {
+        "one_guest": "yes",
+        "inf_guests": "yes",
+        "inf_buses": "yes",
+    }
+    is_correct = answer == correct.get(scenario, "")
+    return templates.TemplateResponse(
+        request,
+        "partials/hilberts_hotel_result.html",
+        {
+            "scenario": scenario,
+            "answer": answer,
+            "is_correct": is_correct,
+        },
     )

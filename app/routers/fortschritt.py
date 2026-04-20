@@ -37,6 +37,7 @@ GAME_LABELS = {
     "gewinner-fluch": "Fluch des Gewinners",
     "hollaendische-auktion": "Holländische Auktion",
     "englische-auktion": "Englische Auktion",
+    "cournot": "Cournot-Duopol",
 }
 
 RESULT_LABELS = {"win": "Gewonnen", "loss": "Verloren", "draw": "Unentschieden"}

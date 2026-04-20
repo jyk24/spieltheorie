@@ -1,28 +1,46 @@
 {% extends "base.html" %}
 {% block title %}Gleiche Münzen – VerhandlungsTrainer{% endblock %}
 {% block content %}
+<style>
+@keyframes coinSpin {
+    0%   { transform: rotateY(0deg); }
+    50%  { transform: rotateY(90deg) scale(0.8); }
+    100% { transform: rotateY(0deg); }
+}
+.coin-reveal { animation: coinSpin 0.5s ease-in-out; }
+</style>
 <div class="max-w-2xl mx-auto">
     <div class="mb-6">
         <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
         <h1 class="text-3xl font-bold text-slate-800 mt-2">🪙 Gleiche Münzen</h1>
-        <p class="text-slate-500 mt-1">Matching Pennies – das reinste Nullsummenspiel.</p>
+        <p class="text-slate-500 mt-1">von Neumann (1928) · Das kanonische Nullsummenspiel – Minimax-Theorem.</p>
     </div>
 
-    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
-        <p class="font-semibold mb-3">Die Regeln:</p>
-        <p class="mb-3">Ihr legt gleichzeitig eine Münze – Kopf (K) oder Zahl (Z).</p>
-        <div class="grid grid-cols-3 gap-2 text-center text-xs font-mono mb-3">
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Matching Pennies – Reines Nullsummenspiel</p>
+        <p class="text-xs text-slate-600 mb-3">Beide legen gleichzeitig eine Münze. Du gewinnst bei Übereinstimmung (Kopf+Kopf oder Zahl+Zahl), die KI gewinnt bei Abweichung.</p>
+
+        <div class="grid grid-cols-3 gap-1.5 text-center text-xs font-mono mb-4">
             <div></div>
-            <div class="font-bold text-slate-600">KI: Kopf</div>
-            <div class="font-bold text-slate-600">KI: Zahl</div>
-            <div class="font-bold text-slate-600">Du: Kopf</div>
-            <div class="bg-emerald-100 rounded p-2">Du: +1 / KI: −1</div>
-            <div class="bg-red-50 rounded p-2">Du: −1 / KI: +1</div>
-            <div class="font-bold text-slate-600">Du: Zahl</div>
-            <div class="bg-red-50 rounded p-2">Du: −1 / KI: +1</div>
-            <div class="bg-emerald-100 rounded p-2">Du: +1 / KI: −1</div>
+            <div class="bg-yellow-100 rounded p-2 font-bold text-yellow-700">KI: Kopf 👑</div>
+            <div class="bg-slate-100 rounded p-2 font-bold text-slate-600">KI: Zahl 🔢</div>
+            <div class="bg-yellow-100 rounded p-2 font-bold text-yellow-700">Du: Kopf 👑</div>
+            <div class="bg-emerald-50 rounded p-2 border border-emerald-200"><span class="text-emerald-700 font-bold">+1 / −1</span></div>
+            <div class="bg-red-50 rounded p-2 border border-red-200"><span class="text-red-700 font-bold">−1 / +1</span></div>
+            <div class="bg-slate-100 rounded p-2 font-bold text-slate-600">Du: Zahl 🔢</div>
+            <div class="bg-red-50 rounded p-2 border border-red-200"><span class="text-red-700 font-bold">−1 / +1</span></div>
+            <div class="bg-emerald-50 rounded p-2 border border-emerald-200"><span class="text-emerald-700 font-bold">+1 / −1</span></div>
         </div>
-        <p class="text-xs text-slate-500">Nash-Gleichgewicht: 50% Kopf, 50% Zahl. Jedes Muster wird ausgenutzt.</p>
+
+        <div class="bg-violet-50 border border-violet-200 rounded-lg p-3 text-xs">
+            <p class="font-semibold text-violet-800 mb-1">Minimax-Theorem (von Neumann, 1928):</p>
+            <p class="text-violet-700 mb-2">In jedem endlichen Zwei-Personen-Nullsummenspiel gilt: max<sub>p</sub> min<sub>q</sub> E[u] = min<sub>q</sub> max<sub>p</sub> E[u]</p>
+            <p class="text-violet-700 mb-1">Optimale Strategie: 50% Kopf, 50% Zahl (uniform random). Jede Abweichung ist durch die KI ausnutzbar:</p>
+            <div class="font-mono text-center text-violet-800">
+                Wenn P(Kopf) = p ≠ ½: KI wählt immer die günstigere Seite → E[u] &lt; 0
+            </div>
+            <p class="text-violet-600 mt-1">Quelle: von Neumann, J. (1928). Zur Theorie der Gesellschaftsspiele. <em>Math. Annalen</em>, 100, 295–320.</p>
+        </div>
     </div>
 
     <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="spiel-area">
@@ -47,9 +65,10 @@
                         hx-swap="innerHTML"
                         hx-include="#game-form"
                         hx-vals='{"choice": "K"}'
-                        class="p-6 rounded-xl border-2 border-yellow-200 bg-yellow-50 hover:border-yellow-400 hover:bg-yellow-100 transition-all text-center">
-                    <div class="text-5xl mb-2">👑</div>
+                        class="group p-6 rounded-xl border-2 border-yellow-200 bg-yellow-50 hover:border-yellow-400 hover:bg-yellow-100 transition-all text-center active:scale-95">
+                    <div class="text-5xl mb-2 transition-transform group-hover:scale-110">👑</div>
                     <div class="font-bold text-yellow-800 text-xl">Kopf</div>
+                    <div class="text-xs text-yellow-600 mt-1">Gewinne bei Match</div>
                 </button>
                 <button type="button"
                         hx-post="/spiele/gleiche-muenzen/zug"
@@ -57,9 +76,10 @@
                         hx-swap="innerHTML"
                         hx-include="#game-form"
                         hx-vals='{"choice": "Z"}'
-                        class="p-6 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 hover:bg-slate-100 transition-all text-center">
-                    <div class="text-5xl mb-2">🔢</div>
+                        class="group p-6 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 hover:bg-slate-100 transition-all text-center active:scale-95">
+                    <div class="text-5xl mb-2 transition-transform group-hover:scale-110">🔢</div>
                     <div class="font-bold text-slate-700 text-xl">Zahl</div>
+                    <div class="text-xs text-slate-500 mt-1">Gewinne bei Match</div>
                 </button>
             </div>
         </form>

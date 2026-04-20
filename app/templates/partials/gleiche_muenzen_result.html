@@ -1,7 +1,21 @@
 {% set coin_label = {"K": "👑 Kopf", "Z": "🔢 Zahl"} %}
+<style>
+@keyframes coinReveal {
+    0%   { transform: rotateY(0deg) scale(1); }
+    40%  { transform: rotateY(90deg) scale(0.7); }
+    60%  { transform: rotateY(90deg) scale(0.7); }
+    100% { transform: rotateY(360deg) scale(1); }
+}
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.coin-animate { animation: coinReveal 0.6s ease-in-out; display: inline-block; }
+.slide-in { animation: slideIn 0.3s ease-out; }
+</style>
 
 {% if not is_final %}
-<form id="game-form">
+<form id="game-form" class="slide-in">
     <input type="hidden" name="strategy" value="{{ strategy }}">
     <input type="hidden" name="history_json" value="{{ history_json }}">
 
@@ -13,20 +27,23 @@
         </div>
     </div>
 
-    <div class="rounded-xl p-4 mb-4 text-sm text-center
-        {{ 'bg-emerald-50 border border-emerald-200' if round_result.player_score > 0 else 'bg-red-50 border border-red-200' }}">
-        <div class="flex justify-center gap-8 mb-2">
+    <div class="rounded-xl p-5 mb-4 text-center
+        {{ 'bg-emerald-50 border-2 border-emerald-300' if round_result.player_score > 0 else 'bg-red-50 border-2 border-red-300' }}">
+        <div class="flex justify-center gap-10 mb-3">
             <div class="text-center">
-                <div class="text-2xl">{{ "👑" if round_result.player == "K" else "🔢" }}</div>
-                <div class="text-xs text-slate-500">Du</div>
+                <div class="text-xs text-slate-400 mb-1">Du</div>
+                <div class="text-4xl coin-animate">{{ "👑" if round_result.player == "K" else "🔢" }}</div>
+                <div class="text-xs font-bold mt-1 text-slate-600">{{ coin_label[round_result.player] }}</div>
             </div>
+            <div class="flex items-center text-slate-300 text-2xl font-bold">vs</div>
             <div class="text-center">
-                <div class="text-2xl">{{ "👑" if round_result.ai == "K" else "🔢" }}</div>
-                <div class="text-xs text-slate-500">KI</div>
+                <div class="text-xs text-slate-400 mb-1">KI</div>
+                <div class="text-4xl coin-animate" style="animation-delay:0.1s">{{ "👑" if round_result.ai == "K" else "🔢" }}</div>
+                <div class="text-xs font-bold mt-1 text-slate-600">{{ coin_label[round_result.ai] }}</div>
             </div>
         </div>
-        <div class="font-bold {{ 'text-emerald-700' if round_result.player_score > 0 else 'text-red-700' }}">
-            {{ "✅ Match! Du gewinnst +1" if round_result.matched else "❌ Kein Match! KI gewinnt +1" }}
+        <div class="font-bold text-base {{ 'text-emerald-700' if round_result.player_score > 0 else 'text-red-700' }}">
+            {{ "✅ Match! +1 für dich" if round_result.matched else "❌ Kein Match – KI: +1" }}
         </div>
     </div>
 
@@ -37,9 +54,9 @@
                 hx-swap="innerHTML"
                 hx-include="#game-form"
                 hx-vals='{"choice": "K"}'
-                class="flex-1 p-4 rounded-xl border-2 border-yellow-200 bg-yellow-50 hover:border-yellow-400 transition-all text-center">
+                class="flex-1 p-4 rounded-xl border-2 border-yellow-200 bg-yellow-50 hover:border-yellow-400 transition-all text-center active:scale-95">
             <div class="text-2xl">👑</div>
-            <div class="font-bold text-yellow-800 text-sm">Kopf</div>
+            <div class="font-bold text-yellow-800 text-sm mt-1">Kopf</div>
         </button>
         <button type="button"
                 hx-post="/spiele/gleiche-muenzen/zug"
@@ -47,35 +64,50 @@
                 hx-swap="innerHTML"
                 hx-include="#game-form"
                 hx-vals='{"choice": "Z"}'
-                class="flex-1 p-4 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 transition-all text-center">
+                class="flex-1 p-4 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 transition-all text-center active:scale-95">
             <div class="text-2xl">🔢</div>
-            <div class="font-bold text-slate-700 text-sm">Zahl</div>
+            <div class="font-bold text-slate-700 text-sm mt-1">Zahl</div>
         </button>
     </div>
 </form>
 
 {% else %}
-<div class="mb-5 p-4 rounded-xl
+<div class="mb-5 p-4 rounded-xl slide-in
     {{ 'bg-emerald-50 border-2 border-emerald-400' if final.result == 'win' else ('bg-red-50 border-2 border-red-400' if final.result == 'loss' else 'bg-slate-50 border-2 border-slate-300') }}">
     {% if final.result == "win" %}
-    <h3 class="text-xl font-bold text-emerald-800 mb-1">Gewonnen! +{{ final.player_total }} Punkte.</h3>
-    <p class="text-sm text-emerald-700">Du hast {{ final.matched_rounds }} von {{ max_rounds }} Matches gewonnen.</p>
+    <h3 class="text-xl font-bold text-emerald-800 mb-1">🎉 Gewonnen! +{{ final.player_total }} Punkte.</h3>
+    <p class="text-sm text-emerald-700">{{ final.matched_rounds }} von {{ max_rounds }} Matches – die KI konnte dein Muster nicht exploitieren.</p>
     {% elif final.result == "loss" %}
     <h3 class="text-xl font-bold text-red-800 mb-1">Verloren. {{ final.player_total }} Punkte.</h3>
-    <p class="text-sm text-red-700">Nur {{ final.matched_rounds }} Matches – die KI hatte ein Muster erkannt.</p>
+    <p class="text-sm text-red-700">Nur {{ final.matched_rounds }} Matches – die KI hat ein Muster in deinen Zügen gefunden.</p>
     {% else %}
-    <h3 class="text-xl font-bold text-slate-700 mb-1">Ausgeglichen – echtes Nullsummenspiel!</h3>
-    <p class="text-sm text-slate-600">{{ final.matched_rounds }} Matches vs {{ max_rounds - final.matched_rounds }} KI-Wins.</p>
+    <h3 class="text-xl font-bold text-slate-700 mb-1">⚖️ Ausgeglichen – echtes Nullsummenspiel!</h3>
+    <p class="text-sm text-slate-600">{{ final.matched_rounds }} Matches, {{ max_rounds - final.matched_rounds }} KI-Wins. Nash-Gleichgewicht.</p>
     {% endif %}
 </div>
 
 <div class="bg-slate-50 rounded-xl p-4 mb-4 text-sm">
-    <p class="font-semibold text-slate-700 mb-2">Deine Züge:</p>
-    <div class="flex gap-4">
-        <span>👑 Kopf: {{ final.k_rounds }}×</span>
-        <span>🔢 Zahl: {{ final.z_rounds }}×</span>
+    <p class="font-semibold text-slate-700 mb-2">Deine Zugverteilung:</p>
+    <div class="flex gap-4 mb-2">
+        <span>👑 Kopf: {{ final.k_rounds }}× ({{ (final.k_rounds / max_rounds * 100)|round|int }}%)</span>
+        <span>🔢 Zahl: {{ final.z_rounds }}× ({{ (final.z_rounds / max_rounds * 100)|round|int }}%)</span>
     </div>
-    <p class="text-xs text-slate-400 mt-2">Nash-Optimum: 50/50 – jede Abweichung ist ausnutzbar.</p>
+    {% set dev = ((final.k_rounds / max_rounds - 0.5) * 100)|round(1)|abs %}
+    {% if dev > 10 %}
+    <div class="bg-amber-50 border border-amber-200 rounded-lg p-2 text-xs text-amber-700">
+        ⚠️ Abweichung von 50/50: {{ dev }}%. Jede systematische Abweichung ist für eine optimale KI ausnutzbar.
+    </div>
+    {% else %}
+    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-xs text-emerald-700">
+        ✓ Nahe am Minimax-Optimum (50/50). Abweichung: nur {{ dev }}%.
+    </div>
+    {% endif %}
+</div>
+
+<div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-4 text-sm text-violet-800">
+    <p class="font-semibold mb-2">von Neumann's Minimax-Theorem (1928):</p>
+    <p class="text-xs text-violet-700 mb-2">In Matching Pennies gibt es kein reines Nash-GGW. Die einzige optimale Strategie: <strong>echte Randomisierung mit p = ½</strong>. Jede Abweichung kann von einem Gegner, der das Muster erkennt, ausgenutzt werden.</p>
+    <p class="text-xs text-violet-600">Dies ist das kanonische Beispiel für gemischte Strategien: Unvorhersehbarkeit als optimale Strategie. Sport-Anwendungen: Elfmeter im Fußball (Palacios-Huerta, 2003 zeigte, dass Profis tatsächlich Minimax spielen).</p>
 </div>
 
 {% if strategy_info %}
@@ -86,13 +118,9 @@
 </div>
 {% endif %}
 
-{% for ach in new_achievements %}
-<div class="bg-amber-50 border border-amber-300 rounded-xl p-3 mb-2 text-sm text-amber-800 font-semibold">
-    🏅 Achievement: {{ ach }}
-</div>
-{% endfor %}
+{% include "partials/achievement_unlock.html" %}
 
-<div class="flex gap-3">
+<div class="flex gap-3 mt-4">
     <a href="/spiele/gleiche-muenzen" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal</a>
     <a href="/spiele" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">Alle Spiele</a>
     {% if strategy_info %}

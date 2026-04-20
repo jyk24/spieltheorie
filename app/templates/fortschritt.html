@@ -11,7 +11,7 @@
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
     <div class="bg-white rounded-xl shadow-sm p-5 border border-slate-100 text-center">
         <div class="text-3xl font-bold text-indigo-600">{{ stats.total_games }}</div>
-        <div class="text-sm text-slate-500 mt-1">Spiele gesamt</div>
+        <div class="text-sm text-slate-500 mt-1">Spiele gesamt</div>  
     </div>
     <div class="bg-white rounded-xl shadow-sm p-5 border border-slate-100 text-center">
         <div class="text-3xl font-bold text-emerald-600">{{ stats.total_score }}</div>
@@ -61,7 +61,8 @@
         "gleiche-muenzen": "🪙",
         "gewinner-fluch": "🏆",
         "hollaendische-auktion": "🌷",
-        "englische-auktion": "🔔"
+        "englische-auktion": "🔔",
+        "cournot": "🏭"
     } %}
     {% for game_type, data in stats.per_game.items() %}
     <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5">

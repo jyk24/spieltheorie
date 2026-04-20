@@ -1,8 +1,22 @@
 {% set player_label = {"H": "🦅 Hawk", "D": "🕊️ Dove"} %}
 {% set ai_label = {"H": "🦅 Hawk", "D": "🕊️ Dove"} %}
+<style>
+@keyframes clash {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(1.3) rotate(-5deg); }
+    60%  { transform: scale(0.9) rotate(3deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.clash-animate { animation: clash 0.5s ease-in-out; display: inline-block; }
+.slide-in { animation: slideIn 0.3s ease-out; }
+</style>
 
 {% if not is_final %}
-<form id="game-form">
+<form id="game-form" class="slide-in">
     <input type="hidden" name="strategy" value="{{ strategy }}">
     <input type="hidden" name="history_json" value="{{ history_json }}">
 
@@ -14,21 +28,33 @@
         </div>
     </div>
 
-    <div class="bg-slate-50 rounded-xl p-4 mb-5 text-sm">
-        <div class="flex justify-center gap-8 items-center mb-2">
+    <!-- Confrontation Display -->
+    <div class="rounded-xl p-5 mb-4 {% if round_result.player == 'H' and round_result.ai == 'H' %}bg-red-50 border-2 border-red-300{% elif round_result.player_score > round_result.ai_score %}bg-emerald-50 border-2 border-emerald-300{% elif round_result.player_score < round_result.ai_score %}bg-slate-50 border-2 border-slate-300{% else %}bg-blue-50 border-2 border-blue-200{% endif %}">
+        <div class="flex justify-center items-center gap-6 mb-3">
             <div class="text-center">
-                <div class="text-2xl">{{ "🦅" if round_result.player == "H" else "🕊️" }}</div>
+                <div class="text-4xl clash-animate">{{ "🦅" if round_result.player == "H" else "🕊️" }}</div>
                 <div class="text-xs text-slate-500 mt-1">Du: {{ player_label[round_result.player] }}</div>
+                <div class="font-bold text-sm mt-0.5 {{ 'text-emerald-700' if round_result.player_score > 0 else ('text-red-700' if round_result.player_score < 0 else 'text-slate-500') }}">
+                    {{ "+" if round_result.player_score >= 0 else "" }}{{ round_result.player_score }}
+                </div>
             </div>
-            <div class="text-slate-300 text-2xl">vs</div>
+            <div class="text-2xl text-slate-300 font-bold">
+                {% if round_result.player == "H" and round_result.ai == "H" %}⚔️{% else %}→{% endif %}
+            </div>
             <div class="text-center">
-                <div class="text-2xl">{{ "🦅" if round_result.ai == "H" else "🕊️" }}</div>
+                <div class="text-4xl clash-animate" style="animation-delay:0.1s">{{ "🦅" if round_result.ai == "H" else "🕊️" }}</div>
                 <div class="text-xs text-slate-500 mt-1">KI: {{ ai_label[round_result.ai] }}</div>
+                <div class="font-bold text-sm mt-0.5 {{ 'text-emerald-700' if round_result.ai_score > 0 else ('text-red-700' if round_result.ai_score < 0 else 'text-slate-500') }}">
+                    {{ "+" if round_result.ai_score >= 0 else "" }}{{ round_result.ai_score }}
+                </div>
             </div>
         </div>
-        <div class="text-center font-semibold text-sm
-            {{ 'text-emerald-700' if round_result.player_score > round_result.ai_score else ('text-red-700' if round_result.player_score < round_result.ai_score else 'text-slate-600') }}">
-            Du: {{ "+" if round_result.player_score >= 0 else "" }}{{ round_result.player_score }} | KI: {{ "+" if round_result.ai_score >= 0 else "" }}{{ round_result.ai_score }}
+        <div class="text-center text-xs text-slate-500">
+            {% if round_result.player == "H" and round_result.ai == "H" %}⚔️ Kampf! Beide verlieren (V−C)/2 = −1
+            {% elif round_result.player == "H" and round_result.ai == "D" %}🦅 Hawk gewinnt die Ressource V = +4
+            {% elif round_result.player == "D" and round_result.ai == "H" %}🕊️ Dove weicht aus – KI bekommt V = +4
+            {% else %}🤝 Beide Dove – teilen die Ressource V/2 = +2 je
+            {% endif %}
         </div>
     </div>
 
@@ -39,9 +65,9 @@
                 hx-swap="innerHTML"
                 hx-include="#game-form"
                 hx-vals='{"choice": "H"}'
-                class="flex-1 p-4 rounded-xl border-2 border-red-200 bg-red-50 hover:border-red-400 transition-all text-center">
+                class="flex-1 p-4 rounded-xl border-2 border-red-200 bg-red-50 hover:border-red-400 transition-all text-center active:scale-95">
             <div class="text-2xl">🦅</div>
-            <div class="font-bold text-red-800 text-sm">Hawk</div>
+            <div class="font-bold text-red-800 text-sm mt-1">Hawk</div>
         </button>
         <button type="button"
                 hx-post="/spiele/habicht-taube/zug"
@@ -49,36 +75,65 @@
                 hx-swap="innerHTML"
                 hx-include="#game-form"
                 hx-vals='{"choice": "D"}'
-                class="flex-1 p-4 rounded-xl border-2 border-blue-200 bg-blue-50 hover:border-blue-400 transition-all text-center">
+                class="flex-1 p-4 rounded-xl border-2 border-blue-200 bg-blue-50 hover:border-blue-400 transition-all text-center active:scale-95">
             <div class="text-2xl">🕊️</div>
-            <div class="font-bold text-blue-800 text-sm">Dove</div>
+            <div class="font-bold text-blue-800 text-sm mt-1">Dove</div>
         </button>
     </div>
 </form>
 
 {% else %}
-<!-- Endergebnis -->
-<div class="mb-5 p-4 rounded-xl
+<!-- Endergebnis mit akademischem Debrief -->
+<div class="mb-5 p-4 rounded-xl slide-in
     {{ 'bg-emerald-50 border-2 border-emerald-400' if final.result == 'win' else ('bg-red-50 border-2 border-red-400' if final.result == 'loss' else 'bg-slate-50 border-2 border-slate-300') }}">
     {% if final.result == "win" %}
-    <h3 class="text-xl font-bold text-emerald-800 mb-1">Gewonnen! 🎉</h3>
-    <p class="text-sm text-emerald-700">Du hast {{ final.player_total }} Punkte gesammelt (KI: {{ final.ai_total }}).</p>
+    <h3 class="text-xl font-bold text-emerald-800 mb-1">🦅 Gewonnen! {{ final.player_total }} Punkte.</h3>
+    <p class="text-sm text-emerald-700">Du hast {{ final.player_total }} vs. KI {{ final.ai_total }} erreicht.</p>
     {% elif final.result == "loss" %}
-    <h3 class="text-xl font-bold text-red-800 mb-1">Verloren.</h3>
-    <p class="text-sm text-red-700">Du hast {{ final.player_total }} Punkte (KI: {{ final.ai_total }}).</p>
+    <h3 class="text-xl font-bold text-red-800 mb-1">Verloren. {{ final.player_total }} Punkte.</h3>
+    <p class="text-sm text-red-700">KI: {{ final.ai_total }} Punkte – sie hat dein Muster ausgenutzt.</p>
     {% else %}
-    <h3 class="text-xl font-bold text-slate-700 mb-1">Unentschieden.</h3>
+    <h3 class="text-xl font-bold text-slate-700 mb-1">⚖️ Ausgeglichen.</h3>
     <p class="text-sm text-slate-600">Beide: {{ final.player_total }} Punkte.</p>
     {% endif %}
 </div>
 
+<!-- Strategie-Analyse -->
 <div class="bg-slate-50 rounded-xl p-4 mb-4 text-sm">
-    <p class="font-semibold text-slate-700 mb-2">Deine Strategie-Verteilung:</p>
-    <div class="flex gap-4">
-        <span class="text-red-700">🦅 Hawk: {{ final.hawk_rounds }}×</span>
-        <span class="text-blue-700">🕊️ Dove: {{ final.dove_rounds }}×</span>
-        <span class="text-slate-500">ESS-Ziel: {{ final.ess_p_hawk }}% Hawk</span>
+    <p class="font-semibold text-slate-700 mb-2">Deine Strategie vs. ESS-Ziel:</p>
+    {% set hawk_pct = (final.hawk_rounds / max_rounds * 100)|round|int %}
+    <div class="flex items-center gap-3 mb-2">
+        <div class="flex-1">
+            <div class="flex justify-between text-xs text-slate-500 mb-1">
+                <span>🦅 Hawk-Anteil</span>
+                <span>{{ hawk_pct }}% / ESS: {{ final.ess_p_hawk }}%</span>
+            </div>
+            <div class="bg-slate-200 rounded-full h-2 overflow-hidden">
+                <div class="h-full bg-red-500 rounded-full" style="width: {{ hawk_pct }}%"></div>
+            </div>
+        </div>
     </div>
+    <div class="flex gap-4 text-xs text-slate-500">
+        <span>🦅 Hawk: {{ final.hawk_rounds }}×</span>
+        <span>🕊️ Dove: {{ final.dove_rounds }}×</span>
+        <span class="text-indigo-600 font-medium">ESS-Ziel: {{ final.ess_p_hawk }}% Hawk</span>
+    </div>
+</div>
+
+<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+    <p class="font-semibold mb-2">Evolutionär Stabile Strategie (ESS) – Maynard Smith & Price (1973):</p>
+    <p class="text-xs text-indigo-700 mb-2">Eine Strategie S ist ESS, wenn eine Population, die S spielt, nicht durch eine kleine Mutanten-Invasion destabilisiert werden kann. Formal: für jeden Mutanten T muss gelten:</p>
+    <div class="font-mono text-xs text-center bg-white rounded p-2 mb-2">
+        E(S, S) > E(T, S), oder<br>
+        E(S, S) = E(T, S) und E(S, T) > E(T, T)
+    </div>
+    <p class="text-xs text-indigo-600">Im H-D-Spiel: p* = V/C = 4/6 = ⅔. Das gemischte NE ist auch ESS – eine Population mit ⅔ Hawks kann durch keine alternative Strategie übernommen werden.</p>
+</div>
+
+<div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-4 text-sm text-violet-800">
+    <p class="font-semibold mb-1">Replicator-Dynamik:</p>
+    <p class="text-xs text-violet-700">Wenn der Hawk-Anteil über p* = V/C steigt, sinkt der Fitness-Vorteil von Hawk (zu viele Kämpfe). Die Population stabilisiert sich automatisch bei p*. Dies ist die Kernannahme der Evolutionären Spieltheorie.</p>
+    <p class="text-xs text-violet-500 mt-1">Anwendung: Tierisches Revierverhalten, Wettrüsten, Preiskämpfe zwischen Unternehmen.</p>
 </div>
 
 {% if strategy_info %}
@@ -89,13 +144,9 @@
 </div>
 {% endif %}
 
-{% for ach in new_achievements %}
-<div class="bg-amber-50 border border-amber-300 rounded-xl p-3 mb-2 text-sm text-amber-800 font-semibold">
-    🏅 Achievement: {{ ach }}
-</div>
-{% endfor %}
+{% include "partials/achievement_unlock.html" %}
 
-<div class="flex gap-3">
+<div class="flex gap-3 mt-4">
     <a href="/spiele/habicht-taube" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal</a>
     <a href="/spiele" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">Alle Spiele</a>
     {% if strategy_info %}
