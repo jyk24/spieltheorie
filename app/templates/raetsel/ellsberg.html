@@ -56,6 +56,8 @@
             <p class="text-sm text-slate-500 mb-5">Gewinne 100 €, wenn die gezogene Kugel die gesuchte Farbe hat.</p>
 
             <form id="ellsberg-phase1-form" class="space-y-3">
+                {% for opt in order1 %}
+                {% if opt == "A" %}
                 <button type="button"
                         hx-post="/raetsel/ellsberg/phase2"
                         hx-target="#ellsberg-area"
@@ -77,7 +79,7 @@
                         </div>
                     </div>
                 </button>
-
+                {% elif opt == "B" %}
                 <button type="button"
                         hx-post="/raetsel/ellsberg/phase2"
                         hx-target="#ellsberg-area"
@@ -101,6 +103,8 @@
                         </div>
                     </div>
                 </button>
+                {% endif %}
+                {% endfor %}
             </form>
         </div>
     </div>

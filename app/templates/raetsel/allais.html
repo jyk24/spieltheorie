@@ -15,7 +15,6 @@
     </div>
 
     <div id="allais-area">
-        <!-- Problem 1 -->
         <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
             <div class="flex items-center gap-2 mb-5">
                 <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-full">Problem 1 von 2</span>
@@ -23,7 +22,8 @@
             <p class="font-semibold text-slate-800 mb-5">Welche Lotterie bevorzugst du?</p>
 
             <form id="allais-phase1-form" class="grid grid-cols-1 gap-4">
-
+                {% for opt in order1 %}
+                {% if opt == "A" %}
                 <button type="button"
                         hx-post="/raetsel/allais/phase2"
                         hx-target="#allais-area"
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                 </button>
-
+                {% elif opt == "B" %}
                 <button type="button"
                         hx-post="/raetsel/allais/phase2"
                         hx-target="#allais-area"
@@ -79,6 +79,8 @@
                         </div>
                     </div>
                 </button>
+                {% endif %}
+                {% endfor %}
             </form>
         </div>
     </div>

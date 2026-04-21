@@ -14,23 +14,61 @@
         </a>
     </div>
 
-    {% set einsteiger = games | selectattr('schwierigkeit', 'equalto', 'Einsteiger') | list %}
-    {% set fortgeschritten = games | selectattr('schwierigkeit', 'equalto', 'Fortgeschritten') | list %}
+    {% set gruppen = [
+        (
+            "🤝 Kooperation & Fairness",
+            "emerald",
+            ["gefangenendilemma", "ultimatum", "vertrauen", "diktator", "public-goods", "stag-hunt", "freiwilligen-dilemma"],
+            "Wie viel kooperieren wir mit Fremden – und warum? Soziale Präferenzen, Fairness und Reziprozität."
+        ),
+        (
+            "⚡ Koordination & Konflikt",
+            "blue",
+            ["chicken", "koordination", "geschlechter-kampf", "rps", "gleiche-muenzen", "habicht-taube", "minderheit"],
+            "Wann können wir uns koordinieren – und wann nicht? Nash-Gleichgewichte, Minimax und Focal Points."
+        ),
+        (
+            "🧠 Strategie & Information",
+            "violet",
+            ["verhandlung", "beauty-contest", "centipede", "el-farol"],
+            "Komplexe Entscheidungssituationen: Rückwärtsinduktion, K-Level-Thinking und Informationsasymmetrie."
+        ),
+        (
+            "🏛️ Auktionen & Märkte",
+            "amber",
+            ["auktion", "englische-auktion", "hollaendische-auktion", "dollarauktion", "gewinner-fluch", "cournot"],
+            "Preisfindung in Märkten und Auktionen: Bieten, Warten und der Fluch des Gewinners."
+        ),
+    ] %}
 
-    <!-- Einsteiger -->
-    <div class="mb-10">
-        <div class="flex items-center gap-3 mb-5">
-            <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide">Einsteiger</span>
-            <div class="flex-1 h-px bg-slate-200"></div>
-            <span class="text-xs text-slate-400">{{ einsteiger|length }} Spiele</span>
+    {% for gruppe_name, farbe, ids, beschreibung in gruppen %}
+    {% set gruppe_games = [] %}
+    {% for id in ids %}
+        {% for g in games %}
+            {% if g.id == id %}{% if gruppe_games.append(g) %}{% endif %}{% endif %}
+        {% endfor %}
+    {% endfor %}
+    {% if gruppe_games %}
+    <div class="mb-12">
+        <div class="flex items-start gap-4 mb-5">
+            <div class="flex-1">
+                <div class="flex items-center gap-3 mb-1">
+                    <span class="bg-{{ farbe }}-100 text-{{ farbe }}-700 text-sm font-bold px-4 py-2 rounded-xl">
+                        {{ gruppe_name }}
+                    </span>
+                    <div class="h-px bg-slate-200 flex-1"></div>
+                    <span class="text-xs text-slate-400">{{ gruppe_games|length }} Spiele</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-2 ml-1">{{ beschreibung }}</p>
+            </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-            {% for game in einsteiger %}
+            {% for game in gruppe_games %}
             <a href="/spiele/{{ game.id }}"
-               class="block bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md hover:border-emerald-200 transition-all group">
+               class="block bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md hover:border-{{ farbe }}-200 transition-all group">
                 <div class="p-5">
                     <div class="text-3xl mb-3">{{ game.icon }}</div>
-                    <h2 class="text-lg font-bold text-slate-800 group-hover:text-emerald-700 transition-colors mb-2">{{ game.name }}</h2>
+                    <h2 class="text-lg font-bold text-slate-800 group-hover:text-{{ farbe }}-700 transition-colors mb-2">{{ game.name }}</h2>
                     <p class="text-slate-500 text-sm mb-4 leading-relaxed">{{ game.beschreibung }}</p>
                     <div class="flex items-center gap-3 text-xs text-slate-400">
                         <span>🔄 {{ game.runden }} Runden</span>
@@ -38,42 +76,15 @@
                         <span class="text-slate-400 truncate">{{ game.konzept.split(',')[0] }}</span>
                     </div>
                 </div>
-                <div class="border-t border-slate-100 px-5 py-2.5 bg-slate-50 group-hover:bg-emerald-50 transition-colors">
-                    <span class="text-sm font-medium text-emerald-600 group-hover:text-emerald-700">Spielen →</span>
+                <div class="border-t border-slate-100 px-5 py-2.5 bg-slate-50 group-hover:bg-{{ farbe }}-50 transition-colors">
+                    <span class="text-sm font-medium text-{{ farbe }}-600 group-hover:text-{{ farbe }}-700">Spielen →</span>
                 </div>
             </a>
             {% endfor %}
         </div>
     </div>
-
-    <!-- Fortgeschritten -->
-    <div>
-        <div class="flex items-center gap-3 mb-5">
-            <span class="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide">Fortgeschritten</span>
-            <div class="flex-1 h-px bg-slate-200"></div>
-            <span class="text-xs text-slate-400">{{ fortgeschritten|length }} Spiele</span>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-            {% for game in fortgeschritten %}
-            <a href="/spiele/{{ game.id }}"
-               class="block bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md hover:border-amber-200 transition-all group">
-                <div class="p-5">
-                    <div class="text-3xl mb-3">{{ game.icon }}</div>
-                    <h2 class="text-lg font-bold text-slate-800 group-hover:text-amber-700 transition-colors mb-2">{{ game.name }}</h2>
-                    <p class="text-slate-500 text-sm mb-4 leading-relaxed">{{ game.beschreibung }}</p>
-                    <div class="flex items-center gap-3 text-xs text-slate-400">
-                        <span>🔄 {{ game.runden }} Runden</span>
-                        <span class="text-slate-200">·</span>
-                        <span class="text-slate-400 truncate">{{ game.konzept.split(',')[0] }}</span>
-                    </div>
-                </div>
-                <div class="border-t border-slate-100 px-5 py-2.5 bg-slate-50 group-hover:bg-amber-50 transition-colors">
-                    <span class="text-sm font-medium text-amber-600 group-hover:text-amber-700">Spielen →</span>
-                </div>
-            </a>
-            {% endfor %}
-        </div>
-    </div>
+    {% endif %}
+    {% endfor %}
 
 </div>
 

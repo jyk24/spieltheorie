@@ -1,4 +1,3 @@
-<!-- Phase 1 Auswahl gespeichert, jetzt Problem 2 -->
 <input type="hidden" id="choice1-store" value="{{ choice1 }}">
 
 <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
@@ -11,6 +10,8 @@
     <form id="allais-phase2-form" class="grid grid-cols-1 gap-4">
         <input type="hidden" name="choice1" value="{{ choice1 }}">
 
+        {% for opt in order2 %}
+        {% if opt == "C" %}
         <button type="button"
                 hx-post="/raetsel/allais/result"
                 hx-target="#allais-area"
@@ -39,7 +40,7 @@
                 </div>
             </div>
         </button>
-
+        {% elif opt == "D" %}
         <button type="button"
                 hx-post="/raetsel/allais/result"
                 hx-target="#allais-area"
@@ -68,5 +69,7 @@
                 </div>
             </div>
         </button>
+        {% endif %}
+        {% endfor %}
     </form>
 </div>

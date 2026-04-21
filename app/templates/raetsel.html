@@ -18,58 +18,65 @@
         <strong>Hinweis:</strong> Diese Rätsel funktionieren am besten, wenn du wirklich überlegst und antwortest – <em>bevor</em> du die Lösung siehst. Der Aha-Moment ist der eigentliche Lerneffekt.
     </div>
 
-    {% set einsteiger_r  = raetsel | selectattr('schwierigkeit', 'equalto', 'Einsteiger')   | list %}
-    {% set mittel_r      = raetsel | selectattr('schwierigkeit', 'equalto', 'Mittel')        | list %}
-    {% set fortg_r       = raetsel | selectattr('schwierigkeit', 'equalto', 'Fortgeschritten') | list %}
+    {% set kategorien = [
+        ("Wahrscheinlichkeit", "🎲", "bg-blue-100", "text-blue-700", "border-blue-200", "hover:border-blue-300"),
+        ("Statistik",          "📊", "bg-emerald-100", "text-emerald-700", "border-emerald-200", "hover:border-emerald-300"),
+        ("Mathematik",         "📐", "bg-violet-100", "text-violet-700", "border-violet-200", "hover:border-violet-300"),
+        ("Logik",              "🧩", "bg-amber-100", "text-amber-700", "border-amber-200", "hover:border-amber-300"),
+        ("Spieltheorie",       "♟️", "bg-rose-100", "text-rose-700", "border-rose-200", "hover:border-rose-300"),
+    ] %}
 
-    <!-- Einsteiger -->
-    {% if einsteiger_r %}
-    <div class="mb-10">
-        <div class="flex items-center gap-3 mb-4">
-            <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide">Einsteiger</span>
+    {% for kat_name, kat_icon, kat_bg, kat_text, kat_border, kat_hover in kategorien %}
+    {% set gruppe = raetsel | selectattr('kategorie', 'equalto', kat_name) | list %}
+    {% if gruppe %}
+    <div class="mb-12">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="{{ kat_bg }} {{ kat_text }} text-sm font-bold px-4 py-2 rounded-xl flex items-center gap-2">
+                <span>{{ kat_icon }}</span>
+                <span>{{ kat_name }}</span>
+            </span>
             <div class="flex-1 h-px bg-slate-200"></div>
-            <span class="text-xs text-slate-400">{{ einsteiger_r|length }} Rätsel</span>
+            <span class="text-xs text-slate-400">{{ gruppe|length }} Rätsel</span>
         </div>
-        <div class="grid gap-4">
-            {% for r in einsteiger_r %}
-            {% include "partials/raetsel_card.html" %}
+        <div class="grid gap-3">
+            {% for r in gruppe %}
+            <a id="{{ r.id }}"
+               href="/raetsel/{{ r.id }}"
+               class="flex items-start gap-5 bg-white rounded-xl shadow-sm border {{ kat_border }} p-5 {{ kat_hover }} hover:shadow-md transition-all group">
+                <div class="text-4xl shrink-0">{{ r.icon }}</div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1 flex-wrap">
+                        <h2 class="text-lg font-bold text-slate-800 group-hover:{{ kat_text }} transition-colors">{{ r.name }}</h2>
+                        <span class="text-xs px-2 py-0.5 rounded-full {{ kat_bg }} {{ kat_text }} font-medium">{{ r.typ }}</span>
+                        <span class="text-xs text-slate-400">{{ r.dauer }}</span>
+                    </div>
+                    <p class="text-slate-500 text-sm leading-relaxed">{{ r.beschreibung }}</p>
+                </div>
+                <div class="text-slate-300 group-hover:{{ kat_text }} transition-colors text-xl mt-1 shrink-0">→</div>
+            </a>
             {% endfor %}
         </div>
     </div>
     {% endif %}
-
-    <!-- Mittel -->
-    {% if mittel_r %}
-    <div class="mb-10">
-        <div class="flex items-center gap-3 mb-4">
-            <span class="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide">Mittel</span>
-            <div class="flex-1 h-px bg-slate-200"></div>
-            <span class="text-xs text-slate-400">{{ mittel_r|length }} Rätsel</span>
-        </div>
-        <div class="grid gap-4">
-            {% for r in mittel_r %}
-            {% include "partials/raetsel_card.html" %}
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- Fortgeschritten -->
-    {% if fortg_r %}
-    <div class="mb-10">
-        <div class="flex items-center gap-3 mb-4">
-            <span class="bg-violet-100 text-violet-700 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide">Fortgeschritten</span>
-            <div class="flex-1 h-px bg-slate-200"></div>
-            <span class="text-xs text-slate-400">{{ fortg_r|length }} Rätsel</span>
-        </div>
-        <div class="grid gap-4">
-            {% for r in fortg_r %}
-            {% include "partials/raetsel_card.html" %}
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
+    {% endfor %}
 
 </div>
+
+<script>
+// Scroll-Position beim Klick speichern, beim Zurücknavigieren wiederherstellen
+document.querySelectorAll('a[href^="/raetsel/"]').forEach(a => {
+    a.addEventListener('click', () => {
+        sessionStorage.setItem('raetsel_scroll_y', window.scrollY);
+    });
+});
+
+(function restoreScroll() {
+    const y = sessionStorage.getItem('raetsel_scroll_y');
+    if (y !== null) {
+        sessionStorage.removeItem('raetsel_scroll_y');
+        window.scrollTo({ top: parseInt(y), behavior: 'instant' });
+    }
+})();
+</script>
 
 {% endblock %}
