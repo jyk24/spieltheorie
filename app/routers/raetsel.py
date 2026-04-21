@@ -280,6 +280,96 @@ RAETSEL_META = [
         "schwierigkeit": "Mittel",
         "dauer": "5 min",
     },
+    {
+        "id": "schlafendes-maedchen",
+        "name": "Das Schlafendes-Mädchen-Paradoxon",
+        "icon": "😴",
+        "beschreibung": "Vor dem Schlafen: P(Kopf) = ½. Nach dem Aufwachen – ohne neue Information – sagen manche Mathematiker: P(Kopf) = ⅓. Wer hat recht? Das Paradoxon spaltet Philosophen und Statistiker.",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "5 min",
+    },
+    {
+        "id": "grandis-serie",
+        "name": "Grandis Serie",
+        "icon": "∞",
+        "beschreibung": "1 − 1 + 1 − 1 + … Was ergibt das? Grandi behauptete 1703: ½. Die Partialsummen schwingen zwischen 0 und 1. Trotzdem lässt sich ½ mathematisch exakt rechtfertigen – mit Cesàro-Summation.",
+        "typ": "Mathematik-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+    },
+    {
+        "id": "ramanujan-summe",
+        "name": "1 + 2 + 3 + … = −1/12",
+        "icon": "🔢",
+        "beschreibung": "Ramanujan schrieb 1913 an Hardy: Die Summe aller natürlichen Zahlen ist −1/12. Hardy hielt ihn für einen Betrüger – bis er die Beweise sah. Wie ist das möglich?",
+        "typ": "Mathematik-Paradox",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "5 min",
+    },
+    {
+        "id": "harmonische-reihe",
+        "name": "Die Harmonische Reihe",
+        "icon": "🌊",
+        "beschreibung": "1 + ½ + ⅓ + ¼ + … – jedes Glied wird kleiner, trotzdem divergiert die Reihe. Oresme bewies das 1350. Wie viele Glieder braucht man, um 10 zu überschreiten? Die Antwort: 12.367.",
+        "typ": "Mathematik-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+    },
+    {
+        "id": "falsch-positiv",
+        "name": "Das Falsch-Positiv-Paradoxon",
+        "icon": "🔬",
+        "beschreibung": "Ein 99%-genauer Test für eine Krankheit mit 0,1% Häufigkeit. Du testest positiv. Wie groß ist die Wahrscheinlichkeit, wirklich krank zu sein? Die Antwort schockiert Ärzte und Patienten.",
+        "typ": "Statistik-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+    },
+    {
+        "id": "spielerfehlschluss",
+        "name": "Der Spielerfehlschluss",
+        "icon": "🎰",
+        "beschreibung": "1913, Monte Carlo: Die Roulette-Kugel fiel 26 Mal auf Schwarz. Spieler setzten Millionen auf Rot – und verloren alles. Warum vergangene Zufallsereignisse nichts über die Zukunft sagen.",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Einsteiger",
+        "dauer": "3 min",
+    },
+    {
+        "id": "bayes-theorem",
+        "name": "Das Bayes-Theorem",
+        "icon": "📐",
+        "beschreibung": "Wie aktualisieren wir Überzeugungen rational auf Basis neuer Beweise? Bayes (1763) lieferte die Formel. Drei interaktive Szenarien: Medizintest, Spam-Filter, und eigene Parameter.",
+        "typ": "Statistik-Interaktiv",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+    },
+    {
+        "id": "gesetz-grosse-zahlen",
+        "name": "Gesetz der großen Zahlen",
+        "icon": "📈",
+        "beschreibung": "Je mehr Würfe, desto näher am Erwartungswert – aber nie garantiert genau. Bernoulli bewies das 1713. Und was unterscheidet dieses Gesetz vom Spielerfehlschluss?",
+        "typ": "Statistik-Interaktiv",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+    },
+    {
+        "id": "coupon-sammler",
+        "name": "Das Coupon-Sammler-Problem",
+        "icon": "🎟️",
+        "beschreibung": "6 verschiedene Figuren im Überraschungsei. Wie viele Eier braucht man im Schnitt, um alle zu haben? Intuitiv sagt man 6 – die Mathematik antwortet: 14,7. Warum?",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+    },
+    {
+        "id": "bertrand-paradoxon",
+        "name": "Das Bertrand-Paradoxon",
+        "icon": "⭕",
+        "beschreibung": "Ziehe eine zufällige Sehne in einem Kreis. Ist sie länger als die Dreiecksseite? Je nach Definition von 'zufällig' lautet die Antwort ⅓, ½ oder ¼. Bertrand (1889) zeigte: Wahrscheinlichkeit braucht Präzision.",
+        "typ": "Mathematik-Paradox",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "5 min",
+    },
 ]
 
 
@@ -2093,4 +2183,132 @@ def hilberts_hotel_result(
             "answer": answer,
             "is_correct": is_correct,
         },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Schlafendes Mädchen (Sleeping Beauty Problem)
+# ---------------------------------------------------------------------------
+
+@router.get("/schlafendes-maedchen", response_class=HTMLResponse)
+def schlafendes_maedchen_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/schlafendes_maedchen.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/schlafendes-maedchen/result", response_class=HTMLResponse)
+def schlafendes_maedchen_result(request: Request, answer: str = Form(...)):
+    return templates.TemplateResponse(
+        request,
+        "partials/schlafendes_maedchen_result.html",
+        {"answer": answer},
+    )
+
+
+# ---------------------------------------------------------------------------
+# Grandis Serie
+# ---------------------------------------------------------------------------
+
+@router.get("/grandis-serie", response_class=HTMLResponse)
+def grandis_serie_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/grandis_serie.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Ramanujan-Summe
+# ---------------------------------------------------------------------------
+
+@router.get("/ramanujan-summe", response_class=HTMLResponse)
+def ramanujan_summe_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/ramanujan_summe.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Harmonische Reihe
+# ---------------------------------------------------------------------------
+
+@router.get("/harmonische-reihe", response_class=HTMLResponse)
+def harmonische_reihe_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/harmonische_reihe.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Falsch-Positiv-Paradoxon
+# ---------------------------------------------------------------------------
+
+@router.get("/falsch-positiv", response_class=HTMLResponse)
+def falsch_positiv_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/falsch_positiv.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Spielerfehlschluss (Gambler's Fallacy)
+# ---------------------------------------------------------------------------
+
+@router.get("/spielerfehlschluss", response_class=HTMLResponse)
+def spielerfehlschluss_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/spielerfehlschluss.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/spielerfehlschluss/result", response_class=HTMLResponse)
+def spielerfehlschluss_result(request: Request, answer: str = Form(...)):
+    return templates.TemplateResponse(
+        request,
+        "partials/spielerfehlschluss_result.html",
+        {"answer": answer},
+    )
+
+
+# ---------------------------------------------------------------------------
+# Bayes-Theorem
+# ---------------------------------------------------------------------------
+
+@router.get("/bayes-theorem", response_class=HTMLResponse)
+def bayes_theorem_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/bayes_theorem.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Gesetz der großen Zahlen
+# ---------------------------------------------------------------------------
+
+@router.get("/gesetz-grosse-zahlen", response_class=HTMLResponse)
+def gesetz_grosse_zahlen_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/gesetz_grosse_zahlen.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Coupon-Sammler-Problem
+# ---------------------------------------------------------------------------
+
+@router.get("/coupon-sammler", response_class=HTMLResponse)
+def coupon_sammler_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/coupon_sammler.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Bertrand-Paradoxon
+# ---------------------------------------------------------------------------
+
+@router.get("/bertrand-paradoxon", response_class=HTMLResponse)
+def bertrand_paradoxon_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/bertrand_paradoxon.html", {"active_page": "raetsel"}
     )

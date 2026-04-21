@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block title %}Coupon-Sammler-Problem – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🎟️ Das Coupon-Sammler-Problem</h1>
+        <p class="text-slate-500 mt-1">Wie viele Überraschungseier braucht man, um alle Figuren zu sammeln?</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5 text-sm text-slate-700">
+        <p class="font-semibold mb-2">Das Problem:</p>
+        <p>Es gibt <strong>n</strong> verschiedene Coupons (Figuren, Sticker, Beilagen). Jeder Kauf liefert einen zufälligen Coupon, gleichmäßig verteilt. Wie viele Käufe braucht man im <em>Durchschnitt</em>, um alle n Coupons mindestens einmal zu haben?</p>
+        <div class="mt-3 bg-white border border-slate-100 rounded-lg p-3 font-mono text-xs text-slate-600 text-center">
+            E[T] = n · H(n) = n · (1 + 1/2 + 1/3 + … + 1/n)
+        </div>
+        <p class="mt-2 text-xs text-slate-500">H(n) = n-te harmonische Zahl ≈ ln(n) + 0.577</p>
+    </div>
+
+    <!-- Quiz -->
+    <div id="quiz-area" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5">
+        <p class="font-semibold text-slate-800 mb-3">Beispiel: Würfel mit 6 Seiten</p>
+        <p class="text-sm text-slate-500 mb-4">Du würfelst, bis du alle 6 Zahlen (1–6) mindestens einmal gewürfelt hast. Wie viele Würfe brauchst du im Schnitt?</p>
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="showResult('6')" class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all">
+                <div class="text-2xl font-bold text-slate-700">6</div>
+                <div class="text-xs text-slate-500 mt-1">Genau 6</div>
+            </button>
+            <button onclick="showResult('10')" class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all">
+                <div class="text-2xl font-bold text-slate-700">~10</div>
+                <div class="text-xs text-slate-500 mt-1">Etwas mehr</div>
+            </button>
+            <button onclick="showResult('14.7')" class="p-4 rounded-xl border-2 border-indigo-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all">
+                <div class="text-2xl font-bold text-indigo-700">~14.7</div>
+                <div class="text-xs text-indigo-500 mt-1">Deutlich mehr</div>
+            </button>
+            <button onclick="showResult('36')" class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all">
+                <div class="text-2xl font-bold text-slate-700">~36</div>
+                <div class="text-xs text-slate-500 mt-1">Sehr viele</div>
+            </button>
+        </div>
+    </div>
+
+    <div id="erklaerung" class="hidden space-y-5">
+        <div id="result-box" class="rounded-xl p-4 border text-sm font-semibold text-center"></div>
+
+        <!-- Warum 14.7? -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-4">Warum 14.7 Würfe?</p>
+            <div class="space-y-2 text-sm">
+                <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg border border-slate-100">
+                    <span class="text-slate-600">1. neuer Wert: schon neu, P = 6/6</span>
+                    <span class="font-bold text-slate-700">E = 1/1 = <strong>1.00</strong></span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg border border-slate-100">
+                    <span class="text-slate-600">2. neuer Wert: P = 5/6</span>
+                    <span class="font-bold text-slate-700">E = 6/5 = <strong>1.20</strong></span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg border border-slate-100">
+                    <span class="text-slate-600">3. neuer Wert: P = 4/6</span>
+                    <span class="font-bold text-slate-700">E = 6/4 = <strong>1.50</strong></span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg border border-slate-100">
+                    <span class="text-slate-600">4. neuer Wert: P = 3/6</span>
+                    <span class="font-bold text-slate-700">E = 6/3 = <strong>2.00</strong></span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg border border-slate-100">
+                    <span class="text-slate-600">5. neuer Wert: P = 2/6</span>
+                    <span class="font-bold text-slate-700">E = 6/2 = <strong>3.00</strong></span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-rose-50 rounded-lg border border-rose-100">
+                    <span class="text-rose-600">6. neuer Wert: P = 1/6</span>
+                    <span class="font-bold text-rose-700">E = 6/1 = <strong>6.00</strong></span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-indigo-50 rounded-lg border border-indigo-100">
+                    <span class="font-bold text-indigo-800">Gesamt:</span>
+                    <span class="font-black text-indigo-700 text-lg">14.70 Würfe</span>
+                </div>
+            </div>
+            <p class="text-xs text-slate-500 mt-3">Das Letzte ist das Schwierigste: Man hat schon 5 von 6, aber die Wahrscheinlichkeit für den fehlenden ist nur 1/6 – im Schnitt 6 weitere Würfe.</p>
+        </div>
+
+        <!-- Interaktiv: n einstellen -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-4">Wie viele Coupons gibt es?</p>
+            <div class="mb-4">
+                <label class="text-sm font-medium text-slate-700">n = <span id="n-val" class="text-indigo-700 font-bold">6</span> verschiedene Coupons</label>
+                <input type="range" min="2" max="100" value="6" step="1" id="n-slider"
+                       class="w-full accent-indigo-600 mt-1" oninput="updateN()">
+                <div class="flex justify-between text-xs text-slate-400 mt-0.5"><span>2</span><span>100</span></div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 text-center">
+                <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4">
+                    <div id="expected-val" class="text-2xl font-black text-indigo-700">14.70</div>
+                    <div class="text-xs text-slate-500 mt-1">Erwarteter Aufwand</div>
+                </div>
+                <div class="bg-amber-50 border border-amber-100 rounded-xl p-4">
+                    <div id="factor-val" class="text-2xl font-black text-amber-700">2.45×</div>
+                    <div class="text-xs text-slate-500 mt-1">Faktor gegenüber n</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simulation -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-3">Simulation (n = <span id="sim-n-label">6</span>):</p>
+            <div class="grid grid-cols-3 gap-4 mb-4 text-center">
+                <div>
+                    <div id="sim-runs" class="text-xl font-black text-slate-700">0</div>
+                    <div class="text-xs text-slate-500">Simulationen</div>
+                </div>
+                <div>
+                    <div id="sim-avg" class="text-xl font-black text-indigo-700">—</div>
+                    <div class="text-xs text-slate-500">Ø Würfe</div>
+                </div>
+                <div>
+                    <div id="sim-theory" class="text-xl font-black text-emerald-700">14.70</div>
+                    <div class="text-xs text-slate-500">Theorie</div>
+                </div>
+            </div>
+
+            <!-- Coupon-Display für letzten Run -->
+            <div id="coupon-display" class="flex flex-wrap gap-1 mb-4 min-h-8"></div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="simulate(100)" class="bg-indigo-600 text-white py-2 rounded-xl font-medium hover:bg-indigo-700 transition-colors text-sm">100× simulieren</button>
+                <button onclick="simulate(1000)" class="bg-indigo-500 text-white py-2 rounded-xl font-medium hover:bg-indigo-600 transition-colors text-sm">1.000× simulieren</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let simTotal = 0, simRuns = 0;
+
+function showResult(guess) {
+    const correct = guess === '14.7';
+    const box = document.getElementById('result-box');
+    box.innerHTML = correct
+        ? '✓ Richtig! Im Schnitt braucht man 14.7 Würfe – fast 2.5× mehr als Seiten.'
+        : `Überraschend: Die Antwort ist <strong>~14.7 Würfe</strong>. Der letzte fehlende Wert ist besonders schwer zu treffen.`;
+    box.className = `rounded-xl p-4 border text-sm font-semibold text-center ${correct
+        ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+        : 'bg-amber-50 border-amber-200 text-amber-800'}`;
+    document.getElementById('quiz-area').classList.add('hidden');
+    document.getElementById('erklaerung').classList.remove('hidden');
+}
+
+function harmonicSum(n) {
+    let s = 0;
+    for (let i = 1; i <= n; i++) s += 1 / i;
+    return s;
+}
+
+let currentN = 6;
+
+function updateN() {
+    currentN = parseInt(document.getElementById('n-slider').value);
+    document.getElementById('n-val').textContent = currentN;
+    document.getElementById('sim-n-label').textContent = currentN;
+    const expected = currentN * harmonicSum(currentN);
+    document.getElementById('expected-val').textContent = expected.toFixed(2);
+    document.getElementById('factor-val').textContent = (expected / currentN).toFixed(2) + '×';
+    document.getElementById('sim-theory').textContent = expected.toFixed(2);
+    simTotal = 0; simRuns = 0;
+    document.getElementById('sim-runs').textContent = '0';
+    document.getElementById('sim-avg').textContent = '—';
+    document.getElementById('coupon-display').innerHTML = '';
+}
+
+function oneSim(n) {
+    const collected = new Set();
+    let tries = 0;
+    while (collected.size < n) {
+        collected.add(Math.floor(Math.random() * n));
+        tries++;
+    }
+    return tries;
+}
+
+function simulate(runs) {
+    const n = currentN;
+    let total = 0;
+    let lastCollected = [];
+
+    for (let i = 0; i < runs; i++) {
+        const collected = new Set();
+        let tries = 0;
+        while (collected.size < n) {
+            collected.add(Math.floor(Math.random() * n));
+            tries++;
+        }
+        total += tries;
+        if (i === runs - 1) lastCollected = [...collected];
+    }
+    simTotal += total;
+    simRuns += runs;
+
+    document.getElementById('sim-runs').textContent = simRuns.toLocaleString('de-DE');
+    document.getElementById('sim-avg').textContent = (simTotal / simRuns).toFixed(2);
+
+    // Show last set of coupons
+    const colors = ['bg-rose-400', 'bg-amber-400', 'bg-emerald-400', 'bg-blue-400', 'bg-violet-400', 'bg-pink-400',
+                    'bg-indigo-400', 'bg-teal-400', 'bg-orange-400', 'bg-cyan-400'];
+    const display = document.getElementById('coupon-display');
+    display.innerHTML = '';
+    for (let i = 0; i < Math.min(n, 30); i++) {
+        const span = document.createElement('span');
+        span.className = `w-6 h-6 rounded-full ${colors[i % colors.length]} text-white text-xs flex items-center justify-center font-bold`;
+        span.textContent = i + 1;
+        display.appendChild(span);
+    }
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+<div class="space-y-4">
+    {% if answer == 'gleich' %}
+    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center">
+        <div class="text-3xl mb-2">✓</div>
+        <div class="font-bold text-emerald-800 text-lg">Richtig! Immer 50/50.</div>
+        <div class="text-sm text-emerald-600 mt-1">Jeder Münzwurf ist vollständig unabhängig vom vorherigen.</div>
+    </div>
+    {% else %}
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
+        <div class="text-3xl mb-2">💡</div>
+        <div class="font-bold text-amber-800 text-lg">Das ist der Spielerfehlschluss!</div>
+        <div class="text-sm text-amber-700 mt-1">Die Münze hat kein Gedächtnis. Es ist immer genau 50/50 – unabhängig von der Geschichte.</div>
+    </div>
+    {% endif %}
+
+    <div class="bg-white border border-slate-200 rounded-xl p-5 text-sm text-slate-700">
+        <p class="font-semibold mb-2 text-slate-800">Warum fühlt es sich trotzdem falsch an?</p>
+        <p class="text-xs mb-3 text-slate-600">Unser Gehirn sucht nach Mustern. Wir erleben 10× Kopf als „unnatürlich" und erwarten eine Korrektur. Aber die Münze kennt ihre eigene Geschichte nicht.</p>
+        <div class="bg-slate-50 border border-slate-100 rounded-lg p-3 text-xs">
+            <p><strong>P(Zahl | 10× Kopf)</strong> = P(Zahl) = <strong>0.5</strong></p>
+            <p class="mt-1 text-slate-500">Statistische Unabhängigkeit bedeutet: Konditionierung auf die Vergangenheit ändert nichts.</p>
+        </div>
+    </div>
+
+    <a href="/raetsel/spielerfehlschluss"
+       class="block w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors text-sm">
+        Zur Simulation →
+    </a>
+</div>

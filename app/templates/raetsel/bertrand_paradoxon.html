@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% block title %}Bertrand-Paradoxon – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">⭕ Das Bertrand-Paradoxon</h1>
+        <p class="text-slate-500 mt-1">Eine zufällige Sehne – drei verschiedene Methoden, drei verschiedene Antworten.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5 text-sm text-slate-700">
+        <p class="font-semibold mb-2">Die Frage (Joseph Bertrand, 1889):</p>
+        <p>Zeichne eine <em>zufällige</em> Sehne in einem Kreis. Wie groß ist die Wahrscheinlichkeit, dass diese Sehne länger ist als die Seite des einbeschriebenen gleichseitigen Dreiecks?</p>
+        <div class="mt-3 bg-white border border-slate-100 rounded-lg p-3 text-xs text-slate-600 text-center">
+            Länge der Dreiecksseite = r√3 ≈ 1.732r &nbsp; (bei Radius r)
+        </div>
+        <p class="mt-2">Die Antwort hängt davon ab, was man unter „zufällig" versteht. Bertrand gab drei Methoden – und bekam drei verschiedene Antworten.</p>
+    </div>
+
+    <!-- Methoden-Auswahl -->
+    <div class="grid grid-cols-3 gap-3 mb-5">
+        <button onclick="selectMethod(1)"
+                class="p-3 rounded-xl border-2 border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-center method-btn" id="btn-m1">
+            <div class="text-lg font-bold text-slate-700">⅓</div>
+            <div class="text-xs text-slate-500 mt-1">Methode 1</div>
+            <div class="text-xs text-slate-400">Zufälliger Endpunkt</div>
+        </button>
+        <button onclick="selectMethod(2)"
+                class="p-3 rounded-xl border-2 border-slate-200 hover:border-violet-400 hover:bg-violet-50 transition-all text-center method-btn" id="btn-m2">
+            <div class="text-lg font-bold text-slate-700">½</div>
+            <div class="text-xs text-slate-500 mt-1">Methode 2</div>
+            <div class="text-xs text-slate-400">Zufälliger Mittelpunkt</div>
+        </button>
+        <button onclick="selectMethod(3)"
+                class="p-3 rounded-xl border-2 border-slate-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all text-center method-btn" id="btn-m3">
+            <div class="text-lg font-bold text-slate-700">¼</div>
+            <div class="text-xs text-slate-500 mt-1">Methode 3</div>
+            <div class="text-xs text-slate-400">Zufälliger Radius</div>
+        </button>
+    </div>
+
+    <!-- Canvas -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5">
+        <div class="flex justify-center mb-4">
+            <canvas id="circle-canvas" width="320" height="320"
+                    class="rounded-lg bg-slate-50 border border-slate-200"></canvas>
+        </div>
+
+        <div id="method-desc" class="text-sm text-slate-700 bg-slate-50 border border-slate-200 rounded-xl p-4 mb-4">
+            <p class="text-slate-500 italic">Wähle eine Methode oben, um die Visualisierung zu starten.</p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 text-center">
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                <div id="stat-total" class="text-xl font-black text-slate-700">0</div>
+                <div class="text-xs text-slate-500">Sehnen gesamt</div>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+                <div id="stat-long" class="text-xl font-black text-emerald-700">0</div>
+                <div class="text-xs text-slate-500">Länger als √3·r</div>
+            </div>
+            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3">
+                <div id="stat-ratio" class="text-xl font-black text-indigo-700">—</div>
+                <div class="text-xs text-slate-500">Anteil</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mt-4">
+            <button onclick="addChords(50)" id="btn-add"
+                    class="bg-indigo-600 text-white py-2 rounded-xl font-medium hover:bg-indigo-700 transition-colors text-sm disabled:opacity-40 disabled:cursor-not-allowed" disabled>
+                50 Sehnen hinzufügen
+            </button>
+            <button onclick="resetCanvas()" id="btn-reset"
+                    class="bg-slate-200 text-slate-700 py-2 rounded-xl font-medium hover:bg-slate-300 transition-colors text-sm">
+                Reset
+            </button>
+        </div>
+    </div>
+
+    <!-- Erklärung -->
+    <div class="space-y-4 text-sm">
+        <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
+            <div class="font-semibold text-blue-800 mb-2">Methode 1 – Zufälliger Endpunkt: P = <strong>1/3</strong></div>
+            <p class="text-blue-700 text-xs">Fixiere einen Endpunkt, wähle den zweiten gleichmäßig auf dem Kreis. Die Sehne ist länger als √3·r, wenn der zweite Punkt im mittleren Drittel des Kreises liegt → 1/3.</p>
+        </div>
+        <div class="bg-violet-50 border border-violet-100 rounded-xl p-4">
+            <div class="font-semibold text-violet-800 mb-2">Methode 2 – Zufälliger Mittelpunkt: P = <strong>1/2</strong></div>
+            <p class="text-violet-700 text-xs">Wähle einen Punkt gleichmäßig in der Scheibe als Mittelpunkt der Sehne. Die Sehne ist länger als √3·r, wenn der Mittelpunkt im inneren Halbkreis liegt → 1/2.</p>
+        </div>
+        <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4">
+            <div class="font-semibold text-emerald-800 mb-2">Methode 3 – Zufälliger Radius: P = <strong>1/4</strong></div>
+            <p class="text-emerald-700 text-xs">Fixiere eine Richtung, wähle den Abstand vom Mittelpunkt gleichmäßig in [0, r]. Die Sehne ist länger als √3·r, wenn der Abstand < r/2 → 1/4.</p>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800">
+            <p class="font-semibold mb-1">Die eigentliche Lehre</p>
+            <p>„Zufällig" ist keine eindeutige Spezifikation. Je nachdem, welche Verteilung auf dem Raum der Sehnen man wählt, erhält man verschiedene Ergebnisse. Bertrand zeigte: Wahrscheinlichkeit setzt eine präzise Definition des Wahrscheinlichkeitsmaßes voraus. Jaynes (1973) argued für Methode 2 durch das Prinzip der Translationsinvarianz.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+const canvas = document.getElementById('circle-canvas');
+const ctx = canvas.getContext('2d');
+const CX = 160, CY = 160, R = 140;
+let currentMethod = 0;
+let totalChords = 0, longChords = 0;
+
+const METHODS = {
+    1: {
+        desc: '<strong>Methode 1: Zufälliger Endpunkt</strong><br>Fixiere Punkt A auf dem Kreis, wähle Punkt B gleichmäßig auf dem restlichen Kreis.',
+        color: '#3b82f6',
+        expected: '1/3 ≈ 33.3%'
+    },
+    2: {
+        desc: '<strong>Methode 2: Zufälliger Mittelpunkt (Midpoint)</strong><br>Wähle einen gleichmäßig verteilten Punkt M in der Scheibe, zeichne die Sehne senkrecht zum Radius durch M.',
+        color: '#8b5cf6',
+        expected: '1/2 = 50.0%'
+    },
+    3: {
+        desc: '<strong>Methode 3: Zufälliger Radius</strong><br>Fixiere eine Richtung (z.B. vertikal), wähle den Abstand d gleichmäßig in [0, R] vom Mittelpunkt.',
+        color: '#10b981',
+        expected: '1/4 = 25.0%'
+    }
+};
+
+function drawBase() {
+    ctx.clearRect(0, 0, 320, 320);
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(0, 0, 320, 320);
+
+    // Circle
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(CX, CY, R, 0, Math.PI * 2); ctx.stroke();
+
+    // Inscribed equilateral triangle
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    for (let i = 0; i < 3; i++) {
+        const a = (i * 2 * Math.PI / 3) - Math.PI / 6;
+        const x = CX + R * Math.cos(a), y = CY + R * Math.sin(a);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.closePath(); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Inner circle for threshold (radius = R/2)
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.arc(CX, CY, R / 2, 0, Math.PI * 2); ctx.stroke();
+    ctx.setLineDash([]);
+}
+
+function addChords(n) {
+    const m = METHODS[currentMethod];
+    for (let i = 0; i < n; i++) {
+        let x1, y1, x2, y2;
+
+        if (currentMethod === 1) {
+            const a1 = Math.random() * Math.PI * 2;
+            const a2 = a1 + (Math.random() * Math.PI * 2 - Math.PI);
+            x1 = CX + R * Math.cos(a1); y1 = CY + R * Math.sin(a1);
+            x2 = CX + R * Math.cos(a2); y2 = CY + R * Math.sin(a2);
+        } else if (currentMethod === 2) {
+            const r2 = R * Math.sqrt(Math.random());
+            const a = Math.random() * Math.PI * 2;
+            const mx = CX + r2 * Math.cos(a), my = CY + r2 * Math.sin(a);
+            const perp = a + Math.PI / 2;
+            const half = Math.sqrt(Math.max(0, R * R - r2 * r2));
+            x1 = mx + half * Math.cos(perp); y1 = my + half * Math.sin(perp);
+            x2 = mx - half * Math.cos(perp); y2 = my - half * Math.sin(perp);
+        } else {
+            const d = Math.random() * R;
+            const half = Math.sqrt(Math.max(0, R * R - d * d));
+            x1 = CX - half; y1 = CY - d;
+            x2 = CX + half; y2 = CY - d;
+        }
+
+        const len = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+        const isLong = len > R * Math.sqrt(3);
+        totalChords++;
+        if (isLong) longChords++;
+
+        ctx.strokeStyle = isLong ? m.color + 'cc' : '#cbd5e1';
+        ctx.lineWidth = 1;
+        ctx.globalAlpha = 0.5;
+        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+        ctx.globalAlpha = 1;
+    }
+
+    document.getElementById('stat-total').textContent = totalChords.toLocaleString('de-DE');
+    document.getElementById('stat-long').textContent = longChords.toLocaleString('de-DE');
+    const ratio = totalChords > 0 ? (longChords / totalChords * 100).toFixed(1) + '%' : '—';
+    document.getElementById('stat-ratio').textContent = ratio;
+}
+
+function selectMethod(m) {
+    currentMethod = m;
+    document.querySelectorAll('.method-btn').forEach((b, i) => {
+        b.className = b.className.replace(/border-(blue|violet|emerald)-400 bg-(blue|violet|emerald)-50/, '');
+        b.classList.remove('border-blue-400', 'bg-blue-50', 'border-violet-400', 'bg-violet-50', 'border-emerald-400', 'bg-emerald-50');
+        b.classList.add('border-slate-200');
+    });
+    const colors = {1: 'blue', 2: 'violet', 3: 'emerald'};
+    const btn = document.getElementById(`btn-m${m}`);
+    btn.classList.remove('border-slate-200');
+    btn.classList.add(`border-${colors[m]}-400`, `bg-${colors[m]}-50`);
+
+    document.getElementById('method-desc').innerHTML =
+        METHODS[m].desc + `<div class="mt-2 text-xs text-slate-500">Theoretisches Ergebnis: <strong>${METHODS[m].expected}</strong></div>`;
+    document.getElementById('btn-add').disabled = false;
+    resetCanvas();
+}
+
+function resetCanvas() {
+    totalChords = 0; longChords = 0;
+    drawBase();
+    document.getElementById('stat-total').textContent = '0';
+    document.getElementById('stat-long').textContent = '0';
+    document.getElementById('stat-ratio').textContent = '—';
+}
+
+drawBase();
+</script>
+
+{% endblock %}

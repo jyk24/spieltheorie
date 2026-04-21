@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% block title %}Gesetz der großen Zahlen – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">📈 Gesetz der großen Zahlen</h1>
+        <p class="text-slate-500 mt-1">Je mehr Versuche, desto näher am wahren Wert – aber wie schnell?</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5 text-sm text-slate-700">
+        <p class="font-semibold mb-2">Das Gesetz:</p>
+        <p>Der Durchschnitt unabhängiger Zufallsvariablen konvergiert mit wachsender Stichprobengröße <em>fast sicher</em> gegen den Erwartungswert. Jakob Bernoulli bewies die schwache Version 1713 nach 20 Jahren Arbeit.</p>
+        <div class="mt-3 bg-white border border-slate-100 rounded-lg p-3 font-mono text-xs text-slate-600 text-center">
+            X̄ₙ = (X₁ + X₂ + … + Xₙ) / n → E[X] &nbsp;&nbsp;für n → ∞
+        </div>
+    </div>
+
+    <!-- Schätze Quiz -->
+    <div id="quiz-area" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5">
+        <p class="font-semibold text-slate-800 mb-2">Intuitions-Test:</p>
+        <p class="text-sm text-slate-500 mb-4">Nach 1.000 Münzwürfen liegt der Anteil „Kopf" bei 52%. Nach wie vielen weiteren Würfen ist es <em>garantiert</em> bei 50%?</p>
+        <div class="grid grid-cols-1 gap-3">
+            <button onclick="showLesson('never')"
+                    class="p-4 rounded-xl border-2 border-indigo-200 bg-indigo-50 hover:border-indigo-400 transition-all text-left">
+                <div class="font-bold text-indigo-700">Niemals – es ist nie garantiert</div>
+                <div class="text-xs text-indigo-600 mt-0.5">Nur der Durchschnitt nähert sich an, nicht der absolute Wert</div>
+            </button>
+            <button onclick="showLesson('1000')"
+                    class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all text-left">
+                <div class="font-bold text-slate-700">Nach ~1.000 weiteren</div>
+                <div class="text-xs text-slate-500 mt-0.5">Die Abweichung wird kompensiert</div>
+            </button>
+            <button onclick="showLesson('million')"
+                    class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all text-left">
+                <div class="font-bold text-slate-700">Nach ~1 Million</div>
+                <div class="text-xs text-slate-500 mt-0.5">Erst bei sehr vielen Versuchen</div>
+            </button>
+        </div>
+    </div>
+
+    <div id="lesson" class="hidden space-y-5">
+        <div id="lesson-result" class="rounded-xl p-4 border text-sm text-center font-semibold"></div>
+
+        <!-- Canvas-Simulation -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-3">Live-Simulation: Münzwurf-Anteil vs. Anzahl Würfe</p>
+
+            <canvas id="sim-canvas" width="560" height="200"
+                    class="w-full rounded-lg bg-slate-50 border border-slate-200"></canvas>
+
+            <div class="grid grid-cols-3 gap-4 mt-4 text-center">
+                <div>
+                    <div id="stat-n" class="text-xl font-black text-slate-700">0</div>
+                    <div class="text-xs text-slate-500">Würfe</div>
+                </div>
+                <div>
+                    <div id="stat-ratio" class="text-xl font-black text-indigo-700">—</div>
+                    <div class="text-xs text-slate-500">Aktueller Anteil</div>
+                </div>
+                <div>
+                    <div id="stat-dev" class="text-xl font-black text-amber-600">—</div>
+                    <div class="text-xs text-slate-500">Abweichung von 50%</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 mt-4">
+                <button onclick="runSim(100)" class="bg-indigo-600 text-white py-2 rounded-xl font-medium hover:bg-indigo-700 transition-colors text-sm">100 Würfe</button>
+                <button onclick="runSim(1000)" class="bg-indigo-500 text-white py-2 rounded-xl font-medium hover:bg-indigo-600 transition-colors text-sm">1.000 Würfe</button>
+                <button onclick="runSim(10000)" class="bg-indigo-400 text-white py-2 rounded-xl font-medium hover:bg-indigo-500 transition-colors text-sm">10.000 Würfe</button>
+            </div>
+            <button onclick="resetSim()" class="mt-2 w-full bg-slate-100 text-slate-600 py-2 rounded-xl font-medium hover:bg-slate-200 transition-colors text-sm">
+                Reset
+            </button>
+        </div>
+
+        <!-- Schwaches vs. Starkes GGZ -->
+        <div class="grid grid-cols-2 gap-4 text-sm">
+            <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
+                <p class="font-semibold text-blue-800 mb-2">Schwaches GGZ</p>
+                <p class="text-blue-700 text-xs">Für jedes ε > 0: P(|X̄ₙ − μ| > ε) → 0. Die Wahrscheinlichkeit einer großen Abweichung geht gegen null. (Bernoulli 1713, Chebyshev 1867)</p>
+            </div>
+            <div class="bg-violet-50 border border-violet-100 rounded-xl p-4">
+                <p class="font-semibold text-violet-800 mb-2">Starkes GGZ</p>
+                <p class="text-violet-700 text-xs">P(X̄ₙ → μ) = 1. Fast sicher konvergiert die Folge. Stärker, aber schwerer zu beweisen. (Borel 1909, Kolmogorov 1930)</p>
+            </div>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800">
+            <p class="font-semibold mb-1">Wichtige Unterscheidung: GGZ ≠ Spielerfehlschluss</p>
+            <p>Das GGZ garantiert nicht, dass vergangene Abweichungen „kompensiert" werden. Die Abweichung wird verdünnt – durch neue Beobachtungen, nicht durch Korrektur. 52% nach 1.000 Würfen + 1.000 neue faire Würfe → erwartet ~51% – näher an 50%, aber nicht durch Ausgleich, sondern durch Verdünnung.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+let allPoints = [];
+let totalFlips = 0;
+let totalKopf = 0;
+
+function showLesson(answer) {
+    const result = document.getElementById('lesson-result');
+    const correct = answer === 'never';
+    result.innerHTML = correct
+        ? '✓ Richtig! Das GGZ garantiert keine Kompensation – nur Verdünnung.'
+        : `Der Anteil wird sich annähern – aber ohne garantierte Kompensation. Die Abweichung wird durch neue Versuche <em>verdünnt</em>, nicht ausgeglichen.`;
+    result.className = `rounded-xl p-4 border text-sm text-center font-semibold ${correct
+        ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+        : 'bg-amber-50 border-amber-200 text-amber-800'}`;
+    document.getElementById('quiz-area').classList.add('hidden');
+    document.getElementById('lesson').classList.remove('hidden');
+    drawCanvas();
+}
+
+function runSim(n) {
+    for (let i = 0; i < n; i++) {
+        totalFlips++;
+        if (Math.random() < 0.5) totalKopf++;
+        if (totalFlips <= 10000) {
+            allPoints.push(totalKopf / totalFlips);
+        }
+    }
+    updateStats();
+    drawCanvas();
+}
+
+function resetSim() {
+    allPoints = []; totalFlips = 0; totalKopf = 0;
+    updateStats();
+    drawCanvas();
+}
+
+function updateStats() {
+    document.getElementById('stat-n').textContent = totalFlips.toLocaleString('de-DE');
+    if (totalFlips > 0) {
+        const r = totalKopf / totalFlips;
+        document.getElementById('stat-ratio').textContent = (r * 100).toFixed(2) + '%';
+        document.getElementById('stat-dev').textContent = Math.abs(r - 0.5).toFixed(4);
+    } else {
+        document.getElementById('stat-ratio').textContent = '—';
+        document.getElementById('stat-dev').textContent = '—';
+    }
+}
+
+function drawCanvas() {
+    const canvas = document.getElementById('sim-canvas');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+
+    // Grid
+    ctx.strokeStyle = '#e2e8f0';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 4; i++) {
+        const y = H * i / 4;
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+
+    // 50% line
+    ctx.strokeStyle = '#6366f1';
+    ctx.setLineDash([5, 5]);
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(0, H / 2); ctx.lineTo(W, H / 2); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Labels
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '11px monospace';
+    ctx.fillText('100%', 4, 14);
+    ctx.fillText('75%', 4, H / 4 + 4);
+    ctx.fillText('50%', 4, H / 2 + 4);
+    ctx.fillText('25%', 4, 3 * H / 4 + 4);
+    ctx.fillText('0%', 4, H - 4);
+
+    if (allPoints.length < 2) return;
+
+    // Data
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (let i = 0; i < allPoints.length; i++) {
+        const x = (i / (allPoints.length - 1)) * W;
+        const y = H - allPoints[i] * H;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Last point dot
+    const lx = W, ly = H - allPoints[allPoints.length - 1] * H;
+    ctx.fillStyle = '#f59e0b';
+    ctx.beginPath(); ctx.arc(lx - 3, ly, 4, 0, Math.PI * 2); ctx.fill();
+}
+
+drawCanvas();
+</script>
+
+{% endblock %}

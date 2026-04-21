@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %}Grandis Serie – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">∞ Grandis Serie</h1>
+        <p class="text-slate-500 mt-1">1 − 1 + 1 − 1 + … Was ergibt das?</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Reihe:</p>
+        <div class="text-2xl font-mono text-center py-3 bg-white rounded-lg border border-slate-100 mb-3">
+            S = 1 − 1 + 1 − 1 + 1 − 1 + …
+        </div>
+        <p>Guido Grandi formulierte diese Reihe 1703 und behauptete: <strong>S = ½</strong>. Die Mathematikwelt war gespalten. Heute wissen wir: beide Seiten haben teilweise recht.</p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5">
+        <p class="font-semibold text-slate-800 mb-1">Deine Intuition:</p>
+        <p class="text-sm text-slate-500 mb-4">Was glaubst du: Was ergibt 1 − 1 + 1 − 1 + …?</p>
+
+        <div id="quiz-area">
+            <div class="grid grid-cols-3 gap-3">
+                <button onclick="showAnswer('zero')"
+                        class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 bg-slate-50 hover:bg-slate-100 transition-all">
+                    <div class="text-2xl font-bold text-slate-700">0</div>
+                    <div class="text-xs text-slate-500 mt-1">Endet auf 0</div>
+                </button>
+                <button onclick="showAnswer('half')"
+                        class="p-4 rounded-xl border-2 border-indigo-200 hover:border-indigo-400 bg-indigo-50 hover:bg-indigo-100 transition-all">
+                    <div class="text-2xl font-bold text-indigo-700">½</div>
+                    <div class="text-xs text-indigo-500 mt-1">Grandi's Antwort</div>
+                </button>
+                <button onclick="showAnswer('one')"
+                        class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 bg-slate-50 hover:bg-slate-100 transition-all">
+                    <div class="text-2xl font-bold text-slate-700">1</div>
+                    <div class="text-xs text-slate-500 mt-1">Endet auf 1</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="erklaerung" class="hidden space-y-4">
+        <!-- Partialsummen-Animation -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-3">Die Partialsummen-Animation:</p>
+            <div class="flex items-center gap-2 mb-4 flex-wrap" id="terms-display">
+            </div>
+
+            <div class="relative h-16 bg-slate-50 rounded-lg border border-slate-200 overflow-hidden mb-3">
+                <div class="absolute inset-y-0 left-1/2 w-px bg-slate-300"></div>
+                <div id="partial-sum-bar" class="absolute top-0 bottom-0 left-1/2 bg-indigo-400 transition-all duration-300 w-0"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span id="partial-sum-val" class="font-bold text-slate-800 text-xl bg-white/70 px-2 rounded">0</span>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="startAnimation()" id="btn-start"
+                        class="flex-1 bg-indigo-600 text-white py-2 rounded-xl font-medium hover:bg-indigo-700 transition-colors text-sm">
+                    Animation starten
+                </button>
+                <button onclick="resetAnimation()" id="btn-reset"
+                        class="flex-1 bg-slate-200 text-slate-700 py-2 rounded-xl font-medium hover:bg-slate-300 transition-colors text-sm">
+                    Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- Erklärung -->
+        <div class="space-y-3 text-sm text-slate-700">
+            <div class="bg-red-50 border border-red-100 rounded-xl p-4">
+                <p class="font-semibold text-red-800 mb-2">Problem: Die Reihe divergiert</p>
+                <p class="text-red-700">Die Partialsummen springen ewig zwischen 0 und 1. Es gibt keinen Grenzwert im klassischen Sinne. Die Reihe <em>divergiert</em> – sie hat keinen eindeutigen Wert.</p>
+            </div>
+
+            <div class="bg-violet-50 border border-violet-100 rounded-xl p-4">
+                <p class="font-semibold text-violet-800 mb-2">Grandis Argument für ½</p>
+                <p class="text-violet-700 mb-2">Sei S = 1 − 1 + 1 − 1 + …</p>
+                <div class="font-mono text-xs bg-white rounded p-2 border border-violet-100 space-y-1">
+                    <div>1 − S = 1 − (1 − 1 + 1 − 1 + …)</div>
+                    <div>1 − S = 1 − 1 + 1 − 1 + … = S</div>
+                    <div>→ 1 = 2S → <strong>S = ½</strong></div>
+                </div>
+            </div>
+
+            <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4">
+                <p class="font-semibold text-emerald-800 mb-2">Cesàro-Summation: ½ ist mathematisch korrekt</p>
+                <p class="text-emerald-700 mb-2">Der Durchschnitt der ersten n Partialsummen nähert sich ½ an:</p>
+                <div class="font-mono text-xs bg-white rounded p-2 border border-emerald-100">
+                    Partialsummen: 1, 0, 1, 0, 1, 0 …<br>
+                    Durchschnitte: 1, ½, ⅔, ½, ⅗, ½ …<br>
+                    → Cesàro-Summe = <strong>½</strong> ✓
+                </div>
+            </div>
+
+            <div class="bg-slate-100 border border-slate-200 rounded-xl p-4 text-xs text-slate-600">
+                <p class="font-semibold text-slate-700 mb-1">Fazit</p>
+                <p>Im klassischen Sinne hat die Reihe keinen Wert. In der <em>Cesàro-Summation</em> ergibt sie ½ – und das ist konsistent mit Grandis Argument. Moderne Mathematik akzeptiert ½ als „verallgemeinerten Grenzwert", nicht als gewöhnliche Summe.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let animInterval = null;
+let step = 0;
+const maxSteps = 12;
+
+function showAnswer(choice) {
+    document.getElementById('quiz-area').classList.add('hidden');
+    document.getElementById('erklaerung').classList.remove('hidden');
+}
+
+function startAnimation() {
+    if (animInterval) return;
+    step = 0;
+    updateDisplay();
+    animInterval = setInterval(() => {
+        step++;
+        if (step >= maxSteps) { clearInterval(animInterval); animInterval = null; }
+        updateDisplay();
+    }, 700);
+}
+
+function resetAnimation() {
+    if (animInterval) { clearInterval(animInterval); animInterval = null; }
+    step = 0;
+    updateDisplay();
+}
+
+function updateDisplay() {
+    const terms = document.getElementById('terms-display');
+    const bar = document.getElementById('partial-sum-bar');
+    const val = document.getElementById('partial-sum-val');
+
+    let html = '';
+    let sum = 0;
+    for (let i = 0; i <= step; i++) {
+        const sign = i % 2 === 0 ? 1 : -1;
+        sum += sign;
+        const color = sign > 0 ? 'bg-indigo-100 text-indigo-700 border-indigo-200' : 'bg-rose-100 text-rose-700 border-rose-200';
+        if (i > 0) html += '<span class="text-slate-400 font-bold text-lg">' + (sign > 0 ? '+' : '−') + '</span>';
+        html += `<span class="px-3 py-1 rounded-lg border text-sm font-bold ${color}">1</span>`;
+    }
+    terms.innerHTML = html;
+    val.textContent = sum;
+
+    const pct = (sum / 2) * 100;
+    bar.style.width = Math.abs(pct) + '%';
+    bar.style.left = pct >= 0 ? '50%' : (50 + pct) + '%';
+    bar.className = `absolute top-0 bottom-0 transition-all duration-300 ${sum > 0 ? 'bg-indigo-400' : 'bg-rose-400'}`;
+}
+
+updateDisplay();
+</script>
+
+{% endblock %}

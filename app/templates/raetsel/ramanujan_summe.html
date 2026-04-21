@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Ramanujan-Summe – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🔢 1 + 2 + 3 + … = −1/12?</h1>
+        <p class="text-slate-500 mt-1">Das berühmteste Ergebnis der Mathematik – und warum es nicht so absurd ist, wie es klingt.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Behauptung:</p>
+        <div class="text-2xl font-mono text-center py-4 bg-white rounded-lg border border-slate-100 mb-3">
+            1 + 2 + 3 + 4 + 5 + … = −<sup>1</sup>/<sub>12</sub>
+        </div>
+        <p>Srinivasa Ramanujan schrieb diese Formel 1913 in einem Brief an G.H. Hardy. Hardy war so irritiert, dass er zunächst an einen Betrüger dachte – bis er die Beweise sah.</p>
+    </div>
+
+    <div id="quiz-area" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5">
+        <p class="font-semibold text-slate-800 mb-2">Deine Intuition:</p>
+        <p class="text-sm text-slate-500 mb-5">1 + 2 + 3 + … – wohin geht diese Reihe?</p>
+        <div class="grid grid-cols-2 gap-4">
+            <button onclick="revealExplanation('infinity')"
+                    class="p-5 rounded-xl border-2 border-slate-200 hover:border-slate-400 bg-slate-50 hover:bg-slate-100 transition-all">
+                <div class="text-3xl mb-2">∞</div>
+                <div class="font-bold text-slate-700">Unendlich</div>
+                <div class="text-xs text-slate-500 mt-1">Die Summe wächst ohne Ende</div>
+            </button>
+            <button onclick="revealExplanation('absurd')"
+                    class="p-5 rounded-xl border-2 border-rose-200 hover:border-rose-400 bg-rose-50 hover:bg-rose-100 transition-all">
+                <div class="text-3xl mb-2">−1/12</div>
+                <div class="font-bold text-rose-700">Das ist absurd</div>
+                <div class="text-xs text-rose-500 mt-1">Kann unmöglich stimmen</div>
+            </button>
+        </div>
+    </div>
+
+    <div id="erklaerung" class="hidden space-y-4">
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-4">Ramanujans originaler „Beweis" – Schritt für Schritt:</p>
+            <div id="steps-container" class="space-y-3">
+            </div>
+            <button onclick="nextStep()" id="btn-next"
+                    class="mt-4 w-full bg-indigo-600 text-white py-2 rounded-xl font-medium hover:bg-indigo-700 transition-colors text-sm">
+                Nächster Schritt →
+            </button>
+        </div>
+
+        <div id="final-box" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-5 text-sm text-amber-800">
+            <p class="font-semibold mb-2">Moment mal – was stimmt hier nicht?</p>
+            <p class="mb-3">Der obige "Beweis" ist mathematisch nicht rigoros: man darf divergente Reihen nicht einfach subtrahieren oder verschieben. Ramanujan wusste das – er verwendete eine tiefere Methode:</p>
+
+            <div class="bg-white border border-amber-100 rounded-lg p-3 text-xs font-mono mb-3">
+                ζ(s) = 1 + 2<sup>−s</sup> + 3<sup>−s</sup> + 4<sup>−s</sup> + …<br>
+                ζ(−1) = 1 + 2 + 3 + 4 + … = <strong>−1/12</strong>
+            </div>
+
+            <p class="text-xs">Die Riemann-Zeta-Funktion ζ(s) ist für Re(s) > 1 konvergent. Durch <em>analytische Fortsetzung</em> kann man sie auf alle komplexen s ausdehnen. Der Wert ζ(−1) = −1/12 ist dann eindeutig definiert – aber es ist <strong>nicht</strong> die gewöhnliche Summe 1+2+3+…</p>
+
+            <div class="mt-3 bg-amber-100 rounded-lg p-3 text-xs">
+                <p class="font-semibold">Warum ist das trotzdem nützlich?</p>
+                <p>In der Stringtheorie, der Quantenfeldtheorie (Casimir-Effekt) und anderen Bereichen der Physik taucht −1/12 als regulierter Wert divergenter Summen auf – und liefert korrekte experimentelle Vorhersagen.</p>
+            </div>
+        </div>
+
+        <div class="bg-slate-100 border border-slate-200 rounded-xl p-4 text-xs text-slate-600">
+            <p class="font-semibold text-slate-700 mb-1">Fazit</p>
+            <p>Im klassischen Sinne ist 1+2+3+… = ∞. In der Zeta-Regularisierung ist der zugeordnete Wert −1/12. Beides ist korrekt – in unterschiedlichen mathematischen Rahmen. Das Erstaunliche: die physikalische Welt bevorzugt manchmal den zweiten Rahmen.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+const steps = [
+    {
+        label: "Schritt 1: Grandis Reihe",
+        content: `Sei <strong>S₁ = 1 − 1 + 1 − 1 + …</strong><br>
+        Wie wir beim Grandis-Paradoxon gesehen haben: Cesàro-Summe = <strong>1/2</strong>`,
+        color: "bg-blue-50 border-blue-100 text-blue-800"
+    },
+    {
+        label: "Schritt 2: Eine neue Reihe",
+        content: `Sei <strong>S₂ = 1 − 2 + 3 − 4 + 5 − …</strong><br>
+        S₁ − S₂ = (1−1+1−…) − (1−2+3−4+…)<br>
+        = 0 + 1 − 2 + 1 + … = <strong>S₁ ⟹ S₂ = 0</strong>? Nein ...<br>
+        Richtig: <strong>S₁ = S₂/2</strong> also <strong>S₂ = 1/4</strong>`,
+        color: "bg-violet-50 border-violet-100 text-violet-800"
+    },
+    {
+        label: "Schritt 3: Die natürliche Reihe",
+        content: `Sei <strong>S = 1 + 2 + 3 + 4 + …</strong><br>
+        S − S₂ = (1+2+3+4+…) − (1−2+3−4+…)<br>
+        = 0 + 4 + 0 + 8 + 0 + … = 4·(1+2+3+…) = <strong>4S</strong>`,
+        color: "bg-emerald-50 border-emerald-100 text-emerald-800"
+    },
+    {
+        label: "Schritt 4: Das Ergebnis",
+        content: `S − S₂ = 4S<br>
+        S − 1/4 = 4S<br>
+        −3S = 1/4<br>
+        <strong>S = −1/12 ✓</strong>`,
+        color: "bg-rose-50 border-rose-100 text-rose-800"
+    }
+];
+
+let currentStep = -1;
+
+function revealExplanation(choice) {
+    document.getElementById('quiz-area').classList.add('hidden');
+    document.getElementById('erklaerung').classList.remove('hidden');
+}
+
+function nextStep() {
+    currentStep++;
+    if (currentStep >= steps.length) {
+        document.getElementById('btn-next').classList.add('hidden');
+        document.getElementById('final-box').classList.remove('hidden');
+        return;
+    }
+
+    const s = steps[currentStep];
+    const div = document.createElement('div');
+    div.className = `border rounded-xl p-4 text-sm ${s.color} animate-pulse-once`;
+    div.innerHTML = `<p class="font-semibold mb-1">${s.label}</p><p class="text-xs leading-relaxed">${s.content}</p>`;
+    document.getElementById('steps-container').appendChild(div);
+
+    if (currentStep === steps.length - 1) {
+        document.getElementById('btn-next').textContent = 'Aber stimmt das wirklich? →';
+    }
+}
+</script>
+
+{% endblock %}

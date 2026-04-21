@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block title %}Harmonische Reihe – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🌊 Die Harmonische Reihe</h1>
+        <p class="text-slate-500 mt-1">1 + 1/2 + 1/3 + 1/4 + … divergiert – aber wie unglaublich langsam.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Reihe:</p>
+        <div class="text-xl font-mono text-center py-3 bg-white rounded-lg border border-slate-100 mb-3">
+            H = 1 + ½ + ⅓ + ¼ + ⅕ + …
+        </div>
+        <p>Jedes einzelne Glied wird immer kleiner. Intuitiv sollte die Summe irgendwann aufhören zu wachsen. Aber sie tut es nicht – sie wächst ohne Grenze. Oresme bewies das bereits um 1350 n.Chr.</p>
+    </div>
+
+    <!-- Schätze-Quiz -->
+    <div id="quiz-area" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5">
+        <p class="font-semibold text-slate-800 mb-2">Teste deine Intuition:</p>
+        <p class="text-sm text-slate-500 mb-5">
+            Wie viele Glieder braucht man, damit die harmonische Reihe den Wert <strong>10</strong> übersteigt?
+        </p>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <button onclick="checkGuess(100)" class="p-4 rounded-xl border-2 border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all font-bold text-slate-700">~100</button>
+            <button onclick="checkGuess(1000)" class="p-4 rounded-xl border-2 border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all font-bold text-slate-700">~1.000</button>
+            <button onclick="checkGuess(10000)" class="p-4 rounded-xl border-2 border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all font-bold text-slate-700">~10.000</button>
+            <button onclick="checkGuess(12367)" class="p-4 rounded-xl border-2 border-indigo-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all font-bold text-indigo-700">~12.367</button>
+        </div>
+    </div>
+
+    <div id="erklaerung" class="hidden space-y-5">
+
+        <div id="quiz-result" class="rounded-xl p-4 text-center border text-sm font-semibold"></div>
+
+        <!-- Live Simulation -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-3">Live-Simulation:</p>
+            <div class="grid grid-cols-3 gap-4 mb-4 text-center">
+                <div>
+                    <div id="sim-n" class="text-2xl font-black text-indigo-700">0</div>
+                    <div class="text-xs text-slate-500">Glieder addiert</div>
+                </div>
+                <div>
+                    <div id="sim-sum" class="text-2xl font-black text-emerald-700">0.000</div>
+                    <div class="text-xs text-slate-500">Aktuelle Summe</div>
+                </div>
+                <div>
+                    <div id="sim-target" class="text-2xl font-black text-amber-600">10</div>
+                    <div class="text-xs text-slate-500">Zielwert</div>
+                </div>
+            </div>
+
+            <!-- Progress bar -->
+            <div class="relative h-4 bg-slate-100 rounded-full overflow-hidden mb-4">
+                <div id="sim-bar" class="absolute left-0 top-0 bottom-0 bg-indigo-500 transition-all duration-100 rounded-full" style="width:0%"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="runSim()" id="btn-sim"
+                        class="bg-indigo-600 text-white py-2 rounded-xl font-medium hover:bg-indigo-700 transition-colors text-sm">
+                    Simulation starten
+                </button>
+                <select id="sim-target-select" onchange="changeTarget(this.value)"
+                        class="border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-700">
+                    <option value="10">Ziel: 10</option>
+                    <option value="15">Ziel: 15</option>
+                    <option value="20">Ziel: 20</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Referenztabelle -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-3">Wie lange dauert es? (Annäherung: Hₙ ≈ ln n + 0.577)</p>
+            <div class="overflow-hidden rounded-lg border border-slate-200">
+                <table class="w-full text-sm">
+                    <thead class="bg-slate-50">
+                        <tr class="text-left text-xs text-slate-500">
+                            <th class="px-4 py-2">Zielwert</th>
+                            <th class="px-4 py-2">Glieder benötigt</th>
+                            <th class="px-4 py-2">Anschaulich</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-slate-700">
+                        <tr><td class="px-4 py-2 font-mono">5</td><td class="px-4 py-2 font-mono">83</td><td class="px-4 py-2 text-xs text-slate-500">Ein kurzer Aufsatz</td></tr>
+                        <tr><td class="px-4 py-2 font-mono">10</td><td class="px-4 py-2 font-mono">12.367</td><td class="px-4 py-2 text-xs text-slate-500">Jede Stunde eine Zahl: 1.4 Jahre</td></tr>
+                        <tr><td class="px-4 py-2 font-mono">20</td><td class="px-4 py-2 font-mono">272 Mio.</td><td class="px-4 py-2 text-xs text-slate-500">Ca. 8 Jahre täglich nicht-stop</td></tr>
+                        <tr><td class="px-4 py-2 font-mono">100</td><td class="px-4 py-2 font-mono">10<sup>43</sup></td><td class="px-4 py-2 text-xs text-slate-500">Länger als das Universum alt ist</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bg-slate-100 border border-slate-200 rounded-xl p-4 text-xs text-slate-600">
+            <p class="font-semibold text-slate-700 mb-1">Oresmes Beweis (ca. 1350):</p>
+            <p>Gruppiere die Terme: (1) + (½) + (⅓+¼) + (⅕+⅙+⅐+⅛) + …</p>
+            <p class="mt-1">Jede Gruppe ist ≥ ½. Unendlich viele Gruppen → Summe = ∞. Fertig.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+let simRunning = false;
+let simTarget = 10;
+
+function checkGuess(val) {
+    const correct = val === 12367;
+    const result = document.getElementById('quiz-result');
+    result.textContent = correct
+        ? '✓ Richtig! Es braucht 12.367 Glieder, um 10 zu überschreiten.'
+        : `Nicht ganz. Die richtige Antwort: ~12.367 Glieder.`;
+    result.className = `rounded-xl p-4 text-center border text-sm font-semibold ${correct
+        ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+        : 'bg-amber-50 border-amber-200 text-amber-800'}`;
+    document.getElementById('quiz-area').classList.add('hidden');
+    document.getElementById('erklaerung').classList.remove('hidden');
+}
+
+function changeTarget(v) {
+    simTarget = parseInt(v);
+    document.getElementById('sim-target').textContent = simTarget;
+    document.getElementById('sim-n').textContent = '0';
+    document.getElementById('sim-sum').textContent = '0.000';
+    document.getElementById('sim-bar').style.width = '0%';
+    simRunning = false;
+    document.getElementById('btn-sim').textContent = 'Simulation starten';
+}
+
+async function runSim() {
+    if (simRunning) return;
+    simRunning = true;
+    document.getElementById('btn-sim').textContent = 'Läuft…';
+    let sum = 0;
+    let n = 0;
+    const target = simTarget;
+    const speeds = [
+        { until: 100, delay: 50, step: 1 },
+        { until: 1000, delay: 20, step: 10 },
+        { until: 10000, delay: 0, step: 100 },
+        { until: Infinity, delay: 0, step: 1000 },
+    ];
+
+    const updateUI = () => {
+        const pct = Math.min((sum / target) * 100, 100);
+        document.getElementById('sim-n').textContent = n.toLocaleString('de-DE');
+        document.getElementById('sim-sum').textContent = sum.toFixed(4);
+        document.getElementById('sim-bar').style.width = pct + '%';
+    };
+
+    for (const phase of speeds) {
+        while (sum < target && n < phase.until) {
+            for (let i = 0; i < phase.step && sum < target; i++) {
+                n++;
+                sum += 1 / n;
+            }
+            updateUI();
+            if (phase.delay > 0) await new Promise(r => setTimeout(r, phase.delay));
+            else if (n % 50000 === 0) await new Promise(r => setTimeout(r, 0));
+        }
+        if (sum >= target) break;
+    }
+    updateUI();
+    document.getElementById('btn-sim').textContent = `✓ Ziel ${target} erreicht!`;
+    simRunning = false;
+}
+</script>
+
+{% endblock %}

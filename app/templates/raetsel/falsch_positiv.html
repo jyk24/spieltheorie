@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block title %}Falsch-Positiv-Paradoxon – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🔬 Das Falsch-Positiv-Paradoxon</h1>
+        <p class="text-slate-500 mt-1">Ein 99%-genauer Test – und trotzdem meistens falsch.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Ausgangssituation:</p>
+        <ul class="space-y-2">
+            <li>🦠 Eine seltene Krankheit betrifft <strong>1 von 1.000</strong> Menschen (0,1 %)</li>
+            <li>🧪 Ein Schnelltest erkennt <strong>99 % der Kranken</strong> korrekt (Sensitivität)</li>
+            <li>✅ Der Test ist bei <strong>99 % der Gesunden negativ</strong> (Spezifität)</li>
+        </ul>
+        <div class="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-3 text-amber-800">
+            <strong>Frage:</strong> Du testest positiv. Wie wahrscheinlich ist es, dass du wirklich krank bist?
+        </div>
+    </div>
+
+    <!-- Quiz -->
+    <div id="quiz-area" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5">
+        <p class="font-semibold text-slate-800 mb-4">Deine Schätzung: P(krank | positiver Test) = ?</p>
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="reveal('99')" class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all">
+                <div class="text-2xl font-bold text-slate-700">~99%</div>
+                <div class="text-xs text-slate-500 mt-1">Der Test ist 99% genau</div>
+            </button>
+            <button onclick="reveal('50')" class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all">
+                <div class="text-2xl font-bold text-slate-700">~50%</div>
+                <div class="text-xs text-slate-500 mt-1">Halbe-halbe Chance</div>
+            </button>
+            <button onclick="reveal('9')" class="p-4 rounded-xl border-2 border-indigo-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all">
+                <div class="text-2xl font-bold text-indigo-700">~9%</div>
+                <div class="text-xs text-indigo-500 mt-1">Viel niedriger</div>
+            </button>
+            <button onclick="reveal('1')" class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all">
+                <div class="text-2xl font-bold text-slate-700">~1%</div>
+                <div class="text-xs text-slate-500 mt-1">Fast unmöglich</div>
+            </button>
+        </div>
+    </div>
+
+    <div id="erklaerung" class="hidden space-y-5">
+
+        <div id="quiz-result" class="rounded-xl p-4 border text-sm font-semibold text-center"></div>
+
+        <!-- Visualisierung -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-3">Stell dir 100.000 Menschen vor:</p>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
+                    <div class="text-xs text-rose-600 font-semibold mb-2">🦠 KRANK (100 von 100.000)</div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-rose-700">Richtig positiv</span>
+                            <span class="font-bold text-rose-800">99</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Falsch negativ</span>
+                            <span class="font-bold text-slate-600">1</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                    <div class="text-xs text-emerald-600 font-semibold mb-2">✅ GESUND (99.900 von 100.000)</div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Richtig negativ</span>
+                            <span class="font-bold text-slate-600">98.901</span>
+                        </div>
+                        <div class="flex justify-between text-sm text-rose-700">
+                            <span>Falsch positiv</span>
+                            <span class="font-bold">999</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 text-center">
+                <p class="text-sm text-indigo-700 mb-1">Von allen positiv Getesteten:</p>
+                <div class="text-3xl font-black text-indigo-800 mb-1">99 / 1.098 ≈ <span class="text-rose-600">9%</span></div>
+                <p class="text-xs text-indigo-600">99 wirklich Kranke + 999 falsch Positiven = 1.098 positive Tests</p>
+            </div>
+        </div>
+
+        <!-- Interaktiver Rechner -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-4">Interaktiv: Verändere die Parameter</p>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-sm font-medium text-slate-700">
+                        Prävalenz: <span id="prev-val" class="text-indigo-700 font-bold">0.1%</span>
+                    </label>
+                    <input type="range" min="1" max="200" value="10" step="1" id="prev-slider"
+                           class="w-full accent-indigo-600 mt-1" oninput="updateCalc()">
+                    <div class="flex justify-between text-xs text-slate-400 mt-0.5"><span>0.01%</span><span>20%</span></div>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-slate-700">
+                        Sensitivität: <span id="sens-val" class="text-indigo-700 font-bold">99%</span>
+                    </label>
+                    <input type="range" min="50" max="100" value="99" step="1" id="sens-slider"
+                           class="w-full accent-indigo-600 mt-1" oninput="updateCalc()">
+                    <div class="flex justify-between text-xs text-slate-400 mt-0.5"><span>50%</span><span>100%</span></div>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-slate-700">
+                        Spezifität: <span id="spec-val" class="text-indigo-700 font-bold">99%</span>
+                    </label>
+                    <input type="range" min="50" max="100" value="99" step="1" id="spec-slider"
+                           class="w-full accent-indigo-600 mt-1" oninput="updateCalc()">
+                    <div class="flex justify-between text-xs text-slate-400 mt-0.5"><span>50%</span><span>100%</span></div>
+                </div>
+            </div>
+            <div class="mt-5 bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
+                <p class="text-xs text-slate-500 mb-1">P(krank | positiver Test) =</p>
+                <div id="ppv-result" class="text-4xl font-black text-indigo-700">9.0%</div>
+                <p id="ppv-text" class="text-xs text-slate-500 mt-1"></p>
+            </div>
+        </div>
+
+        <div class="bg-slate-100 border border-slate-200 rounded-xl p-4 text-xs text-slate-600">
+            <p class="font-semibold text-slate-700 mb-2">Bayes-Formel (Positiv-Vorhersagewert):</p>
+            <div class="font-mono bg-white rounded p-2 border border-slate-200">
+                PPV = (Sensitivität × Prävalenz) / (Sensitivität × Prävalenz + (1−Spezifität) × (1−Prävalenz))
+            </div>
+            <p class="mt-2">Je seltener die Krankheit, desto mehr dominieren die Falsch-Positiven – selbst bei sehr genauen Tests.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+function reveal(choice) {
+    const correct = choice === '9';
+    const result = document.getElementById('quiz-result');
+    result.innerHTML = correct
+        ? '✓ Richtig! Nur ~9% der positiv Getesteten sind wirklich krank.'
+        : `Überraschend: Die richtige Antwort ist nur <strong>~9%</strong> – obwohl der Test 99% genau ist.`;
+    result.className = `rounded-xl p-4 border text-sm font-semibold text-center ${correct
+        ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+        : 'bg-amber-50 border-amber-200 text-amber-800'}`;
+    document.getElementById('quiz-area').classList.add('hidden');
+    document.getElementById('erklaerung').classList.remove('hidden');
+    updateCalc();
+}
+
+function updateCalc() {
+    const prev = parseInt(document.getElementById('prev-slider').value) / 10000;
+    const sens = parseInt(document.getElementById('sens-slider').value) / 100;
+    const spec = parseInt(document.getElementById('spec-slider').value) / 100;
+
+    document.getElementById('prev-val').textContent = (prev * 100).toFixed(2) + '%';
+    document.getElementById('sens-val').textContent = (sens * 100).toFixed(0) + '%';
+    document.getElementById('spec-val').textContent = (spec * 100).toFixed(0) + '%';
+
+    const ppv = (sens * prev) / (sens * prev + (1 - spec) * (1 - prev));
+    document.getElementById('ppv-result').textContent = (ppv * 100).toFixed(1) + '%';
+
+    const n = 100000;
+    const tp = Math.round(prev * n * sens);
+    const fp = Math.round((1 - prev) * n * (1 - spec));
+    document.getElementById('ppv-text').textContent =
+        `(${tp.toLocaleString('de-DE')} Richtig Positiv + ${fp.toLocaleString('de-DE')} Falsch Positiv bei 100.000 Tests)`;
+}
+</script>
+
+{% endblock %}
