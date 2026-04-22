@@ -98,6 +98,35 @@
             }
         }
     });
+
+    // Rätsel-Completion-Tracking
+    (function() {
+        var m = window.location.pathname.match(/^\/raetsel\/([a-z0-9\-]+)$/);
+        if (!m) return;
+        var pid = m[1];
+        var KEY = 'rs_' + pid;
+        function mark() {
+            if (!localStorage.getItem(KEY)) localStorage.setItem(KEY, Date.now().toString());
+        }
+        // htmx-based reveals (spiel-area / game-area swaps)
+        document.body.addEventListener('htmx:afterSwap', function(e) {
+            var tid = e.detail && e.detail.target && e.detail.target.id;
+            if (tid === 'spiel-area' || tid === 'game-area' || tid === 'question-area') mark();
+        });
+        // JS-based reveals (hidden class removed from #solution or similar)
+        var obs = new MutationObserver(function(muts) {
+            muts.forEach(function(m) {
+                if (m.type === 'attributes' && !m.target.classList.contains('hidden')) mark();
+            });
+        });
+        function setup() {
+            document.querySelectorAll('#solution, #aufloesung, #phase2').forEach(function(el) {
+                obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+            });
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup);
+        else setup();
+    })();
     </script>
 </body>
 </html>

@@ -73,6 +73,29 @@
 <!-- Errungenschaften -->
 {% include "partials/achievements_gallery.html" %}
 
+<!-- Rätsel-Fortschritt -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-8">
+    <h2 class="font-semibold text-slate-700 mb-1">
+        Rätsel & Paradoxe
+        <span id="raetsel-prog-label" class="text-sm font-normal text-slate-400 ml-2">–/{{ raetsel_meta|length }} gelöst</span>
+    </h2>
+    <div class="mb-4 mt-3">
+        <div class="bg-slate-100 rounded-full h-2">
+            <div id="raetsel-prog-bar" class="bg-indigo-500 h-2 rounded-full transition-all" style="width:0%"></div>
+        </div>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="raetsel-list">
+        {% for r in raetsel_meta %}
+        <a href="/raetsel/{{ r.id }}"
+           class="raetsel-fp-item flex items-center gap-2 text-sm p-2 rounded-lg hover:bg-slate-50 transition-colors"
+           data-rid="{{ r.id }}">
+            <span class="raetsel-fp-check text-slate-300 text-base">○</span>
+            <span class="raetsel-fp-name text-slate-400 truncate">{{ r.icon }} {{ r.name }}</span>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
 <!-- Letzte Spielpartien -->
 {% if recent_sessions %}
 <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-8">
@@ -141,6 +164,29 @@
         {% endfor %}
     </div>
 </div>
+
+<script>
+(function() {
+    var items = document.querySelectorAll('.raetsel-fp-item');
+    var total = items.length;
+    var solved = 0;
+    items.forEach(function(a) {
+        var rid = a.dataset.rid;
+        if (localStorage.getItem('rs_' + rid)) {
+            solved++;
+            var check = a.querySelector('.raetsel-fp-check');
+            var name = a.querySelector('.raetsel-fp-name');
+            if (check) { check.textContent = '✓'; check.className = 'raetsel-fp-check text-emerald-500 text-base font-bold'; }
+            if (name) name.className = 'raetsel-fp-name text-slate-700 truncate';
+        }
+    });
+    var label = document.getElementById('raetsel-prog-label');
+    var bar = document.getElementById('raetsel-prog-bar');
+    if (label) label.textContent = solved + '/' + total + ' gelöst';
+    if (bar) bar.style.width = (total > 0 ? Math.round(solved / total * 100) : 0) + '%';
+    if (solved > 0 && label) label.className = 'text-sm font-normal text-emerald-600 ml-2';
+})();
+</script>
 
 {% if stats.total_games > 0 %}
 <script>

@@ -1,4 +1,5 @@
 """Rätsel & Paradoxe – einmalige spieltheoretische Denkexperimente."""
+import datetime as _dt
 import json
 import random as _random
 
@@ -476,6 +477,26 @@ RAETSEL_META = [
         "dauer": "4 min",
         "kategorie": "Logik",
     },
+    {
+        "id": "informationskaskade",
+        "name": "Informationskaskade",
+        "icon": "🫧",
+        "beschreibung": "Drei Personen vor dir wählten alle Urne A. Deine private Kugel sagt etwas anderes. Wem vertraust du – der Masse oder dir selbst? Bikhchandani (1992) zeigte: Es kann rational sein, die eigene Information zu ignorieren.",
+        "typ": "Entscheidungsexperiment",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Kognition",
+    },
+    {
+        "id": "marktverlust",
+        "name": "Der Markt für Zitronen",
+        "icon": "🍋",
+        "beschreibung": "10 Gebrauchtwagen, Qualität 1–10. Nur der Verkäufer kennt die echte Qualität. Beobachte Runde für Runde, wie der Markt kollabiert – das Akerlof-Paradoxon (Nobelpreis 2001) interaktiv simuliert.",
+        "typ": "Marktmechanismus",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Spieltheorie",
+    },
 ]
 
 
@@ -485,8 +506,15 @@ RAETSEL_META = [
 
 @router.get("", response_class=HTMLResponse)
 def raetsel_overview(request: Request):
+    day_num = _dt.date.today().timetuple().tm_yday
+    featured = RAETSEL_META[day_num % len(RAETSEL_META)]
     return templates.TemplateResponse(
-        request, "raetsel.html", {"active_page": "raetsel", "raetsel": RAETSEL_META}
+        request, "raetsel.html", {
+            "active_page": "raetsel",
+            "raetsel": RAETSEL_META,
+            "featured_raetsel": featured,
+            "total_raetsel": len(RAETSEL_META),
+        }
     )
 
 
@@ -2486,4 +2514,26 @@ def collatz_vermutung_page(request: Request):
 def barbier_paradoxon_page(request: Request):
     return templates.TemplateResponse(
         request, "raetsel/barbier_paradoxon.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Informationskaskade
+# ---------------------------------------------------------------------------
+
+@router.get("/informationskaskade", response_class=HTMLResponse)
+def informationskaskade_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/informationskaskade.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Marktverlust (Akerlof Market for Lemons)
+# ---------------------------------------------------------------------------
+
+@router.get("/marktverlust", response_class=HTMLResponse)
+def marktverlust_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/marktverlust.html", {"active_page": "raetsel"}
     )

@@ -10,6 +10,7 @@ from ..achievements import ACHIEVEMENTS
 from ..database import get_db
 from ..game_registry import GAME_ICONS, GAME_LABELS
 from ..models import GameSession, Lesson, UserAchievement, UserProgress
+from .raetsel import RAETSEL_META
 from ..services import get_all_progress
 
 router = APIRouter(prefix="/fortschritt")
@@ -79,6 +80,7 @@ def fortschritt(request: Request, db: Session = Depends(get_db)):
             "all_achievements": ACHIEVEMENTS,
             "unlocked_slugs": unlocked_slugs,
             "achievement_dates": achievement_dates,
+            "raetsel_meta": RAETSEL_META,
         },
     )
 

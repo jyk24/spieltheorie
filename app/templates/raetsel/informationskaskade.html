@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% block title %}Informationskaskade – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🫧 Informationskaskade</h1>
+        <p class="text-slate-500 mt-1">Wann ist es rational, die eigene Überzeugung zu ignorieren und der Masse zu folgen?</p>
+    </div>
+
+    <!-- Setup -->
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Das Experiment:</p>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-center">
+                <div class="text-2xl mb-1">🔵🔵🔵🔴</div>
+                <div class="font-bold text-blue-800">Urne A</div>
+                <div class="text-xs text-blue-600">3 blaue, 1 rote Kugel</div>
+            </div>
+            <div class="bg-red-50 border border-red-200 rounded-xl p-3 text-center">
+                <div class="text-2xl mb-1">🔴🔴🔴🔵</div>
+                <div class="font-bold text-red-800">Urne B</div>
+                <div class="text-xs text-red-600">3 rote, 1 blaue Kugel</div>
+            </div>
+        </div>
+        <ul class="space-y-1.5 text-sm">
+            <li class="flex gap-2"><span class="text-indigo-500 mt-0.5">➊</span><span>Ein Computer hat eine Urne verdeckt gewählt (50/50).</span></li>
+            <li class="flex gap-2"><span class="text-indigo-500 mt-0.5">➋</span><span>Jede Person zieht <strong>verdeckt eine Kugel</strong> und rät öffentlich, welche Urne gewählt wurde.</span></li>
+            <li class="flex gap-2"><span class="text-indigo-500 mt-0.5">➌</span><span>Du siehst die öffentlichen <strong>Entscheidungen</strong> der anderen – aber nicht deren private Kugeln.</span></li>
+        </ul>
+    </div>
+
+    <!-- Phase 1: Entscheidung -->
+    <div id="phase1">
+        <!-- Vorherige Stimmen -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-4">
+            <p class="text-sm font-semibold text-slate-700 mb-3">Die drei Personen vor dir haben gewählt:</p>
+            <div class="flex items-end gap-3 flex-wrap" id="vote-display"></div>
+        </div>
+
+        <!-- Kugel ziehen -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-4">
+            <p class="text-sm font-semibold text-slate-700 mb-3">Deine verdeckte Kugel:</p>
+            <div class="text-center py-4" id="signal-area">
+                <button onclick="revealSignal()"
+                        class="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors">
+                    Kugel ziehen 🎱
+                </button>
+                <p class="text-xs text-slate-400 mt-2">Zufällig – jede Kugel ist gleich wahrscheinlich</p>
+            </div>
+        </div>
+
+        <!-- Abstimmen (erst nach Signal sichtbar) -->
+        <div id="vote-buttons" class="hidden space-y-3">
+            <p class="font-semibold text-slate-800 mb-2">Welche Urne war es?</p>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="castVote('A')"
+                        class="p-5 rounded-xl border-2 border-blue-200 bg-blue-50 hover:border-blue-400 transition-all text-center">
+                    <div class="text-3xl mb-2">🔵</div>
+                    <div class="font-bold text-blue-800 text-lg">Urne A</div>
+                    <div class="text-xs text-blue-600 mt-1">3 blau, 1 rot</div>
+                </button>
+                <button onclick="castVote('B')"
+                        class="p-5 rounded-xl border-2 border-red-200 bg-red-50 hover:border-red-400 transition-all text-center">
+                    <div class="text-3xl mb-2">🔴</div>
+                    <div class="font-bold text-red-800 text-lg">Urne B</div>
+                    <div class="text-xs text-red-600 mt-1">3 rot, 1 blau</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auflösung -->
+    <div id="solution" class="hidden"></div>
+</div>
+
+<script>
+const PRIOR_VOTES = ['A', 'A', 'A'];
+let mySignal = null;
+
+// Prior votes
+const voteDisplay = document.getElementById('vote-display');
+PRIOR_VOTES.forEach((v, i) => {
+    const div = document.createElement('div');
+    div.className = 'flex flex-col items-center gap-1.5';
+    div.innerHTML = `
+        <div class="w-12 h-12 rounded-full ${v === 'A' ? 'bg-blue-100 border-2 border-blue-300' : 'bg-red-100 border-2 border-red-300'} flex items-center justify-center text-xl">
+            ${v === 'A' ? '🔵' : '🔴'}
+        </div>
+        <div class="text-xs text-slate-500">Person ${i + 1}</div>
+        <div class="text-xs font-bold ${v === 'A' ? 'text-blue-600' : 'text-red-600'}">Urne ${v}</div>`;
+    voteDisplay.appendChild(div);
+});
+// "Du" Platzhalter
+const you = document.createElement('div');
+you.className = 'flex flex-col items-center gap-1.5';
+you.innerHTML = `
+    <div class="w-12 h-12 rounded-full bg-indigo-100 border-2 border-indigo-300 border-dashed flex items-center justify-center text-xl">?</div>
+    <div class="text-xs text-slate-500">Du</div>
+    <div class="text-xs font-bold text-indigo-400">Person 4</div>`;
+voteDisplay.appendChild(you);
+
+function revealSignal() {
+    mySignal = Math.random() < 0.5 ? 'blue' : 'red';
+    const isBlue = mySignal === 'blue';
+    document.getElementById('signal-area').innerHTML = `
+        <div class="text-5xl mb-2">${isBlue ? '🔵' : '🔴'}</div>
+        <div class="font-bold text-lg ${isBlue ? 'text-blue-700' : 'text-red-700'} mb-1">
+            ${isBlue ? 'Blaue Kugel' : 'Rote Kugel'}
+        </div>
+        <div class="text-xs text-slate-500">
+            ${isBlue ? 'Blaue Kugeln sind in Urne A häufiger (3 von 4)' : 'Rote Kugeln sind in Urne B häufiger (3 von 4)'}
+        </div>`;
+    document.getElementById('vote-buttons').classList.remove('hidden');
+}
+
+function castVote(choice) {
+    document.getElementById('phase1').classList.add('hidden');
+    const isBlue = mySignal === 'blue';
+
+    // Bayesian calculation:
+    // P(A | 3 A votes): each A-voter likely drew blue (3/4 in A, 1/4 in B)
+    // Assuming each voter follows their signal optimally:
+    // P(3 A votes | Urn A) = (3/4)^3 = 27/64
+    // P(3 A votes | Urn B) = (1/4)^3 =  1/64
+    // P(A | 3 A votes) = 27/(27+1) = 27/28 ≈ 96.4%
+    const pA_after_votes = 27 / 28;
+
+    let pA_final;
+    if (isBlue) {
+        // Blue favors A: P(blue|A) = 3/4, P(blue|B) = 1/4
+        const num = pA_after_votes * (3 / 4);
+        pA_final = num / (num + (1 - pA_after_votes) * (1 / 4));
+    } else {
+        // Red favors B: P(red|A) = 1/4, P(red|B) = 3/4
+        const num = pA_after_votes * (1 / 4);
+        pA_final = num / (num + (1 - pA_after_votes) * (3 / 4));
+    }
+
+    const pA_pct = Math.round(pA_final * 100);
+    const rational = pA_pct >= 50 ? 'A' : 'B';
+    const correct = choice === rational;
+    const isCascade = rational === 'A' && !isBlue;  // blue favors B but A still wins
+
+    const sol = document.getElementById('solution');
+    sol.classList.remove('hidden');
+    sol.innerHTML = `
+    <div class="space-y-4">
+        ${correct
+            ? `<div class="bg-emerald-50 border-2 border-emerald-400 rounded-xl p-4">
+                <p class="font-bold text-emerald-800 text-lg">✓ Rationale Entscheidung – Urne ${choice}!</p>
+                <p class="text-emerald-700 text-sm mt-1">
+                    ${isCascade ? 'Auch mit der roten Kugel, die Urne B nahelegt, ist Urne A die rationale Wahl. Das ist eine Informationskaskade.' : 'Gut analysiert!'}
+                </p>
+               </div>`
+            : `<div class="bg-amber-50 border-2 border-amber-400 rounded-xl p-4">
+                <p class="font-bold text-amber-800 text-lg">Urne ${rational} wäre die rationale Wahl</p>
+                <p class="text-amber-700 text-sm mt-1">
+                    ${isCascade ? 'Obwohl die rote Kugel für Urne B spricht, überwiegt die Information der 3 Vorwähler.' : 'Das private Signal und die Mehrheit zeigen beide in dieselbe Richtung.'}
+                </p>
+               </div>`}
+
+        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-5 text-sm">
+            <p class="font-bold text-indigo-800 mb-3">Die Bayesianische Rechnung:</p>
+            <div class="bg-white rounded-lg p-4 mb-3 font-mono text-xs text-slate-700 space-y-1.5">
+                <p class="text-slate-500 font-sans font-semibold mb-2">Schritt 1: Nach 3 A-Stimmen</p>
+                <p>P(A|3×A) = (3/4)³ / [(3/4)³ + (1/4)³]</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 27/64 / [27/64 + 1/64] = <strong>27/28 ≈ 96%</strong></p>
+                <p class="text-slate-500 font-sans font-semibold mt-3 mb-2">Schritt 2: Dein Signal (${isBlue ? 'Blau' : 'Rot'})</p>
+                ${isBlue
+                    ? '<p>Blau spricht für A (3/4). Posterior steigt auf ≈ <strong>' + pA_pct + '%</strong> für A</p>'
+                    : '<p>Rot spricht für B (3/4). Aber Prior 96% → Posterior noch <strong>' + pA_pct + '%</strong> für A</p>'
+                }
+                <p class="mt-2 text-indigo-700 font-sans">→ Rationale Wahl: <strong>Urne ${rational}</strong></p>
+            </div>
+            ${isCascade ? `
+            <div class="bg-rose-50 border border-rose-200 rounded-lg p-3 text-xs text-rose-700">
+                <p class="font-semibold mb-1">Das ist eine Informationskaskade!</p>
+                <p>Dein privates Signal sagt "B" – aber rational ist es, "A" zu wählen. Die öffentlichen Informationen der 3 Vorwähler übertrumpfen dein privates Wissen. Damit geht deine Information verloren.</p>
+            </div>` : ''}
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 text-sm text-slate-700">
+            <p class="font-bold text-slate-800 mb-3">Was ist eine Informationskaskade?</p>
+            <p class="mb-3">Sobald genug Menschen öffentlich dieselbe Entscheidung treffen, wird es für alle Folgenden <em>rational</em>, ihre private Information zu ignorieren – selbst wenn diese Information korrekt ist. Das Paradoxe: Alle handeln rational, aber die kollektive Entscheidung kann falsch sein.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <div class="bg-rose-50 border border-rose-100 rounded-lg p-3 text-xs">
+                    <p class="font-semibold text-rose-700 mb-1">Das Problem</p>
+                    <p class="text-rose-600">Private Informationen gehen verloren. Die Gesellschaft sammelt weniger Wissen als möglich – weil Individuen rational auf Massensignale reagieren statt eigene Informationen zu teilen.</p>
+                </div>
+                <div class="bg-amber-50 border border-amber-100 rounded-lg p-3 text-xs">
+                    <p class="font-semibold text-amber-700 mb-1">Fragilität</p>
+                    <p class="text-amber-600">Kaskaden können durch ein einziges glaubwürdiges Gegensignal zusammenbrechen. Das erklärt, warum Blasen plötzlich platzen und Trends abrupt enden.</p>
+                </div>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 text-xs">
+                <p class="font-semibold text-slate-700 mb-2">Reale Beispiele:</p>
+                <ul class="space-y-1 text-slate-600">
+                    <li>→ <strong>Restaurants:</strong> Leere Restaurants bleiben leer, volle werden voller – unabhängig von Qualität</li>
+                    <li>→ <strong>Finanzmarkt-Crashs:</strong> Alle verkaufen, wenn alle verkaufen – rationale Reaktion auf das Verhalten anderer</li>
+                    <li>→ <strong>Wissenschaft:</strong> Falscher Konsens kann sich festigen, wenn Widerspruch sozial teuer ist</li>
+                    <li>→ <strong>Produktbewertungen:</strong> Das erste positive Review erhöht die Wahrscheinlichkeit weiterer positiver Reviews stark</li>
+                </ul>
+            </div>
+            <div class="mt-3 bg-indigo-50 rounded-lg p-3 text-xs text-indigo-700">
+                <p class="font-semibold mb-1">Bikhchandani, Hirshleifer & Welch (1992)</p>
+                <p>Das Modell der Informationskaskaden erschien in der Review of Economic Studies und zählt zu den meistzitierten Papieren der Verhaltensökonomik. Es erklärt Herdenverhalten ohne Irrationalität.</p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+            <a href="/raetsel/informationskaskade"
+               class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+                Nochmal (neues Signal)
+            </a>
+            <a href="/raetsel/marktverlust"
+               class="border border-amber-200 text-amber-700 px-5 py-2 rounded-lg text-sm font-medium hover:bg-amber-50">
+                🍋 Markt für Zitronen
+            </a>
+            <a href="/raetsel"
+               class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+                Alle Rätsel
+            </a>
+        </div>
+    </div>`;
+}
+</script>
+
+{% endblock %}
