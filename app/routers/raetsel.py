@@ -130,7 +130,7 @@ RAETSEL_META = [
         "typ": "Verhaltens-Experiment",
         "schwierigkeit": "Einsteiger",
         "dauer": "4 min",
-        "kategorie": "Statistik",
+        "kategorie": "Kognition",
     },
     {
         "id": "framing",
@@ -140,17 +140,17 @@ RAETSEL_META = [
         "typ": "Verhaltens-Experiment",
         "schwierigkeit": "Einsteiger",
         "dauer": "4 min",
-        "kategorie": "Statistik",
+        "kategorie": "Kognition",
     },
     {
         "id": "wason",
         "name": "Wason-Auswahlaufgabe",
         "icon": "🃏",
         "beschreibung": "Vier Karten, eine Regel. Welche musst du umdrehen? Nur ~10% lösen die abstrakte Version – aber fast alle die soziale Version. Cosmides (1989) entdeckte: Unser Gehirn ist für soziale Regeln optimiert.",
-        "typ": "Kognitions-Experiment",
+        "typ": "Logik-Experiment",
         "schwierigkeit": "Mittel",
         "dauer": "5 min",
-        "kategorie": "Statistik",
+        "kategorie": "Logik",
     },
     # ── Mathematik & Unendlichkeit ─────────────────────────────────────────────
     {
@@ -414,6 +414,67 @@ RAETSEL_META = [
         "schwierigkeit": "Mittel",
         "dauer": "4 min",
         "kategorie": "Spieltheorie",
+    },
+    # ── Kognition & Psychologie ────────────────────────────────────────────────
+    {
+        "id": "konfirmationsfehler",
+        "name": "Der Konfirmationsfehler",
+        "icon": "🔍",
+        "beschreibung": "Du siehst Zahlen in einer Sequenz. Dein Ziel: die Regel herausfinden. Wason (1960) zeigte, dass Menschen fast immer bestätigen statt widerlegen – auch wenn Widerlegung viel schneller zur Lösung führt.",
+        "typ": "Kognitions-Experiment",
+        "schwierigkeit": "Einsteiger",
+        "dauer": "4 min",
+        "kategorie": "Kognition",
+    },
+    {
+        "id": "dunning-kruger",
+        "name": "Dunning-Kruger-Effekt",
+        "icon": "📉",
+        "beschreibung": "Schätze dein Wissen in verschiedenen Bereichen ein – dann vergleiche mit dem Durchschnitt. Dunning & Kruger (1999) fanden: Inkompetente überschätzen sich, Experten unterschätzen sich. Das Paradox des Nicht-Wissens.",
+        "typ": "Selbsteinschätzungs-Experiment",
+        "schwierigkeit": "Einsteiger",
+        "dauer": "5 min",
+        "kategorie": "Kognition",
+    },
+    {
+        "id": "survivorship-bias",
+        "name": "Survivorship Bias",
+        "icon": "✈️",
+        "beschreibung": "Wo soll man Bomber im WWII panzerplatten? Dort, wo die Einschüsse sind? Abraham Wald (1943) dachte anders – und rettete damit tausende Leben. Der klassische Fehler: nur die Überlebenden zu beobachten.",
+        "typ": "Statistik-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Statistik",
+    },
+    {
+        "id": "regression-zur-mitte",
+        "name": "Regression zur Mitte",
+        "icon": "📊",
+        "beschreibung": "Warum schneiden Sportler nach dem Titelblatt schlechter ab? Warum wirken Strafen besser als Lob? Galton (1886) entdeckte: extreme Ergebnisse neigen zur Mitte – ganz ohne kausale Erklärung.",
+        "typ": "Statistik-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+        "kategorie": "Statistik",
+    },
+    {
+        "id": "collatz-vermutung",
+        "name": "Die Collatz-Vermutung",
+        "icon": "🔄",
+        "beschreibung": "Nimm eine beliebige Zahl. Gerade? Halbiere. Ungerade? Mal 3 plus 1. Wiederhole. Lothar Collatz (1937) behauptete: du landest immer bei 1. Klingt einfach – kein Mensch hat es bisher bewiesen.",
+        "typ": "Mathematik-Vermutung",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Mathematik",
+    },
+    {
+        "id": "barbier-paradoxon",
+        "name": "Das Barbier-Paradoxon",
+        "icon": "✂️",
+        "beschreibung": "Ein Barbier rasiert alle, die sich nicht selbst rasieren. Rasiert er sich selbst? Bertrand Russell (1901) zeigte: Diese Frage hat keine konsistente Antwort – und erschütterte damit die Grundlagen der Mathematik.",
+        "typ": "Logik-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+        "kategorie": "Logik",
     },
 ]
 
@@ -2359,4 +2420,70 @@ def coupon_sammler_page(request: Request):
 def bertrand_paradoxon_page(request: Request):
     return templates.TemplateResponse(
         request, "raetsel/bertrand_paradoxon.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Konfirmationsfehler
+# ---------------------------------------------------------------------------
+
+@router.get("/konfirmationsfehler", response_class=HTMLResponse)
+def konfirmationsfehler_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/konfirmationsfehler.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Dunning-Kruger-Effekt
+# ---------------------------------------------------------------------------
+
+@router.get("/dunning-kruger", response_class=HTMLResponse)
+def dunning_kruger_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/dunning_kruger.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Survivorship Bias
+# ---------------------------------------------------------------------------
+
+@router.get("/survivorship-bias", response_class=HTMLResponse)
+def survivorship_bias_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/survivorship_bias.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Regression zur Mitte
+# ---------------------------------------------------------------------------
+
+@router.get("/regression-zur-mitte", response_class=HTMLResponse)
+def regression_zur_mitte_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/regression_zur_mitte.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Collatz-Vermutung
+# ---------------------------------------------------------------------------
+
+@router.get("/collatz-vermutung", response_class=HTMLResponse)
+def collatz_vermutung_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/collatz_vermutung.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Barbier-Paradoxon
+# ---------------------------------------------------------------------------
+
+@router.get("/barbier-paradoxon", response_class=HTMLResponse)
+def barbier_paradoxon_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/barbier_paradoxon.html", {"active_page": "raetsel"}
     )

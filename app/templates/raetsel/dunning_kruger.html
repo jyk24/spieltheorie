@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% block title %}Dunning-Kruger-Effekt – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">📉 Dunning-Kruger-Effekt</h1>
+        <p class="text-slate-500 mt-1">Schätze dein Wissen ein – dann sieh, was dein Selbstbild über dein echtes Wissen verrät.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 text-sm text-slate-600">
+        Beantworte die Fragen ehrlich – erst schätze dein Wissen, dann teste es. Du siehst am Ende dein Ergebnis im Vergleich zum Durchschnitt.
+    </div>
+
+    <div id="quiz-container">
+        <!-- Schritt 1: Selbsteinschätzung -->
+        <div id="step-1" class="space-y-5">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-full">Schritt 1 von 2</span>
+                    <span class="text-xs text-slate-400">Selbsteinschätzung</span>
+                </div>
+                <p class="font-semibold text-slate-800 mb-5">Wie gut kennst du dich in diesen Bereichen aus? (1 = kaum / 10 = sehr gut)</p>
+
+                <div class="space-y-5" id="self-ratings">
+                    <div class="rating-item" data-topic="Statistik">
+                        <label class="block font-medium text-slate-700 mb-2">📊 Statistik & Wahrscheinlichkeit</label>
+                        <div class="flex items-center gap-3">
+                            <input type="range" min="1" max="10" value="5" class="flex-1 accent-indigo-600" oninput="updateRating(this)">
+                            <span class="w-8 text-center font-bold text-indigo-700 rating-val">5</span>
+                        </div>
+                    </div>
+                    <div class="rating-item" data-topic="Logik">
+                        <label class="block font-medium text-slate-700 mb-2">🧩 Logik & Argumentation</label>
+                        <div class="flex items-center gap-3">
+                            <input type="range" min="1" max="10" value="5" class="flex-1 accent-indigo-600" oninput="updateRating(this)">
+                            <span class="w-8 text-center font-bold text-indigo-700 rating-val">5</span>
+                        </div>
+                    </div>
+                    <div class="rating-item" data-topic="Spieltheorie">
+                        <label class="block font-medium text-slate-700 mb-2">♟️ Spieltheorie & Ökonomie</label>
+                        <div class="flex items-center gap-3">
+                            <input type="range" min="1" max="10" value="5" class="flex-1 accent-indigo-600" oninput="updateRating(this)">
+                            <span class="w-8 text-center font-bold text-indigo-700 rating-val">5</span>
+                        </div>
+                    </div>
+                    <div class="rating-item" data-topic="Mathematik">
+                        <label class="block font-medium text-slate-700 mb-2">📐 Mathematik & Analysis</label>
+                        <div class="flex items-center gap-3">
+                            <input type="range" min="1" max="10" value="5" class="flex-1 accent-indigo-600" oninput="updateRating(this)">
+                            <span class="w-8 text-center font-bold text-indigo-700 rating-val">5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="goToStep2()" class="mt-6 w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors">
+                    Weiter zum Wissenstest →
+                </button>
+            </div>
+        </div>
+
+        <!-- Schritt 2: Wissenstest -->
+        <div id="step-2" class="hidden space-y-4">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-full">Schritt 2 von 2</span>
+                    <span class="text-xs text-slate-400">Wissenstest</span>
+                </div>
+                <p class="font-semibold text-slate-800 mb-5">Beantworte diese Fragen:</p>
+
+                <div class="space-y-5" id="knowledge-test">
+                    <div class="question-item" data-correct="C">
+                        <p class="text-sm font-medium text-slate-700 mb-2">1. Bei 23 zufälligen Menschen: wie wahrscheinlich ist ein gemeinsamer Geburtstag?</p>
+                        <div class="space-y-2">
+                            <button onclick="answer(this, 'A')" class="ans-btn w-full text-left p-3 rounded-lg border-2 border-slate-200 hover:border-indigo-300 text-sm">A: ca. 6%</button>
+                            <button onclick="answer(this, 'B')" class="ans-btn w-full text-left p-3 rounded-lg border-2 border-slate-200 hover:border-indigo-300 text-sm">B: ca. 23%</button>
+                            <button onclick="answer(this, 'C')" class="ans-btn w-full text-left p-3 rounded-lg border-2 border-slate-200 hover:border-indigo-300 text-sm">C: über 50%</button>
+                            <button onclick="answer(this, 'D')" class="ans-btn w-full text-left p-3 rounded-lg border-2 border-slate-200 hover:border-indigo-300 text-sm">D: ca. 35%</button>
+                        </div>
+                    </div>
+                    <div class="question-item" data-correct="B">
+                        <p class="text-sm font-medium text-slate-700 mb-2">2. Was ist ein Nash-Gleichgewicht?</p>
+                        <div class="space-y-2">
+                            <button onclick="answer(this, 'A')" class="ans-btn w-full text-left p-3 rounded-lg border-2 border-slate-200 hover:border-indigo-300 text-sm">A: Das fairste Ergebnis für alle</button>
+                            <button onclick="answer(this, 'B')" class="ans-btn w-full text-left p-3 rounded-lg border-2 border-slate-200 hover:border-indigo-300 text-sm">B: Kein Spieler kann durch einseitige Änderung profitieren</button>
+                            <button onclick="answer(this, 'C')" class="ans-btn w-full text-left p-3 rounded-lg border-2 border-slate-200 hover:border-indigo-300 text-sm">C: Die Strategie mit dem höchsten Erwartungswert</button>
+                            <button onclick="answer(this, 'D')" class="ans-btn w-full text-left p-3 rounded-lg border-2 border-slate-200 hover:border-indigo-300 text-sm">D: Das Ergebnis wenn alle kooperieren</button>
+                        </div>
+                    </div>
+                    <div class="question-item" data-correct="A">
+                        <p class="text-sm font-medium text-slate-700 mb-2">3. 1 + 1/2 + 1/3 + 1/4 + … (harmonische Reihe): Was passiert mit dieser Summe?</p>
+                        <div class="space-y-2">
+                            <button onclick="answer(this, 'A')" class="ans-btn w-full text-left p-3 rounded-lg border-2 border-slate-200 hover:border-indigo-300 text-sm">A: Sie wächst unbegrenzt (divergiert)</button>
+                            <button onclick="answer(this, 'B')" class="ans-btn w-full text-left p-3 rounded-lg border-2 border-slate-200 hover:border-indigo-300 text-sm">B: Sie nähert sich ln(2) ≈ 0.693</button>
+                            <button onclick="answer(this, 'C')" class="ans-btn w-full text-left p-3 rounded-lg border-2 border-slate-200 hover:border-indigo-300 text-sm">C: Sie konvergiert gegen π²/6</button>
+                            <button onclick="answer(this, 'D')" class="ans-btn w-full text-left p-3 rounded-lg border-2 border-slate-200 hover:border-indigo-300 text-sm">D: Sie konvergiert gegen e</button>
+                        </div>
+                    </div>
+                    <div class="question-item" data-correct="C">
+                        <p class="text-sm font-medium text-slate-700 mb-2">4. Ein Test ist zu 99% sensitiv und 99% spezifisch. Die Krankheit hat 0.1% Prävalenz. Du testest positiv – wie wahrscheinlich bist du wirklich krank?</p>
+                        <div class="space-y-2">
+                            <button onclick="answer(this, 'A')" class="ans-btn w-full text-left p-3 rounded-lg border-2 border-slate-200 hover:border-indigo-300 text-sm">A: ca. 99%</button>
+                            <button onclick="answer(this, 'B')" class="ans-btn w-full text-left p-3 rounded-lg border-2 border-slate-200 hover:border-indigo-300 text-sm">B: ca. 50%</button>
+                            <button onclick="answer(this, 'C')" class="ans-btn w-full text-left p-3 rounded-lg border-2 border-slate-200 hover:border-indigo-300 text-sm">C: ca. 9%</button>
+                            <button onclick="answer(this, 'D')" class="ans-btn w-full text-left p-3 rounded-lg border-2 border-slate-200 hover:border-indigo-300 text-sm">D: ca. 1%</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="submit-btn" onclick="showResult()" class="mt-6 w-full bg-violet-600 text-white py-3 rounded-xl font-bold hover:bg-violet-700 transition-colors hidden">
+                    Ergebnis anzeigen →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auflösung -->
+    <div id="result-area" class="hidden space-y-5 mt-2">
+
+        <div id="result-card" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <!-- Filled by JS -->
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 text-sm text-slate-700">
+            <p class="font-semibold mb-3 text-slate-800">Der Dunning-Kruger-Effekt (1999)</p>
+            <p class="mb-3">David Dunning und Justin Kruger (Cornell) gaben Studenten Tests zu Logik und Grammatik. Ergebnis:</p>
+            <div class="space-y-3">
+                <div class="bg-rose-50 border border-rose-100 rounded-lg p-3">
+                    <p class="font-semibold text-rose-800 text-xs mb-1">Schlechteste 25%</p>
+                    <p class="text-rose-700 text-xs">Schätzten ihre Fähigkeit auf 62. Perzentil ein – obwohl sie im 12. Perzentil lagen. Überschätzung durch mangelndes Metawissen: Wer etwas nicht weiß, weiß oft auch nicht, dass er es nicht weiß.</p>
+                </div>
+                <div class="bg-emerald-50 border border-emerald-100 rounded-lg p-3">
+                    <p class="font-semibold text-emerald-800 text-xs mb-1">Beste 25%</p>
+                    <p class="text-emerald-700 text-xs">Unterschätzten ihre Leistung erheblich. Experten gehen davon aus, was ihnen leicht fällt, sei für andere ebenso leicht – das sogenannte „Fluency-Paradox".</p>
+                </div>
+            </div>
+            <div class="mt-3 bg-indigo-50 border border-indigo-100 rounded-lg p-3">
+                <p class="text-xs text-indigo-700"><strong>Die Moral:</strong> Das Problem ist nicht Unwissenheit an sich – sondern Unwissenheit über die eigene Unwissenheit. Sokrates wusste: „Ich weiß, dass ich nichts weiß" – das ist bereits Expertise.</p>
+            </div>
+        </div>
+
+        <a href="/raetsel/dunning-kruger"
+           class="block w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors">
+            Nochmal spielen
+        </a>
+    </div>
+</div>
+
+<script>
+let selfRatings = {};
+let answersGiven = {};
+let questionsAnswered = 0;
+const TOTAL_QUESTIONS = 4;
+
+function updateRating(input) {
+    input.nextElementSibling.textContent = input.value;
+}
+
+function goToStep2() {
+    document.querySelectorAll('.rating-item').forEach(item => {
+        const topic = item.dataset.topic;
+        const val = item.querySelector('input[type=range]').value;
+        selfRatings[topic] = parseInt(val);
+    });
+    document.getElementById('step-1').classList.add('hidden');
+    document.getElementById('step-2').classList.remove('hidden');
+}
+
+function answer(btn, choice) {
+    const qItem = btn.closest('.question-item');
+    if (qItem.dataset.answered) return;
+    qItem.dataset.answered = '1';
+    const correct = qItem.dataset.correct;
+    const isRight = choice === correct;
+
+    qItem.querySelectorAll('.ans-btn').forEach(b => {
+        b.disabled = true;
+        const btnChoice = b.onclick.toString().match(/'([A-D])'/)[1];
+        if (btnChoice === correct) {
+            b.classList.add('border-emerald-400', 'bg-emerald-50', 'text-emerald-800');
+        } else if (b === btn && !isRight) {
+            b.classList.add('border-rose-400', 'bg-rose-50', 'text-rose-800');
+        }
+    });
+
+    answersGiven[qItem.dataset.correct] = { correct: isRight, choice };
+    questionsAnswered++;
+    if (questionsAnswered >= TOTAL_QUESTIONS) {
+        document.getElementById('submit-btn').classList.remove('hidden');
+    }
+}
+
+function showResult() {
+    const correctCount = Object.values(answersGiven).filter(a => a.correct).length;
+    const scorePercent = Math.round(correctCount / TOTAL_QUESTIONS * 100);
+    const avgSelf = Math.round(Object.values(selfRatings).reduce((a, b) => a + b, 0) / 4 * 10);
+
+    let verdict = '';
+    let verdictColor = '';
+    const diff = avgSelf - scorePercent;
+
+    if (diff > 25) {
+        verdict = 'Du hast dich deutlich überschätzt – ein klassisches Dunning-Kruger-Muster.';
+        verdictColor = 'rose';
+    } else if (diff < -20) {
+        verdict = 'Du hast dich unterschätzt – typisch für Experten mit dem Fluency-Paradox.';
+        verdictColor = 'emerald';
+    } else {
+        verdict = 'Deine Selbsteinschätzung war recht präzise – das ist selten!';
+        verdictColor = 'blue';
+    }
+
+    document.getElementById('result-card').innerHTML = `
+        <h3 class="font-bold text-slate-800 text-lg mb-4">Dein Ergebnis</h3>
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 text-center">
+                <div class="text-3xl font-black text-indigo-700">${scorePercent}%</div>
+                <div class="text-xs text-indigo-600 mt-1">Richtig beantwortet</div>
+                <div class="text-xs text-slate-500">${correctCount} von ${TOTAL_QUESTIONS} Fragen</div>
+            </div>
+            <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 text-center">
+                <div class="text-3xl font-black text-violet-700">${avgSelf}%</div>
+                <div class="text-xs text-violet-600 mt-1">Selbsteinschätzung</div>
+                <div class="text-xs text-slate-500">Ø deiner 4 Ratings</div>
+            </div>
+        </div>
+        <div class="bg-${verdictColor}-50 border border-${verdictColor}-200 rounded-xl p-4 text-sm text-${verdictColor}-800">
+            <strong>Auswertung:</strong> ${verdict}
+        </div>
+        <div class="mt-3 text-xs text-slate-500 text-center">Tatsächlicher Durchschnitt dieser App-Nutzer: ~55%</div>
+    `;
+
+    document.getElementById('step-2').classList.add('hidden');
+    document.getElementById('result-area').classList.remove('hidden');
+    document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+
+{% endblock %}

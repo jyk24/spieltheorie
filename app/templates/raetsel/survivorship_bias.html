@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}Survivorship Bias – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">✈️ Survivorship Bias</h1>
+        <p class="text-slate-500 mt-1">Wo soll man einen Bomber panzern? Die Antwort ist genau das Gegenteil von dem, was die Daten zeigen.</p>
+    </div>
+
+    <!-- Szenario -->
+    <div class="bg-slate-800 rounded-xl p-5 mb-6 text-white">
+        <p class="text-slate-300 text-xs font-semibold uppercase tracking-wider mb-3">1943 – Zweiter Weltkrieg, US Navy</p>
+        <p class="text-sm leading-relaxed mb-4">Die US-Marine analysiert zurückgekehrte Bomber auf Einschusslöcher. Das Ergebnis:</p>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <div class="bg-slate-700 rounded-lg p-3">
+                <div class="text-slate-300 text-xs mb-1">Flügel & Rumpf</div>
+                <div class="text-2xl font-black text-rose-400">Viele Treffer</div>
+            </div>
+            <div class="bg-slate-700 rounded-lg p-3">
+                <div class="text-slate-300 text-xs mb-1">Motor & Cockpit</div>
+                <div class="text-2xl font-black text-emerald-400">Wenige Treffer</div>
+            </div>
+        </div>
+        <!-- Flugzeug-Skizze -->
+        <div class="bg-slate-900 rounded-lg p-4 mb-4 flex justify-center">
+            <svg viewBox="0 0 280 160" width="280" height="160">
+                <!-- Rumpf -->
+                <ellipse cx="140" cy="80" rx="80" ry="20" fill="#475569" stroke="#64748b" stroke-width="1"/>
+                <!-- Linker Flügel -->
+                <polygon points="140,75 40,110 40,120 140,90" fill="#334155" stroke="#64748b" stroke-width="1"/>
+                <!-- Rechter Flügel -->
+                <polygon points="140,75 240,110 240,120 140,90" fill="#334155" stroke="#64748b" stroke-width="1"/>
+                <!-- Cockpit -->
+                <ellipse cx="185" cy="76" rx="18" ry="12" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1.5"/>
+                <!-- Heck -->
+                <polygon points="60,72 40,60 40,100 60,88" fill="#334155" stroke="#64748b" stroke-width="1"/>
+                <!-- Motor links -->
+                <ellipse cx="80" cy="105" rx="12" ry="7" fill="#1e293b" stroke="#64748b" stroke-width="1"/>
+                <!-- Motor rechts -->
+                <ellipse cx="200" cy="105" rx="12" ry="7" fill="#1e293b" stroke="#64748b" stroke-width="1"/>
+                <!-- Einschüsse Flügel / Rumpf (rot = viele Treffer) -->
+                <circle cx="100" cy="80" r="4" fill="#ef4444" opacity="0.9"/>
+                <circle cx="115" cy="85" r="3" fill="#ef4444" opacity="0.9"/>
+                <circle cx="90" cy="75" r="3" fill="#ef4444" opacity="0.9"/>
+                <circle cx="160" cy="78" r="4" fill="#ef4444" opacity="0.9"/>
+                <circle cx="175" cy="83" r="3" fill="#ef4444" opacity="0.9"/>
+                <circle cx="70" cy="108" r="4" fill="#ef4444" opacity="0.9"/>
+                <circle cx="55" cy="105" r="3" fill="#ef4444" opacity="0.9"/>
+                <circle cx="210" cy="108" r="4" fill="#ef4444" opacity="0.9"/>
+                <circle cx="225" cy="112" r="3" fill="#ef4444" opacity="0.9"/>
+                <!-- Cockpit & Motor: wenige Treffer (grün) -->
+                <circle cx="183" cy="76" r="3" fill="#22c55e" opacity="0.8"/>
+                <circle cx="80" cy="103" r="3" fill="#22c55e" opacity="0.8"/>
+                <!-- Legende -->
+                <circle cx="30" cy="140" r="5" fill="#ef4444"/>
+                <text x="40" y="145" fill="#94a3b8" font-size="10">Viele Treffer</text>
+                <circle cx="140" cy="140" r="5" fill="#22c55e"/>
+                <text x="150" y="145" fill="#94a3b8" font-size="10">Wenige Treffer</text>
+            </svg>
+        </div>
+        <p class="text-slate-300 text-sm">Der naive Schluss wäre: <em>„Panzere die Stellen mit vielen Einschüssen."</em></p>
+    </div>
+
+    <!-- Entscheidungsfrage -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5" id="question-area">
+        <p class="font-semibold text-slate-800 mb-2">Was empfiehlst du?</p>
+        <p class="text-sm text-slate-500 mb-5">Wo sollte die Marine zusätzliche Panzerung anbringen?</p>
+        <div class="space-y-3">
+            <button onclick="reveal('wrong')"
+                    class="w-full text-left p-4 rounded-xl border-2 border-rose-200 bg-rose-50 hover:border-rose-400 hover:bg-rose-100 transition-all">
+                <div class="font-bold text-rose-800 mb-1">Flügel und Rumpf panzernen</div>
+                <div class="text-sm text-rose-600">Dort sind die meisten Einschüsse – dort ist der Schutz nötig.</div>
+            </button>
+            <button onclick="reveal('right')"
+                    class="w-full text-left p-4 rounded-xl border-2 border-emerald-200 bg-emerald-50 hover:border-emerald-400 hover:bg-emerald-100 transition-all">
+                <div class="font-bold text-emerald-800 mb-1">Cockpit und Motoren panzernen</div>
+                <div class="text-sm text-emerald-600">Dort sind kaum Einschüsse – das ist verdächtig.</div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Auflösung -->
+    <div id="solution" class="hidden space-y-4">
+        <div id="answer-header" class="rounded-xl p-5 border-2"></div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 text-sm text-slate-700">
+            <p class="font-bold text-slate-800 mb-3">Abraham Walds Analyse (1943)</p>
+            <p class="mb-3">Statistiker Abraham Wald vom Statistical Research Group erkannte den Fehler sofort:</p>
+            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4">
+                <p class="font-semibold text-indigo-800 mb-2">Der entscheidende Gedanke</p>
+                <p class="text-indigo-700 text-sm">Wir analysieren <strong>nur die Flugzeuge, die zurückgekehrt sind</strong>. Die Bomber, die abgeschossen wurden, sind nicht in der Stichprobe.</p>
+                <p class="text-indigo-700 text-sm mt-2">Wenn Cockpit und Motor kaum Treffer zeigen, heißt das <strong>nicht</strong>, dass dort wenig geschossen wird – es heißt, dass Flugzeuge mit Treffern dort <strong>nicht zurückgekehrt sind</strong>.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <div class="bg-rose-50 border border-rose-100 rounded-lg p-3">
+                    <p class="font-semibold text-rose-700 text-xs mb-1">Viele Treffer im Flügel</p>
+                    <p class="text-rose-600 text-xs">→ Flügeltreffer sind <em>überlebbar</em>. Flugzeuge kamen trotzdem zurück.</p>
+                </div>
+                <div class="bg-slate-100 border border-slate-200 rounded-lg p-3">
+                    <p class="font-semibold text-slate-700 text-xs mb-1">Wenige Treffer im Motor</p>
+                    <p class="text-slate-600 text-xs">→ Motortreffer sind <em>tödlich</em>. Diese Flugzeuge kamen gar nicht erst zurück.</p>
+                </div>
+            </div>
+            <p class="text-slate-600">Wald empfahl: <strong>Panzerung dorthin, wo keine Einschüsse sind.</strong> Die Marine folgte dem Rat – und rettete tausende Leben.</p>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-sm text-amber-800">
+            <p class="font-semibold mb-2">Survivorship Bias im Alltag</p>
+            <ul class="space-y-2 text-xs">
+                <li class="flex gap-2"><span>•</span><span><strong>Unternehmensratgeber:</strong> Wir lesen über erfolgreiche Firmen. Die tausend gescheiterten Startups mit gleicher Strategie sind unsichtbar.</span></li>
+                <li class="flex gap-2"><span>•</span><span><strong>Musik & Kunst:</strong> „Früher war die Musik besser." Nein – wir erinnern uns nur an die Besten von damals.</span></li>
+                <li class="flex gap-2"><span>•</span><span><strong>Investitionen:</strong> Fonds-Rankings zeigen nur Fonds, die noch existieren. Schlechte Fonds werden aufgelöst und verschwinden aus der Statistik.</span></li>
+                <li class="flex gap-2"><span>•</span><span><strong>Sport:</strong> Extreme Trainingsmethoden erscheinen erfolgreich, weil wir nur die sehen, die es überlebt haben.</span></li>
+            </ul>
+        </div>
+
+        <a href="/raetsel/survivorship-bias"
+           class="block w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors">
+            Nochmal spielen
+        </a>
+    </div>
+</div>
+
+<script>
+function reveal(choice) {
+    document.getElementById('question-area').classList.add('hidden');
+    document.getElementById('solution').classList.remove('hidden');
+    const header = document.getElementById('answer-header');
+    if (choice === 'right') {
+        header.className = 'rounded-xl p-5 border-2 bg-emerald-50 border-emerald-300';
+        header.innerHTML = '<p class="font-bold text-emerald-800 text-lg mb-1">✓ Richtig gedacht!</p><p class="text-emerald-700 text-sm">Cockpit und Motoren zu panzern ist die korrekte Schlussfolgerung. Abraham Wald kam 1943 zur selben Erkenntnis.</p>';
+    } else {
+        header.className = 'rounded-xl p-5 border-2 bg-rose-50 border-rose-300';
+        header.innerHTML = '<p class="font-bold text-rose-800 text-lg mb-1">Das ist der Survivorship Bias</p><p class="text-rose-700 text-sm">Die Daten zeigen nur, wo Überlebende getroffen wurden – nicht, wo letale Treffer liegen. Lies unten, warum die Antwort das genaue Gegenteil ist.</p>';
+    }
+}
+</script>
+
+{% endblock %}

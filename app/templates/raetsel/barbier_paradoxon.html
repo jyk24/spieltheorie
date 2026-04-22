@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Das Barbier-Paradoxon – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">✂️ Das Barbier-Paradoxon</h1>
+        <p class="text-slate-500 mt-1">Eine einfache Beschreibung – die logisch unmöglich ist. Russell erschütterte damit die Mathematik.</p>
+    </div>
+
+    <!-- Setup -->
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6">
+        <p class="font-semibold text-slate-800 mb-3">Das Rätsel:</p>
+        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-5 mb-4">
+            <p class="text-indigo-800 text-lg font-bold text-center leading-relaxed">
+                „In einem Dorf gibt es genau einen Barbier.<br>
+                <span class="text-indigo-600">Er rasiert alle, die sich nicht selbst rasieren.</span><br>
+                <span class="text-slate-600 text-base font-normal">Und nur diese."</span>
+            </p>
+        </div>
+        <p class="text-sm text-slate-600">Der Barbier ist ein Bewohner des Dorfes. Die Beschreibung klingt völlig logisch – oder?</p>
+    </div>
+
+    <!-- Frage -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5" id="question-area">
+        <p class="font-semibold text-slate-800 mb-2">Die Frage:</p>
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5 text-center text-xl font-bold text-amber-800">
+            Rasiert der Barbier sich selbst?
+        </div>
+        <div class="space-y-3">
+            <button onclick="reveal('yes')"
+                    class="w-full text-left p-4 rounded-xl border-2 border-blue-200 bg-blue-50 hover:border-blue-400 transition-all">
+                <div class="font-bold text-blue-800 mb-1">Ja, er rasiert sich selbst</div>
+                <div class="text-sm text-blue-600">Er ist ein Dorfbewohner und entscheidet sich für die Selbstrasur.</div>
+            </button>
+            <button onclick="reveal('no')"
+                    class="w-full text-left p-4 rounded-xl border-2 border-violet-200 bg-violet-50 hover:border-violet-400 transition-all">
+                <div class="font-bold text-violet-800 mb-1">Nein, er rasiert sich nicht selbst</div>
+                <div class="text-sm text-violet-600">Er überlässt das Rasieren einem anderen oder lässt es bleiben.</div>
+            </button>
+            <button onclick="reveal('impossible')"
+                    class="w-full text-left p-4 rounded-xl border-2 border-rose-200 bg-rose-50 hover:border-rose-400 transition-all">
+                <div class="font-bold text-rose-800 mb-1">Beides ist unmöglich – ein Widerspruch</div>
+                <div class="text-sm text-rose-600">Die Beschreibung selbst ist logisch inkonsistent.</div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Auflösung -->
+    <div id="solution" class="hidden space-y-4">
+        <div class="bg-rose-50 border border-rose-300 rounded-xl p-5">
+            <p class="font-bold text-rose-800 text-lg mb-2">✓ Beides ist unmöglich</p>
+            <div class="space-y-3 text-sm">
+                <div class="bg-white border border-rose-100 rounded-lg p-3">
+                    <p class="font-semibold text-rose-700 mb-1">Fall 1: Der Barbier rasiert sich selbst</p>
+                    <p class="text-rose-600">→ Aber er rasiert „nur die, die sich <em>nicht</em> selbst rasieren".<br>Wenn er sich selbst rasiert, darf er sich nicht selbst rasieren. <strong>Widerspruch.</strong></p>
+                </div>
+                <div class="bg-white border border-rose-100 rounded-lg p-3">
+                    <p class="font-semibold text-rose-700 mb-1">Fall 2: Der Barbier rasiert sich nicht selbst</p>
+                    <p class="text-rose-600">→ Aber er rasiert „alle, die sich <em>nicht</em> selbst rasieren".<br>Da er sich nicht selbst rasiert, muss er sich rasieren. <strong>Widerspruch.</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 text-sm text-slate-700">
+            <p class="font-bold text-slate-800 mb-3">Bertrand Russell und die Mengenlehre (1901)</p>
+            <p class="mb-3">Russell erfand das Barbier-Paradoxon, um ein viel tieferes Problem zu veranschaulichen: das <strong>Russell'sche Paradoxon</strong> in der Mengenlehre.</p>
+
+            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-3">
+                <p class="font-semibold text-indigo-800 mb-2">Das originale Paradoxon</p>
+                <p class="text-indigo-700 text-xs font-mono mb-2">Sei R = die Menge aller Mengen, die sich nicht selbst enthalten.</p>
+                <p class="text-indigo-700 text-xs"><strong>Frage:</strong> Enthält R sich selbst?<br>
+                • Ja: Dann enthält R eine Menge, die sich selbst enthält – Widerspruch zur Definition.<br>
+                • Nein: Dann muss R sich selbst enthalten – Widerspruch.</p>
+            </div>
+
+            <p class="mb-3">Russell schrieb dieses Paradoxon 1901 in einem Brief an Gottlob Frege – der gerade sein zweibändiges Grundlagenwerk der Mathematik abgeschlossen hatte. Frege antwortete: „Ihr Brief hat mich am Ende meines Lebens erschüttert."</p>
+
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                <p class="font-semibold text-amber-800 text-xs mb-1">Die Folgen</p>
+                <p class="text-amber-700 text-xs">Das Paradoxon zerstörte Freges naives Mengenprogramm. Die Mathematik wurde in der Folge neu fundamentiert:<br>
+                • <strong>Zermelo-Fraenkel-Axiomatik (1908)</strong> – verhindert solche Selbstreferenz durch Axiome<br>
+                • <strong>Russell's Typentheorie</strong> – trennt Mengen in hierarchische Ebenen<br>
+                • <strong>Gödels Unvollständigkeitssatz (1931)</strong> – zeigt: jedes hinreichend mächtige formale System hat unentscheidbare Sätze</p>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-600">
+            <p class="font-semibold text-slate-700 mb-2">Selbstreferenz-Paradoxe im Alltag</p>
+            <div class="space-y-1.5 text-xs">
+                <p>• <strong>Der Lügner:</strong> „Dieser Satz ist falsch." – wahr oder falsch?</p>
+                <p>• <strong>The Library:</strong> Bibliothek, die alle Bibliothekskataloge enthält, die sich selbst nicht enthalten.</p>
+                <p>• <strong>Halting Problem (Turing, 1936):</strong> Kein Programm kann entscheiden, ob jedes andere Programm terminiert.</p>
+                <p>• <strong>Gödel (1931):</strong> Jedes konsistente formale System enthält wahre, aber unbeweisbare Sätze.</p>
+            </div>
+        </div>
+
+        <a href="/raetsel/barbier-paradoxon"
+           class="block w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors">
+            Nochmal spielen
+        </a>
+    </div>
+</div>
+
+<script>
+function reveal(choice) {
+    document.getElementById('question-area').classList.add('hidden');
+    document.getElementById('solution').classList.remove('hidden');
+    document.getElementById('solution').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+
+{% endblock %}

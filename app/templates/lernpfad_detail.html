@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block title %}{{ pfad.title }} – Lernpfad – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+
+    <!-- Breadcrumb -->
+    <div class="mb-5">
+        <a href="/lernpfade" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Lernpfade</a>
+    </div>
+
+    <!-- Header -->
+    <div class="{{ c.bg }} rounded-2xl p-6 mb-6 text-white">
+        <div class="flex items-center gap-3 mb-3">
+            <span class="text-4xl">{{ pfad.icon }}</span>
+            <div>
+                <h1 class="text-2xl font-bold">{{ pfad.title }}</h1>
+                <p class="text-white/75 text-sm">{{ pfad.subtitle }}</p>
+            </div>
+        </div>
+        <p class="text-white/85 text-sm leading-relaxed mb-4">{{ pfad.beschreibung }}</p>
+        <div class="flex items-center gap-4 text-white/70 text-xs">
+            <span>📚 {{ pfad.puzzles | length }} Rätsel</span>
+            <span>·</span>
+            <span>⏱ {{ pfad.dauer }}</span>
+            <span>·</span>
+            <span>{{ pfad.level }}</span>
+        </div>
+    </div>
+
+    <!-- Was du lernst -->
+    <div class="bg-white border {{ c.border }} rounded-xl p-5 mb-6">
+        <h2 class="font-bold text-slate-800 mb-3">Was du in diesem Pfad lernst</h2>
+        <ul class="space-y-2">
+        {% for punkt in pfad.was_du_lernst %}
+        <li class="flex items-start gap-2.5 text-sm text-slate-700">
+            <span class="{{ c.text }} font-bold mt-0.5 shrink-0">✓</span>
+            <span>{{ punkt }}</span>
+        </li>
+        {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Puzzle-Sequenz -->
+    <h2 class="font-bold text-slate-800 mb-4 text-lg">Dein Pfad – {{ pfad.puzzles | length }} Stationen</h2>
+
+    <div class="space-y-3" id="pfad-list">
+    {% for puzzle in pfad.puzzles %}
+    {% set idx = loop.index %}
+    <a href="/raetsel/{{ puzzle.id }}"
+       data-pfad="{{ pfad.id }}"
+       data-idx="{{ idx }}"
+       onclick="savePfadProgress('{{ pfad.id }}', {{ idx }})"
+       class="pfad-item flex items-center gap-4 bg-white rounded-xl border-2 {{ c.border }} p-4 hover:shadow-md hover:{{ c.bg }} hover:border-transparent hover:text-white transition-all group">
+
+        <!-- Step number -->
+        <div class="{{ c.bg }} text-white w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm shrink-0 group-hover:bg-white/20 transition-colors">
+            {{ idx }}
+        </div>
+
+        <!-- Emoji -->
+        <div class="text-2xl shrink-0">{{ puzzle.icon }}</div>
+
+        <!-- Info -->
+        <div class="flex-1 min-w-0">
+            <div class="font-bold text-slate-800 group-hover:text-white transition-colors text-sm">{{ puzzle.name }}</div>
+            <div class="flex items-center gap-3 text-xs text-slate-400 group-hover:text-white/70 mt-0.5 transition-colors">
+                <span>⏱ {{ puzzle.dauer }}</span>
+                <span>·</span>
+                <span class="{{ c.badge }} group-hover:bg-white/20 group-hover:text-white px-1.5 py-0.5 rounded-full transition-colors text-xs font-medium">{{ puzzle.schwierigkeit }}</span>
+            </div>
+        </div>
+
+        <!-- Visited indicator (JS-managed) -->
+        <div class="visited-check hidden text-xl shrink-0" data-id="{{ puzzle.id }}">✓</div>
+        <div class="arrow-icon {{ c.text }} group-hover:text-white transition-colors text-lg shrink-0">→</div>
+    </a>
+    {% endfor %}
+    </div>
+
+    <!-- After-completion CTA -->
+    <div class="mt-8 bg-slate-50 border border-slate-200 rounded-xl p-5 text-center">
+        <p class="text-sm text-slate-600 mb-3">Pfad abgeschlossen? Erkunde weitere Themen:</p>
+        <div class="flex gap-3 justify-center flex-wrap">
+            <a href="/lernpfade" class="text-sm border border-slate-300 text-slate-600 px-4 py-2 rounded-lg hover:bg-slate-100 transition-colors">Alle Lernpfade</a>
+            <a href="/raetsel" class="text-sm {{ c.bg }} text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">Alle Rätsel</a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+const PFAD_ID = '{{ pfad.id }}';
+
+function savePfadProgress(pfadId, idx) {
+    const key = 'pfad_' + pfadId;
+    const visited = JSON.parse(localStorage.getItem(key) || '[]');
+    if (!visited.includes(idx)) visited.push(idx);
+    localStorage.setItem(key, JSON.stringify(visited));
+}
+
+function loadPfadProgress() {
+    const key = 'pfad_' + PFAD_ID;
+    const visited = JSON.parse(localStorage.getItem(key) || '[]');
+    document.querySelectorAll('.pfad-item').forEach(item => {
+        const idx = parseInt(item.dataset.idx);
+        if (visited.includes(idx)) {
+            item.querySelector('.visited-check').classList.remove('hidden');
+            item.querySelector('.arrow-icon').classList.add('hidden');
+            item.classList.add('opacity-80');
+        }
+    });
+    // Count and show progress
+    if (visited.length > 0) {
+        const total = document.querySelectorAll('.pfad-item').length;
+        const pct = Math.round(visited.length / total * 100);
+        showProgress(visited.length, total, pct);
+    }
+}
+
+function showProgress(done, total, pct) {
+    const bar = document.createElement('div');
+    bar.className = 'bg-white border {{ c.border }} rounded-xl p-4 mb-5';
+    bar.innerHTML = `
+        <div class="flex justify-between text-xs text-slate-500 mb-1.5">
+            <span>Dein Fortschritt</span>
+            <span>${done} / ${total} besucht</span>
+        </div>
+        <div class="bg-slate-100 rounded-full h-2.5 overflow-hidden">
+            <div class="h-full {{ c.bg }} rounded-full transition-all" style="width:${pct}%"></div>
+        </div>
+    `;
+    document.getElementById('pfad-list').before(bar);
+}
+
+loadPfadProgress();
+</script>
+
+{% endblock %}

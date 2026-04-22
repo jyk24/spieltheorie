@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Regression zur Mitte – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">📊 Regression zur Mitte</h1>
+        <p class="text-slate-500 mt-1">Warum schneiden Sportler nach einem Rekord schlechter ab – und warum Lob oft besser wirkt als Strafe.</p>
+    </div>
+
+    <!-- Intuitions-Test -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5" id="question-area">
+        <p class="font-semibold text-slate-800 mb-2">Szenario:</p>
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-5 text-sm text-blue-800">
+            Ein Pilot-Ausbilder beobachtet: Wenn er nach einer schlechten Landung lobt, wird die nächste Landung besser. Wenn er nach einer guten Landung kritisiert, wird die nächste schlechter. <strong>Sein Schluss: Kritik funktioniert, Lob verschlechtert die Leistung.</strong>
+        </div>
+        <p class="font-semibold text-slate-800 mb-4">Hat er Recht?</p>
+        <div class="space-y-3">
+            <button onclick="reveal('right')"
+                    class="w-full text-left p-4 rounded-xl border-2 border-emerald-200 bg-emerald-50 hover:border-emerald-400 transition-all">
+                <div class="font-bold text-emerald-800 mb-1">Nein – das ist eine Illusion</div>
+                <div class="text-sm text-emerald-600">Die Leistungsänderung hat eine andere Ursache als Lob oder Kritik.</div>
+            </button>
+            <button onclick="reveal('wrong')"
+                    class="w-full text-left p-4 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 transition-all">
+                <div class="font-bold text-slate-800 mb-1">Ja – seine Beobachtung ist korrekt</div>
+                <div class="text-sm text-slate-600">Das Feedback hat offensichtlich einen messbaren Effekt.</div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Auflösung -->
+    <div id="solution" class="hidden space-y-5">
+        <div id="answer-header" class="rounded-xl p-5 border-2"></div>
+
+        <!-- Erklärung -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 text-sm text-slate-700">
+            <p class="font-bold text-slate-800 mb-3 text-base">Regression zur Mitte – Galton (1886)</p>
+            <p class="mb-4">Francis Galton entdeckte beim Studium von Körpergröße-Daten: Sehr große Väter haben tendenziell kleinere Söhne (als sie selbst) – und sehr kleine Väter haben tendenziell größere Söhne. Die Kinder bewegen sich zur <em>Mitte</em>.</p>
+
+            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4">
+                <p class="font-semibold text-indigo-800 mb-2">Das Prinzip</p>
+                <p class="text-indigo-700">Extreme Messungen enthalten immer zwei Komponenten: echte Fähigkeit + zufälliger Glücks-/Pechfaktor. Nach einem Extremergebnis wird der Glücksfaktor wahrscheinlicher wieder mittelmäßig – die Leistung kehrt zur Mitte zurück.</p>
+            </div>
+
+            <!-- Visualisierung -->
+            <p class="font-semibold mb-3">Simulation:</p>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-4">
+                <div class="flex gap-4 items-end h-24 mb-2">
+                    <div class="flex-1 flex flex-col items-center gap-1">
+                        <div id="bar1" class="w-full bg-rose-400 rounded-t transition-all" style="height:90%"></div>
+                        <div class="text-xs text-slate-500">Versuch 1</div>
+                    </div>
+                    <div class="flex-1 flex flex-col items-center gap-1">
+                        <div id="bar2" class="w-full bg-slate-300 rounded-t transition-all" style="height:50%"></div>
+                        <div class="text-xs text-slate-500">Versuch 2</div>
+                    </div>
+                    <div class="flex-1 flex flex-col items-center gap-1">
+                        <div id="bar3" class="w-full bg-slate-300 rounded-t transition-all" style="height:50%"></div>
+                        <div class="text-xs text-slate-500">Versuch 3</div>
+                    </div>
+                    <div class="flex-1 flex flex-col items-center gap-1">
+                        <div id="bar4" class="w-full bg-slate-300 rounded-t transition-all" style="height:50%"></div>
+                        <div class="text-xs text-slate-500">Versuch 4</div>
+                    </div>
+                    <div class="flex-1 flex flex-col items-center gap-1">
+                        <div id="bar5" class="w-full bg-slate-300 rounded-t transition-all" style="height:50%"></div>
+                        <div class="text-xs text-slate-500">Versuch 5</div>
+                    </div>
+                </div>
+                <div class="relative border-t border-dashed border-amber-400 mb-1">
+                    <span class="absolute -top-3 right-0 text-xs text-amber-600">⬅ Durchschnitt</span>
+                </div>
+                <div id="sim-text" class="text-xs text-slate-500 text-center mt-2">Klicke "Simulieren" für 5 zufällige Würfe</div>
+                <button onclick="runSim()" class="mt-3 w-full bg-indigo-600 text-white py-2 rounded-xl font-medium hover:bg-indigo-700 transition-colors text-sm">Simulieren (5 Versuche)</button>
+            </div>
+
+            <div class="space-y-3">
+                <div class="bg-rose-50 border border-rose-100 rounded-lg p-3">
+                    <p class="font-semibold text-rose-800 text-xs mb-1">Warum der Pilot irrt</p>
+                    <p class="text-rose-700 text-xs">Nach einer sehr schlechten Landung (Extremwert) ist die nächste fast sicher besser – <em>unabhängig</em> vom Feedback. Der Ausbilder schreibt dem Lob/der Kritik zu, was allein auf Regression zurückgeht.</p>
+                </div>
+                <div class="bg-emerald-50 border border-emerald-100 rounded-lg p-3">
+                    <p class="font-semibold text-emerald-800 text-xs mb-1">Wohin das führt</p>
+                    <p class="text-emerald-700 text-xs">Trainingsregimes werden falsch optimiert. Medikamente wirken „besser" als sie sind (Patienten suchen beim Tiefpunkt Hilfe). Sports Illustrated Cover-Fluch. Bestrafung wird überbetont.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
+            <p class="font-semibold mb-1">Galton's Orakel</p>
+            <p class="text-xs">Daniel Kahneman (Nobelpreis 2002) schreibt in „Thinking, Fast and Slow": Das Piloten-Szenario war sein persönlichstes Aha-Erlebnis. Er beobachtete israelische Fluglehrer, die genau diese Illusion hatten – und erkannte, dass Regression zur Mitte die Wirksamkeit von Feedback systematisch verzerrt.</p>
+        </div>
+
+        <a href="/raetsel/regression-zur-mitte"
+           class="block w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors">
+            Nochmal spielen
+        </a>
+    </div>
+</div>
+
+<script>
+function reveal(choice) {
+    document.getElementById('question-area').classList.add('hidden');
+    document.getElementById('solution').classList.remove('hidden');
+    const header = document.getElementById('answer-header');
+    if (choice === 'right') {
+        header.className = 'rounded-xl p-5 border-2 bg-emerald-50 border-emerald-300';
+        header.innerHTML = '<p class="font-bold text-emerald-800 text-lg mb-1">✓ Richtig erkannt!</p><p class="text-emerald-700 text-sm">Regression zur Mitte erklärt die Beobachtung des Piloten vollständig – ohne auf Lob oder Kritik angewiesen zu sein.</p>';
+    } else {
+        header.className = 'rounded-xl p-5 border-2 bg-amber-50 border-amber-300';
+        header.innerHTML = '<p class="font-bold text-amber-800 text-lg mb-1">Das ist eine statistische Illusion</p><p class="text-amber-700 text-sm">Die Beobachtung ist real – aber die Erklärung ist falsch. Regression zur Mitte erklärt alles, ohne Lob oder Kritik zu brauchen.</p>';
+    }
+    runSim();
+}
+
+function runSim() {
+    const bars = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3'), document.getElementById('bar4'), document.getElementById('bar5')];
+    const ability = 0.6;
+    const values = bars.map((_, i) => {
+        const luck = (Math.random() - 0.5) * 0.6;
+        return Math.max(0.05, Math.min(0.95, ability + luck));
+    });
+    const colors = ['bg-rose-400', 'bg-blue-400', 'bg-blue-400', 'bg-blue-400', 'bg-blue-400'];
+    bars.forEach((bar, i) => {
+        bar.style.height = (values[i] * 100) + '%';
+        bar.className = `w-full ${colors[i]} rounded-t transition-all`;
+    });
+    const trend = values[1] < values[0] ? 'nach einem Extremwert sank die Leistung – Regression zur Mitte' : 'Zufällig angestiegen – aber im Durchschnitt sinkt es';
+    document.getElementById('sim-text').textContent = `Versuch 1 war ${(values[0]*100).toFixed(0)}% – danach: ${(values[1]*100).toFixed(0)}%, ${(values[2]*100).toFixed(0)}%, ${(values[3]*100).toFixed(0)}%, ${(values[4]*100).toFixed(0)}%`;
+}
+</script>
+
+{% endblock %}
