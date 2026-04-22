@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block title %}Das Priming-Experiment – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">💡 Das Priming-Experiment</h1>
+        <p class="text-slate-500 mt-1">Beeinflusst ein Wort deine Gedanken – ohne dass du es merkst?</p>
+    </div>
+
+    <!-- Setup -->
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-2">Das Experiment:</p>
+        <p>Du wirst zweimal dieselbe Frage beantworten. Dazwischen siehst du kurz eine Wortliste. Beobachte, ob sie deine Antwort verändert.</p>
+        <div class="mt-3 bg-pink-50 border border-pink-200 rounded-lg p-3 text-xs text-pink-700">
+            <strong>Wichtig:</strong> Antworte schnell und spontan – dein erster Impuls zählt.
+        </div>
+    </div>
+
+    <!-- Phase 1: Erste Frage -->
+    <div id="phase1" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+        <p class="text-sm text-slate-400 mb-1">Runde 1 – vor dem Priming</p>
+        <p class="font-bold text-xl text-slate-800 mb-5">Was kommt dir zuerst in den Sinn bei: <span class="text-indigo-600">BANK</span>?</p>
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="answerRound1('finanzen')"
+                    class="p-4 rounded-xl border-2 border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all text-center font-bold text-slate-700">
+                🏦 Finanzinstitut
+            </button>
+            <button onclick="answerRound1('sitzen')"
+                    class="p-4 rounded-xl border-2 border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all text-center font-bold text-slate-700">
+                🪑 Sitzgelegenheit
+            </button>
+        </div>
+    </div>
+
+    <!-- Phase 2: Prime-Wörter (hidden) -->
+    <div id="phase2" class="hidden bg-indigo-900 rounded-xl p-8 mb-4 text-center">
+        <p class="text-indigo-300 text-xs mb-4">Lies diese Wörter:</p>
+        <div id="prime-word" class="text-5xl font-black text-white tracking-widest mb-2"></div>
+        <div class="flex justify-center gap-1 mt-4" id="prime-dots"></div>
+    </div>
+
+    <!-- Phase 3: Zweite Frage (hidden) -->
+    <div id="phase3" class="hidden bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+        <p class="text-sm text-slate-400 mb-1">Runde 2 – nach dem Priming</p>
+        <p class="font-bold text-xl text-slate-800 mb-5">Was kommt dir zuerst in den Sinn bei: <span class="text-indigo-600">BANK</span>?</p>
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="answerRound2('finanzen')"
+                    class="p-4 rounded-xl border-2 border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all text-center font-bold text-slate-700">
+                🏦 Finanzinstitut
+            </button>
+            <button onclick="answerRound2('sitzen')"
+                    class="p-4 rounded-xl border-2 border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all text-center font-bold text-slate-700">
+                🪑 Sitzgelegenheit
+            </button>
+        </div>
+    </div>
+
+    <!-- Phase 4: Auflösung (hidden) -->
+    <div id="solution" class="hidden space-y-4"></div>
+</div>
+
+<script>
+const PRIME_WORDS = ['KREDIT', 'ZINSEN', 'AKTIEN', 'SCHULDEN', 'SPARPLAN'];
+let round1Answer = null;
+
+function answerRound1(ans) {
+    round1Answer = ans;
+    document.getElementById('phase1').classList.add('hidden');
+    showPrime();
+}
+
+function showPrime() {
+    const phase2 = document.getElementById('phase2');
+    phase2.classList.remove('hidden');
+
+    // Build dot indicators
+    const dots = document.getElementById('prime-dots');
+    PRIME_WORDS.forEach((_, i) => {
+        const d = document.createElement('div');
+        d.className = 'w-2 h-2 rounded-full bg-indigo-600 opacity-30';
+        d.id = 'dot-' + i;
+        dots.appendChild(d);
+    });
+
+    let idx = 0;
+    const wordEl = document.getElementById('prime-word');
+
+    function showNext() {
+        if (idx >= PRIME_WORDS.length) {
+            phase2.classList.add('hidden');
+            document.getElementById('phase3').classList.remove('hidden');
+            return;
+        }
+        wordEl.textContent = PRIME_WORDS[idx];
+        wordEl.style.opacity = '0';
+        wordEl.style.transform = 'scale(0.8)';
+        setTimeout(() => {
+            wordEl.style.transition = 'all 0.2s';
+            wordEl.style.opacity = '1';
+            wordEl.style.transform = 'scale(1)';
+        }, 50);
+        document.getElementById('dot-' + idx).classList.remove('opacity-30');
+        document.getElementById('dot-' + idx).classList.add('opacity-100', 'bg-white');
+        idx++;
+        setTimeout(showNext, 700);
+    }
+    showNext();
+}
+
+function answerRound2(ans) {
+    document.getElementById('phase3').classList.add('hidden');
+    showSolution(ans);
+}
+
+function showSolution(round2Answer) {
+    const changed = round1Answer !== round2Answer;
+    const primed = round2Answer === 'finanzen';
+
+    const sol = document.getElementById('solution');
+    sol.classList.remove('hidden');
+    sol.innerHTML = `
+    <div class="space-y-4">
+
+        <!-- Ergebnis -->
+        <div class="${changed ? 'bg-rose-50 border-2 border-rose-400' : 'bg-slate-50 border-2 border-slate-300'} rounded-xl p-5">
+            <p class="font-bold text-lg ${changed ? 'text-rose-800' : 'text-slate-700'} mb-1">
+                ${changed ? '⚡ Deine Antwort hat sich verändert!' : '🛡️ Deine Antwort blieb stabil.'}
+            </p>
+            <div class="flex items-center gap-4 mt-2 text-sm">
+                <div class="text-center">
+                    <p class="text-xs text-slate-400 mb-1">Runde 1</p>
+                    <span class="font-bold text-slate-700 px-3 py-1 bg-white rounded-lg border border-slate-200">
+                        ${round1Answer === 'finanzen' ? '🏦 Finanzinstitut' : '🪑 Sitzgelegenheit'}
+                    </span>
+                </div>
+                <span class="text-slate-300 text-xl">→</span>
+                <div class="text-center">
+                    <p class="text-xs text-slate-400 mb-1">Runde 2</p>
+                    <span class="font-bold ${changed ? 'text-rose-700' : 'text-slate-700'} px-3 py-1 bg-white rounded-lg border ${changed ? 'border-rose-300' : 'border-slate-200'}">
+                        ${round2Answer === 'finanzen' ? '🏦 Finanzinstitut' : '🪑 Sitzgelegenheit'}
+                    </span>
+                </div>
+            </div>
+            ${changed ? '<p class="text-xs text-rose-600 mt-3">Die fünf Finanzwörter haben deine Assoziation zu "BANK" verschoben – genau das ist Priming.</p>'
+                      : primed ? '<p class="text-xs text-slate-500 mt-3">Du hast "BANK" beide Male mit Finanzen assoziiert – entweder warst du schon vor dem Priming auf Finanzen eingestellt, oder das Priming hat eine bereits vorhandene Assoziation verstärkt.</p>'
+                               : '<p class="text-xs text-slate-500 mt-3">Du hast dich nicht beeinflussen lassen – das kommt vor, ist aber selten. Vielleicht war deine Bank-Assoziation besonders stark verankert.</p>'}
+        </div>
+
+        <!-- Statistik -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+            <p class="font-bold text-slate-800 mb-3">Was Forschung zeigt:</p>
+            <div class="grid grid-cols-2 gap-3 mb-3">
+                <div class="bg-slate-50 rounded-lg p-3 text-center text-sm">
+                    <p class="text-xs text-slate-400 mb-1">Ohne Priming</p>
+                    <p class="text-2xl font-bold text-slate-700">~52%</p>
+                    <p class="text-xs text-slate-500">wählen "Finanzinstitut"</p>
+                </div>
+                <div class="bg-rose-50 rounded-lg p-3 text-center text-sm">
+                    <p class="text-xs text-slate-400 mb-1">Nach Finanz-Priming</p>
+                    <p class="text-2xl font-bold text-rose-700">~85%</p>
+                    <p class="text-xs text-slate-500">wählen "Finanzinstitut"</p>
+                </div>
+            </div>
+            <p class="text-xs text-slate-500">Fünf kurze Wörter reichen aus, um die Interpretation eines mehrdeutigen Begriffs um ~33 Prozentpunkte zu verschieben – ohne bewusste Wahrnehmung.</p>
+        </div>
+
+        <!-- Theorie -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 text-sm text-slate-700">
+            <p class="font-bold text-slate-800 mb-3">Was ist Priming?</p>
+            <p class="mb-3">Priming (Tulving & Schacter, 1990) beschreibt den Effekt, bei dem ein vorangehender Reiz die Verarbeitung eines späteren Reizes beeinflusst – ohne bewusstes Erinnern des ersten Reizes.</p>
+            <div class="bg-pink-50 border border-pink-200 rounded-lg p-4 mb-3">
+                <p class="font-semibold text-pink-800 mb-2">Das Florida-Experiment (Bargh, Chen & Burrows, 1996)</p>
+                <p class="text-xs text-pink-700">Studierende, die Wörter wie "alt", "langsam", "Rente", "grau" und "Falte" unscrambled hatten, verließen das Labor messbar langsamer als die Kontrollgruppe – obwohl das Wort "langsam" selbst nie vorkam. Nur die semantischen Assoziationen genügten.</p>
+            </div>
+            <div class="space-y-2 text-xs text-slate-600">
+                <p class="flex gap-2"><span class="text-pink-500 shrink-0">→</span><span><strong>Semantisches Priming:</strong> Verwandte Wörter (ARZT → KRANKHEIT) werden schneller erkannt, weil das Netzwerk im Gedächtnis bereits aktiviert ist.</span></p>
+                <p class="flex gap-2"><span class="text-pink-500 shrink-0">→</span><span><strong>Konzeptuelles Priming:</strong> Die Kategorie wird aktiviert, nicht nur das Wort. Finanzwörter aktivieren das gesamte "Finanzwelt"-Schema.</span></p>
+                <p class="flex gap-2"><span class="text-pink-500 shrink-0">→</span><span><strong>Implizites Gedächtnis:</strong> Priming funktioniert ohne bewusstes Erinnern. Amnesie-Patienten zeigen Priming-Effekte, obwohl sie sich an das Prime nicht erinnern.</span></p>
+            </div>
+        </div>
+
+        <!-- Real-World -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm">
+            <p class="font-semibold text-slate-700 mb-2">Priming in der Praxis</p>
+            <div class="space-y-1.5 text-xs text-slate-600">
+                <p class="flex gap-2"><span>→</span><span><strong>Werbung:</strong> Duftmarketung in Supermärkten aktiviert Frische-Assoziationen und erhöht den Kauf von Obst und Gemüse.</span></p>
+                <p class="flex gap-2"><span>→</span><span><strong>Verhandlung:</strong> Einen hohen Anker zu setzen, aktiviert den "hoher Wert"-Frame bei der Gegenseite – und verschiebt das Ergebnis.</span></p>
+                <p class="flex gap-2"><span>→</span><span><strong>Vorstellungsgespräche:</strong> Die Umgebung des Raums, die Kleidung, sogar das Wetter beim Eintreffen beeinflussen erste Eindrücke über Priming.</span></p>
+                <p class="flex gap-2"><span>→</span><span><strong>Präsentationen:</strong> Die ersten Worte einer Rede primen das Publikum für alles, was folgt. "Problem" vs. "Herausforderung" aktivieren verschiedene mentale Frames.</span></p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+            <a href="/raetsel/priming" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal ausprobieren</a>
+            <a href="/raetsel/kognitive-dissonanz" class="border border-pink-200 text-pink-700 px-5 py-2 rounded-lg text-sm font-medium hover:bg-pink-50">🔄 Kognitive Dissonanz</a>
+            <a href="/raetsel/konfirmationsfehler" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">🔍 Konfirmationsfehler</a>
+            <a href="/skills#psychologie" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">📖 Psychologie-Theorie</a>
+        </div>
+    </div>`;
+}
+</script>
+
+{% endblock %}

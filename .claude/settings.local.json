@@ -107,7 +107,11 @@
       "Bash(python -c \"import json; data=json.load\\(open\\('data/lektionen.json'\\)\\); print\\([d['slug'] for d in data]\\)\")",
       "Bash(python -c \"import json; data=json.load\\(open\\('data/lektionen.json', encoding='utf-8'\\)\\); print\\([d['slug'] for d in data]\\)\")",
       "Bash(python -c \"import json; data=json.load\\(open\\('data/lektionen.json', encoding='utf-8'\\)\\); print\\([\\(d['slug'], d['order_index']\\) for d in data[-5:]]\\)\")",
-      "Bash(python -c \"import json; data=json.load\\(open\\('data/lektionen.json', encoding='utf-8'\\)\\); print\\(data[-1]['slug']\\)\")"
+      "Bash(python -c \"import json; data=json.load\\(open\\('data/lektionen.json', encoding='utf-8'\\)\\); print\\(data[-1]['slug']\\)\")",
+      "Bash(python -c \"from app.routers.raetsel import router; print\\('raetsel router OK'\\)\")",
+      "Bash(python -c \"from app.main import app; print\\('main app OK'\\)\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }

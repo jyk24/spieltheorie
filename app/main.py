@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .database import Base, engine, SessionLocal
 from .seed import seed_lessons, seed_progress
-from .routers import dashboard, lektionen, spiele, fortschritt, raetsel, grundlagen, spielpfad, konzepte, lernpfade
+from .routers import dashboard, lektionen, spiele, fortschritt, raetsel, grundlagen, spielpfad, konzepte, lernpfade, skills
 
 
 @asynccontextmanager
@@ -32,3 +32,4 @@ app.include_router(grundlagen.router)
 app.include_router(spielpfad.router)
 app.include_router(konzepte.router)
 app.include_router(lernpfade.router)
+app.include_router(skills.router)

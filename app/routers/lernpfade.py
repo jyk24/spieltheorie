@@ -152,6 +152,68 @@ LERNPFADE = [
         ],
     },
     {
+        "id": "psychologie",
+        "title": "Psychologie & Verhalten",
+        "subtitle": "Warum Menschen handeln, wie sie handeln",
+        "icon": "🧬",
+        "color": "pink",
+        "level": "Einsteiger → Mittel",
+        "dauer": "ca. 35 min",
+        "beschreibung": (
+            "Sozialpsychologie erklärt Verhalten, das Ökonomie nicht erklären kann. "
+            "Von Priming über Dissonanz bis zu Herdenverhalten – dieser Pfad zeigt, "
+            "wie unsichtbare Kräfte unsere Urteile und Entscheidungen formen."
+        ),
+        "was_du_lernst": [
+            "Wie Priming Gedanken beeinflusst, bevor wir denken (Bargh 1996)",
+            "Warum wir Überzeugungen ändern, statt Verhalten (Festinger 1959)",
+            "Wie rationale Individuen kollektiv irren (Informationskaskade)",
+            "Den Konfirmationsfehler: Wir suchen Bestätigung, nicht Widerlegung",
+            "Dunning-Kruger: Unwissenheit über die eigene Unwissenheit",
+        ],
+        "puzzles": [
+            {"id": "priming",              "name": "Das Priming-Experiment",    "icon": "💡",  "dauer": "4 min", "schwierigkeit": "Einstieg"},
+            {"id": "kognitive-dissonanz",  "name": "Kognitive Dissonanz",       "icon": "🔄",  "dauer": "5 min", "schwierigkeit": "Mittel"},
+            {"id": "informationskaskade",  "name": "Informationskaskade",       "icon": "🫧",  "dauer": "5 min", "schwierigkeit": "Mittel"},
+            {"id": "konfirmationsfehler",  "name": "Der Konfirmationsfehler",   "icon": "🔍",  "dauer": "4 min", "schwierigkeit": "Einstieg"},
+            {"id": "dunning-kruger",       "name": "Dunning-Kruger-Effekt",     "icon": "📉",  "dauer": "5 min", "schwierigkeit": "Mittel"},
+            {"id": "framing",              "name": "Framing-Effekt",            "icon": "🖼️", "dauer": "4 min", "schwierigkeit": "Einstieg"},
+            {"id": "anker-experiment",     "name": "Der Anker-Effekt",          "icon": "⚓",  "dauer": "4 min", "schwierigkeit": "Einstieg"},
+            {"id": "survivorship-bias",    "name": "Survivorship Bias",         "icon": "✈️", "dauer": "5 min", "schwierigkeit": "Mittel"},
+        ],
+    },
+    {
+        "id": "kommunikation",
+        "title": "Kommunikation & Verhandlung",
+        "subtitle": "Überzeugend argumentieren – rational verhandeln",
+        "icon": "💬",
+        "color": "teal",
+        "level": "Einsteiger → Fortgeschritten",
+        "dauer": "ca. 40 min",
+        "beschreibung": (
+            "Verhandlung ist angewandte Spieltheorie. "
+            "Dieser Pfad verbindet BATNA-Kalkulation, Trugschluss-Erkennung und "
+            "klassische Entscheidungsparadoxe zu einem kohärenten Kommunikations-Toolkit."
+        ),
+        "was_du_lernst": [
+            "BATNA: deine Verhandlungsmacht kommt aus deiner besten Alternative",
+            "Die 5 häufigsten Trugschlüsse erkennen und kontern",
+            "Warum rationale Akteure systematisch zu wenig kooperieren",
+            "Informationsasymmetrie als Verhandlungsvorteil (Akerlof, Spence)",
+            "Anker setzen: der erste Wert prägt das gesamte Ergebnis",
+        ],
+        "puzzles": [
+            {"id": "batna",            "name": "BATNA – Verhandlungsmacht",   "icon": "🤝",  "dauer": "5 min", "schwierigkeit": "Einstieg"},
+            {"id": "trugschluesse",    "name": "Trugschlüsse erkennen",       "icon": "🧩",  "dauer": "5 min", "schwierigkeit": "Mittel"},
+            {"id": "marktverlust",     "name": "Markt für Zitronen",          "icon": "🍋",  "dauer": "5 min", "schwierigkeit": "Mittel"},
+            {"id": "anker-experiment", "name": "Der Anker-Effekt",            "icon": "⚓",  "dauer": "4 min", "schwierigkeit": "Einstieg"},
+            {"id": "reisenden-dilemma","name": "Reisenden-Dilemma",          "icon": "🧳",  "dauer": "4 min", "schwierigkeit": "Mittel"},
+            {"id": "hotelling",        "name": "Hotelling-Gesetz",            "icon": "🏖️", "dauer": "3 min", "schwierigkeit": "Einstieg"},
+            {"id": "allais",           "name": "Allais-Paradoxon",            "icon": "🎰",  "dauer": "5 min", "schwierigkeit": "Mittel"},
+            {"id": "condorcet",        "name": "Condorcet-Paradoxon",         "icon": "🗳️", "dauer": "5 min", "schwierigkeit": "Fortgeschritten"},
+        ],
+    },
+    {
         "id": "spieltheorie",
         "title": "Spieltheorie-Paradoxe",
         "subtitle": "Entscheidungen, die sich selbst widersprechen",
@@ -193,6 +255,8 @@ COLOR_MAP = {
     "amber":   {"bg": "bg-amber-500",   "light": "bg-amber-50",   "border": "border-amber-200",   "text": "text-amber-700",   "badge": "bg-amber-100 text-amber-800",   "btn": "bg-amber-600 hover:bg-amber-700",   "ring": "ring-amber-400"},
     "rose":    {"bg": "bg-rose-500",    "light": "bg-rose-50",    "border": "border-rose-200",    "text": "text-rose-700",    "badge": "bg-rose-100 text-rose-800",    "btn": "bg-rose-600 hover:bg-rose-700",    "ring": "ring-rose-400"},
     "indigo":  {"bg": "bg-indigo-500",  "light": "bg-indigo-50",  "border": "border-indigo-200",  "text": "text-indigo-700",  "badge": "bg-indigo-100 text-indigo-800",  "btn": "bg-indigo-600 hover:bg-indigo-700",  "ring": "ring-indigo-400"},
+    "pink":    {"bg": "bg-pink-500",    "light": "bg-pink-50",    "border": "border-pink-200",    "text": "text-pink-700",    "badge": "bg-pink-100 text-pink-800",    "btn": "bg-pink-600 hover:bg-pink-700",    "ring": "ring-pink-400"},
+    "teal":    {"bg": "bg-teal-500",    "light": "bg-teal-50",    "border": "border-teal-200",    "text": "text-teal-700",    "badge": "bg-teal-100 text-teal-800",    "btn": "bg-teal-600 hover:bg-teal-700",    "ring": "ring-teal-400"},
 }
 
 

@@ -49,8 +49,8 @@
         {% endfor %}
     {% endfor %}
     {% if gruppe_games %}
-    <div class="mb-12">
-        <div class="flex items-start gap-4 mb-5">
+    <div class="mb-12 spiel-gruppe" data-grp="{{ gruppe_name }}">
+        <button class="grp-header w-full flex items-start gap-4 mb-5 text-left select-none group" title="Klicken zum Ein-/Ausklappen">
             <div class="flex-1">
                 <div class="flex items-center gap-3 mb-1">
                     <span class="bg-{{ farbe }}-100 text-{{ farbe }}-700 text-sm font-bold px-4 py-2 rounded-xl">
@@ -58,11 +58,12 @@
                     </span>
                     <div class="h-px bg-slate-200 flex-1"></div>
                     <span class="text-xs text-slate-400">{{ gruppe_games|length }} Spiele</span>
+                    <svg class="grp-chevron w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
                 </div>
                 <p class="text-xs text-slate-400 mt-2 ml-1">{{ beschreibung }}</p>
             </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        </button>
+        <div class="grp-body grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             {% for game in gruppe_games %}
             <a href="/spiele/{{ game.id }}"
                class="block bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md hover:border-{{ farbe }}-200 transition-all group">
@@ -87,5 +88,33 @@
     {% endfor %}
 
 </div>
+
+<script>
+(function() {
+    const STORAGE = 'spiele_acc_v1';
+    let state = {};
+    try { state = JSON.parse(sessionStorage.getItem(STORAGE) || '{}'); } catch(e) {}
+    function save() { try { sessionStorage.setItem(STORAGE, JSON.stringify(state)); } catch(e) {} }
+
+    document.querySelectorAll('.grp-header').forEach(function(btn) {
+        const sec = btn.closest('.spiel-gruppe');
+        const grp = sec.dataset.grp;
+        const body = sec.querySelector('.grp-body');
+        const chev = btn.querySelector('.grp-chevron');
+
+        if (state[grp] === 'collapsed') {
+            body.classList.add('hidden');
+            if (chev) chev.style.transform = 'rotate(180deg)';
+        }
+
+        btn.addEventListener('click', function() {
+            const isHidden = body.classList.toggle('hidden');
+            if (chev) chev.style.transform = isHidden ? 'rotate(180deg)' : '';
+            state[grp] = isHidden ? 'collapsed' : 'expanded';
+            save();
+        });
+    });
+})();
+</script>
 
 {% endblock %}

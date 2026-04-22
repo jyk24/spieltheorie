@@ -497,6 +497,48 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Spieltheorie",
     },
+    # ── Psychologie & Sozialverhalten ─────────────────────────────────────────
+    {
+        "id": "priming",
+        "name": "Das Priming-Experiment",
+        "icon": "💡",
+        "beschreibung": "Fünf Wörter – und deine nächste Assoziation verschiebt sich messbar. Erlebe Priming am eigenen Beispiel: Beeinflusst ein unsichtbarer Kontext deine spontanen Gedanken?",
+        "typ": "Psychologie-Experiment",
+        "schwierigkeit": "Einsteiger",
+        "dauer": "4 min",
+        "kategorie": "Psychologie",
+    },
+    {
+        "id": "kognitive-dissonanz",
+        "name": "Kognitive Dissonanz",
+        "icon": "🔄",
+        "beschreibung": "Festinger 1959: Wer eine langweilige Aufgabe für 1 Dollar als interessant bezeichnet, glaubt das hinterher wirklich – mehr als jemand mit 20 Dollar. Warum ändern wir Überzeugungen statt Verhalten?",
+        "typ": "Psychologie-Quiz",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Psychologie",
+    },
+    # ── Kommunikation & Rhetorik ──────────────────────────────────────────────
+    {
+        "id": "batna",
+        "name": "BATNA – Die Verhandlungsmacht",
+        "icon": "🤝",
+        "beschreibung": "Deine Stärke in Verhandlungen hängt nicht davon ab, wie sehr du willst – sondern wie gut deine Alternative ist. Kalkuliere deinen BATNA und visualisiere die Verhandlungszone interaktiv.",
+        "typ": "Verhandlungs-Simulation",
+        "schwierigkeit": "Einsteiger",
+        "dauer": "5 min",
+        "kategorie": "Kommunikation",
+    },
+    {
+        "id": "trugschluesse",
+        "name": "Trugschlüsse erkennen",
+        "icon": "🧩",
+        "beschreibung": "5 Argumente, die überzeugend klingen – aber logisch fehlerhaft sind. Ad Hominem, Strohmann, Falsche Dichotomie, Slippery Slope, Appeal to Authority. Erkennst du sie alle?",
+        "typ": "Logik-Quiz",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Kommunikation",
+    },
 ]
 
 
@@ -2536,4 +2578,48 @@ def informationskaskade_page(request: Request):
 def marktverlust_page(request: Request):
     return templates.TemplateResponse(
         request, "raetsel/marktverlust.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Priming-Experiment
+# ---------------------------------------------------------------------------
+
+@router.get("/priming", response_class=HTMLResponse)
+def priming_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/priming.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Kognitive Dissonanz
+# ---------------------------------------------------------------------------
+
+@router.get("/kognitive-dissonanz", response_class=HTMLResponse)
+def kognitive_dissonanz_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/kognitive_dissonanz.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# BATNA – Verhandlungsmacht
+# ---------------------------------------------------------------------------
+
+@router.get("/batna", response_class=HTMLResponse)
+def batna_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/batna.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Trugschlüsse erkennen
+# ---------------------------------------------------------------------------
+
+@router.get("/trugschluesse", response_class=HTMLResponse)
+def trugschluesse_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/trugschluesse.html", {"active_page": "raetsel"}
     )

@@ -60,6 +60,8 @@
             ("Logik",              "🧩"),
             ("Kognition",          "🧠"),
             ("Spieltheorie",       "♟️"),
+            ("Psychologie",        "🧬"),
+            ("Kommunikation",      "💬"),
         ] %}
         {% for kat_name, kat_icon in kategorien_meta %}
         {% set count = raetsel | selectattr('kategorie', 'equalto', kat_name) | list | length %}
@@ -87,21 +89,24 @@
         ("Logik",              "🧩", "bg-amber-100", "text-amber-700", "border-amber-200", "hover:border-amber-300"),
         ("Kognition",          "🧠", "bg-rose-100", "text-rose-700", "border-rose-200", "hover:border-rose-300"),
         ("Spieltheorie",       "♟️", "bg-indigo-100", "text-indigo-700", "border-indigo-200", "hover:border-indigo-300"),
+        ("Psychologie",        "🧬", "bg-pink-100", "text-pink-700", "border-pink-200", "hover:border-pink-300"),
+        ("Kommunikation",      "💬", "bg-teal-100", "text-teal-700", "border-teal-200", "hover:border-teal-300"),
     ] %}
 
     {% for kat_name, kat_icon, kat_bg, kat_text, kat_border, kat_hover in kategorien %}
     {% set gruppe = raetsel | selectattr('kategorie', 'equalto', kat_name) | list %}
     {% if gruppe %}
     <div class="mb-12 kategorie-section" data-kat="{{ kat_name }}">
-        <div class="flex items-center gap-3 mb-5">
+        <button class="kat-header w-full flex items-center gap-3 mb-5 text-left select-none group" title="Klicken zum Ein-/Ausklappen">
             <span class="{{ kat_bg }} {{ kat_text }} text-sm font-bold px-4 py-2 rounded-xl flex items-center gap-2">
                 <span>{{ kat_icon }}</span>
                 <span>{{ kat_name }}</span>
             </span>
             <div class="flex-1 h-px bg-slate-200"></div>
             <span class="text-xs text-slate-400 kat-count">{{ gruppe|length }} Rätsel</span>
-        </div>
-        <div class="grid gap-3">
+            <svg class="kat-chevron w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+        </button>
+        <div class="kat-body grid gap-3">
             {% for r in gruppe %}
             <a id="{{ r.id }}"
                href="/raetsel/{{ r.id }}"
@@ -202,6 +207,52 @@ function setCat(btn, cat) {
     btn.classList.remove('bg-slate-100', 'text-slate-600');
     filterRaetsel();
 }
+
+// ── Accordion ──
+(function() {
+    const STORAGE = 'raetsel_acc_v1';
+    let state = {};
+    try { state = JSON.parse(sessionStorage.getItem(STORAGE) || '{}'); } catch(e) {}
+
+    function save() { try { sessionStorage.setItem(STORAGE, JSON.stringify(state)); } catch(e) {} }
+
+    document.querySelectorAll('.kat-header').forEach(function(btn) {
+        const sec = btn.closest('.kategorie-section');
+        const kat = sec.dataset.kat;
+        const body = sec.querySelector('.kat-body');
+        const chev = btn.querySelector('.kat-chevron');
+
+        if (state[kat] === 'collapsed') {
+            body.classList.add('hidden');
+            if (chev) chev.style.transform = 'rotate(180deg)';
+        }
+
+        btn.addEventListener('click', function() {
+            const isHidden = body.classList.toggle('hidden');
+            if (chev) chev.style.transform = isHidden ? 'rotate(180deg)' : '';
+            state[kat] = isHidden ? 'collapsed' : 'expanded';
+            save();
+        });
+    });
+
+    // Patch filterRaetsel to expand matching sections when searching
+    const _origFilter = filterRaetsel;
+    filterRaetsel = function() {
+        _origFilter();
+        const q = (document.getElementById('rs-search').value || '').trim();
+        const activeCat = (document.querySelector('.cat-btn.active') || {}).dataset?.cat || '';
+        if (q || activeCat) {
+            document.querySelectorAll('.kategorie-section').forEach(function(sec) {
+                if (sec.style.display !== 'none') {
+                    const body = sec.querySelector('.kat-body');
+                    const chev = sec.querySelector('.kat-chevron');
+                    if (body) { body.classList.remove('hidden'); }
+                    if (chev) chev.style.transform = '';
+                }
+            });
+        }
+    };
+})();
 </script>
 
 {% endblock %}

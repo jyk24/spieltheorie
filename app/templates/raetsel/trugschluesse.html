@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% block title %}Trugschlüsse erkennen – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🧩 Trugschlüsse erkennen</h1>
+        <p class="text-slate-500 mt-1">Argumente, die überzeugend klingen – aber logisch falsch sind. Erkennst du die 5 klassischen Trugschlüsse?</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 text-sm text-slate-700">
+        <p>Jede Frage zeigt ein reales Argument. Entscheide, welcher <strong>logische Trugschluss</strong> verwendet wird. Dein Ergebnis erscheint am Ende.</p>
+    </div>
+
+    <!-- Quiz -->
+    <div id="quiz"></div>
+    <div id="solution" class="hidden space-y-4"></div>
+</div>
+
+<script>
+const FRAGEN = [
+    {
+        argument: '"Max Müller fordert strengere Klimaschutzgesetze. Dabei fliegt er selbst mehrmals im Jahr in den Urlaub – wie kann man ihm das ernst nehmen?"',
+        optionen: [
+            { id: 'a', text: 'Ad Hominem – Angriff auf die Person statt auf das Argument', korrekt: true },
+            { id: 'b', text: 'Strohmann – das Argument wird verzerrt und dann widerlegt', korrekt: false },
+            { id: 'c', text: 'Falsche Dichotomie – es werden nur zwei Optionen präsentiert', korrekt: false },
+            { id: 'd', text: 'Slippery Slope – eine Kette unrealistischer Konsequenzen', korrekt: false },
+        ],
+        erklaerung: '<strong>Ad Hominem</strong> (lat. „gegen den Menschen"): Das Argument wird nicht inhaltlich widerlegt, sondern der Sprecher persönlich angegriffen. Ob Müller fliegt oder nicht, hat keinen logischen Einfluss auf die Frage, ob Klimaschutzgesetze sinnvoll sind. Die Inkonsistenz eines Sprechers sagt nichts über die Wahrheit seiner Aussage.',
+        beispiel: 'Tu quoque – die Unterform „du auch": „Du rauchst doch selbst!" beantwortet nicht, ob Rauchen schädlich ist.',
+    },
+    {
+        argument: '"Die Opposition fordert, die Verteidigungsausgaben nicht weiter zu erhöhen. Das bedeutet, sie will ein wehrloses Deutschland, das sich nicht mehr schützen kann."',
+        optionen: [
+            { id: 'a', text: 'Ad Hominem – Angriff auf die Person', korrekt: false },
+            { id: 'b', text: 'Strohmann – eine schwächere Version des Arguments wird widerlegt', korrekt: true },
+            { id: 'c', text: 'Appeal to Authority – Berufung auf eine Autorität', korrekt: false },
+            { id: 'd', text: 'Hasty Generalization – Verallgemeinerung aus zu wenigen Fällen', korrekt: false },
+        ],
+        erklaerung: '<strong>Strohmann</strong> (Straw Man): Das ursprüngliche Argument wird verzerrt, übertrieben oder vereinfacht dargestellt – sodass es einfacher angreifbar wird. Hier: „keine Erhöhung" wird zu „wehrlos". Wer dann den Strohmann widerlegt, hat das echte Argument nicht angetastet.',
+        beispiel: 'Klassisch in der Politik: „Wer Steuern senken will, will Schulen und Krankenhäuser abschaffen."',
+    },
+    {
+        argument: '"Entweder du bist für unser Sicherheitsgesetz, oder du bist auf der Seite der Kriminellen."',
+        optionen: [
+            { id: 'a', text: 'Slippery Slope – eine unrealistische Kausalkette', korrekt: false },
+            { id: 'b', text: 'Ad Hominem – Angriff auf die Person', korrekt: false },
+            { id: 'c', text: 'Falsche Dichotomie – nur zwei Optionen, obwohl mehr existieren', korrekt: true },
+            { id: 'd', text: 'Strohmann – verzerrte Darstellung', korrekt: false },
+        ],
+        erklaerung: '<strong>Falsche Dichotomie</strong> (False Dilemma): Es werden nur zwei Optionen präsentiert, als ob es keine anderen gäbe – obwohl in Wirklichkeit viele Positionen möglich sind. Man kann das Gesetz aus Gründen ablehnen, die nichts mit Unterstützung von Kriminalität zu tun haben: Datenschutz, Verhältnismäßigkeit, Grundrechte.',
+        beispiel: '„Wer nicht für uns ist, ist gegen uns." – George W. Bush, 2001.',
+    },
+    {
+        argument: '"Wenn wir heute Homeoffice erlauben, dann wollen bald alle nur noch von zuhause arbeiten. Dann sind unsere Büros leer, die Teamkultur verfällt, und am Ende bricht das ganze Unternehmen zusammen."',
+        optionen: [
+            { id: 'a', text: 'Slippery Slope – unrealistische Kausalkette ohne Belege', korrekt: true },
+            { id: 'b', text: 'Falsche Dichotomie – nur zwei Optionen dargestellt', korrekt: false },
+            { id: 'c', text: 'Appeal to Tradition – das war früher schon immer so', korrekt: false },
+            { id: 'd', text: 'Hasty Generalization – eine Verallgemeinerung aus wenigen Fällen', korrekt: false },
+        ],
+        erklaerung: '<strong>Slippery Slope</strong> (schiefe Ebene): Es wird eine Kausalkette von einer Handlung zu extremen Konsequenzen gezogen – ohne zu belegen, warum jeder Schritt zwingend folgt. Das erste Ereignis muss den Rest nicht auslösen. Homeoffice-Erlaubnis bedeutet nicht automatisch den Zusammenbruch der Unternehmenskultur.',
+        beispiel: '„Wenn wir Marihuana legalisieren, wird bald jeder harte Drogen nehmen." – die Zwischenschritte fehlen.',
+    },
+    {
+        argument: '"Professor Schneider hat in seinem Buch geschrieben, dass tägliche Vitaminpräparate gesund sind. Er ist Chemiker – also sollten wir das Empfohlene kaufen."',
+        optionen: [
+            { id: 'a', text: 'Ad Hominem – Angriff auf den Professor', korrekt: false },
+            { id: 'b', text: 'Strohmann – das Argument wird verzerrt', korrekt: false },
+            { id: 'c', text: 'Slippery Slope – unrealistische Kausalkette', korrekt: false },
+            { id: 'd', text: 'Appeal to Authority – Berufung auf falsche/irrelevante Autorität', korrekt: true },
+        ],
+        erklaerung: '<strong>Appeal to Authority</strong> (argumentum ad verecundiam): Eine Autorität wird zitiert, die entweder nicht qualifiziert ist (Chemiker ≠ Ernährungswissenschaftler), oder deren Aussage durch Eigeninteresse beeinflusst sein könnte. Autorität ersetzt keine empirische Evidenz. Relevant ist: stimmt die Aussage, und hat die Autorität tatsächlich Expertise im fraglichen Bereich?',
+        beispiel: '„Prominenter Schauspieler empfiehlt Diät X – deshalb funktioniert sie." – Bekanntheit ist keine Kompetenz.',
+    },
+];
+
+let current = 0;
+let score = 0;
+const results = [];
+
+function renderFrage() {
+    if (current >= FRAGEN.length) {
+        showSolution();
+        return;
+    }
+    const f = FRAGEN[current];
+    const quiz = document.getElementById('quiz');
+    quiz.innerHTML = `
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+        <div class="flex items-center justify-between mb-4">
+            <span class="text-xs text-slate-400">Argument ${current + 1} von ${FRAGEN.length}</span>
+            <span class="text-xs font-bold text-indigo-600">${score}/${current} erkannt</span>
+        </div>
+        <div class="bg-slate-50 border-l-4 border-slate-400 rounded-r-xl p-4 mb-5">
+            <p class="text-slate-700 text-sm italic leading-relaxed">${f.argument}</p>
+        </div>
+        <p class="font-bold text-slate-800 mb-3">Welcher Trugschluss wird hier verwendet?</p>
+        <div class="space-y-2">
+            ${f.optionen.map(o => `
+            <button onclick="answer('${o.id}')"
+                    class="opt-btn w-full text-left px-4 py-3 rounded-xl border-2 border-slate-200 hover:border-teal-400 hover:bg-teal-50 transition-all text-sm text-slate-700"
+                    data-korrekt="${o.korrekt}">
+                ${o.text}
+            </button>`).join('')}
+        </div>
+        <div id="feedback" class="hidden mt-4"></div>
+    </div>`;
+}
+
+function answer(optId) {
+    const f = FRAGEN[current];
+    const opt = f.optionen.find(o => o.id === optId);
+    const korrekt = opt.korrekt;
+    if (korrekt) score++;
+    results.push({ korrekt, name: f.optionen.find(o => o.korrekt).text.split('–')[0].trim() });
+
+    document.querySelectorAll('.opt-btn').forEach(btn => {
+        btn.disabled = true;
+        const isK = btn.dataset.korrekt === 'true';
+        const isSelected = btn.textContent.trim().startsWith(opt.text.trim().substring(0, 8));
+        if (isK) {
+            btn.className = btn.className.replace('border-slate-200 hover:border-teal-400 hover:bg-teal-50', 'border-emerald-400 bg-emerald-50 text-emerald-800 font-semibold');
+        } else if (!korrekt && isSelected) {
+            btn.className = btn.className.replace('border-slate-200 hover:border-teal-400 hover:bg-teal-50', 'border-rose-300 bg-rose-50 text-rose-700');
+        }
+    });
+
+    const feedback = document.getElementById('feedback');
+    feedback.classList.remove('hidden');
+    feedback.innerHTML = `
+    <div class="${korrekt ? 'bg-emerald-50 border border-emerald-200' : 'bg-amber-50 border border-amber-200'} rounded-xl p-4 text-sm">
+        <p class="font-bold ${korrekt ? 'text-emerald-800' : 'text-amber-800'} mb-2">${korrekt ? '✓ Richtig erkannt!' : '→ Das war: ' + f.optionen.find(o => o.korrekt).text.split('–')[0].trim()}</p>
+        <p class="text-xs text-slate-600 leading-relaxed mb-2">${f.erklaerung}</p>
+        <p class="text-xs text-slate-500 italic">Beispiel: ${f.beispiel}</p>
+    </div>
+    <button onclick="nextFrage()" class="mt-3 w-full bg-teal-600 text-white py-2.5 rounded-xl font-bold hover:bg-teal-700 transition-colors text-sm">
+        ${current < FRAGEN.length - 1 ? 'Nächstes Argument →' : 'Gesamtergebnis →'}
+    </button>`;
+}
+
+function nextFrage() {
+    current++;
+    renderFrage();
+}
+
+function showSolution() {
+    document.getElementById('quiz').classList.add('hidden');
+    const sol = document.getElementById('solution');
+    sol.classList.remove('hidden');
+
+    const pct = Math.round(score / FRAGEN.length * 100);
+    const grade = score === 5 ? 'Perfekt!' : score >= 4 ? 'Sehr gut!' : score >= 3 ? 'Gut!' : score >= 2 ? 'Solide Basis' : 'Zum Nachlesen empfohlen';
+
+    sol.innerHTML = `
+    <div class="space-y-4">
+        <div class="${score >= 4 ? 'bg-emerald-50 border-2 border-emerald-400' : score >= 3 ? 'bg-blue-50 border-2 border-blue-400' : 'bg-amber-50 border-2 border-amber-400'} rounded-xl p-5">
+            <p class="font-bold text-xl ${score >= 4 ? 'text-emerald-800' : score >= 3 ? 'text-blue-800' : 'text-amber-800'}">${score}/${FRAGEN.length} – ${grade}</p>
+            <div class="flex gap-1 mt-2">
+                ${results.map((r, i) => `<div class="flex-1 h-2 rounded-full ${r.korrekt ? 'bg-emerald-400' : 'bg-rose-300'}"></div>`).join('')}
+            </div>
+            <p class="text-sm mt-3 ${score >= 4 ? 'text-emerald-700' : score >= 3 ? 'text-blue-700' : 'text-amber-700'}">
+                ${score === 5 ? 'Du erkennst logische Trugschlüsse zuverlässig – eine seltene und wertvolle Fähigkeit.' :
+                  score >= 4 ? 'Du hast ein gutes Gespür für fehlerhafte Argumentation entwickelt.' :
+                  score >= 3 ? 'Die häufigsten Trugschlüsse erkennst du bereits. Übe weiter!' :
+                  'Trugschlüsse sind subtil – nochmal durchgehen lohnt sich.'}
+            </p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 text-sm text-slate-700">
+            <p class="font-bold text-slate-800 mb-3">Die 5 Trugschlüsse im Überblick</p>
+            <div class="space-y-3">
+                ${[
+                    ['Ad Hominem', 'Angriff auf die Person statt das Argument', 'Macht den Sprecher zum Thema – nicht den Inhalt. Gegenmaßnahme: „Lass uns bei den Argumenten bleiben."'],
+                    ['Strohmann', 'Verzerrte Version des Arguments wird widerlegt', 'Formuliere das Argument des Gegenübers immer in seiner stärksten Form – dann widerlege das. (Stahlmann-Prinzip)'],
+                    ['Falsche Dichotomie', 'Nur zwei Optionen, obwohl mehr existieren', 'Frage: „Gibt es wirklich nur diese zwei Möglichkeiten?" Fast immer gibt es eine dritte Perspektive.'],
+                    ['Slippery Slope', 'Unrealistische Kausalkette ohne Belege', 'Verlange Belege für jeden Schritt der Kette. Welcher Mechanismus macht den nächsten Schritt zwingend?'],
+                    ['Appeal to Authority', 'Falsche oder irrelevante Autorität zitiert', 'Prüfe: Ist die Autorität in diesem Bereich kompetent? Hat sie Eigeninteressen? Gibt es Gegenmeinungen?'],
+                ].map(([name, kurz, tipp]) => `
+                <div class="flex gap-3 bg-slate-50 rounded-lg p-3 text-xs">
+                    <div class="shrink-0">
+                        <p class="font-bold text-teal-700">${name}</p>
+                        <p class="text-slate-500">${kurz}</p>
+                    </div>
+                    <div class="border-l border-slate-200 pl-3">
+                        <p class="text-slate-600">${tipp}</p>
+                    </div>
+                </div>`).join('')}
+            </div>
+        </div>
+
+        <div class="bg-teal-50 border border-teal-200 rounded-xl p-4 text-sm">
+            <p class="font-semibold text-teal-800 mb-2">Warum Trugschlüsse so wirksam sind</p>
+            <p class="text-xs text-teal-700 leading-relaxed">Trugschlüsse nutzen kognitive Abkürzungen (Heuristiken) aus. Ad Hominem aktiviert die Glaubwürdigkeitsheuristik, Slippery Slope die Verfügbarkeitsheuristik, Appeal to Authority unsere soziale Orientierung an Experten. Wer diese Mechanismen kennt, ist weniger anfällig – und überzeugender in eigenen Argumentationen.</p>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+            <a href="/raetsel/trugschluesse" class="bg-teal-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-teal-700">Nochmal spielen</a>
+            <a href="/raetsel/batna" class="border border-teal-200 text-teal-700 px-5 py-2 rounded-lg text-sm font-medium hover:bg-teal-50">🤝 BATNA-Verhandlung</a>
+            <a href="/skills#rhetorik" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">📖 Rhetorik & Kommunikation</a>
+        </div>
+    </div>`;
+}
+
+renderFrage();
+</script>
+
+{% endblock %}

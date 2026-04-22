@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+{% block title %}Skills & Kompetenzen – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-4xl mx-auto">
+
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-slate-800">💡 Skills & Kompetenzen</h1>
+        <p class="text-slate-500 mt-1">Rhetorik, Führung, Präsentation und Psychologie – Theorie, Frameworks und interaktive Übungen.</p>
+    </div>
+
+    <!-- Quick nav -->
+    <div class="flex flex-wrap gap-2 mb-8">
+        <a href="#rhetorik" class="px-4 py-2 rounded-xl bg-indigo-50 text-indigo-700 text-sm font-semibold hover:bg-indigo-100 transition-colors">💬 Rhetorik & Kommunikation</a>
+        <a href="#fuehrung" class="px-4 py-2 rounded-xl bg-amber-50 text-amber-700 text-sm font-semibold hover:bg-amber-100 transition-colors">🏆 Führungskonzepte</a>
+        <a href="#praesentation" class="px-4 py-2 rounded-xl bg-emerald-50 text-emerald-700 text-sm font-semibold hover:bg-emerald-100 transition-colors">📊 Präsentation</a>
+        <a href="#psychologie" class="px-4 py-2 rounded-xl bg-pink-50 text-pink-700 text-sm font-semibold hover:bg-pink-100 transition-colors">🧬 Psychologie</a>
+    </div>
+
+    <!-- ── 1. Rhetorik & Kommunikation ─────────────────────────────────────── -->
+    <section id="rhetorik" class="mb-12 scroll-mt-20">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="bg-indigo-100 text-indigo-700 text-sm font-bold px-4 py-2 rounded-xl flex items-center gap-2">
+                <span>💬</span><span>Rhetorik & Kommunikation</span>
+            </span>
+            <div class="flex-1 h-px bg-slate-200"></div>
+        </div>
+
+        <p class="text-slate-600 text-sm leading-relaxed mb-5">
+            Kommunikation ist kein Talent – es ist ein System. Von Aristoteles' Überzeugungsdreieck bis zur modernen Verhandlungstheorie: Wer die Struktur kennt, überzeugt systematischer.
+        </p>
+
+        <!-- Konzeptkarten -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
+            <div class="bg-white border border-indigo-100 rounded-xl p-4">
+                <div class="text-2xl mb-2">🏛️</div>
+                <p class="font-bold text-slate-800 text-sm mb-1">Ethos · Pathos · Logos</p>
+                <p class="text-xs text-slate-500 leading-relaxed">Aristoteles (350 v.Chr.): <strong>Ethos</strong> = Glaubwürdigkeit des Sprechers. <strong>Pathos</strong> = emotionaler Appell. <strong>Logos</strong> = logisches Argument. Alle drei braucht jede erfolgreiche Überzeugung.</p>
+            </div>
+            <div class="bg-white border border-indigo-100 rounded-xl p-4">
+                <div class="text-2xl mb-2">👂</div>
+                <p class="font-bold text-slate-800 text-sm mb-1">4-Ohren-Modell</p>
+                <p class="text-xs text-slate-500 leading-relaxed">Schulz von Thun (1981): Jede Botschaft hat vier Ebenen – <strong>Sachinhalt</strong>, <strong>Selbstoffenbarung</strong>, <strong>Beziehung</strong> und <strong>Appell</strong>. Missverständnisse entstehen, weil Sender und Empfänger unterschiedliche Ohren benutzen.</p>
+            </div>
+            <div class="bg-white border border-indigo-100 rounded-xl p-4">
+                <div class="text-2xl mb-2">⚓</div>
+                <p class="font-bold text-slate-800 text-sm mb-1">Ankern in Verhandlungen</p>
+                <p class="text-xs text-slate-500 leading-relaxed">Wer zuerst einen Wert nennt, setzt den Anker – alle folgenden Zahlen werden relativ dazu bewertet. Kahneman & Tversky zeigten: der erste Wert beeinflusst das Ergebnis dramatisch, selbst wenn er offensichtlich zufällig ist.</p>
+            </div>
+        </div>
+
+        <!-- Framework-Box: BATNA -->
+        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-5 mb-5">
+            <p class="font-bold text-indigo-800 mb-2">🔑 Framework: BATNA – deine Verhandlungsmacht</p>
+            <p class="text-sm text-indigo-700 mb-3">Fisher & Ury, <em>Getting to Yes</em> (1981): Deine Stärke in einer Verhandlung hängt nicht davon ab, wie dringend du willst – sondern wie gut deine beste Alternative ist.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div class="bg-white rounded-lg p-3 border border-indigo-100">
+                    <p class="font-bold text-indigo-700 mb-1">BATNA</p>
+                    <p class="text-slate-600">Best Alternative To a Negotiated Agreement – was passiert, wenn die Verhandlung scheitert?</p>
+                </div>
+                <div class="bg-white rounded-lg p-3 border border-indigo-100">
+                    <p class="font-bold text-indigo-700 mb-1">Reservation Price</p>
+                    <p class="text-slate-600">Dein absoluter Mindestwert. Darunter gehst du nicht – und du weißt ihn vor der Verhandlung.</p>
+                </div>
+                <div class="bg-white rounded-lg p-3 border border-indigo-100">
+                    <p class="font-bold text-indigo-700 mb-1">ZOPA</p>
+                    <p class="text-slate-600">Zone of Possible Agreement – der Bereich zwischen deinem Minimum und dem Maximum der Gegenseite.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Relevante Inhalte -->
+        <div class="flex flex-wrap gap-2">
+            <span class="text-xs text-slate-400 self-center">Üben:</span>
+            <a href="/raetsel/batna" class="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg hover:bg-indigo-700 transition-colors">🤝 BATNA-Verhandlung</a>
+            <a href="/raetsel/trugschluesse" class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-lg hover:bg-indigo-200 transition-colors">🧩 Trugschlüsse erkennen</a>
+            <a href="/raetsel/anker-experiment" class="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg hover:bg-slate-200 transition-colors">⚓ Anker-Effekt</a>
+            <a href="/raetsel/framing" class="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg hover:bg-slate-200 transition-colors">🖼️ Framing-Effekt</a>
+        </div>
+    </section>
+
+    <!-- ── 2. Führungskonzepte ──────────────────────────────────────────────── -->
+    <section id="fuehrung" class="mb-12 scroll-mt-20">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="bg-amber-100 text-amber-700 text-sm font-bold px-4 py-2 rounded-xl flex items-center gap-2">
+                <span>🏆</span><span>Führungskonzepte</span>
+            </span>
+            <div class="flex-1 h-px bg-slate-200"></div>
+        </div>
+
+        <p class="text-slate-600 text-sm leading-relaxed mb-5">
+            Führung ist keine Eigenschaft – sie ist eine Relation. Dasselbe Verhalten ist in einer Situation optimal, in einer anderen kontraproduktiv. Die Spieltheorie liefert die Mechanismen dahinter.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
+            <div class="bg-white border border-amber-100 rounded-xl p-4">
+                <div class="text-2xl mb-2">📐</div>
+                <p class="font-bold text-slate-800 text-sm mb-1">Situative Führung</p>
+                <p class="text-xs text-slate-500 leading-relaxed">Hersey & Blanchard (1969): Führungsstil richtet sich nach der Reife des Mitarbeiters. <strong>Anweisen</strong> → <strong>Coachen</strong> → <strong>Unterstützen</strong> → <strong>Delegieren</strong>. Kein Stil ist universal – der Kontext entscheidet.</p>
+            </div>
+            <div class="bg-white border border-amber-100 rounded-xl p-4">
+                <div class="text-2xl mb-2">⚡</div>
+                <p class="font-bold text-slate-800 text-sm mb-1">Transformational vs. Transaktional</p>
+                <p class="text-xs text-slate-500 leading-relaxed">Burns (1978): <strong>Transaktionale</strong> Führung = Belohnung/Strafe-Tausch. <strong>Transformationale</strong> Führung = Sinn vermitteln, Vision schaffen, intrinsische Motivation wecken. In Wissensarbeit überwiegt die transformationale.</p>
+            </div>
+            <div class="bg-white border border-amber-100 rounded-xl p-4">
+                <div class="text-2xl mb-2">🔗</div>
+                <p class="font-bold text-slate-800 text-sm mb-1">Principal-Agent-Problem</p>
+                <p class="text-xs text-slate-500 leading-relaxed">Jensen & Meckling (1976): Wenn jemand im Auftrag eines anderen handelt, entstehen Interessenkonflikte. Der Agent (Mitarbeiter) kennt seinen Aufwand besser als der Principal (Chef) – <strong>Moral Hazard</strong> und <strong>Adverse Selektion</strong> sind die Folgen.</p>
+            </div>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-5">
+            <p class="font-bold text-amber-800 mb-2">🔑 Framework: Glaubwürdige Commitments</p>
+            <p class="text-sm text-amber-700 mb-3">Schelling (1960): Eine Drohung ist nur dann wirksam, wenn die Gegenseite glaubt, dass du sie ausführen wirst. Das Paradoxe: manchmal erhöht man seine Macht, indem man eigene Optionen bewusst aufgibt (<em>Burning Bridges</em>).</p>
+            <div class="grid grid-cols-2 gap-3 text-xs">
+                <div class="bg-white rounded-lg p-3 border border-amber-100">
+                    <p class="font-bold text-amber-700 mb-1">Leere Drohungen</p>
+                    <p class="text-slate-600">Wenn Ausführung für dich selbst schädlicher wäre als Nachgeben – niemand glaubt dir. Spieltheorie zeigt: deine Worte zählen nicht, deine Anreize zählen.</p>
+                </div>
+                <div class="bg-white rounded-lg p-3 border border-amber-100">
+                    <p class="font-bold text-amber-700 mb-1">Commitment-Devices</p>
+                    <p class="text-slate-600">Öffentliche Ankündigungen, Verträge, externe Kontrollinstanzen – Mechanismen, die deine eigene Handlungsfähigkeit einschränken, um Glaubwürdigkeit zu erzeugen.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+            <span class="text-xs text-slate-400 self-center">Üben:</span>
+            <a href="/spiele/vertrauen" class="text-xs bg-amber-600 text-white px-3 py-1.5 rounded-lg hover:bg-amber-700 transition-colors">🤝 Vertrauen-Spiel</a>
+            <a href="/spiele/gefangenendilemma" class="text-xs bg-amber-100 text-amber-700 px-3 py-1.5 rounded-lg hover:bg-amber-200 transition-colors">⚖️ Gefangenendilemma</a>
+            <a href="/raetsel/piraten" class="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg hover:bg-slate-200 transition-colors">🏴‍☠️ Piratenspiel</a>
+            <a href="/raetsel/henker" class="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg hover:bg-slate-200 transition-colors">⚖️ Henkerparadoxon</a>
+        </div>
+    </section>
+
+    <!-- ── 3. Präsentation & Überzeugung ───────────────────────────────────── -->
+    <section id="praesentation" class="mb-12 scroll-mt-20">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="bg-emerald-100 text-emerald-700 text-sm font-bold px-4 py-2 rounded-xl flex items-center gap-2">
+                <span>📊</span><span>Präsentation & Überzeugung</span>
+            </span>
+            <div class="flex-1 h-px bg-slate-200"></div>
+        </div>
+
+        <p class="text-slate-600 text-sm leading-relaxed mb-5">
+            Eine gute Präsentation ist keine Sammlung von Folien – sie ist ein Argument. Struktur, kognitive Last und visuelle Klarheit entscheiden darüber, ob eine Botschaft ankommt oder verloren geht.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
+            <div class="bg-white border border-emerald-100 rounded-xl p-4">
+                <div class="text-2xl mb-2">🔺</div>
+                <p class="font-bold text-slate-800 text-sm mb-1">Minto-Pyramide</p>
+                <p class="text-xs text-slate-500 leading-relaxed">Barbara Minto (1987, McKinsey): Beginne mit der Antwort, dann die Begründungen, dann die Details. <strong>SCQA</strong>: Situation → Complication → Question → Answer. Manager wollen das Ergebnis zuerst.</p>
+            </div>
+            <div class="bg-white border border-emerald-100 rounded-xl p-4">
+                <div class="text-2xl mb-2">🧠</div>
+                <p class="font-bold text-slate-800 text-sm mb-1">Cognitive Load</p>
+                <p class="text-xs text-slate-500 leading-relaxed">Sweller (1988): Das Arbeitsgedächtnis verarbeitet ca. 4 Chunks gleichzeitig. Überfüllte Folien erzeugen <strong>extrinsische Belastung</strong>. Regel: ein Punkt pro Folie, maximale Klarheit, keine Dekoration.</p>
+            </div>
+            <div class="bg-white border border-emerald-100 rounded-xl p-4">
+                <div class="text-2xl mb-2">📉</div>
+                <p class="font-bold text-slate-800 text-sm mb-1">Daten klar kommunizieren</p>
+                <p class="text-xs text-slate-500 leading-relaxed">Edward Tufte: <strong>Data-Ink-Ratio</strong> maximieren – alles entfernen, was nicht der Datenübertragung dient. Cleveland & McGill: Längen und Positionen werden präziser wahrgenommen als Flächen und Winkel.</p>
+            </div>
+        </div>
+
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5 mb-5">
+            <p class="font-bold text-emerald-800 mb-2">🔑 Framework: Die Story-Struktur</p>
+            <p class="text-sm text-emerald-700 mb-3">Menschen denken in Narrativen, nicht in Daten. McKinsey's "Situation → Complication → Resolution" (SCR) macht aus Fakten eine Geschichte, der das Gehirn folgen kann.</p>
+            <div class="grid grid-cols-3 gap-3 text-xs">
+                <div class="bg-white rounded-lg p-3 border border-emerald-100 text-center">
+                    <p class="font-bold text-emerald-700 text-base mb-1">1. Situation</p>
+                    <p class="text-slate-600">Was ist der unbestrittene Ausgangszustand? (Fakten, die alle kennen)</p>
+                </div>
+                <div class="bg-white rounded-lg p-3 border border-emerald-100 text-center">
+                    <p class="font-bold text-emerald-700 text-base mb-1">2. Complication</p>
+                    <p class="text-slate-600">Was hat sich verändert oder droht? Das erzeugt Spannung und Relevanz.</p>
+                </div>
+                <div class="bg-white rounded-lg p-3 border border-emerald-100 text-center">
+                    <p class="font-bold text-emerald-700 text-base mb-1">3. Resolution</p>
+                    <p class="text-slate-600">Deine Antwort, Empfehlung oder Lösung. Klar, konkret, umsetzbar.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+            <span class="text-xs text-slate-400 self-center">Verwandte Rätsel:</span>
+            <a href="/raetsel/survivorship-bias" class="text-xs bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-lg hover:bg-emerald-200 transition-colors">✈️ Survivorship Bias</a>
+            <a href="/raetsel/simpson" class="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg hover:bg-slate-200 transition-colors">📊 Simpson-Paradoxon</a>
+            <a href="/raetsel/dunning-kruger" class="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg hover:bg-slate-200 transition-colors">📉 Dunning-Kruger</a>
+            <a href="/raetsel/framing" class="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg hover:bg-slate-200 transition-colors">🖼️ Framing</a>
+        </div>
+    </section>
+
+    <!-- ── 4. Psychologie ──────────────────────────────────────────────────── -->
+    <section id="psychologie" class="mb-12 scroll-mt-20">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="bg-pink-100 text-pink-700 text-sm font-bold px-4 py-2 rounded-xl flex items-center gap-2">
+                <span>🧬</span><span>Psychologie</span>
+            </span>
+            <div class="flex-1 h-px bg-slate-200"></div>
+        </div>
+
+        <p class="text-slate-600 text-sm leading-relaxed mb-5">
+            Sozialpsychologie erklärt, warum Menschen in Gruppen anders handeln als allein, warum Überzeugungen sich gegen Fakten behaupten, und wie Reize unser Denken formen, bevor wir uns dessen bewusst sind.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+            <div class="bg-white border border-pink-100 rounded-xl p-4">
+                <div class="text-2xl mb-2">🔄</div>
+                <p class="font-bold text-slate-800 text-sm mb-1">Kognitive Dissonanz</p>
+                <p class="text-xs text-slate-500 leading-relaxed">Festinger (1957): Wenn Handlung und Überzeugung nicht übereinstimmen, entsteht psychischer Druck. Menschen reduzieren diesen Druck nicht durch Verhaltensänderung – sondern meist durch Überzeugungsänderung. Wichtig für: Selbstbild, Nachkauf-Rationalisierung, Lernen aus Fehlern.</p>
+            </div>
+            <div class="bg-white border border-pink-100 rounded-xl p-4">
+                <div class="text-2xl mb-2">💡</div>
+                <p class="font-bold text-slate-800 text-sm mb-1">Priming</p>
+                <p class="text-xs text-slate-500 leading-relaxed">Tulving & Schacter (1990), Bargh (1996): Vorangehende Reize aktivieren assoziierte Konzepte im Gedächtnis und beeinflussen nachfolgende Urteile – ohne dass wir es merken. Das berühmte Florida-Experiment: Wörter wie "alt" verlangsamten die Gehgeschwindigkeit von Studierenden.</p>
+            </div>
+            <div class="bg-white border border-pink-100 rounded-xl p-4">
+                <div class="text-2xl mb-2">👥</div>
+                <p class="font-bold text-slate-800 text-sm mb-1">Soziale Beweise</p>
+                <p class="text-xs text-slate-500 leading-relaxed">Cialdini (1984): Wir nutzen das Verhalten anderer als Information über richtiges Handeln – besonders in Unsicherheit. Basis von Herdenverhalten, viralen Trends und der Macht von Bewertungssystemen. Verbindet sich direkt mit Informationskaskaden.</p>
+            </div>
+            <div class="bg-white border border-pink-100 rounded-xl p-4">
+                <div class="text-2xl mb-2">🚫</div>
+                <p class="font-bold text-slate-800 text-sm mb-1">Reaktanz</p>
+                <p class="text-xs text-slate-500 leading-relaxed">Brehm (1966): Wenn Freiheit eingeschränkt wird oder droht eingeschränkt zu werden, steigt die Attraktivität des Verbotenen. Erklärt "Romeo-und-Julia-Effekt", Backfire-Effekte in Kampagnen und warum Verbote manchmal nach hinten losgehen.</p>
+            </div>
+        </div>
+
+        <div class="bg-pink-50 border border-pink-200 rounded-xl p-5 mb-5">
+            <p class="font-bold text-pink-800 mb-2">🔑 Framework: Cialdinis 7 Prinzipien der Überzeugung</p>
+            <p class="text-sm text-pink-700 mb-3">Robert Cialdini (<em>Influence</em>, 1984 / <em>Pre-Suasion</em>, 2016) identifizierte universelle Mechanismen, die Einfluss erzeugen:</p>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                <div class="bg-white rounded-lg p-2.5 border border-pink-100 text-center">
+                    <p class="font-bold text-pink-700">Reziprozität</p>
+                    <p class="text-slate-500 mt-0.5">Geben → Erhalten</p>
+                </div>
+                <div class="bg-white rounded-lg p-2.5 border border-pink-100 text-center">
+                    <p class="font-bold text-pink-700">Commitment</p>
+                    <p class="text-slate-500 mt-0.5">Konsistenz mit sich selbst</p>
+                </div>
+                <div class="bg-white rounded-lg p-2.5 border border-pink-100 text-center">
+                    <p class="font-bold text-pink-700">Soziale Beweise</p>
+                    <p class="text-slate-500 mt-0.5">Was andere tun</p>
+                </div>
+                <div class="bg-white rounded-lg p-2.5 border border-pink-100 text-center">
+                    <p class="font-bold text-pink-700">Autorität</p>
+                    <p class="text-slate-500 mt-0.5">Expertise & Status</p>
+                </div>
+                <div class="bg-white rounded-lg p-2.5 border border-pink-100 text-center">
+                    <p class="font-bold text-pink-700">Sympathie</p>
+                    <p class="text-slate-500 mt-0.5">Ähnlichkeit & Mögen</p>
+                </div>
+                <div class="bg-white rounded-lg p-2.5 border border-pink-100 text-center">
+                    <p class="font-bold text-pink-700">Knappheit</p>
+                    <p class="text-slate-500 mt-0.5">Seltenheit = Wert</p>
+                </div>
+                <div class="bg-white rounded-lg p-2.5 border border-pink-100 text-center">
+                    <p class="font-bold text-pink-700">Einheit</p>
+                    <p class="text-slate-500 mt-0.5">Gemeinsame Identität</p>
+                </div>
+                <div class="bg-white rounded-lg p-2.5 border border-pink-100 text-center">
+                    <p class="font-bold text-pink-600 text-opacity-60 italic">Pre-Suasion</p>
+                    <p class="text-slate-400 mt-0.5 text-opacity-60">Timing des Kontexts</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white border border-pink-100 rounded-xl p-4 mb-5 text-sm">
+            <p class="font-bold text-slate-800 mb-2">Selbstwirksamkeit – Bandura (1977)</p>
+            <p class="text-slate-600 text-xs leading-relaxed">Die Überzeugung, eine Aufgabe bewältigen zu können, beeinflusst die tatsächliche Leistung stärker als objektive Fähigkeiten. Quellen der Selbstwirksamkeit: <strong>Mastery experiences</strong> (eigene Erfolge), <strong>Modelllernen</strong> (andere beobachten), <strong>soziale Überzeugung</strong> (Feedback) und <strong>physiologische Zustände</strong> (Energie, Ruhe).</p>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+            <span class="text-xs text-slate-400 self-center">Üben:</span>
+            <a href="/raetsel/priming" class="text-xs bg-pink-600 text-white px-3 py-1.5 rounded-lg hover:bg-pink-700 transition-colors">💡 Priming-Experiment</a>
+            <a href="/raetsel/kognitive-dissonanz" class="text-xs bg-pink-100 text-pink-700 px-3 py-1.5 rounded-lg hover:bg-pink-200 transition-colors">🔄 Kognitive Dissonanz</a>
+            <a href="/raetsel/informationskaskade" class="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg hover:bg-slate-200 transition-colors">🫧 Informationskaskade</a>
+            <a href="/raetsel/konfirmationsfehler" class="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-lg hover:bg-slate-200 transition-colors">🔍 Konfirmationsfehler</a>
+        </div>
+    </section>
+
+    <!-- ── Lernpfade & Spiele ──────────────────────────────────────────────── -->
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5">
+        <p class="font-semibold text-slate-700 mb-3">Geführte Lernpfade zu diesen Themen</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <a href="/lernpfade/psychologie" class="flex items-center gap-3 bg-white border border-pink-200 rounded-xl p-3 hover:border-pink-300 hover:shadow-sm transition-all group">
+                <span class="text-2xl">🧬</span>
+                <div>
+                    <p class="font-bold text-slate-800 text-sm group-hover:text-pink-700 transition-colors">Psychologie & Verhalten</p>
+                    <p class="text-xs text-slate-400">Priming, Dissonanz, Herdenverhalten</p>
+                </div>
+            </a>
+            <a href="/lernpfade/kommunikation" class="flex items-center gap-3 bg-white border border-teal-200 rounded-xl p-3 hover:border-teal-300 hover:shadow-sm transition-all group">
+                <span class="text-2xl">💬</span>
+                <div>
+                    <p class="font-bold text-slate-800 text-sm group-hover:text-teal-700 transition-colors">Kommunikation & Verhandlung</p>
+                    <p class="text-xs text-slate-400">BATNA, Argumente, Paradoxe</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

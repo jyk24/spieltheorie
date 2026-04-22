@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% block title %}Kognitive Dissonanz – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🔄 Kognitive Dissonanz</h1>
+        <p class="text-slate-500 mt-1">Warum wir unsere Überzeugungen anpassen, wenn wir uns falsch verhalten haben – statt unser Verhalten zu ändern.</p>
+    </div>
+
+    <!-- Setup -->
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-2">Das Festinger-Experiment (1959):</p>
+        <p class="mb-3">Versuchspersonen führen eine Stunde lang eine extrem langweilige Aufgabe durch – sie drehen Holzspulen auf einem Brett. Danach werden sie gebeten, dem nächsten Teilnehmer zu sagen, die Aufgabe sei "interessant und abwechslungsreich" gewesen.</p>
+        <div class="grid grid-cols-2 gap-3">
+            <div class="bg-white rounded-lg p-3 border border-slate-200 text-center">
+                <p class="text-2xl mb-1">💵</p>
+                <p class="font-bold text-slate-800">Gruppe A</p>
+                <p class="text-xs text-slate-500">erhält <strong>1 Dollar</strong> für die Lüge</p>
+            </div>
+            <div class="bg-white rounded-lg p-3 border border-slate-200 text-center">
+                <p class="text-2xl mb-1">💰</p>
+                <p class="font-bold text-slate-800">Gruppe B</p>
+                <p class="text-xs text-slate-500">erhält <strong>20 Dollar</strong> für die Lüge</p>
+            </div>
+        </div>
+        <p class="mt-3 text-xs text-slate-500">Danach werden beide Gruppen befragt, wie interessant sie die Aufgabe wirklich fanden (Skala 1–11).</p>
+    </div>
+
+    <!-- Quiz -->
+    <div id="quiz"></div>
+    <div id="solution" class="hidden space-y-4"></div>
+</div>
+
+<script>
+const QUESTIONS = [
+    {
+        id: 'q1',
+        frage: 'Welche Gruppe bewertete die Aufgabe hinterher als <em>interessanter</em>?',
+        optionen: [
+            { id: 'a', text: '💵 Gruppe A (1 Dollar)', korrekt: true },
+            { id: 'b', text: '💰 Gruppe B (20 Dollar)', korrekt: false },
+            { id: 'c', text: '🟰 Beide gleich', korrekt: false },
+        ],
+        erklaerung: '<strong>Gruppe A (1 Dollar)</strong> bewertete die Aufgabe mit durchschnittlich <strong>6.0/11</strong>, Gruppe B nur mit <strong>1.3/11</strong>. Die schlechter Bezahlten fanden die Aufgabe wirklich interessanter – das klingt absurd, aber die Psychologie liefert die Erklärung.',
+        richtig_text: 'Genau das überraschende Ergebnis – gut erkannt!',
+        falsch_text: 'Gegenintuitiv: Die schlechter bezahlte Gruppe fand die Aufgabe hinterher interessanter.',
+    },
+    {
+        id: 'q2',
+        frage: 'Was wäre das <em>rationale</em> Ergebnis aus ökonomischer Sicht?',
+        optionen: [
+            { id: 'a', text: '20 Dollar → mehr Überzeugungskraft → mehr Meinungsänderung', korrekt: false },
+            { id: 'b', text: 'Kein Unterschied – die Meinung bleibt gleich, egal was bezahlt wird', korrekt: false },
+            { id: 'c', text: '1 Dollar → kein ausreichender äußerer Grund → innere Rationalisierung', korrekt: true },
+        ],
+        erklaerung: 'Psychologisch rational: Wer nur 1 Dollar bekommt, hat keinen ausreichenden äußeren Grund für seine Lüge. Das erzeugt Dissonanz zwischen Verhalten ("Ich habe gelogen") und Selbstbild ("Ich bin kein Lügner"). Die Auflösung: "Eigentlich war die Aufgabe gar nicht so schlimm."',
+        richtig_text: 'Genau – weniger Geld erzeugt mehr Dissonanz und damit mehr Meinungsänderung.',
+        falsch_text: 'Psychologie beats Ökonomie: Weniger äußerer Anreiz → mehr innere Rationalisierung.',
+    },
+    {
+        id: 'q3',
+        frage: 'In welcher Situation tritt kognitive Dissonanz am <em>stärksten</em> auf?',
+        optionen: [
+            { id: 'a', text: 'Wenn jemand gegen seine Überzeugungen handelt und keine gute externe Rechtfertigung hat', korrekt: true },
+            { id: 'b', text: 'Wenn jemand sehr viel Geld für etwas bekommt, das er nicht mag', korrekt: false },
+            { id: 'c', text: 'Wenn jemand in einer Gruppe anders denkt als alle anderen', korrekt: false },
+        ],
+        erklaerung: 'Dissonanz entsteht zwischen zwei kognitiven Elementen (Überzeugungen, Handlungen, Wissen). Je weniger externe Rechtfertigung vorhanden ist, desto stärker muss man intern rationalisieren. Mit 20 Dollar kann man sagen: "Ich tat es für das Geld." Mit 1 Dollar sucht das Gehirn nach einer anderen Erklärung.',
+        richtig_text: 'Richtig – fehlende externe Rechtfertigung zwingt das Gehirn zur internen Rationalisierung.',
+        falsch_text: 'Der Schlüssel ist: fehlende externe Rechtfertigung erzwingt interne Rationalisierung.',
+    },
+];
+
+let current = 0;
+let score = 0;
+const answers = [];
+
+function renderQuestion() {
+    if (current >= QUESTIONS.length) {
+        showSolution();
+        return;
+    }
+    const q = QUESTIONS[current];
+    const quiz = document.getElementById('quiz');
+    quiz.innerHTML = `
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+        <div class="flex items-center justify-between mb-4">
+            <span class="text-xs text-slate-400">Frage ${current + 1} von ${QUESTIONS.length}</span>
+            <span class="text-xs font-bold text-indigo-600">${score}/${current} richtig</span>
+        </div>
+        <p class="font-bold text-slate-800 text-lg mb-5">${q.frage}</p>
+        <div class="space-y-2" id="options">
+            ${q.optionen.map(o => `
+            <button onclick="answer('${o.id}')"
+                    class="opt-btn w-full text-left px-4 py-3.5 rounded-xl border-2 border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all text-sm font-medium text-slate-700"
+                    data-korrekt="${o.korrekt}">
+                ${o.text}
+            </button>`).join('')}
+        </div>
+        <div id="feedback" class="hidden mt-4"></div>
+    </div>`;
+}
+
+function answer(optId) {
+    const q = QUESTIONS[current];
+    const opt = q.optionen.find(o => o.id === optId);
+    const isKorrekt = opt.korrekt;
+    if (isKorrekt) score++;
+    answers.push({ q: current, korrekt: isKorrekt });
+
+    // Disable all buttons and mark correct/wrong
+    document.querySelectorAll('.opt-btn').forEach(btn => {
+        btn.disabled = true;
+        const k = btn.dataset.korrekt === 'true';
+        if (k) btn.className = btn.className.replace('border-slate-200 hover:border-indigo-400 hover:bg-indigo-50', 'border-emerald-400 bg-emerald-50 text-emerald-800');
+        else if (btn.textContent.trim().includes(opt.text.trim().substring(0, 10))) btn.className = btn.className.replace('border-slate-200 hover:border-indigo-400 hover:bg-indigo-50', 'border-rose-300 bg-rose-50 text-rose-700');
+    });
+
+    const feedback = document.getElementById('feedback');
+    feedback.classList.remove('hidden');
+    feedback.innerHTML = `
+    <div class="${isKorrekt ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : 'bg-amber-50 border border-amber-200 text-amber-800'} rounded-xl p-4 text-sm">
+        <p class="font-bold mb-1">${isKorrekt ? '✓ ' + q.richtig_text : '→ ' + q.falsch_text}</p>
+        <p class="text-xs leading-relaxed opacity-80">${q.erklaerung}</p>
+    </div>
+    <button onclick="nextQuestion()" class="mt-3 w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold hover:bg-indigo-700 transition-colors text-sm">
+        ${current < QUESTIONS.length - 1 ? 'Nächste Frage →' : 'Auflösung anzeigen →'}
+    </button>`;
+}
+
+function nextQuestion() {
+    current++;
+    renderQuestion();
+}
+
+function showSolution() {
+    document.getElementById('quiz').classList.add('hidden');
+    const sol = document.getElementById('solution');
+    sol.classList.remove('hidden');
+    sol.innerHTML = `
+    <div class="space-y-4">
+
+        <div class="${score >= 2 ? 'bg-emerald-50 border-2 border-emerald-400' : 'bg-amber-50 border-2 border-amber-400'} rounded-xl p-5">
+            <p class="font-bold text-xl ${score >= 2 ? 'text-emerald-800' : 'text-amber-800'}">${score}/${QUESTIONS.length} Fragen richtig</p>
+            <p class="${score >= 2 ? 'text-emerald-700' : 'text-amber-700'} text-sm mt-1">
+                ${score === 3 ? 'Hervorragend – du hast die Psychologie der Dissonanz intuitiv verstanden.' :
+                  score === 2 ? 'Gut! Die zentralen Mechanismen sind dir klar.' :
+                  'Kognitive Dissonanz ist eine der counterintuitivsten Erkenntnisse der Sozialpsychologie – das ist normal.'}
+            </p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 text-sm text-slate-700">
+            <p class="font-bold text-slate-800 mb-3">Kognitive Dissonanz – Festinger (1957)</p>
+            <p class="mb-3">Wenn zwei kognitive Elemente (Überzeugungen, Handlungen, Wahrnehmungen) nicht übereinstimmen, entsteht ein unangenehmer Spannungszustand. Dieser Zustand motiviert zur Reduktion der Dissonanz – fast immer durch Anpassung der Überzeugung, seltener durch Verhaltensänderung.</p>
+
+            <div class="bg-slate-50 rounded-lg p-4 mb-3">
+                <p class="font-semibold text-slate-700 mb-2">Drei Wege zur Dissonanzreduktion:</p>
+                <div class="space-y-2 text-xs">
+                    <p class="flex gap-2"><span class="text-rose-500">1.</span><span><strong>Überzeugung ändern:</strong> "Eigentlich war die Aufgabe interessant" (Festinger-Experiment)</span></p>
+                    <p class="flex gap-2"><span class="text-amber-500">2.</span><span><strong>Neue Elemente hinzufügen:</strong> "Aber ich habe dabei gelernt..." – Rationalisierung</span></p>
+                    <p class="flex gap-2"><span class="text-emerald-500">3.</span><span><strong>Bedeutung minimieren:</strong> "Das war ja nur ein Experiment, nicht wirklich wichtig"</span></p>
+                </div>
+            </div>
+
+            <div class="bg-pink-50 border border-pink-200 rounded-lg p-3 text-xs text-pink-700 mb-3">
+                <p class="font-semibold mb-1">Effort Justification</p>
+                <p>Eine Variante: Wer viel Mühe in etwas investiert, bewertet das Ergebnis höher – egal wie gut es objektiv ist. Initiation-Experimente zeigen: Gruppen mit schmerzhafter Aufnahmeritual werden als wertvoller eingeschätzt als solche mit einfacher.</p>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm">
+            <p class="font-semibold text-slate-700 mb-2">Wo begegnet uns Dissonanz täglich?</p>
+            <div class="space-y-1.5 text-xs text-slate-600">
+                <p class="flex gap-2"><span>→</span><span><strong>Kaufentscheidungen:</strong> Nach dem Kauf eines teuren Produkts suchen wir Gründe, warum es die beste Wahl war.</span></p>
+                <p class="flex gap-2"><span>→</span><span><strong>Gesundheitsverhalten:</strong> Raucher entwickeln Überzeugungen, die das Rauchen rechtfertigen ("Mein Opa hat geraucht und wurde 90").</span></p>
+                <p class="flex gap-2"><span>→</span><span><strong>Politische Überzeugungen:</strong> Nach der Wahl eines Kandidaten erhöht sich die Bewertung seiner Eigenschaften retroaktiv.</span></p>
+                <p class="flex gap-2"><span>→</span><span><strong>Moralisches Licensing:</strong> Wer sich zuerst gut verhält, erlaubt sich danach schlechtes Verhalten – die gute Tat "zahlt" für die schlechte.</span></p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+            <a href="/raetsel/kognitive-dissonanz" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Nochmal spielen</a>
+            <a href="/raetsel/priming" class="border border-pink-200 text-pink-700 px-5 py-2 rounded-lg text-sm font-medium hover:bg-pink-50">💡 Priming-Experiment</a>
+            <a href="/skills#psychologie" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">📖 Psychologie-Theorie</a>
+        </div>
+    </div>`;
+}
+
+renderQuestion();
+</script>
+
+{% endblock %}
