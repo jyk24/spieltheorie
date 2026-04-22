@@ -33,18 +33,32 @@
     </div>
 
     <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="spiel-area">
-        <p class="font-semibold text-slate-800 mb-4">Welche Position wählst du?</p>
-        <div class="grid grid-cols-5 gap-3">
-            {% for pos in positions %}
-            <button hx-post="/raetsel/josephus/result"
-                    hx-target="#spiel-area"
-                    hx-swap="innerHTML"
-                    hx-vals='{"position": "{{ pos }}"}'
-                    class="py-4 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-indigo-300 hover:bg-indigo-50 transition-all font-bold text-slate-700 text-xl">
-                {{ pos }}
+        <p class="font-semibold text-slate-800 mb-2">Welche Position wählst du? (1–10)</p>
+        <p class="text-sm text-slate-500 mb-5">Arbeite den Ablauf im Kopf durch – wer wird wann eliminiert?</p>
+
+        <div class="flex gap-3 mb-2">
+            <input type="number" id="position-guess" min="1" max="10" placeholder="1–10"
+                   class="flex-1 border-2 border-slate-200 rounded-xl px-4 py-3 text-xl font-bold text-center focus:border-indigo-400 focus:outline-none"
+                   onkeydown="if(event.key==='Enter') submitPosition()">
+            <button onclick="submitPosition()"
+                    class="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors text-sm whitespace-nowrap">
+                Wählen →
             </button>
-            {% endfor %}
         </div>
+        <p class="text-xs text-slate-400 mb-1">Tipp: Verfolge die Eliminierungsreihenfolge Schritt für Schritt.</p>
     </div>
 </div>
+
+<script>
+function submitPosition() {
+    const val = document.getElementById('position-guess').value;
+    if (!val || parseInt(val) < 1 || parseInt(val) > 10) return;
+    htmx.ajax('POST', '/raetsel/josephus/result', {
+        target: '#spiel-area',
+        swap: 'innerHTML',
+        values: { position: val }
+    });
+}
+</script>
+
 {% endblock %}

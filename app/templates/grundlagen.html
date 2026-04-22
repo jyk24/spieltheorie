@@ -26,6 +26,9 @@
                 ('4', 'Spieltypen'),
                 ('5', 'Beschränkte Rationalität'),
                 ('6', 'Verhandlung & Spieltheorie'),
+                ('7', 'Gemischte Strategien'),
+                ('8', 'Signaling & Information'),
+                ('9', 'Evolutionäre Spieltheorie'),
             ] %}
             <a href="#section-{{ num }}" class="flex items-center gap-2 text-indigo-700 hover:text-indigo-900">
                 <span class="bg-indigo-200 text-indigo-800 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0">{{ num }}</span>
@@ -346,6 +349,199 @@
                 Spieler 1: 1/(1+δ) · · · Spieler 2: δ/(1+δ)
             </div>
             <p class="text-indigo-700 text-xs">Mit gleicher Diskontrate (δ = 0.9): 1 erhält 52.6%, 2 erhält 47.4%. Wer zuerst fragt, hat einen kleinen Vorteil – aber nur wenn δ &lt; 1.</p>
+        </div>
+    </section>
+
+    <!-- ── 7. Gemischte Strategien ─────────────────────────────────── -->
+    <section id="section-7" class="mb-12">
+        <h2 class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-3">
+            <span class="bg-indigo-100 text-indigo-700 text-sm font-bold w-8 h-8 rounded-full flex items-center justify-center">7</span>
+            Gemischte Strategien
+        </h2>
+
+        <p class="text-slate-600 mb-4 leading-relaxed">
+            In vielen Spielen gibt es kein Nash-Gleichgewicht in reinen Strategien – weil jede feste Wahl vom Gegner ausgenutzt werden kann. Die Lösung: zufällig mischen, so dass der Gegner indifferent ist.
+        </p>
+
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden mb-4">
+            <div class="bg-violet-50 border-b border-violet-100 px-5 py-3">
+                <h3 class="font-bold text-violet-800">Von Neumanns Minimax-Theorem (1928)</h3>
+            </div>
+            <div class="p-5 text-sm text-slate-600">
+                <p class="mb-3">In jedem endlichen Zwei-Spieler-Nullsummenspiel gilt: Es gibt eine gemischte Strategie, die den maximalen Verlust minimiert (Minimax) – und dieser Wert ist gleich dem Gleichgewichtswert, den der Gegner durch Maximieren erzielt.</p>
+                <div class="bg-slate-50 rounded-xl p-4 mb-4">
+                    <p class="font-semibold text-slate-700 mb-3">Schere-Stein-Papier: Die Rechnung</p>
+                    <div class="grid grid-cols-4 gap-1 text-xs max-w-sm mb-3">
+                        <div class="bg-slate-100 rounded p-1.5 text-center font-medium"></div>
+                        <div class="bg-slate-100 rounded p-1.5 text-center font-medium">✂️ S</div>
+                        <div class="bg-slate-100 rounded p-1.5 text-center font-medium">🪨 St</div>
+                        <div class="bg-slate-100 rounded p-1.5 text-center font-medium">📄 P</div>
+                        <div class="bg-slate-100 rounded p-1.5 text-center font-medium">✂️ S</div>
+                        <div class="bg-amber-100 rounded p-1.5 text-center">0</div>
+                        <div class="bg-red-100 rounded p-1.5 text-center">−1</div>
+                        <div class="bg-emerald-100 rounded p-1.5 text-center">+1</div>
+                        <div class="bg-slate-100 rounded p-1.5 text-center font-medium">🪨 St</div>
+                        <div class="bg-emerald-100 rounded p-1.5 text-center">+1</div>
+                        <div class="bg-amber-100 rounded p-1.5 text-center">0</div>
+                        <div class="bg-red-100 rounded p-1.5 text-center">−1</div>
+                        <div class="bg-slate-100 rounded p-1.5 text-center font-medium">📄 P</div>
+                        <div class="bg-red-100 rounded p-1.5 text-center">−1</div>
+                        <div class="bg-emerald-100 rounded p-1.5 text-center">+1</div>
+                        <div class="bg-amber-100 rounded p-1.5 text-center">0</div>
+                    </div>
+                    <p class="text-xs text-slate-500">Wenn Spieler A jede Option mit Wahrscheinlichkeit ⅓ wählt, ist Spieler B indifferent zwischen allen seinen Optionen – egal was er spielt, sein Erwartungswert ist 0. Und umgekehrt. Das ist das einzige Nash-GG.</p>
+                </div>
+                <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-3">
+                    <p class="font-semibold text-indigo-800 mb-2">Die Kernregel gemischter Gleichgewichte:</p>
+                    <p class="text-indigo-700 text-xs">Im Gleichgewicht ist jeder Spieler <strong>indifferent</strong> zwischen den Optionen, die er mischt. Wäre eine Option besser als die andere, würde er 100% auf die bessere setzen – kein Mischen mehr. Die optimale Mischrate lässt sich so berechnen: Setze die Erwartungswerte der Optionen gleich und löse auf.</p>
+                </div>
+                <a href="/spiele/rps" class="text-indigo-600 text-xs hover:underline">→ Im Schere-Stein-Papier die gemischte Strategie erleben</a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="bg-white border border-slate-200 rounded-xl p-4 text-sm">
+                <p class="font-semibold text-slate-700 mb-2">Wenn reine Strategien kein GG haben:</p>
+                <ul class="text-xs text-slate-500 space-y-2">
+                    <li class="flex gap-2"><span class="text-violet-400">→</span><span>Jede feste Wahl kann vom Gegner ausgenutzt werden.</span></li>
+                    <li class="flex gap-2"><span class="text-violet-400">→</span><span>Unvorhersehbarkeit schützt – zufälliges Mischen verhindert Ausbeutung.</span></li>
+                    <li class="flex gap-2"><span class="text-violet-400">→</span><span>Nash bewies 1950: Jedes endliche Spiel hat mindestens ein GG in gemischten Strategien.</span></li>
+                </ul>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-4 text-sm">
+                <p class="font-semibold text-slate-700 mb-2">Reale Anwendungen:</p>
+                <ul class="text-xs text-slate-500 space-y-2">
+                    <li class="flex gap-2"><span class="text-emerald-400">→</span><span><strong>Elfmeter:</strong> Walker (2001) zeigte, dass Profis exakt die Nash-optimalen Mischungen spielen.</span></li>
+                    <li class="flex gap-2"><span class="text-emerald-400">→</span><span><strong>Steuerprüfungen:</strong> Zufällige Audits sind optimal, weil Muster ausgenutzt werden.</span></li>
+                    <li class="flex gap-2"><span class="text-emerald-400">→</span><span><strong>Tennis-Aufschlag:</strong> Profis mischen Richtungen exakt nach Minimax-Kalkül.</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="flex gap-3 flex-wrap">
+            <a href="/spiele/rps" class="text-xs border border-slate-200 px-3 py-1.5 rounded-full text-slate-600 hover:border-indigo-400 hover:text-indigo-600">→ Schere-Stein-Papier spielen</a>
+            <a href="/spiele/chicken" class="text-xs border border-slate-200 px-3 py-1.5 rounded-full text-slate-600 hover:border-indigo-400 hover:text-indigo-600">→ Feiglingsspiel (hat Mixed-NE)</a>
+        </div>
+    </section>
+
+    <!-- ── 8. Signaling & Information ──────────────────────────────── -->
+    <section id="section-8" class="mb-12">
+        <h2 class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-3">
+            <span class="bg-indigo-100 text-indigo-700 text-sm font-bold w-8 h-8 rounded-full flex items-center justify-center">8</span>
+            Signaling, Screening & Information
+        </h2>
+
+        <p class="text-slate-600 mb-5 leading-relaxed">
+            Informationsasymmetrie – eine Seite weiß mehr als die andere – ist in der Realität der Regelfall, nicht die Ausnahme. Spieltheorie zeigt, wie Märkte damit umgehen, warum manche Signale funktionieren und andere nicht.
+        </p>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-4 text-sm">
+            <p class="font-bold text-amber-800 mb-2">Das Zitronen-Problem (Akerlof, 1970)</p>
+            <p class="text-amber-700 mb-2">Auf dem Gebrauchtwagenmarkt kennt nur der Verkäufer die wahre Qualität. Käufer zahlen daher nur den Durchschnittspreis. Gute Autos werden zurückgehalten (zu billiger Preis). Der Markt kollabiert schrittweise – nur schlechte Ware bleibt.</p>
+            <p class="text-xs text-amber-600">Akerlof erhielt 2001 den Nobelpreis. Lösungen: Garantien, Zertifizierungen, Reputationssysteme, Inspektion.</p>
+        </div>
+
+        <div class="space-y-4 mb-5">
+            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+                <div class="bg-emerald-50 border-b border-emerald-100 px-5 py-3">
+                    <h3 class="font-bold text-emerald-800">Signaling (Spence, 1973)</h3>
+                </div>
+                <div class="p-5 text-sm text-slate-600">
+                    <p class="mb-3">Ein Signal ist glaubwürdig, wenn es für schlechte Typen zu teuer ist, es zu fälschen. Ein Diplom signalisiert Fähigkeit nicht weil es Wissen vermittelt, sondern weil es für weniger Fähige unverhältnismäßig teuer ist.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3 text-xs">
+                        <div class="bg-slate-50 rounded-lg p-3">
+                            <p class="font-semibold text-slate-700 mb-1.5">Trenngleichgewicht (Separating)</p>
+                            <p class="text-slate-500">Gute und schlechte Typen wählen unterschiedliche Signale. Das Signal enthüllt die private Information vollständig. Voraussetzung: Signalkosten trennen die Typen.</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-lg p-3">
+                            <p class="font-semibold text-slate-700 mb-1.5">Poolgleichgewicht (Pooling)</p>
+                            <p class="text-slate-500">Alle Typen wählen dasselbe Signal – Information wird nicht übermittelt. Entsteht, wenn das Signal zu billig für alle oder zu teuer für alle ist.</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500"><strong>Weitere Beispiele:</strong> Aktienrückkäufe (teuer, signalisiert Liquidität), Geld-zurück-Garantien (nur hohe Qualität kann es sich leisten), aufwendige Werbung (cheap talk, wenn ohne Inhalt – costly signal, wenn erkennbar teuer).</p>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+                <div class="bg-blue-50 border-b border-blue-100 px-5 py-3">
+                    <h3 class="font-bold text-blue-800">Screening</h3>
+                </div>
+                <div class="p-5 text-sm text-slate-600">
+                    <p class="mb-3">Die uninformierte Seite gestaltet Verträge so, dass verschiedene Typen sich selbst offenbaren – durch ihre Vertragswahl. Versicherungen bieten Pakete mit verschiedenen Prämien/Selbstbehalten an: Hochrisiko-Typen wählen niedrige Selbstbeteiligung, Niedrigrisiko-Typen den hohen.</p>
+                    <div class="bg-blue-50 rounded-lg p-3 text-xs text-blue-700">
+                        <p class="font-semibold mb-1">Anreizkompatibilitätsbedingung (IC):</p>
+                        <p>Jeder Typ muss den für ihn designten Vertrag gegenüber dem Vertrag des anderen Typs vorziehen. Sonst funktioniert das Screening nicht – Typen wählen den für sie günstigeren fremden Vertrag.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex gap-3 flex-wrap">
+            <a href="/spiele/auktion" class="text-xs border border-slate-200 px-3 py-1.5 rounded-full text-slate-600 hover:border-indigo-400 hover:text-indigo-600">→ Vickrey-Auktion (Anreizkompatibilität)</a>
+            <a href="/raetsel/newcomb" class="text-xs border border-slate-200 px-3 py-1.5 rounded-full text-slate-600 hover:border-indigo-400 hover:text-indigo-600">→ Newcomb-Paradoxon</a>
+        </div>
+    </section>
+
+    <!-- ── 9. Evolutionäre Spieltheorie ─────────────────────────────── -->
+    <section id="section-9" class="mb-12">
+        <h2 class="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-3">
+            <span class="bg-indigo-100 text-indigo-700 text-sm font-bold w-8 h-8 rounded-full flex items-center justify-center">9</span>
+            Evolutionäre Spieltheorie
+        </h2>
+
+        <p class="text-slate-600 mb-5 leading-relaxed">
+            Was passiert, wenn Strategien sich nicht durch Nachdenken, sondern durch natürliche Selektion durchsetzen? Evolutionäre Spieltheorie ersetzt den rationalen Akteur durch Populationen, in denen erfolgreiche Strategien sich verbreiten.
+        </p>
+
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden mb-4">
+            <div class="bg-rose-50 border-b border-rose-100 px-5 py-3">
+                <h3 class="font-bold text-rose-800">Evolutionär stabile Strategien (ESS)</h3>
+            </div>
+            <div class="p-5 text-sm text-slate-600">
+                <p class="mb-3">Eine Strategie ist evolutionär stabil (Maynard Smith & Price, 1973), wenn eine Population, die sie spielt, nicht durch eine kleine Gruppe von Mutanten unterwandert werden kann.</p>
+                <div class="bg-slate-50 rounded-xl p-4 mb-3">
+                    <p class="font-semibold text-slate-700 mb-3">Falke-Taube-Spiel:</p>
+                    <div class="grid grid-cols-3 gap-1 text-xs max-w-xs mb-3">
+                        <div class="bg-slate-100 rounded p-1.5 font-medium text-center"></div>
+                        <div class="bg-slate-100 rounded p-1.5 font-medium text-center">🦅 Falke</div>
+                        <div class="bg-slate-100 rounded p-1.5 font-medium text-center">🕊️ Taube</div>
+                        <div class="bg-slate-100 rounded p-1.5 font-medium text-center">🦅 Falke</div>
+                        <div class="bg-red-100 rounded p-1.5 text-center text-xs">(V−C)/2</div>
+                        <div class="bg-emerald-100 rounded p-1.5 text-center text-xs">V</div>
+                        <div class="bg-slate-100 rounded p-1.5 font-medium text-center">🕊️ Taube</div>
+                        <div class="bg-amber-100 rounded p-1.5 text-center text-xs">0</div>
+                        <div class="bg-blue-100 rounded p-1.5 text-center text-xs">V/2</div>
+                    </div>
+                    <p class="text-xs text-slate-500">Wenn V > C: Falke ist ESS (Aggression zahlt sich immer aus). Wenn V &lt; C: Weder reine Falke noch reine Taube ist stabil – die ESS ist eine gemischte Population mit Anteil V/C Falken. Natur findet dieselbe Lösung wie der Nash-Kalkül.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+            <div class="bg-white border border-slate-200 rounded-xl p-4 text-sm">
+                <p class="font-semibold text-slate-700 mb-2">Von der Biologie in die Ökonomie:</p>
+                <ul class="text-xs text-slate-500 space-y-2">
+                    <li class="flex gap-2"><span class="text-rose-400">→</span><span><strong>Kooperation:</strong> Robert Axelrod (1984) ließ Computerprogramme wiederholte Gefangenendilemma spielen – Tit-for-Tat gewann.</span></li>
+                    <li class="flex gap-2"><span class="text-rose-400">→</span><span><strong>Altruismus:</strong> Kin selection (Hamilton) erklärt, warum Individuen für Verwandte sterben – Gene, nicht Individuen, sind die Einheit.</span></li>
+                    <li class="flex gap-2"><span class="text-rose-400">→</span><span><strong>Marktdynamik:</strong> Unternehmen mit besseren Strategien wachsen; schlechtere schrumpfen. Selektion ohne Bewusstsein.</span></li>
+                </ul>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-xl p-4 text-sm">
+                <p class="font-semibold text-slate-700 mb-2">Replikator-Dynamik:</p>
+                <p class="text-xs text-slate-500 mb-2">Strategien mit überdurchschnittlichem Fitnesswert wachsen in der Population. Das System konvergiert zu Nash-Gleichgewichten – aber nur zu stabilen (ESS), nicht zu allen.</p>
+                <p class="text-xs text-slate-500">Bedeutung: Rationalität ist keine Voraussetzung für Nash-Gleichgewichte. Selektion findet sie auch ohne bewusstes Nachdenken – in Biologie, Märkten, Kulturen.</p>
+            </div>
+        </div>
+
+        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 text-sm">
+            <p class="font-semibold text-indigo-800 mb-2">Tit-for-Tat – die robusteste Strategie</p>
+            <p class="text-indigo-700 text-xs mb-2">Axelrods Turnier (1984): Kooperiere in Runde 1, dann tue was der Gegner in der letzten Runde getan hat. Trotz nie-zuerst-defektieren gewann Tit-for-Tat gegen alle anderen Programme. Eigenschaften:</p>
+            <div class="grid grid-cols-2 gap-2 text-xs text-indigo-700">
+                <span>✓ Nett: beginnt kooperativ</span>
+                <span>✓ Provozierbar: beantwortet Defekt mit Defekt</span>
+                <span>✓ Vergebend: kehrt nach einer Runde zur Kooperation zurück</span>
+                <span>✓ Klar: leicht für Gegner verständlich</span>
+            </div>
         </div>
     </section>
 

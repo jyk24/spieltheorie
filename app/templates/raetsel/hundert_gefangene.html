@@ -20,44 +20,114 @@
     </div>
 
     <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="spiel-area">
-        <p class="font-semibold text-slate-800 mb-2">Welche Strategie würdest du wählen?</p>
-        <p class="text-sm text-slate-500 mb-5">Entscheide dich, bevor du die Auflösung siehst. Die Simulation läuft live (2.000 Durchläufe).</p>
 
-        <div class="space-y-3">
-            <button hx-post="/raetsel/hundert-gefangene/result"
-                    hx-target="#spiel-area"
-                    hx-swap="innerHTML"
-                    hx-vals='{"strategy": "random"}'
-                    hx-indicator="#loading"
-                    class="w-full text-left p-5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-red-300 hover:bg-red-50 transition-all">
-                <div class="flex items-start gap-4">
-                    <span class="text-3xl">🎲</span>
-                    <div>
-                        <div class="font-bold text-slate-800 text-lg">Zufällige Strategie</div>
-                        <div class="text-sm text-slate-600 mt-1">Jeder Gefangene öffnet 50 zufällig gewählte Boxen. Keine Absprache nötig.</div>
-                    </div>
-                </div>
-            </button>
+        <!-- Phase 1: Einschätzung abgeben -->
+        <div id="phase1">
+            <p class="font-semibold text-slate-800 mb-1">Bevor du eine Strategie siehst:</p>
+            <p class="text-sm text-slate-500 mb-4">Überleg kurz – was wäre deine intuitive Idee? Wie hoch ist deine Schätzung, dass alle 100 überleben?</p>
 
-            <button hx-post="/raetsel/hundert-gefangene/result"
-                    hx-target="#spiel-area"
-                    hx-swap="innerHTML"
-                    hx-vals='{"strategy": "loop"}'
-                    hx-indicator="#loading"
-                    class="w-full text-left p-5 rounded-xl border-2 border-indigo-200 bg-indigo-50 hover:border-indigo-400 hover:bg-indigo-100 transition-all">
-                <div class="flex items-start gap-4">
-                    <span class="text-3xl">🔁</span>
-                    <div>
-                        <div class="font-bold text-indigo-800 text-lg">Schleifen-Strategie</div>
-                        <div class="text-sm text-indigo-700 mt-1">Gefangener N öffnet Box N, dann die Box mit der darin gefundenen Nummer – immer weiter, max. 50 Mal.</div>
-                    </div>
+            <textarea id="strategie-idee" rows="2"
+                placeholder="z.B. 'Jeder öffnet zufällig 50 Boxen' oder 'Absprache vor dem Betreten des Raums…'"
+                class="w-full border-2 border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-indigo-400 focus:outline-none mb-4 resize-none"></textarea>
+
+            <div class="mb-5">
+                <div class="flex justify-between text-sm text-slate-600 mb-2">
+                    <span>Überlebenschance aller 100 Gefangenen:</span>
+                    <span id="estimate-label" class="font-bold text-indigo-600">50%</span>
                 </div>
+                <input type="range" id="range-estimate" min="0" max="100" value="50"
+                       oninput="document.getElementById('estimate-label').textContent = this.value + '%'"
+                       class="w-full accent-indigo-600">
+                <div class="flex justify-between text-xs text-slate-400 mt-1">
+                    <span>0% – praktisch unmöglich</span>
+                    <span>100% – alle überleben sicher</span>
+                </div>
+            </div>
+
+            <button onclick="revealStrategies()"
+                    class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors">
+                Meine Einschätzung abgeben →
             </button>
         </div>
 
-        <div id="loading" class="htmx-indicator text-center text-slate-400 text-sm mt-4">
-            Simuliere 2.000 Durchläufe…
+        <!-- Phase 2: Strategie wählen (anfangs versteckt) -->
+        <div id="phase2" class="hidden">
+            <p class="font-semibold text-slate-800 mb-2">Zwei mögliche Strategien – welche wählst du?</p>
+            <p class="text-sm text-slate-500 mb-5">Die Simulation läuft direkt live (2.000 Durchläufe).</p>
+
+            <div class="space-y-3">
+                <button hx-post="/raetsel/hundert-gefangene/result"
+                        hx-target="#spiel-area"
+                        hx-swap="innerHTML"
+                        hx-vals='{"strategy": "random"}'
+                        hx-indicator="#loading"
+                        class="w-full text-left p-5 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-red-300 hover:bg-red-50 transition-all">
+                    <div class="flex items-start gap-4">
+                        <span class="text-3xl">🎲</span>
+                        <div>
+                            <div class="font-bold text-slate-800 text-lg">Unkoordinierte Strategie</div>
+                            <div class="text-sm text-slate-600 mt-1">Jeder Gefangene entscheidet für sich, welche Boxen er öffnet. Keine gemeinsame Absprache nötig.</div>
+                        </div>
+                    </div>
+                </button>
+
+                <button hx-post="/raetsel/hundert-gefangene/result"
+                        hx-target="#spiel-area"
+                        hx-swap="innerHTML"
+                        hx-vals='{"strategy": "loop"}'
+                        hx-indicator="#loading"
+                        class="w-full text-left p-5 rounded-xl border-2 border-indigo-200 bg-indigo-50 hover:border-indigo-400 hover:bg-indigo-100 transition-all">
+                    <div class="flex items-start gap-4">
+                        <span class="text-3xl">🔁</span>
+                        <div>
+                            <div class="font-bold text-indigo-800 text-lg">Koordinierte Strategie</div>
+                            <div class="text-sm text-indigo-700 mt-1">Alle Gefangene folgen einem gemeinsam festgelegten strukturierten Schema, das ihre Suche miteinander verknüpft.</div>
+                        </div>
+                    </div>
+                </button>
+            </div>
+
+            <div id="loading" class="htmx-indicator text-center text-slate-400 text-sm mt-4">
+                Simuliere 2.000 Durchläufe…
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+function revealStrategies() {
+    const estimate = document.getElementById('range-estimate').value;
+    const idea = document.getElementById('strategie-idee').value.trim();
+    sessionStorage.setItem('gef_estimate', estimate);
+    sessionStorage.setItem('gef_idea', idea || '');
+    document.getElementById('phase1').classList.add('hidden');
+    document.getElementById('phase2').classList.remove('hidden');
+    document.getElementById('phase2').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+document.body.addEventListener('htmx:afterSwap', function(evt) {
+    if (evt.detail.target.id !== 'spiel-area') return;
+    const estimate = sessionStorage.getItem('gef_estimate');
+    if (estimate === null) return;
+    const idea = sessionStorage.getItem('gef_idea');
+    sessionStorage.removeItem('gef_estimate');
+    sessionStorage.removeItem('gef_idea');
+
+    const box = document.createElement('div');
+    box.className = 'bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm';
+    box.innerHTML = `
+        <p class="font-semibold text-violet-800 mb-3">Deine Einschätzung vorher:</p>
+        <div class="flex items-start gap-4 flex-wrap">
+            <div class="bg-white rounded-xl px-4 py-3 border border-violet-200 text-center shrink-0">
+                <div class="text-2xl font-black text-violet-600">${estimate}%</div>
+                <div class="text-xs text-slate-500">geschätzte Überlebenschance</div>
+            </div>
+            ${idea ? `<div class="text-slate-600 text-xs italic flex-1 pt-2">"${idea}"</div>` : ''}
+        </div>
+    `;
+    const spiel = document.getElementById('spiel-area');
+    if (spiel) spiel.insertBefore(box, spiel.firstChild);
+});
+</script>
+
 {% endblock %}

@@ -89,6 +89,118 @@
     </div>
     {% endif %}
 
+    {# ── Konzept erklärt ── #}
+    {% set game_concepts = {
+        "gefangenendilemma": {
+            "titel": "Gefangenendilemma & dominante Strategien",
+            "kern": "Zwei rational handelnde Spieler wählen Defekt, obwohl gegenseitige Kooperation für beide besser wäre. Das Dilemma entsteht, weil keiner der Bindung des anderen vertrauen kann.",
+            "praxis": ["Rüstungswettläufe: Beide Seiten rüsten, obwohl keine Seite netto gewinnt.", "Preiskämpfe: Alle Anbieter senken Preise, bis Margen verschwinden.", "Klimapolitik: Jedes Land emittiert, weil andere es ebenfalls tun."],
+            "lernen": "Wiederholung, Reputation und Verträge können das Dilemma auflösen – einmalige Begegnungen nicht."
+        },
+        "ultimatum": {
+            "titel": "Ultimatumspiel & soziale Präferenzen",
+            "kern": "Rational gesehen sollte jeder Angebot > 0 akzeptieren. Experimentell lehnen Menschen unfaire Angebote ab – und bestrafen Unrecht auf eigene Kosten. Fairness ist ein echter Nutzenfaktor.",
+            "praxis": ["Gehaltsverhandlungen: Zu niedrige Erstangebote werden als Affront abgelehnt.", "Kartellverhandlungen: Parteien scheitern lieber, als eine als ungerecht empfundene Lösung zu akzeptieren.", "Streiks: Beschäftigte lehnen Angebote ab, die sie als nicht fair erleben."],
+            "lernen": "Fairness-Normen ignorieren kostet – ein akzeptables Angebot ist oft profitabler als ein theoretisch optimales, das abgelehnt wird."
+        },
+        "vertrauen": {
+            "titel": "Vertrauensspiel & soziales Kapital",
+            "kern": "Ohne Vertrauen wird kein Wert geschaffen. Mit Vertrauen kann der Kuchen für beide Seiten wachsen – aber nur wenn der Empfänger nicht defektiert. Reputation löst das Problem in wiederholten Begegnungen.",
+            "praxis": ["Kreditvergabe: Banken vertrauen auf Rückzahlung – ohne Vertrauen kein Kapitalmarkt.", "Lieferketten: Zulieferer investieren in Spezialwerkzeuge für einen Kunden, der sie nicht ausbeuten darf.", "E-Commerce: Käufer vertrauen Bewertungen und Plattformgarantien."],
+            "lernen": "Vertrauen ist profitabel – aber nur wenn es Mechanismen gibt, die Verrat bestrafen (Reputation, Verträge, Plattformregeln)."
+        },
+        "chicken": {
+            "titel": "Feiglingsspiel & Commitment",
+            "kern": "Wer überzeugend zeigen kann, dass er nicht nachgibt, gewinnt – ohne kämpfen zu müssen. Das Paradox: Irrationalität kann rational sein, wenn sie glaubwürdig kommuniziert wird.",
+            "praxis": ["Nuklearabschreckung: Die Drohung muss glaubhaft sein, obwohl ihre Ausführung irrational wäre.", "Tarifverhandlungen: Wer überzeugend streikbereit ist, erzielt bessere Konditionen.", "Startups vs. Incumbents: Wer glaubhaft zeigt, den Marktanteil um jeden Preis zu verteidigen, schreckt Konkurrenten ab."],
+            "lernen": "Commitment-Devices – öffentliche Ankündigungen, Bürgschaften, verbrannte Schiffe – machen Drohungen glaubwürdig."
+        },
+        "stag-hunt": {
+            "titel": "Hirschjagd & Koordinationsproblem",
+            "kern": "Kooperation ist die beste Option – aber nur wenn alle mitmachen. Das Problem ist Vertrauen und Koordination, nicht Gier. Zwei Nash-Gleichgewichte: sicher/allein vs. riskant/gemeinsam.",
+            "praxis": ["Standardisierung: QWERTZ-Tastatur, USB-C – alle profitieren, aber jeder braucht Gewissheit, dass andere mitziehen.", "Politische Reformen: Alle wären besser dran, aber niemand startet ohne Garantie der anderen.", "Teamarbeit: Optimales Ergebnis braucht Vertrauen in die Beiträge aller."],
+            "lernen": "Focal Points, Kommunikation und Institutionen helfen, das effiziente Gleichgewicht zu koordinieren."
+        },
+        "koordination": {
+            "titel": "Koordinationsspiele & Schelling-Punkte",
+            "kern": "Wenn mehrere Nash-Gleichgewichte existieren, ist die Frage nicht 'was ist rational?' sondern 'welches Gleichgewicht wählen wir?' Schelling-Punkte – kulturell hervorstechende Optionen – lösen das Problem ohne Kommunikation.",
+            "praxis": ["Verkehrsregeln: Rechts- oder Linksverkehr – beide Gleichgewichte sind stabil, keines ist rational superior.", "Währungen: Bitcoin, Dollar – beide können Tauschmittel sein, aber niemand allein kann wechseln.", "Meetingpunkte: Wo trifft man sich ohne Absprache? Schelling fragte NYer – fast alle sagten 'Grand Central, Mittag'."],
+            "lernen": "Gemeinsame Erwartungen, Konventionen und kulturelle Focal Points lösen Koordinationsprobleme ohne formale Kommunikation."
+        },
+        "rps": {
+            "titel": "Schere-Stein-Papier & gemischte Strategien",
+            "kern": "In Nullsummenspielen ohne dominante Strategie ist die einzige Nash-Lösung eine Mischstrategie – zufällig und unvorhersehbar. Jede Regelmäßigkeit wird vom Gegner ausgenutzt.",
+            "praxis": ["Tennis-Aufschlag: Profis mischen Richtungen, um nicht ausgelesen zu werden.", "Fußball-Elfmeter: Torwart und Schütze spielen gemischte Strategien (Palacios-Huerta, 2003: entspricht exakt dem Nash-GG).", "Steuerprüfungen: Zufällige Auswahl macht Steuerhinterziehung weniger lohnend als vorhersehbare Muster."],
+            "lernen": "Unvorhersehbarkeit ist Strategie. Die optimale Mischrate lässt den Gegner indifferent zwischen seinen Optionen."
+        },
+        "public-goods": {
+            "titel": "Öffentliche Güter & Trittbrettfahrerproblem",
+            "kern": "Wenn alle profitieren, egal ob sie beitragen, ist individuelle Rationalität kollektive Katastrophe. Staatliche Lösungen, Strafen und Normen kompensieren den Marktversagen.",
+            "praxis": ["Steuern: Öffentliche Infrastruktur kann nicht individuell ausgeschlossen werden – privater Markt liefert zu wenig.", "Open Source: Viele nutzen es, wenige tragen bei – trotzdem entstehen Linux, Wikipedia.", "Impfschutz: Herdimmunität ist ein öffentliches Gut – individuelle Rationalität führt zu Unterversorgung."],
+            "lernen": "Kleine Gruppen, Transparenz und Reziprozitätsnormen erhöhen freiwillige Beiträge deutlich."
+        },
+        "diktator": {
+            "titel": "Diktatorspiel & andere-regarding preferences",
+            "kern": "Wenn der Geber keinerlei strategischen Vorteil aus Großzügigkeit zieht, gibt er trotzdem im Schnitt 20–30%. Das widerlegt reinen Eigennutz und belegt, dass Altruismus, Fairness-Normen und soziale Identität echte Nutzenkomponenten sind.",
+            "praxis": ["Spenden ohne Gegensatz: Menschen geben, obwohl keine Reziprozität erwartet wird.", "Trinkgeld bei einmaligem Restaurant-Besuch: Kein strategischer Nutzen, trotzdem Standard.", "Whistleblowing: Hohe persönliche Kosten für soziales Gut ohne direkten Nutzen."],
+            "lernen": "Modelle, die nur Eigennutz annehmen, unterschätzen systematisch Kooperation, Spenden und moralisches Handeln."
+        },
+        "auktion": {
+            "titel": "Vickrey-Auktion & Anreizkompatibilität",
+            "kern": "Eine Auktion ist anreizkompatibel, wenn ehrliches Bieten die dominante Strategie ist. Bei Vickrey (zweitpreisig) zahlt der Gewinner weniger als sein Gebot – und kann trotzdem nicht von strategischem Unter- oder Überbieten profitieren.",
+            "praxis": ["Google Ads: Zweitpreisauktion macht ehrliches Bieten optimal für Werbetreibende.", "Spectrum-Auktionen: Staaten verwenden komplexe Auktionsdesigns, um Wahrheit zu incentivieren.", "eBay (vereinfacht): Der Proxy-Bid funktioniert wie eine Vickrey-Auktion."],
+            "lernen": "Mechanismus-Design: Das Ziel ist, Regeln so zu gestalten, dass Eigennutz gesellschaftlich optimale Ergebnisse produziert."
+        },
+        "beauty-contest": {
+            "titel": "Schönheitswettbewerb & K-Level Thinking",
+            "kern": "Die optimale Antwort hängt davon ab, was andere denken – und was andere denken, was andere denken. Nash-GG ist 0, aber Menschen denken nur 1–2 Iterationen tief. K-Level misst die Tiefe strategischen Denkens.",
+            "praxis": ["Finanzmärkte: Keynes' Schönheitswettbewerb – du kaufst nicht was du schön findest, sondern was andere schön finden werden.", "Preissetzung bei Launch: Wo setzen Konkurrenten ihre Preise? Nicht optimal, sondern was sie von dir erwarten.", "Poker: Level-0 schaut eigene Karten, Level-1 schätzt gegnerische Karten, Level-2 schätzt was der Gegner über dich denkt."],
+            "lernen": "In strategischen Situationen ist es oft wichtiger, wie andere denken als wie man selbst denkt."
+        },
+        "centipede": {
+            "titel": "Centipede-Spiel & Rückwärtsinduktion vs. Kooperation",
+            "kern": "Rückwärtsinduktion sagt: sofort nehmen. Aber Experimente zeigen, dass Spieler bis zu 6-7 Runden kooperieren – weil beide wissen, dass der Kuchen wächst. Das Nash-GG ist kollektiv suboptimal.",
+            "praxis": ["Langfristige Geschäftsbeziehungen: Beide Seiten 'hätten nehmen können', aber kooperieren weiter.", "Politische Deals: 'Jetzt könnten wir brechen' – aber langfristige Kooperation ist besser.", "Reputationsaufbau: Bewusster Verzicht auf kurzfristigen Gewinn für langfristige Zusammenarbeit."],
+            "lernen": "Wenn Rückwärtsinduktion zu kollektiv schlechten Ergebnissen führt, können gemeinsame Erwartungen und Reputation bessere Gleichgewichte stabilisieren."
+        },
+        "dollarauktion": {
+            "titel": "Dollarauktion & versunkene Kosten",
+            "kern": "Einmal drin, ist jeder Schritt rational – aber das Gesamtergebnis ist absurd. Die Falle: versunkene Kosten und Eskalationsdynamik machen den Ausstieg psychologisch schwer.",
+            "praxis": ["Krieg: Beide Seiten eskalieren, weil niemand als Verlierer dastehen will.", "Unternehmensübernahmen: Bietergefechte treiben Preise über den fundamentalen Wert.", "Casinoautomaten: 'Noch einmal, ich habe schon so viel investiert.'"],
+            "lernen": "Erkenne Eskalationsfallen frühzeitig. Der beste Ausstieg ist oft der frühe Ausstieg – bevor die versunkenen Kosten die Entscheidung trüben."
+        },
+        "verhandlung": {
+            "titel": "Verhandlung & Rubinstein-Modell",
+            "kern": "Wer geduldiger ist (niedrigere Diskontrate), hat mehr Verhandlungsmacht. Das Nash-Bargaining-Gleichgewicht teilt den Surplus proportional zu Drohpunkten und Geduld.",
+            "praxis": ["Jobverhandlungen: Wer mehrere Angebote hat (starke BATNA), verhandelt besser.", "M&A-Transaktionen: Zeit ist Geld – wer unter Druck ist, gibt nach.", "Tarifverhandlungen: Streikfähigkeit (Geduld) ist der entscheidende Machtfaktor."],
+            "lernen": "Kenne deine BATNA. Verbessere sie. Und kommuniziere sie glaubwürdig – nicht als Bluff."
+        },
+        "minderheit": {
+            "titel": "Minderheitsspiel & Anti-Koordination",
+            "kern": "Im Minderheitsspiel ist Koordination schädlich – wer dasselbe macht wie die Mehrzahl, verliert. Das System konvergiert zu einem gemischten Gleichgewicht, wenn Spieler adaptieren.",
+            "praxis": ["Finanzmarkt-Arbitrage: Wenn alle dieselbe Strategie verfolgen, verschwindet die Rendite.", "Verkehrsrouten: Wenn alle dieselbe 'kürzeste Route' nehmen, ist sie nicht mehr die kürzeste.", "Modezyklen: Trends sterben, wenn sie Mainstream werden."],
+            "lernen": "In Anti-Koordinationsspielen lohnt es sich, die Minderheitsposition einzunehmen – aber nur solange sie Minderheit ist."
+        },
+    } %}
+
+    {% if current_game_id in game_concepts %}
+    {% set c = game_concepts[current_game_id] %}
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-4">
+        <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">— Das Konzept dahinter —</div>
+        <p class="font-bold text-slate-800 mb-2">{{ c.titel }}</p>
+        <p class="text-sm text-slate-600 mb-3 leading-relaxed">{{ c.kern }}</p>
+        <div class="bg-white rounded-lg border border-slate-100 p-3 mb-3">
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Reale Beispiele:</p>
+            <ul class="space-y-1.5">
+            {% for bsp in c.praxis %}
+                <li class="text-xs text-slate-600 flex gap-2 leading-relaxed"><span class="text-indigo-400 shrink-0 mt-0.5">→</span><span>{{ bsp }}</span></li>
+            {% endfor %}
+            </ul>
+        </div>
+        <p class="text-xs text-emerald-700 font-medium bg-emerald-50 rounded-lg px-3 py-2">✓ {{ c.lernen }}</p>
+    </div>
+    {% endif %}
+
     {# ── Navigation ── #}
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
         <a href="/spiele/{{ current_game_id }}"

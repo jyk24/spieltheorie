@@ -33,19 +33,32 @@
 
     <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="spiel-area">
         <p class="font-semibold text-slate-800 mb-2">Wie viele Tester brauchst du mindestens?</p>
-        <p class="text-sm text-slate-500 mb-5">Denk daran: Tester können aus mehreren Fässern trinken – gleichzeitig, in einer Nacht.</p>
+        <p class="text-sm text-slate-500 mb-5">Tester können aus mehreren Fässern trinken – gleichzeitig, in einer Nacht. Minimiere die Anzahl.</p>
 
-        <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
-            {% for val in [1, 3, 7, 10, 15, 30, 100, 500] %}
-            <button hx-post="/raetsel/vergiftete-faesser/result"
-                    hx-target="#spiel-area"
-                    hx-swap="innerHTML"
-                    hx-vals='{"guess": "{{ val }}"}'
-                    class="py-4 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-indigo-300 hover:bg-indigo-50 transition-all font-bold text-slate-700 text-lg">
-                {{ val }}
+        <div class="flex gap-3 mb-2">
+            <input type="number" id="tester-guess" min="1" max="1000" placeholder="Deine Antwort…"
+                   class="flex-1 border-2 border-slate-200 rounded-xl px-4 py-3 text-xl font-bold text-center focus:border-indigo-400 focus:outline-none"
+                   onkeydown="if(event.key==='Enter') submitGuess()">
+            <button onclick="submitGuess()"
+                    class="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors text-sm whitespace-nowrap">
+                Prüfen →
             </button>
-            {% endfor %}
         </div>
+        <p class="text-xs text-slate-400 mb-1">Hinweis: Die Antwort ist eine einstellige Zahl.</p>
+        <div id="loading" class="htmx-indicator text-center text-slate-400 text-sm mt-3">Auswerten…</div>
     </div>
 </div>
+
+<script>
+function submitGuess() {
+    const val = document.getElementById('tester-guess').value;
+    if (!val || parseInt(val) < 1) return;
+    htmx.ajax('POST', '/raetsel/vergiftete-faesser/result', {
+        target: '#spiel-area',
+        swap: 'innerHTML',
+        values: { guess: val }
+    });
+}
+</script>
+
 {% endblock %}
