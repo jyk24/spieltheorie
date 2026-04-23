@@ -33,12 +33,12 @@
                 </tr>
             </thead>
             <tbody>
-                {% for fass in [1, 2, 3, 42, 100, 500, 999] %}
+                {% for row in bit_rows %}
                 <tr class="border-t border-slate-200">
-                    <td class="py-1 pr-4 text-slate-600">Nr. {{ fass }}</td>
-                    {% for bit in range(9, -1, -1) %}
-                    <td class="py-1 pr-2 {% if (fass >> bit) & 1 %}text-red-600 font-bold{% else %}text-slate-300{% endif %}">
-                        {{ (fass >> bit) & 1 }}
+                    <td class="py-1 pr-4 text-slate-600">Nr. {{ row.fass }}</td>
+                    {% for b in row.bits %}
+                    <td class="py-1 pr-2 {% if b %}text-red-600 font-bold{% else %}text-slate-300{% endif %}">
+                        {{ b }}
                     </td>
                     {% endfor %}
                 </tr>

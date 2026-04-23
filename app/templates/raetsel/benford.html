@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Benfords Gesetz – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🔢 Benfords Gesetz</h1>
+        <p class="text-slate-500 mt-1">Warum beginnen Einwohnerzahlen, Börsenkurse und Steuererklärungen so auffällig oft mit einer 1?</p>
+    </div>
+
+    <!-- Das Phänomen -->
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5 text-sm text-slate-700">
+        <p class="font-semibold text-slate-800 mb-2">Das Phänomen:</p>
+        <p class="mb-3">Frank Benford beobachtete 1938 etwas Seltsames: In fast allen realen Datensätzen – von Flusslängen bis Aktienkursen – beginnt die <strong>erste Ziffer</strong> nicht gleichmäßig oft mit 1..9. Stattdessen:</p>
+        <div class="grid grid-cols-9 gap-1 text-center text-xs mb-2">
+            {% for pct in expected %}
+            <div>
+                <div class="h-20 bg-indigo-50 border border-indigo-200 rounded flex items-end justify-center relative">
+                    <div class="bg-indigo-500 w-full rounded-b" style="height: {{ (pct * 2.5)|round(1) }}%;"></div>
+                </div>
+                <div class="mt-1 font-bold text-indigo-700">{{ loop.index }}</div>
+                <div class="text-slate-500 text-[0.65rem]">{{ pct }}%</div>
+            </div>
+            {% endfor %}
+        </div>
+        <p class="text-xs text-slate-500">Formel: <span class="font-mono">P(d) = log₁₀(1 + 1/d)</span> – eine logarithmische, nicht gleichmäßige Verteilung.</p>
+    </div>
+
+    <!-- Warum das? -->
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-6 text-sm text-amber-800">
+        <p class="font-semibold mb-2">Warum ist das so?</p>
+        <p class="text-xs">Zahlen, die über mehrere Größenordnungen streuen (1–10, 10–100, 100–1.000, …), verbringen logarithmisch gesehen mehr Zeit mit einer 1 als Führungsziffer: Der Sprung von 1 nach 2 ist prozentual größer als von 8 nach 9. Benford gilt fast überall dort, wo Zahlen multiplikativ entstehen – Umsätze, Bevölkerungen, Naturkonstanten.</p>
+    </div>
+
+    <!-- Die Aufgabe -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+        <p class="font-semibold text-slate-800 mb-1">Deine Aufgabe:</p>
+        <p class="text-sm text-slate-500 mb-4">Du erhältst vier Datensätze. Für jeden: Passt die Verteilung der ersten Ziffern zu Benford (= plausibel echt) oder nicht (= verdächtig / künstlich)?</p>
+
+        <div id="benford-area" class="space-y-3">
+            {% for ds in datasets %}
+            <div class="border border-slate-200 rounded-xl p-4">
+                <div class="flex items-center justify-between mb-1">
+                    <div class="font-semibold text-slate-800">{{ ds.label }}</div>
+                    <div class="text-xs text-slate-400">Datensatz {{ loop.index }}</div>
+                </div>
+                <p class="text-xs text-slate-500 mb-3">{{ ds.context }}</p>
+
+                <!-- Observed distribution bar -->
+                {% set total = ds.counts | sum %}
+                <div class="grid grid-cols-9 gap-1 text-center text-[0.65rem] mb-3">
+                    {% for c in ds.counts %}
+                    <div>
+                        <div class="h-16 bg-slate-50 border border-slate-200 rounded flex items-end justify-center">
+                            <div class="bg-rose-400 w-full rounded-b" style="height: {{ ((c / total * 100) * 2.5)|round(1) }}%;"></div>
+                        </div>
+                        <div class="mt-1 font-bold text-slate-700">{{ loop.index }}</div>
+                        <div class="text-slate-400">{{ (c / total * 100)|round(1) }}%</div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <form hx-post="/raetsel/benford/result"
+                          hx-target="closest .border" hx-swap="outerHTML">
+                        <input type="hidden" name="key" value="{{ ds.key }}">
+                        <input type="hidden" name="guess" value="echt">
+                        <button class="w-full py-2 rounded-lg border-2 border-emerald-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all text-sm font-medium text-emerald-700">
+                            ✅ Echt (folgt Benford)
+                        </button>
+                    </form>
+                    <form hx-post="/raetsel/benford/result"
+                          hx-target="closest .border" hx-swap="outerHTML">
+                        <input type="hidden" name="key" value="{{ ds.key }}">
+                        <input type="hidden" name="guess" value="gefälscht">
+                        <button class="w-full py-2 rounded-lg border-2 border-rose-200 hover:border-rose-400 hover:bg-rose-50 transition-all text-sm font-medium text-rose-700">
+                            🚨 Verdächtig / künstlich
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Anwendung -->
+    <div class="mt-5 bg-indigo-50 border border-indigo-200 rounded-xl p-4 text-sm text-indigo-800">
+        <p class="font-semibold mb-1">Wo wird das eingesetzt?</p>
+        <ul class="text-xs space-y-1.5">
+            <li class="flex gap-2"><span>•</span><span><strong>Finanzprüfung:</strong> Nigrini (1999) nutzt Benford, um gefälschte Bilanzen zu entlarven. Der Enron-Skandal fiel u.a. so auf.</span></li>
+            <li class="flex gap-2"><span>•</span><span><strong>Wahlbetrug:</strong> Analysen der iranischen Wahl 2009 zeigten Abweichungen von Benford in offiziellen Stimmenzahlen.</span></li>
+            <li class="flex gap-2"><span>•</span><span><strong>Naturwissenschaft:</strong> Physikalische Konstanten, Erdbebenstärken, Populationen – überall findet sich das Muster.</span></li>
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

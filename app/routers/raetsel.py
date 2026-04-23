@@ -124,6 +124,16 @@ RAETSEL_META = [
         "kategorie": "Statistik",
     },
     {
+        "id": "benford",
+        "name": "Benfords Gesetz",
+        "icon": "🔢",
+        "beschreibung": "In realen Datensätzen fängt etwa jede dritte Zahl mit einer 1 an – aber nur jede zwanzigste mit einer 9. Ein seltsames Muster, das Finanzprüfer nutzen, um Bilanzbetrug zu entlarven. Kannst du die gefälschten Zahlen erkennen?",
+        "typ": "Statistik-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Statistik",
+    },
+    {
         "id": "anker-experiment",
         "name": "Der Anker-Effekt",
         "icon": "⚓",
@@ -154,6 +164,16 @@ RAETSEL_META = [
         "kategorie": "Logik",
     },
     # ── Mathematik & Unendlichkeit ─────────────────────────────────────────────
+    {
+        "id": "schubfach",
+        "name": "Das Schubfach-Prinzip",
+        "icon": "🕊️",
+        "beschreibung": "Müssen in einer Großstadt zwei Menschen exakt gleich viele Haare auf dem Kopf haben? Dirichlet bewies 1834 ein Prinzip so einfach, dass es trivial klingt – und das trotzdem in der Zahlentheorie, Informatik und Kombinatorik heute noch Beweise trägt.",
+        "typ": "Mathematik-Prinzip",
+        "schwierigkeit": "Einsteiger",
+        "dauer": "4 min",
+        "kategorie": "Mathematik",
+    },
     {
         "id": "achilles",
         "name": "Achilles und die Schildkröte",
@@ -1698,10 +1718,23 @@ def vergiftete_faesser_page(request: Request):
 @router.post("/vergiftete-faesser/result", response_class=HTMLResponse)
 def vergiftete_faesser_result(request: Request, guess: int = Form(...)):
     correct = 10
+    sample_barrels = [1, 2, 3, 42, 100, 500, 999]
+    bit_rows = [
+        {
+            "fass": fass,
+            "bits": [(fass >> bit) & 1 for bit in range(9, -1, -1)],
+        }
+        for fass in sample_barrels
+    ]
     return templates.TemplateResponse(
         request,
         "partials/vergiftete_faesser_result.html",
-        {"guess": guess, "correct": correct, "is_correct": guess == correct},
+        {
+            "guess": guess,
+            "correct": correct,
+            "is_correct": guess == correct,
+            "bit_rows": bit_rows,
+        },
     )
 
 
@@ -2114,14 +2147,14 @@ _achilles_speed = 10.0
 _turtle_speed = 1.0
 for _i in range(7):
     _gap = _turtle_pos - _achilles_pos
-    _dt = _gap / _achilles_speed
-    _time += _dt
+    _delta_t = _gap / _achilles_speed
+    _time += _delta_t
     _achilles_pos = _turtle_pos
-    _turtle_pos += _dt * _turtle_speed
+    _turtle_pos += _delta_t * _turtle_speed
     _ACHILLES_STEPS.append({
         "step": _i + 1,
         "gap": round(_gap, 4),
-        "dt": round(_dt, 4),
+        "dt": round(_delta_t, 4),
         "total_time": round(_time, 4),
         "achilles_pos": round(_achilles_pos, 4),
         "turtle_pos": round(_turtle_pos, 4),
@@ -2622,4 +2655,152 @@ def batna_page(request: Request):
 def trugschluesse_page(request: Request):
     return templates.TemplateResponse(
         request, "raetsel/trugschluesse.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Benfords Gesetz – Erste-Ziffer-Verteilung
+# ---------------------------------------------------------------------------
+
+import math as _math
+
+_BENFORD_EXPECTED = [
+    round(_math.log10(1 + 1 / d) * 100, 1) for d in range(1, 10)
+]  # % für erste Ziffer 1..9
+
+_BENFORD_DATASETS = [
+    {
+        "key": "einwohnerzahlen",
+        "label": "Einwohnerzahlen deutscher Städte",
+        "context": "Einwohnerzahlen von 2.057 deutschen Städten und Gemeinden.",
+        "counts": [622, 360, 259, 197, 172, 144, 122, 100, 81],
+        "is_real": True,
+        "verdict": "✅ Echt – folgt Benfords Gesetz fast perfekt.",
+        "explain": "Natürlich gewachsene Größen (Einwohnerzahlen, Flusslängen, Börsenkurse) spannen mehrere Größenordnungen und folgen Benford.",
+    },
+    {
+        "key": "umsaetze",
+        "label": "Monatsumsätze einer Firma",
+        "context": "Buchhaltung eines angeblichen Dienstleisters, 500 Rechnungen.",
+        "counts": [56, 55, 57, 54, 56, 58, 56, 54, 54],
+        "is_real": False,
+        "verdict": "🚨 Verdächtig – fast gleich verteilt, statt fallend.",
+        "explain": "Gefälschte Zahlen sind oft annähernd gleichverteilt über alle Ziffern (1..9). Finanzprüfer erkennen so Betrug (Nigrini, 1999).",
+    },
+    {
+        "key": "lottozahlen",
+        "label": "Lottozahlen der letzten 10 Jahre",
+        "context": "Erste Ziffer der gezogenen Lottozahlen (1–49), ~3.120 Ziehungen.",
+        "counts": [701, 698, 704, 693, 65, 63, 66, 68, 62],
+        "is_real": False,
+        "verdict": "❌ Folgt Benford NICHT – und das ist in Ordnung.",
+        "explain": "Bei künstlich begrenzten Wertebereichen (1–49) greift Benford nicht: 11 Zahlen starten mit 1, 2, 3, 4, aber nur eine jeweils mit 5–9. Das Gesetz gilt nur für Daten über mehrere Größenordnungen.",
+    },
+    {
+        "key": "fibonacci",
+        "label": "Die ersten 500 Fibonacci-Zahlen",
+        "context": "Erste Ziffern von F(1) … F(500).",
+        "counts": [151, 88, 63, 48, 40, 34, 30, 25, 21],
+        "is_real": True,
+        "verdict": "✅ Perfekte Benford-Verteilung.",
+        "explain": "Fibonacci-Zahlen wachsen exponentiell – genau dann taucht Benfords Gesetz auf. Das gilt für fast jede multiplikative Folge.",
+    },
+]
+
+
+@router.get("/benford", response_class=HTMLResponse)
+def benford_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "raetsel/benford.html",
+        {
+            "active_page": "raetsel",
+            "expected": _BENFORD_EXPECTED,
+            "datasets": _BENFORD_DATASETS,
+        },
+    )
+
+
+@router.post("/benford/result", response_class=HTMLResponse)
+def benford_result(request: Request, key: str = Form(...), guess: str = Form(...)):
+    dataset = next((d for d in _BENFORD_DATASETS if d["key"] == key), None)
+    if dataset is None:
+        dataset = _BENFORD_DATASETS[0]
+    total = sum(dataset["counts"]) or 1
+    observed = [round(c / total * 100, 1) for c in dataset["counts"]]
+    correct_answer = "echt" if dataset["is_real"] else "gefälscht"
+    is_correct = guess == correct_answer
+    return templates.TemplateResponse(
+        request,
+        "partials/benford_result.html",
+        {
+            "dataset": dataset,
+            "observed": observed,
+            "expected": _BENFORD_EXPECTED,
+            "guess": guess,
+            "correct_answer": correct_answer,
+            "is_correct": is_correct,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Schubfach-Prinzip (Dirichlet 1834)
+# ---------------------------------------------------------------------------
+
+_SCHUBFACH_SCENARIOS = [
+    {
+        "id": "haare",
+        "frage": "Eine Stadt hat 1.000.000 Einwohner. Ein Mensch hat höchstens etwa 150.000 Haare auf dem Kopf. Müssen mindestens zwei Einwohner exakt gleich viele Haare haben?",
+        "richtig": "ja",
+        "erklaerung": "1.000.000 Tauben (Menschen), 150.001 Schubladen (mögliche Haaranzahlen 0…150.000). Da es mehr Tauben als Schubladen gibt, müssen mindestens zwei Menschen dieselbe Haaranzahl teilen.",
+    },
+    {
+        "id": "socken",
+        "frage": "In einer dunklen Schublade liegen 10 schwarze und 10 weiße Socken. Wie viele Socken musst du mindestens ziehen, um sicher ein farbgleiches Paar zu haben?",
+        "richtig": "drei",
+        "erklaerung": "Zwei Schubladen (Farben), drei Tauben (Socken). Nach drei Zügen müssen zwei dieselbe Farbe haben – egal wie du ziehst.",
+    },
+    {
+        "id": "zahlen",
+        "frage": "Wähle irgendwelche 5 ganzen Zahlen. Gibt es garantiert zwei von ihnen, deren Differenz durch 4 teilbar ist?",
+        "richtig": "ja",
+        "erklaerung": "Jede Zahl hat bei Division durch 4 einen Rest aus {0, 1, 2, 3} – also nur 4 Schubladen. Bei 5 Zahlen liegen zwei im selben Schubfach; ihre Differenz ist durch 4 teilbar.",
+    },
+    {
+        "id": "bekanntschaften",
+        "frage": "Auf einer Party mit n ≥ 2 Gästen: Gibt es immer zwei, die exakt gleich viele andere Gäste kennen?",
+        "richtig": "ja",
+        "erklaerung": "Jeder kennt zwischen 0 und n−1 andere. Aber 0 und n−1 können nicht gleichzeitig vorkommen (wer alle kennt, kennt auch den, der niemanden kennt – Widerspruch). Also nur n−1 mögliche Schubladen für n Gäste.",
+    },
+]
+
+
+@router.get("/schubfach", response_class=HTMLResponse)
+def schubfach_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "raetsel/schubfach.html",
+        {"active_page": "raetsel", "scenarios": _SCHUBFACH_SCENARIOS},
+    )
+
+
+@router.post("/schubfach/result", response_class=HTMLResponse)
+def schubfach_result(
+    request: Request,
+    scenario_id: str = Form(...),
+    answer: str = Form(...),
+):
+    scenario = next((s for s in _SCHUBFACH_SCENARIOS if s["id"] == scenario_id), None)
+    if scenario is None:
+        scenario = _SCHUBFACH_SCENARIOS[0]
+    is_correct = answer == scenario["richtig"]
+    return templates.TemplateResponse(
+        request,
+        "partials/schubfach_result.html",
+        {
+            "scenario": scenario,
+            "answer": answer,
+            "is_correct": is_correct,
+        },
     )

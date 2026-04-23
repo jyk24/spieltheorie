@@ -1,0 +1,31 @@
+<div class="border rounded-xl p-4 {% if is_correct %}border-emerald-300 bg-emerald-50{% else %}border-rose-300 bg-rose-50{% endif %}">
+    <div class="flex items-center justify-between mb-1">
+        <div class="font-semibold text-slate-800">{{ dataset.label }}</div>
+        <div class="text-xs {% if is_correct %}text-emerald-600{% else %}text-rose-600{% endif %} font-bold">
+            {% if is_correct %}✓ Richtig{% else %}✗ Falsch{% endif %}
+        </div>
+    </div>
+    <p class="text-xs text-slate-600 mb-3">Du hast getippt: <strong>{{ guess }}</strong> · Korrekte Antwort: <strong>{{ correct_answer }}</strong></p>
+
+    <!-- Overlay: beobachtet vs. Benford -->
+    <div class="grid grid-cols-9 gap-1 text-center text-[0.65rem] mb-3">
+        {% for i in range(9) %}
+        <div>
+            <div class="h-20 bg-white border border-slate-200 rounded flex items-end justify-center relative overflow-hidden">
+                <!-- Benford-Erwartung als Linie -->
+                <div class="absolute left-0 right-0 h-0.5 bg-indigo-400" style="bottom: {{ (expected[i] * 2.5)|round(1) }}%;"></div>
+                <!-- Beobachtete Balken -->
+                <div class="{% if is_correct %}bg-emerald-400{% else %}bg-rose-400{% endif %} w-full rounded-b" style="height: {{ (observed[i] * 2.5)|round(1) }}%;"></div>
+            </div>
+            <div class="mt-1 font-bold text-slate-700">{{ i + 1 }}</div>
+            <div class="text-slate-400">{{ observed[i] }}%</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="bg-white/70 rounded-lg p-3 text-xs text-slate-700 border border-slate-200">
+        <p class="font-semibold mb-1">{{ dataset.verdict }}</p>
+        <p>{{ dataset.explain }}</p>
+        <p class="text-slate-400 mt-2">Indigo-Linie = Benford-Erwartung, Balken = beobachtete Häufigkeit.</p>
+    </div>
+</div>

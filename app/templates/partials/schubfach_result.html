@@ -1,0 +1,12 @@
+<div class="border rounded-xl p-4 {% if is_correct %}border-emerald-300 bg-emerald-50{% else %}border-rose-300 bg-rose-50{% endif %}" id="scenario-{{ scenario.id }}">
+    <p class="text-sm font-medium text-slate-800 mb-2">{{ scenario.frage }}</p>
+    <div class="flex items-center gap-2 mb-2">
+        <span class="text-xs font-bold {% if is_correct %}text-emerald-600{% else %}text-rose-600{% endif %}">
+            {% if is_correct %}✓ Richtig{% else %}✗ Falsch{% endif %}
+        </span>
+        <span class="text-xs text-slate-500">· deine Antwort: <strong>{{ answer }}</strong> · korrekt: <strong>{{ scenario.richtig }}</strong></span>
+    </div>
+    <div class="bg-white/70 border border-slate-200 rounded-lg p-3 text-xs text-slate-700">
+        {{ scenario.erklaerung }}
+    </div>
+</div>

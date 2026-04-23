@@ -61,6 +61,7 @@ LERNPFADE = [
             {"id": "falsch-positiv",        "name": "Falsch-Positiv-Paradoxon",  "icon": "🔬", "dauer": "4 min", "schwierigkeit": "Einstieg"},
             {"id": "bayes-theorem",         "name": "Das Bayes-Theorem",         "icon": "📐", "dauer": "5 min", "schwierigkeit": "Mittel"},
             {"id": "gesetz-grosse-zahlen",  "name": "Gesetz der großen Zahlen",  "icon": "📈", "dauer": "4 min", "schwierigkeit": "Mittel"},
+            {"id": "benford",               "name": "Benfords Gesetz",           "icon": "🔢", "dauer": "5 min", "schwierigkeit": "Mittel"},
             {"id": "survivorship-bias",     "name": "Survivorship Bias",         "icon": "✈️", "dauer": "5 min", "schwierigkeit": "Mittel"},
             {"id": "regression-zur-mitte",  "name": "Regression zur Mitte",      "icon": "📊", "dauer": "4 min", "schwierigkeit": "Mittel"},
             {"id": "simpson",               "name": "Simpson-Paradoxon",         "icon": "📊", "dauer": "4 min", "schwierigkeit": "Fortgeschritten"},
@@ -87,6 +88,7 @@ LERNPFADE = [
         ],
         "puzzles": [
             {"id": "geschwindigkeit",   "name": "Durchschnittsgeschwindigkeit",  "icon": "🚗", "dauer": "4 min", "schwierigkeit": "Einstieg"},
+            {"id": "schubfach",         "name": "Das Schubfach-Prinzip",        "icon": "🕊️", "dauer": "4 min", "schwierigkeit": "Einstieg"},
             {"id": "achilles",          "name": "Achilles & die Schildkröte",   "icon": "🐢", "dauer": "5 min", "schwierigkeit": "Einstieg"},
             {"id": "hilberts-hotel",    "name": "Hilberts Hotel",               "icon": "🏨", "dauer": "5 min", "schwierigkeit": "Mittel"},
             {"id": "grandis-serie",     "name": "Grandis Serie",                "icon": "∞",  "dauer": "4 min", "schwierigkeit": "Mittel"},
