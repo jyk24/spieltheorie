@@ -1,0 +1,125 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    {% if level == "perfekt" %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">Exakt – {{ korrekt_wert }} % stimmt!</h3>
+        <p class="text-sm text-emerald-700">
+            Du hast {{ schaetzung }} % geschätzt. Die Ziffer 1 taucht in realen Datensätzen mit ≈ 30,1 %
+            als führende Ziffer auf – fast dreimal so häufig wie „naiv" erwartet.
+        </p>
+    </div>
+    {% elif level == "solide" %}
+    <div class="mb-5 p-4 rounded-xl bg-blue-50 border-2 border-blue-300">
+        <h3 class="text-xl font-bold text-blue-800 mb-1">Gute Intuition: du warst bei {{ schaetzung }} %.</h3>
+        <p class="text-sm text-blue-700">
+            Richtig sind ≈ {{ korrekt_wert }} %. Die meisten Menschen tippen auf ~11 % (also 1 von 9 Ziffern gleich­verteilt)
+            – du lagst deutlich näher an der Realität.
+        </p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-xl font-bold text-amber-800 mb-1">Überraschend: ≈ {{ korrekt_wert }} % ist richtig.</h3>
+        <p class="text-sm text-amber-700">
+            Du hast {{ schaetzung }} % geschätzt. Die „naive" Antwort wäre {{ naiv_wert }} % (1 von 9 gleich­verteilt).
+            Tatsächlich beginnt fast jede dritte natürliche Zahl mit einer 1.
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Benford-Verteilung -->
+    <div class="mb-5">
+        <h4 class="font-bold text-slate-800 mb-3">Benford-Verteilung: erwartete Häufigkeit pro führender Ziffer</h4>
+        <div class="space-y-1.5">
+            {% for pct in expected %}
+            <div class="flex items-center gap-3">
+                <div class="w-6 text-right text-sm font-bold text-indigo-700">{{ loop.index }}</div>
+                <div class="flex-1 bg-slate-100 rounded-full h-4 overflow-hidden">
+                    <div class="h-full rounded-full bg-indigo-400"
+                         style="width: {{ (pct * 3) }}%"></div>
+                </div>
+                <div class="w-14 text-sm font-medium text-slate-700">{{ pct }} %</div>
+            </div>
+            {% endfor %}
+        </div>
+        <p class="text-xs text-slate-500 mt-2 font-mono">Formel: P(d) = log<sub>10</sub>(1 + 1/d)</p>
+    </div>
+
+    <!-- Reale Datensätze -->
+    <div class="mb-5">
+        <h4 class="font-bold text-slate-800 mb-3">Reale Datensätze vs. Benford</h4>
+        <div class="space-y-3">
+            {% for ds in datasets %}
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
+                <div class="flex items-start justify-between mb-2">
+                    <div>
+                        <p class="text-sm font-semibold text-slate-800">{{ ds.name }}</p>
+                        <p class="text-xs text-slate-500">{{ ds.quelle }}</p>
+                    </div>
+                    {% if ds.id == "enron" %}
+                    <span class="text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full font-semibold">Auffällig</span>
+                    {% else %}
+                    <span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-semibold">Benford-konform</span>
+                    {% endif %}
+                </div>
+                <div class="flex gap-1 items-end h-12">
+                    {% for d in ds.digits %}
+                    <div class="flex-1 flex flex-col items-center justify-end">
+                        <div class="w-full {% if ds.id == 'enron' %}bg-rose-400{% else %}bg-teal-400{% endif %} rounded-t"
+                             style="height: {{ (d * 2.5) }}%"
+                             title="Ziffer {{ loop.index }}: {{ d }} %"></div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="flex gap-1 mt-1">
+                    {% for d in ds.digits %}
+                    <div class="flex-1 text-center text-xs text-slate-400">{{ loop.index }}</div>
+                    {% endfor %}
+                </div>
+                <p class="text-xs text-slate-600 mt-2 italic">{{ ds.hinweis }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Warum funktioniert es? -->
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-800">
+        <p class="font-semibold mb-2">Warum ist das so?</p>
+        <p class="mb-2">
+            Natürliche Zahlen wachsen häufig <strong>multiplikativ</strong> (z.&nbsp;B. Zinseszins, Bevölkerung, Physik).
+            Bei multiplikativem Wachstum verbringt eine Zahl mehr Zeit im Bereich 1xxx–1999 als im Bereich 9000–9999,
+            weil der Sprung von 1 auf 2 eine <em>Verdopplung</em> ist, der von 9 auf 10 nur +11 %.
+        </p>
+        <p class="mb-2">
+            Auf einer logarithmischen Skala ist der Abstand von „1" zu „2" deshalb viel größer als von „9" zu „10" –
+            und die Wahrscheinlichkeit der führenden Ziffer <em>d</em> ist genau
+            <span class="font-mono">log<sub>10</sub>(1 + 1/d)</span>.
+        </p>
+        <p class="text-xs">
+            Ziffer 1: 30,1 % &nbsp;·&nbsp; Ziffer 2: 17,6 % &nbsp;·&nbsp; Ziffer 9: nur 4,6 %.
+        </p>
+    </div>
+
+    <!-- Anwendung -->
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+        <p class="font-semibold mb-1">Anwendung: Forensische Analyse</p>
+        <p class="mb-1">
+            Mark Nigrini nutzte Benfords Gesetz ab 1994, um manipulierte Buchhaltungen aufzudecken. Wer Zahlen
+            „aus dem Bauch heraus" erfindet, nutzt alle Ziffern etwa gleich oft – die charakteristische
+            Benford-Kurve fehlt dann. So wurden u.&nbsp;a. Unregelmäßigkeiten bei Enron (2001) sichtbar.
+        </p>
+        <p><strong>Limit:</strong> Das Gesetz greift nur bei Daten, die mehrere Größen­ordnungen überspannen.
+            Postleitzahlen oder Körpergrößen folgen ihm nicht.</p>
+    </div>
+
+    <div class="flex gap-3 flex-wrap">
+        <a href="/raetsel/benford" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/raetsel/gesetz-grosse-zahlen" class="border border-teal-200 text-teal-700 px-5 py-2 rounded-lg text-sm font-medium hover:bg-teal-50">
+            📊 Gesetz der großen Zahlen
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>

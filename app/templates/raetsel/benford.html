@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Benfords Gesetz – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">1️⃣ Benfords Gesetz</h1>
+        <p class="text-slate-500 mt-1">Warum beginnt fast jede dritte reale Zahl mit einer 1 – und was hat das mit Steuerbetrug zu tun?</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Frage:</p>
+        <p class="mb-3">
+            Du sammelst eine beliebige Liste „natürlicher" Zahlen: Einwohnerzahlen, Flusslängen,
+            Aktienkurse, physikalische Konstanten. Jetzt schaust du nur auf die <strong>erste Ziffer</strong>
+            jeder Zahl (also die Ziffer ganz links, ohne Null).
+        </p>
+        <p class="mb-3">Intuitiv sollte jede Ziffer 1–9 etwa gleich häufig vorkommen: also <strong>1 von 9 ≈ 11,1 %</strong>.</p>
+        <div class="bg-white border border-slate-100 rounded-lg p-3 text-xs text-slate-600">
+            <p class="font-medium mb-1">Aber:</p>
+            <ul class="space-y-0.5">
+                <li>→ Frank Benford (1938) analysierte 20 229 Zahlen aus 20 Quellen</li>
+                <li>→ Simon Newcomb hatte das Muster bereits 1881 in Logarithmen­tafeln bemerkt</li>
+                <li>→ Heute nutzen Finanzämter & Wirtschaftsprüfer es zur Betrugs­erkennung</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="spiel-area">
+        <p class="font-semibold text-slate-800 mb-2">Deine Schätzung:</p>
+        <p class="text-sm text-slate-500 mb-5">
+            Wie oft beginnt eine zufällig aus einem realen Datensatz gezogene Zahl mit der Ziffer <strong>1</strong>?
+        </p>
+
+        <form hx-post="/raetsel/benford/result"
+              hx-target="#spiel-area"
+              hx-swap="innerHTML"
+              class="space-y-5">
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">
+                    Meine Schätzung: <span id="benford-display" class="font-bold text-indigo-700">15</span> %
+                </label>
+                <input type="range" min="5" max="60" value="15" step="1"
+                       name="schaetzung" id="benford-slider"
+                       class="w-full accent-indigo-600"
+                       oninput="document.getElementById('benford-display').textContent = this.value">
+                <div class="flex justify-between text-xs text-slate-400 mt-1">
+                    <span>5 %</span>
+                    <span>30 %</span>
+                    <span>60 %</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-4 gap-2 text-xs text-center">
+                {% for v in [11, 20, 30, 45] %}
+                <button type="button"
+                        onclick="setBenfordGuess({{ v }})"
+                        class="py-2 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600">
+                    {{ v }} %
+                </button>
+                {% endfor %}
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
+                Auflösung ansehen →
+            </button>
+        </form>
+    </div>
+
+    <div class="mt-6 bg-teal-50 border border-teal-200 rounded-xl p-4 text-sm text-teal-800">
+        <p class="font-semibold mb-1">💡 Vorab-Intuition</p>
+        <p class="text-xs leading-relaxed">
+            Zähle im Kopf, wie viele Hausnummern, Uhrzeiten oder Kontostände du heute schon gesehen hast,
+            die mit einer 1 beginnen. Typischerweise überraschend viele – weil eine Zahl, die von 100 auf 200
+            wächst, doppelt so lange mit einer „1" startet wie von 200 auf 300 mit einer „2".
+        </p>
+    </div>
+</div>
+
+<script>
+function setBenfordGuess(val) {
+    const slider = document.getElementById('benford-slider');
+    if (slider) {
+        slider.value = val;
+        document.getElementById('benford-display').textContent = val;
+    }
+}
+</script>
+
+{% endblock %}

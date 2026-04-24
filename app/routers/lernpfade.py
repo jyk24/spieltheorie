@@ -63,6 +63,7 @@ LERNPFADE = [
             {"id": "gesetz-grosse-zahlen",  "name": "Gesetz der großen Zahlen",  "icon": "📈", "dauer": "4 min", "schwierigkeit": "Mittel"},
             {"id": "survivorship-bias",     "name": "Survivorship Bias",         "icon": "✈️", "dauer": "5 min", "schwierigkeit": "Mittel"},
             {"id": "regression-zur-mitte",  "name": "Regression zur Mitte",      "icon": "📊", "dauer": "4 min", "schwierigkeit": "Mittel"},
+            {"id": "benford",               "name": "Benfords Gesetz",           "icon": "1️⃣", "dauer": "4 min", "schwierigkeit": "Mittel"},
             {"id": "simpson",               "name": "Simpson-Paradoxon",         "icon": "📊", "dauer": "4 min", "schwierigkeit": "Fortgeschritten"},
         ],
     },

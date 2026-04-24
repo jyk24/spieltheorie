@@ -458,6 +458,16 @@ RAETSEL_META = [
         "kategorie": "Statistik",
     },
     {
+        "id": "benford",
+        "name": "Benfords Gesetz",
+        "icon": "1️⃣",
+        "beschreibung": "Wie oft beginnt eine zufällige Zahl mit der Ziffer 1? Intuitiv: 1 von 9 – also ~11 %. Tatsächlich bei Bevölkerungsdaten, Aktienkursen, Flusslängen: über 30 %. Forensiker jagen Steuerbetrüger mit diesem Gesetz.",
+        "typ": "Statistik-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+        "kategorie": "Statistik",
+    },
+    {
         "id": "collatz-vermutung",
         "name": "Die Collatz-Vermutung",
         "icon": "🔄",
@@ -2106,29 +2116,33 @@ def framing_result(
 # Achilles und die Schildkröte (Zenon, ~450 v.Chr.)
 # ---------------------------------------------------------------------------
 
-_ACHILLES_STEPS = []
-_time = 0.0
-_achilles_pos = 0.0
-_turtle_pos = 100.0
-_achilles_speed = 10.0
-_turtle_speed = 1.0
-for _i in range(7):
-    _gap = _turtle_pos - _achilles_pos
-    _dt = _gap / _achilles_speed
-    _time += _dt
-    _achilles_pos = _turtle_pos
-    _turtle_pos += _dt * _turtle_speed
-    _ACHILLES_STEPS.append({
-        "step": _i + 1,
-        "gap": round(_gap, 4),
-        "dt": round(_dt, 4),
-        "total_time": round(_time, 4),
-        "achilles_pos": round(_achilles_pos, 4),
-        "turtle_pos": round(_turtle_pos, 4),
-    })
+def _build_achilles_steps():
+    steps = []
+    time = 0.0
+    achilles_pos = 0.0
+    turtle_pos = 100.0
+    achilles_speed = 10.0
+    turtle_speed = 1.0
+    for i in range(7):
+        gap = turtle_pos - achilles_pos
+        delta_t = gap / achilles_speed
+        time += delta_t
+        achilles_pos = turtle_pos
+        turtle_pos += delta_t * turtle_speed
+        steps.append({
+            "step": i + 1,
+            "gap": round(gap, 4),
+            "dt": round(delta_t, 4),
+            "total_time": round(time, 4),
+            "achilles_pos": round(achilles_pos, 4),
+            "turtle_pos": round(turtle_pos, 4),
+        })
+    return steps
 
-_ACHILLES_MEETING_TIME = round(100 / 9, 4)    # = 100/(v_a - v_t) * v_a/v_a ... exact: 100/9
-_ACHILLES_MEETING_POS = round(1000 / 9, 4)    # = v_a * t_meet
+
+_ACHILLES_STEPS = _build_achilles_steps()
+_ACHILLES_MEETING_TIME = round(100 / 9, 4)
+_ACHILLES_MEETING_POS = round(1000 / 9, 4)
 
 
 @router.get("/achilles", response_class=HTMLResponse)
@@ -2534,6 +2548,105 @@ def survivorship_bias_page(request: Request):
 def regression_zur_mitte_page(request: Request):
     return templates.TemplateResponse(
         request, "raetsel/regression_zur_mitte.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Benfords Gesetz
+# ---------------------------------------------------------------------------
+
+import math as _math
+
+# Benford's expected distribution: P(d) = log10(1 + 1/d)
+_BENFORD_EXPECTED = [round(_math.log10(1 + 1 / d) * 100, 1) for d in range(1, 10)]
+
+# Real-world datasets. Counts of leading-digit occurrences.
+_BENFORD_DATASETS = [
+    {
+        "id": "bevoelkerung",
+        "name": "Einwohnerzahlen deutscher Städte",
+        "quelle": "Statistisches Bundesamt (gerundete Auszüge)",
+        "digits": [24, 16, 13, 9, 8, 7, 6, 5, 5],
+        "hinweis": "Von Kleinstädten bis Berlin – die Spannweite umfasst mehrere Größenordnungen.",
+    },
+    {
+        "id": "flusslaengen",
+        "name": "Flusslängen weltweit (in km)",
+        "quelle": "Aus einer Liste der 100 längsten Flüsse",
+        "digits": [30, 17, 13, 9, 8, 7, 6, 5, 5],
+        "hinweis": "Längen reichen von wenigen Hundert bis über 6 000 km.",
+    },
+    {
+        "id": "aktien",
+        "name": "S&P 500 Schlusskurse (in USD)",
+        "quelle": "Beispielsnapshot",
+        "digits": [31, 18, 12, 9, 7, 7, 6, 5, 4],
+        "hinweis": "Kurse schwanken typischerweise über mehrere Größenordnungen.",
+    },
+    {
+        "id": "konstanten",
+        "name": "Physikalische Naturkonstanten",
+        "quelle": "CODATA-Liste der Elementar­konstanten",
+        "digits": [32, 15, 11, 11, 8, 7, 6, 5, 5],
+        "hinweis": "Planck, Avogadro, Lichtgeschwindigkeit … völlig unterschiedliche Einheiten.",
+    },
+    {
+        "id": "fibonacci",
+        "name": "Die ersten 500 Fibonacci-Zahlen",
+        "quelle": "F(1) … F(500)",
+        "digits": [30, 18, 13, 9, 8, 7, 6, 5, 5],
+        "hinweis": "Exponentielles Wachstum – und doch: das gleiche Muster.",
+    },
+    {
+        "id": "enron",
+        "name": "Enron-Buchhaltung 2000",
+        "quelle": "Vereinfachte Darstellung aus forensischer Analyse (Nigrini 2012)",
+        "digits": [13, 13, 12, 12, 11, 11, 10, 10, 8],
+        "hinweis": "Hier weicht die Verteilung deutlich ab – ein Warnsignal für Manipulation.",
+    },
+]
+
+
+@router.get("/benford", response_class=HTMLResponse)
+def benford_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "raetsel/benford.html",
+        {
+            "active_page": "raetsel",
+            "expected": _BENFORD_EXPECTED,
+            "datasets": _BENFORD_DATASETS,
+        },
+    )
+
+
+@router.post("/benford/result", response_class=HTMLResponse)
+def benford_result(
+    request: Request,
+    schaetzung: int = Form(...),   # prozentuale Schätzung für Ziffer 1
+):
+    schaetzung = max(0, min(100, schaetzung))
+    korrekt_wert = _BENFORD_EXPECTED[0]   # ≈ 30.1
+    naiv_wert = round(100 / 9, 1)         # ≈ 11.1
+    abweichung = abs(schaetzung - korrekt_wert)
+    # Buckets: within 5% → perfekt; within 15% → solide; sonst → typische Intuition
+    if abweichung <= 5:
+        level = "perfekt"
+    elif abweichung <= 15:
+        level = "solide"
+    else:
+        level = "typisch"
+    return templates.TemplateResponse(
+        request,
+        "partials/benford_result.html",
+        {
+            "schaetzung": schaetzung,
+            "korrekt_wert": korrekt_wert,
+            "naiv_wert": naiv_wert,
+            "level": level,
+            "expected": _BENFORD_EXPECTED,
+            "datasets": _BENFORD_DATASETS,
+        },
     )
 
 
