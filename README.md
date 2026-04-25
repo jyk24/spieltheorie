@@ -1,41 +1,65 @@
-# Spieltheorie & Verhandlungstrainer
+# Redesign-Skin (Beta) — Integration
 
-Ein interaktiver Verhandlungstrainer auf Basis spieltheoretischer Konzepte.
-Spiele gegen KI-Gegner und lerne durch wissenschaftlich fundierte Lektionen.
+Dieser Patch fügt eine **zusätzliche Designoption** hinzu, ohne das bestehende Tailwind-Design zu verändern.
 
-## Features
+## Dateien
 
-- **4 Spiele**: Gefangenendilemma, Ultimatumspiel, Vertrauensspiel, Verhandlungssimulation
-- **16 Lektionen**: Von Nash-Gleichgewicht bis Taktische Empathie
-- **KI-Strategien**: Tit-for-Tat, Grim Trigger, Nash Bargaining und mehr
-- **Fortschrittstracking**: Punkte, Statistiken und Lernpfad
-- **Wissenschaftliche Basis**: Fisher & Ury, Axelrod, Kahneman, Voss, Schelling
-
-## Installation
-
-```bash
-cd E:\User\Documents\Apps\Spieltheorie
-pip install -r requirements.txt
-uvicorn app.main:app --reload
+```
+app/static/redesign/        ← CSS + React/JSX-Komponenten der neuen Skin
+app/templates/redesign.html ← Jinja-Einstieg (lädt die SPA)
+app/routers/redesign.py     ← FastAPI-Router, mountet /redesign
 ```
 
-Dann im Browser: http://localhost:8000
+## Schritt 1 — Dateien committen
 
-## Tech Stack
+Kopiere den Inhalt von `repo-patch/` in den Repo-Root, sodass die Pfade
+exakt `app/static/redesign/...`, `app/templates/redesign.html` und
+`app/routers/redesign.py` sind.
 
-- **Backend**: FastAPI + Python
-- **DB**: SQLAlchemy + SQLite
-- **Frontend**: Jinja2 + Tailwind CSS + HTMX + Chart.js
+## Schritt 2 — Router in `app/main.py` registrieren
 
-## Wissenschaftliche Quellen
+In `app/main.py` zwei kleine Änderungen:
 
-| Konzept | Quelle |
-|---|---|
-| Nash-Gleichgewicht | Nash (1951), Dixit & Nalebuff (1991) |
-| Tit-for-Tat | Axelrod (1984) |
-| Prospect Theory | Kahneman & Tversky (1979) |
-| Ultimatumspiel | Güth et al. (1982) |
-| Rubinstein Bargaining | Rubinstein (1982) |
-| BATNA / Harvard-Konzept | Fisher & Ury (1981) |
-| Taktische Empathie | Voss (2016) |
-| Signaling | Schelling (1960), Spence (1973) |
+```python
+# alte Zeile:
+from .routers import dashboard, lektionen, spiele, fortschritt, raetsel, grundlagen, spielpfad, konzepte, lernpfade, skills
+
+# neue Zeile (ergänze 'redesign'):
+from .routers import dashboard, lektionen, spiele, fortschritt, raetsel, grundlagen, spielpfad, konzepte, lernpfade, skills, redesign
+```
+
+Und ganz unten:
+
+```python
+app.include_router(redesign.router)
+```
+
+## Schritt 3 — Optional: Link in `base.html` Navigation
+
+In `app/templates/base.html` kannst du im Nav-Block einen Link einfügen:
+
+```html
+<a href="/redesign" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">✨ Editorial (Beta)</a>
+```
+
+## Schritt 4 — Lokal testen
+
+```bash
+uvicorn app.main:app --reload
+# http://localhost:8000/redesign
+```
+
+## Schritt 5 — Push
+
+```bash
+git checkout -b redesign-skin
+git add app/static/redesign app/templates/redesign.html app/routers/redesign.py app/main.py
+git commit -m "feat: add editorial redesign skin (beta) at /redesign"
+git push origin redesign-skin
+```
+
+## Hinweise
+
+- Die SPA ist **rein clientseitig** (React via CDN + Babel-in-browser). Sie zeigt Mock-Daten; keine DB-Anbindung.
+- Light/Dark und DE/EN sind in der Topbar umschaltbar.
+- Wenn du das Design später produktiv willst, müssen die Komponenten an die Jinja-Routes angebunden und (für Performance) serverseitig vorgerendert oder vorab transpiliert werden.
