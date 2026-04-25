@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Penneys Spiel – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🎲 Penneys Spiel</h1>
+        <p class="text-slate-500 mt-1">Wer zuerst seine Drei-Münzen-Folge sieht, gewinnt – aber wer zuerst wählt, verliert.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Regeln (Walter Penney, 1969):</p>
+        <ol class="space-y-1 list-decimal ml-5 mb-3">
+            <li><strong>Du wählst zuerst</strong> eine Folge aus drei Würfen, z.B. <span class="font-mono bg-white px-1 rounded">KKZ</span> (Kopf-Kopf-Zahl).</li>
+            <li>Die KI sieht deine Folge und wählt danach <em>ihre</em> Folge.</li>
+            <li>Eine Münze wird so lange geworfen, bis eine der beiden Folgen <strong>als Schluss-Sequenz</strong> erscheint.</li>
+            <li>Wessen Folge zuerst auftaucht, gewinnt die Runde.</li>
+        </ol>
+        <p>Dieses Spiel sieht symmetrisch aus – aber es ist <strong>nicht-transitiv</strong>: Für <em>jede</em> Folge, die du wählst, gibt es eine bessere Konter-Folge.</p>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-sm text-amber-800">
+        <p class="font-semibold mb-1">💡 Vor dem Klick: Welche Folge wählst du?</p>
+        <p>Intuitiv denkt man: „Alle Folgen sind doch gleich wahrscheinlich (1/8)." Das stimmt für <em>einen einzelnen Block von drei Würfen</em> – aber nicht für eine fortlaufende Wurfreihe. Die Folge, die nach einem Treffer „neu starten" muss, verliert öfter.</p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="spiel-area">
+        <p class="font-semibold text-slate-800 mb-4">Wähle deine Drei-Münzen-Folge:</p>
+
+        <form hx-post="/raetsel/penney/result"
+              hx-target="#spiel-area"
+              hx-swap="innerHTML"
+              class="space-y-3">
+
+            <div class="grid grid-cols-4 gap-2">
+                {% for seq in ["KKK", "KKZ", "KZK", "KZZ", "ZKK", "ZKZ", "ZZK", "ZZZ"] %}
+                <label class="flex flex-col items-center p-3 rounded-lg border-2 border-slate-200 cursor-pointer hover:bg-slate-50 hover:border-indigo-300 transition has-[:checked]:bg-indigo-50 has-[:checked]:border-indigo-400">
+                    <input type="radio" name="player_seq" value="{{ seq }}" required class="sr-only peer">
+                    <span class="font-mono text-lg font-bold text-slate-700 peer-checked:text-indigo-700">{{ seq }}</span>
+                </label>
+                {% endfor %}
+            </div>
+
+            <p class="text-xs text-slate-500 mt-3">K = Kopf, Z = Zahl. Beispiel: <span class="font-mono">ZKK</span> heißt Zahl, dann Kopf, dann Kopf.</p>
+
+            <button type="submit"
+                    class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors mt-4">
+                Spiel starten →
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

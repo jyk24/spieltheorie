@@ -82,6 +82,26 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Wahrscheinlichkeit",
     },
+    {
+        "id": "bertrand-box",
+        "name": "Bertrands Schachtel-Paradoxon",
+        "icon": "🪙",
+        "beschreibung": "Drei Schachteln: GG, SS, GS. Du ziehst eine Münze – sie ist Gold. Wie wahrscheinlich ist die zweite Münze in derselben Schachtel auch Gold? Die Antwort ist nicht ½.",
+        "typ": "Bedingte Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
+    {
+        "id": "penney",
+        "name": "Penneys Spiel",
+        "icon": "🎲",
+        "beschreibung": "Du wählst eine Drei-Münzen-Folge (z.B. KKZ). Dein Gegner wählt danach eine. Wer zuerst seine Folge im Wurf sieht, gewinnt. Trotz Symmetrie verliert wer zuerst wählt – fast immer.",
+        "typ": "Nicht-Transitivität",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
     # ── Statistik & Kognition ──────────────────────────────────────────────────
     {
         "id": "simpson",
@@ -2114,14 +2134,14 @@ _achilles_speed = 10.0
 _turtle_speed = 1.0
 for _i in range(7):
     _gap = _turtle_pos - _achilles_pos
-    _dt = _gap / _achilles_speed
-    _time += _dt
+    _step_dt = _gap / _achilles_speed
+    _time += _step_dt
     _achilles_pos = _turtle_pos
-    _turtle_pos += _dt * _turtle_speed
+    _turtle_pos += _step_dt * _turtle_speed
     _ACHILLES_STEPS.append({
         "step": _i + 1,
         "gap": round(_gap, 4),
-        "dt": round(_dt, 4),
+        "dt": round(_step_dt, 4),
         "total_time": round(_time, 4),
         "achilles_pos": round(_achilles_pos, 4),
         "turtle_pos": round(_turtle_pos, 4),
@@ -2622,4 +2642,132 @@ def batna_page(request: Request):
 def trugschluesse_page(request: Request):
     return templates.TemplateResponse(
         request, "raetsel/trugschluesse.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Bertrands Schachtel-Paradoxon (Bertrand 1889)
+# ---------------------------------------------------------------------------
+
+@router.get("/bertrand-box", response_class=HTMLResponse)
+def bertrand_box_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/bertrand_box.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/bertrand-box/result", response_class=HTMLResponse)
+def bertrand_box_result(request: Request, guess: str = Form(...)):
+    # Korrekte Antwort: 2/3 (nicht 1/2). Eine von drei goldenen Münzen
+    # gehört zur GS-Schachtel, zwei zur GG. Wenn du eine Goldmünze ziehst,
+    # bist du mit Wahrscheinlichkeit 2/3 in der GG-Schachtel.
+    correct_key = "two_thirds"
+    is_correct = (guess == correct_key)
+
+    # Einfache Monte-Carlo-Simulation (1000 Durchgänge) zum Beleg
+    boxes = [("G", "G"), ("S", "S"), ("G", "S")]
+    trials = 0
+    second_gold = 0
+    for _ in range(2000):
+        box = _random.choice(boxes)
+        coin_idx = _random.randint(0, 1)
+        first = box[coin_idx]
+        if first != "G":
+            continue
+        trials += 1
+        other = box[1 - coin_idx]
+        if other == "G":
+            second_gold += 1
+    sim_pct = round(100 * second_gold / trials, 1) if trials else 0
+
+    return templates.TemplateResponse(
+        request,
+        "partials/bertrand_box_result.html",
+        {
+            "guess": guess,
+            "is_correct": is_correct,
+            "trials": trials,
+            "second_gold": second_gold,
+            "sim_pct": sim_pct,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Penney-Spiel (Walter Penney 1969) – nicht-transitives Münzwerfen
+# ---------------------------------------------------------------------------
+
+# Konrad's optimale Konter-Strategie für Penney-Spiel:
+#   Gegnerwahl ABC → wähle (¬B)AB
+PENNEY_COUNTER = {
+    "KKK": "ZKK", "KKZ": "ZKK", "KZK": "KKZ", "KZZ": "KKZ",
+    "ZKK": "ZZK", "ZKZ": "ZZK", "ZZK": "KZZ", "ZZZ": "KZZ",
+}
+
+# Bekannte ungefähre Gewinnwahrscheinlichkeiten (Konters gegen Gegnerwahl)
+PENNEY_WIN_PCT = {
+    "KKK": 87.5, "KKZ": 75.0, "KZK": 66.7, "KZZ": 70.0,
+    "ZKK": 70.0, "ZKZ": 66.7, "ZZK": 75.0, "ZZZ": 87.5,
+}
+
+
+@router.get("/penney", response_class=HTMLResponse)
+def penney_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/penney.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/penney/result", response_class=HTMLResponse)
+def penney_result(request: Request, player_seq: str = Form(...)):
+    player_seq = player_seq.upper().strip()
+    if player_seq not in PENNEY_COUNTER:
+        player_seq = "KKK"
+    ai_seq = PENNEY_COUNTER[player_seq]
+
+    # Simuliere 200 Würfe – wer sieht seine Folge zuerst?
+    rounds = 200
+    player_wins = 0
+    ai_wins = 0
+    sample_round = None
+    for r in range(rounds):
+        flips = ""
+        winner = None
+        steps = 0
+        while True:
+            flips += _random.choice("KZ")
+            steps += 1
+            if flips.endswith(player_seq):
+                winner = "player"
+                break
+            if flips.endswith(ai_seq):
+                winner = "ai"
+                break
+            if steps > 200:
+                winner = "draw"
+                break
+        if winner == "player":
+            player_wins += 1
+        elif winner == "ai":
+            ai_wins += 1
+        if r == 0:
+            sample_round = {"flips": flips, "winner": winner, "steps": steps}
+
+    total = player_wins + ai_wins
+    ai_pct = round(100 * ai_wins / total, 1) if total else 0
+    expected = PENNEY_WIN_PCT.get(player_seq, 50.0)
+
+    return templates.TemplateResponse(
+        request,
+        "partials/penney_result.html",
+        {
+            "player_seq": player_seq,
+            "ai_seq": ai_seq,
+            "rounds": rounds,
+            "player_wins": player_wins,
+            "ai_wins": ai_wins,
+            "ai_pct": ai_pct,
+            "expected_pct": expected,
+            "sample": sample_round,
+        },
     )

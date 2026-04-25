@@ -33,6 +33,8 @@ LERNPFADE = [
             {"id": "geburtstag",         "name": "Geburtstagsparadoxon",          "icon": "🎂",  "dauer": "3 min", "schwierigkeit": "Einstieg"},
             {"id": "spielerfehlschluss", "name": "Der Spielerfehlschluss",         "icon": "🎰",  "dauer": "3 min", "schwierigkeit": "Einstieg"},
             {"id": "monty-hall",         "name": "Monty Hall Problem",             "icon": "🚪",  "dauer": "3 min", "schwierigkeit": "Mittel"},
+            {"id": "bertrand-box",       "name": "Bertrands Schachtel-Paradoxon",  "icon": "🪙",  "dauer": "4 min", "schwierigkeit": "Mittel"},
+            {"id": "penney",             "name": "Penneys Spiel",                  "icon": "🎲",  "dauer": "5 min", "schwierigkeit": "Mittel"},
             {"id": "hundert-gefangene",  "name": "100-Gefangenen-Problem",         "icon": "📦",  "dauer": "5 min", "schwierigkeit": "Mittel"},
             {"id": "coupon-sammler",     "name": "Coupon-Sammler-Problem",         "icon": "🎟️", "dauer": "4 min", "schwierigkeit": "Mittel"},
             {"id": "bertrand-paradoxon", "name": "Bertrand-Paradoxon",             "icon": "⭕",  "dauer": "5 min", "schwierigkeit": "Fortgeschritten"},

@@ -1,0 +1,80 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    <!-- Vergleich -->
+    <div class="grid grid-cols-2 gap-3 mb-5">
+        <div class="p-4 rounded-xl border-2 border-slate-200 bg-slate-50 text-center">
+            <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Du</div>
+            <div class="font-mono text-2xl font-bold text-slate-700 mb-1">{{ player_seq }}</div>
+            <div class="text-2xl font-bold text-slate-700">{{ player_wins }}</div>
+            <div class="text-xs text-slate-500">Siege</div>
+        </div>
+        <div class="p-4 rounded-xl border-2 border-emerald-300 bg-emerald-50 text-center">
+            <div class="text-xs text-emerald-600 uppercase tracking-wide mb-1">KI-Konter</div>
+            <div class="font-mono text-2xl font-bold text-emerald-700 mb-1">{{ ai_seq }}</div>
+            <div class="text-2xl font-bold text-emerald-700">{{ ai_wins }}</div>
+            <div class="text-xs text-emerald-600">Siege</div>
+        </div>
+    </div>
+
+    <!-- Sieg-Balken -->
+    <div class="mb-5">
+        <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+            <span>Du: {{ 100 - ai_pct }}%</span>
+            <span>KI: {{ ai_pct }}%</span>
+        </div>
+        <div class="bg-slate-200 rounded-full h-4 overflow-hidden flex">
+            <div class="h-full bg-slate-400" style="width: {{ 100 - ai_pct }}%"></div>
+            <div class="h-full bg-emerald-500" style="width: {{ ai_pct }}%"></div>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">
+            Theoretisch erwartete KI-Gewinnrate gegen <span class="font-mono">{{ player_seq }}</span>:
+            <strong class="text-emerald-700">{{ expected_pct }}%</strong>
+            (Conway, 1980)
+        </p>
+    </div>
+
+    <!-- Beispielrunde -->
+    {% if sample %}
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-5">
+        <p class="font-semibold text-slate-700 mb-2 text-sm">🎬 Beispielrunde 1 von {{ rounds }}:</p>
+        <div class="font-mono text-sm break-all text-slate-600 leading-relaxed">{{ sample.flips }}</div>
+        <p class="text-xs text-slate-500 mt-2">
+            Nach {{ sample.steps }} Würfen gewann
+            {% if sample.winner == "player" %}<strong class="text-slate-700">DU</strong> mit <span class="font-mono">{{ player_seq }}</span>{% else %}<strong class="text-emerald-700">die KI</strong> mit <span class="font-mono">{{ ai_seq }}</span>{% endif %}.
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Erklärung der Konter-Strategie -->
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-800">
+        <p class="font-semibold mb-2">🧠 Conway-Regel: Wie wählt die KI ihre Konter-Folge?</p>
+        <p class="mb-2">Für jede Gegnerfolge <span class="font-mono">ABC</span> wählt die KI die Folge <span class="font-mono">(¬B)·A·B</span>:</p>
+        <ul class="space-y-1 text-xs font-mono bg-white rounded p-3 leading-relaxed">
+            <li>Du: <strong>{{ player_seq }}</strong> &nbsp;→&nbsp; KI: <strong>{{ ai_seq }}</strong></li>
+        </ul>
+        <p class="mt-2">Die KI-Folge hängt sich „vor" deine: Sobald du auf den ersten zwei Buchstaben deiner Folge bist, ist die KI bereits einen Wurf voraus auf <em>ihrem</em> Pfad.</p>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-4 text-sm text-violet-700">
+        <p class="font-semibold mb-2">🔄 Warum nicht-transitiv?</p>
+        <p class="mb-2">Wie bei Schere-Stein-Papier gibt es keinen „besten" Zug. Jede Folge wird von einer anderen geschlagen:</p>
+        <p class="text-xs font-mono bg-white rounded p-2 text-center">
+            KKK ← ZKK ← ZZK ← KZZ ← KKZ ← ... ← KKK
+        </p>
+        <p class="mt-2 text-xs">Wer zuerst wählen muss, ist immer im Nachteil – das ist Penneys Pointe.</p>
+    </div>
+
+    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-5 text-sm text-blue-800">
+        <p class="font-semibold mb-1">📚 Bezug zur Spieltheorie</p>
+        <p>Penneys Spiel zeigt: Die <em>Reihenfolge der Züge</em> kann ein scheinbar faires Spiel komplett kippen. Wer Information nutzen darf (zweite Wahl), schlägt den Erstbieter systematisch. In Verhandlungen, Auktionen und Wettbewerb gilt dasselbe Prinzip: Manchmal lohnt sich Warten – und manchmal ist das erste Angebot ein Fluch.</p>
+    </div>
+
+    <div class="flex gap-3">
+        <a href="/raetsel/penney" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Andere Folge wählen
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>
