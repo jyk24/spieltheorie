@@ -38,6 +38,16 @@ function Icon({ name, size = 16 }) {
   }
 }
 
+const CLASSIC_URL = {
+  dashboard: "/", spiele: "/spiele", game: "/spiele",
+  konzepte: "/konzepte", lernpfade: "/lernpfade", fortschritt: "/fortschritt"
+};
+
+function switchToClassic(currentPage) {
+  localStorage.setItem("app_design", "classic");
+  window.location.href = CLASSIC_URL[currentPage] || "/";
+}
+
 function Topbar({ page, setPage, tweaks, setTweaks }) {
   const t = useT();
   return (
@@ -63,6 +73,9 @@ function Topbar({ page, setPage, tweaks, setTweaks }) {
           <button className="icon-btn" style={{width:"auto",padding:"0 12px",fontFamily:"var(--font-mono)",fontSize:11,letterSpacing:"0.1em"}} onClick={()=>{
             setTweaks({lang: tweaks.lang === "de" ? "en" : "de"});
           }}>{tweaks.lang.toUpperCase()}</button>
+          <button className="icon-btn" style={{width:"auto",padding:"0 12px",fontFamily:"var(--font-mono)",fontSize:11,letterSpacing:"0.1em",opacity:0.6}} onClick={()=>switchToClassic(page)} title="Zu klassischem Design wechseln">
+            ← Klassisch
+          </button>
         </div>
       </div>
     </header>

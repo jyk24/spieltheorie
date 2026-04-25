@@ -13,8 +13,19 @@ function App() {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
-  const [page, setPage] = React.useState("dashboard");
+  const [page, setPage] = React.useState(() => {
+    const p = new URLSearchParams(window.location.search).get("page");
+    const valid = ["dashboard","spiele","game","konzepte","lernpfade","fortschritt"];
+    return valid.includes(p) ? p : "dashboard";
+  });
   const [activeGame, setActiveGame] = React.useState("gefangenendilemma");
+
+  // Keep URL in sync so "← Klassisch" back-mapping always knows the current page
+  React.useEffect(() => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("page", page);
+    history.replaceState(null, "", url.toString());
+  }, [page]);
 
   // wrapper for Topbar (expects {theme,lang} setter taking partial obj)
   const setTweaksObj = (patch) => {

@@ -43,7 +43,7 @@
                         <a href="/raetsel" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'raetsel' %}bg-indigo-800 text-white{% endif %}">Rätsel</a>
                         <a href="/skills" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'skills' %}bg-indigo-800 text-white{% endif %}">💡 Skills</a>
                         <a href="/fortschritt" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'fortschritt' %}bg-indigo-800 text-white{% endif %}">Fortschritt</a>
-                        <a href="/redesign" class="text-amber-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'redesign' %}bg-indigo-800 text-white{% endif %}">✨ Editorial</a>
+                        <button onclick="switchDesign(event)" class="text-amber-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer bg-transparent border-0">✨ Editorial</button>
                     </div>
 
                     <!-- Mobile hamburger -->
@@ -67,7 +67,7 @@
                         <a href="/raetsel" class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'raetsel' %}bg-indigo-800 text-white{% endif %}">🧩 Rätsel</a>
                         <a href="/skills" class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'skills' %}bg-indigo-800 text-white{% endif %}">💡 Skills</a>
                         <a href="/fortschritt" class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'fortschritt' %}bg-indigo-800 text-white{% endif %}">📊 Fortschritt</a>
-                        <a href="/redesign" class="text-amber-300 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'redesign' %}bg-indigo-800 text-white{% endif %}">✨ Editorial (Beta)</a>
+                        <button onclick="switchDesign(event)" class="text-amber-300 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors cursor-pointer bg-transparent border-0 w-full text-left">✨ Editorial (Beta)</button>
                     </div>
                 </div>
             </div>
@@ -102,6 +102,23 @@
             }
         }
     });
+
+    // Design switching
+    var _DESIGN_MAP = {
+        '/': 'dashboard', '/spiele': 'spiele', '/konzepte': 'konzepte',
+        '/lernpfade': 'lernpfade', '/fortschritt': 'fortschritt'
+    };
+    function switchDesign(e) {
+        e.preventDefault();
+        localStorage.setItem('app_design', 'editorial');
+        var ep = _DESIGN_MAP[window.location.pathname] || 'dashboard';
+        window.location.href = '/redesign?page=' + ep;
+    }
+    (function autoRedirectToEditorial() {
+        if (localStorage.getItem('app_design') !== 'editorial') return;
+        var ep = _DESIGN_MAP[window.location.pathname];
+        if (ep) window.location.replace('/redesign?page=' + ep);
+    })();
 
     // Rätsel-Completion-Tracking
     (function() {
