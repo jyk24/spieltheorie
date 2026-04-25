@@ -2114,14 +2114,14 @@ _achilles_speed = 10.0
 _turtle_speed = 1.0
 for _i in range(7):
     _gap = _turtle_pos - _achilles_pos
-    _dt = _gap / _achilles_speed
-    _time += _dt
+    _step_dt = _gap / _achilles_speed
+    _time += _step_dt
     _achilles_pos = _turtle_pos
-    _turtle_pos += _dt * _turtle_speed
+    _turtle_pos += _step_dt * _turtle_speed
     _ACHILLES_STEPS.append({
         "step": _i + 1,
         "gap": round(_gap, 4),
-        "dt": round(_dt, 4),
+        "dt": round(_step_dt, 4),
         "total_time": round(_time, 4),
         "achilles_pos": round(_achilles_pos, 4),
         "turtle_pos": round(_turtle_pos, 4),
