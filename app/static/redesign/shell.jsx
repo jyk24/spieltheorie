@@ -50,15 +50,17 @@ function switchToClassic(currentPage) {
 
 function Topbar({ page, setPage, tweaks, setTweaks }) {
   const t = useT();
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const NAV_PAGES = ["dashboard","spiele","konzepte","lernpfade","fortschritt"];
   return (
     <header className="topbar">
       <div className="wrap topbar-inner">
-        <a href="#" onClick={(e)=>{e.preventDefault();setPage("dashboard");}} className="brand">
+        <a href="#" onClick={(e)=>{e.preventDefault();setPage("dashboard");setMobileOpen(false);}} className="brand">
           <span className="brand-mark"></span>
-          <span>{t.brand}<span style={{color:"var(--ink-mute)",fontStyle:"italic",marginLeft:8,fontSize:14,fontFamily:"var(--font-display)"}}>·</span><span style={{color:"var(--ink-mute)",fontStyle:"italic",marginLeft:8,fontSize:14,fontFamily:"var(--font-display)"}}>{t.brand_sub}</span></span>
+          <span className="brand-text">{t.brand}<span style={{color:"var(--ink-mute)",fontStyle:"italic",marginLeft:8,fontSize:14,fontFamily:"var(--font-display)"}}>·</span><span style={{color:"var(--ink-mute)",fontStyle:"italic",marginLeft:8,fontSize:14,fontFamily:"var(--font-display)"}}>{t.brand_sub}</span></span>
         </a>
-        <nav className="nav">
-          {["dashboard","spiele","konzepte","lernpfade","fortschritt"].map(k => (
+        <nav className="nav nav-desktop">
+          {NAV_PAGES.map(k => (
             <a key={k} href="#" onClick={(e)=>{e.preventDefault();setPage(k);}}
                className={"nav-item" + (page===k?" active":"")}>{t.nav[k]}</a>
           ))}
@@ -73,11 +75,26 @@ function Topbar({ page, setPage, tweaks, setTweaks }) {
           <button className="icon-btn" style={{width:"auto",padding:"0 12px",fontFamily:"var(--font-mono)",fontSize:11,letterSpacing:"0.1em"}} onClick={()=>{
             setTweaks({lang: tweaks.lang === "de" ? "en" : "de"});
           }}>{tweaks.lang.toUpperCase()}</button>
-          <button className="icon-btn" style={{width:"auto",padding:"0 12px",fontFamily:"var(--font-mono)",fontSize:11,letterSpacing:"0.1em",opacity:0.6}} onClick={()=>switchToClassic(page)} title="Zu klassischem Design wechseln">
+          <button className="icon-btn classic-btn" style={{width:"auto",padding:"0 12px",fontFamily:"var(--font-mono)",fontSize:11,letterSpacing:"0.1em",opacity:0.6}} onClick={()=>switchToClassic(page)} title="Zu klassischem Design wechseln">
             ← Klassisch
+          </button>
+          <button className="icon-btn mobile-hamburger" onClick={()=>setMobileOpen(o=>!o)} aria-label="Menü">
+            {mobileOpen
+              ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+              : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            }
           </button>
         </div>
       </div>
+      {mobileOpen && (
+        <div className="nav-mobile">
+          {NAV_PAGES.map(k => (
+            <a key={k} href="#" onClick={(e)=>{e.preventDefault();setPage(k);setMobileOpen(false);}}
+               className={"nav-mobile-item" + (page===k?" active":"")}>{t.nav[k]}</a>
+          ))}
+          <button className="nav-mobile-item" style={{background:"none",border:"none",cursor:"pointer",textAlign:"left",fontFamily:"inherit",fontSize:"inherit",color:"var(--ink-soft)"}} onClick={()=>switchToClassic(page)}>← Klassisch</button>
+        </div>
+      )}
     </header>
   );
 }

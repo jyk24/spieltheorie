@@ -1,6 +1,17 @@
 /* Page: Dashboard */
 const { useState: useStateD, useEffect: useEffectD } = React;
 
+function useDashboardStats() {
+  const [stats, setStats] = useStateD(null);
+  useEffectD(() => {
+    fetch("/api/redesign/stats")
+      .then(r => r.json())
+      .then(setStats)
+      .catch(() => {});
+  }, []);
+  return stats;
+}
+
 function Hero() {
   const t = useT();
   return (
@@ -11,7 +22,7 @@ function Hero() {
         <span className="display-italic" style={{color: "var(--accent)"}}>{t.hero_title[1]}</span><br/>
         {t.hero_title[2]}
       </h1>
-      <div style={{display:"grid", gridTemplateColumns:"1.1fr 1fr", gap:48, marginTop: 44, alignItems:"end"}}>
+      <div className="hero-cta-row" style={{display:"grid", gridTemplateColumns:"1.1fr 1fr", gap:48, marginTop: 44, alignItems:"end"}}>
         <p style={{fontSize: 18, lineHeight: 1.55, color: "var(--ink-soft)", maxWidth: 560, margin: 0}}>{t.hero_lede}</p>
         <div style={{display:"flex", gap:10, justifyContent:"flex-end", flexWrap:"wrap"}}>
           <a href="#" className="btn btn-primary btn-large">
@@ -24,17 +35,22 @@ function Hero() {
   );
 }
 
-function StatStrip() {
+function StatStrip({ apiStats }) {
   const t = useT();
+  const d = apiStats;
   const stats = [
-    { label: t.stat_games, value: "47", spark: [3,5,4,6,7,5,8,9,7,10] },
-    { label: t.stat_score, value: "2,184", spark: [10,15,12,20,18,25,30,28,35,42] },
-    { label: t.stat_lessons, value: "9 / 16", spark: [1,2,2,3,4,5,6,7,8,9] },
-    { label: t.stat_badges, value: "6 / 24", spark: [1,1,2,2,3,4,5,5,6,6] },
+    { label: t.stat_games,   value: d ? String(d.total_games) : "…",
+      spark: d ? [1,2,3,4,5,6,7,8,9,d.total_games] : [] },
+    { label: t.stat_score,   value: d ? d.total_score.toLocaleString("de-DE") : "…",
+      spark: d ? [10,20,30,40,50,60,70,80,90,d.total_score/50] : [] },
+    { label: t.stat_lessons, value: d ? `${d.lessons_viewed} / ${d.total_lessons}` : "…",
+      spark: d ? [1,2,3,4,5,6,7,8,9,d.lessons_viewed] : [] },
+    { label: t.stat_badges,  value: d ? `${d.unlocked_achievements} / ${d.total_achievements}` : "…",
+      spark: d ? [1,2,3,4,5,6,7,8,9,d.unlocked_achievements] : [] },
   ];
   return (
     <section style={{borderTop: "1px solid var(--ink)", borderBottom: "1px solid var(--line)", margin:"0 -28px"}}>
-      <div className="wrap" style={{display:"grid", gridTemplateColumns: "repeat(4, 1fr)", padding: 0}}>
+      <div className="wrap stat-strip-grid" style={{gridTemplateColumns: "repeat(4, 1fr)", padding: 0}}>
         {stats.map((s,i) => (
           <div key={i} style={{padding: "28px 24px", borderRight: i<3?"1px solid var(--line)":"none", display:"flex", flexDirection:"column", gap:8}}>
             <div className="eyebrow">{s.label}</div>
@@ -71,7 +87,7 @@ function Recommended({ setPage, setActiveGame }) {
         <h2 className="display" style={{fontSize: 36, margin:0}}>{t.section_recommended}</h2>
         <div className="eyebrow">— Tag 4 / 28</div>
       </div>
-      <div className="card" style={{display:"grid", gridTemplateColumns:"1.2fr 1fr", overflow:"hidden"}}>
+      <div className="card recommended-grid" style={{display:"grid", gridTemplateColumns:"1.2fr 1fr", overflow:"hidden"}}>
         <div style={{padding: 36, display:"flex", flexDirection:"column", justifyContent:"space-between", borderRight:"1px solid var(--line)"}}>
           <div>
             <div style={{display:"flex", gap:8, marginBottom:18}}>
@@ -159,7 +175,7 @@ function ConceptsInFocus() {
         <h2 className="display" style={{fontSize: 36, margin: 0}}>{t.section_concepts}</h2>
         <a href="#" className="arrow-link">{lang==="de"?"Alle Konzepte":"All concepts"}<Icon name="arrow-up-right" size={13}/></a>
       </div>
-      <div style={{display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap: 16}}>
+      <div className="concepts-grid" style={{gridTemplateColumns:"repeat(4, 1fr)", gap: 16}}>
         {items.map((c,i)=>(
           <a key={i} href="#" className="card card-hover" style={{padding: 22, display:"flex", flexDirection:"column", gap: 16, minHeight: 200}}>
             <div style={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
@@ -177,15 +193,10 @@ function ConceptsInFocus() {
   );
 }
 
-function RecentSessions() {
+function RecentSessions({ apiStats }) {
   const t = useT();
   const lang = window.__lang || "de";
-  const sessions = [
-    { game: "gefangenendilemma", res: "win", score: 28, when: lang==="de"?"vor 2 Std.":"2h ago" },
-    { game: "ultimatum", res: "loss", score: 12, when: lang==="de"?"gestern":"yesterday" },
-    { game: "stag-hunt", res: "win", score: 32, when: lang==="de"?"vor 2 Tagen":"2d ago" },
-    { game: "centipede", res: "draw", score: 18, when: lang==="de"?"vor 4 Tagen":"4d ago" },
-  ];
+  const sessions = apiStats ? apiStats.recent_sessions : [];
   return (
     <section style={{padding: "56px 0", borderTop: "1px solid var(--line)"}}>
       <div style={{display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom: 24}}>
@@ -193,23 +204,26 @@ function RecentSessions() {
         <a href="#" className="arrow-link">{lang==="de"?"Vollständig":"All sessions"}<Icon name="arrow-up-right" size={13}/></a>
       </div>
       <div className="card" style={{overflow: "hidden"}}>
+        {sessions.length === 0 && (
+          <div style={{padding:"32px 24px", color:"var(--ink-mute)", fontSize:14}}>
+            {lang==="de" ? "Noch keine Spiele gespielt." : "No games played yet."}
+          </div>
+        )}
         {sessions.map((s,i)=>{
-          const g = GAMES.find(x=>x.id===s.game);
-          const resColor = s.res==="win"?"var(--cooperate)":s.res==="loss"?"var(--accent)":"var(--ink-mute)";
+          const resColor = s.result==="win"?"var(--cooperate)":s.result==="loss"?"var(--accent)":"var(--ink-mute)";
           const resLabel = lang==="de"
-            ? (s.res==="win"?"Gewonnen":s.res==="loss"?"Verloren":"Unentschieden")
-            : (s.res==="win"?"Won":s.res==="loss"?"Lost":"Draw");
+            ? (s.result==="win"?"Gewonnen":s.result==="loss"?"Verloren":"Unentschieden")
+            : (s.result==="win"?"Won":s.result==="loss"?"Lost":"Draw");
           return (
-            <a key={i} href="#" style={{display:"grid", gridTemplateColumns:"40px 1fr 100px 100px 24px", padding:"18px 24px", alignItems:"center", borderBottom: i<sessions.length-1?"1px solid var(--line)":"none", gap:16}}>
-              <span style={{color:"var(--ink-mute)"}}><Icon name={g.icon} size={20}/></span>
+            <div key={i} style={{display:"grid", gridTemplateColumns:"36px 1fr auto auto", padding:"16px 20px", alignItems:"center", borderBottom: i<sessions.length-1?"1px solid var(--line)":"none", gap:14}}>
+              <span style={{fontSize:20, lineHeight:1}}>{s.game_icon}</span>
               <div>
-                <div style={{fontSize: 15, fontWeight: 500}}>{lang==="de"?g.de:g.en}</div>
-                <div className="mono" style={{fontSize:11, color:"var(--ink-mute)", marginTop:2}}>{s.when} · {g.rounds} {t.rounds.toLowerCase()}</div>
+                <div style={{fontSize: 15, fontWeight: 500}}>{s.game_name}</div>
+                <div className="mono" style={{fontSize:11, color:"var(--ink-mute)", marginTop:2}}>{s.date}</div>
               </div>
               <div className="mono" style={{fontSize: 13, color: resColor}}>{resLabel}</div>
-              <div className="mono" style={{fontSize: 14, textAlign:"right"}}>{s.score} <span style={{color:"var(--ink-mute)", fontSize:11}}>{lang==="de"?"PKT":"PTS"}</span></div>
-              <Icon name="arrow-right" size={14}/>
-            </a>
+              <div className="mono" style={{fontSize: 14, textAlign:"right"}}>{s.score} <span style={{color:"var(--ink-mute)", fontSize:11}}>{lang==="de"?"Pkt.":"pts"}</span></div>
+            </div>
           );
         })}
       </div>
@@ -218,13 +232,14 @@ function RecentSessions() {
 }
 
 function Dashboard({ setPage, setActiveGame }) {
+  const apiStats = useDashboardStats();
   return (
     <div className="page wrap">
       <Hero/>
-      <StatStrip/>
+      <StatStrip apiStats={apiStats}/>
       <Recommended setPage={setPage} setActiveGame={setActiveGame}/>
       <ConceptsInFocus/>
-      <RecentSessions/>
+      <RecentSessions apiStats={apiStats}/>
       <div style={{height: 80}}/>
     </div>
   );

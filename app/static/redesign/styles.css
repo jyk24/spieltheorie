@@ -284,3 +284,84 @@ input, select, textarea { font-family: inherit; color: inherit; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 100px; border: 2px solid var(--bg); }
 ::-webkit-scrollbar-thumb:hover { background: var(--ink-mute); }
+
+/* ─── Mobile hamburger / nav ──────────────────────────────────────────────── */
+.mobile-hamburger { display: none; }
+.nav-desktop { display: flex; }
+
+.nav-mobile {
+  display: flex; flex-direction: column;
+  border-top: 1px solid var(--line);
+  padding: 8px 0 12px;
+}
+.nav-mobile-item {
+  display: block; padding: 12px 20px;
+  font-size: 15px; color: var(--ink-soft);
+  border-bottom: none; width: 100%;
+  transition: color 0.15s, background 0.15s;
+}
+.nav-mobile-item:hover { color: var(--ink); background: var(--bg-sunk); }
+.nav-mobile-item.active { color: var(--ink); font-weight: 600; }
+
+/* ─── Responsive breakpoints ─────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  /* Topbar: collapse desktop nav, show hamburger */
+  .nav-desktop { display: none; }
+  .mobile-hamburger { display: flex; }
+  .classic-btn { display: none; } /* shown in mobile menu instead */
+
+  .wrap { padding: 0 16px; }
+  .wrap-narrow { padding: 0 16px; }
+
+  /* stat strip: 2×2 grid */
+  .stat-strip-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Recommended card: stack vertically */
+  .recommended-grid { grid-template-columns: 1fr !important; }
+  .recommended-grid > *:first-child { border-right: none !important; border-bottom: 1px solid var(--line); }
+
+  /* Concepts grid: 2 columns */
+  .concepts-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Hero */
+  .hero-cta-row { grid-template-columns: 1fr !important; gap: 24px !important; }
+  .hero-cta-row > div:last-child { justify-content: flex-start !important; }
+}
+
+@media (max-width: 600px) {
+  /* Stat strip: single column */
+  .stat-strip-grid { grid-template-columns: 1fr !important; }
+  .stat-strip-grid > * { border-right: none !important; border-bottom: 1px solid var(--line); }
+
+  /* Concepts grid: single column */
+  .concepts-grid { grid-template-columns: 1fr !important; }
+
+  /* Recent sessions: hide rightmost columns */
+  .session-row { grid-template-columns: 36px 1fr auto !important; }
+  .session-score { display: none; }
+
+  /* Spiele grid: single column */
+  .spiele-grid { grid-template-columns: 1fr !important; }
+
+  /* Lernpfade grid: single column */
+  .lernpfade-grid { grid-template-columns: 1fr !important; }
+
+  /* Typography scale-down */
+  .display { font-size: clamp(28px, 7vw, 64px) !important; }
+  h1.display { font-size: clamp(36px, 10vw, 80px) !important; }
+
+  /* Brand subtitle: hide on very small screens */
+  .brand-text > span:not(:first-child) { display: none; }
+
+  /* Page padding */
+  .page { padding-top: 16px !important; }
+
+  /* Fortschritt tabs: scroll horizontally */
+  .tab-row { overflow-x: auto; flex-wrap: nowrap !important; padding-bottom: 4px; }
+  .tab-row > * { white-space: nowrap; }
+}
+
+/* Ensure stat-strip and grids use class-based hooks for responsive overrides */
+.stat-strip-grid { display: grid; }
+.concepts-grid { display: grid; }
+.session-row { display: grid; }
