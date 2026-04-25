@@ -4,10 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Spieltheorie & Verhandlung{% endblock %}</title>
+
+    <!-- Design-Präferenz vor dem ersten Paint setzen, verhindert Flicker -->
+    <script>
+    (function() {
+        if (localStorage.getItem('app_design') === 'editorial')
+            document.documentElement.dataset.design = 'editorial';
+    })();
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@2.0.3"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/editorial.css">
     <style>
         [htmx-indicator] { display: none; }
         .htmx-request [htmx-indicator] { display: inline; }
@@ -43,7 +53,10 @@
                         <a href="/raetsel" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'raetsel' %}bg-indigo-800 text-white{% endif %}">Rätsel</a>
                         <a href="/skills" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'skills' %}bg-indigo-800 text-white{% endif %}">💡 Skills</a>
                         <a href="/fortschritt" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'fortschritt' %}bg-indigo-800 text-white{% endif %}">Fortschritt</a>
-                        <button onclick="switchDesign(event)" class="text-amber-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer bg-transparent border-0">✨ Editorial</button>
+                        <button onclick="switchDesign()" class="design-toggle-btn text-amber-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer bg-transparent border-0">
+                            <span class="show-classic">✨ Editorial</span>
+                            <span class="show-editorial">← Klassisch</span>
+                        </button>
                     </div>
 
                     <!-- Mobile hamburger -->
@@ -67,7 +80,10 @@
                         <a href="/raetsel" class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'raetsel' %}bg-indigo-800 text-white{% endif %}">🧩 Rätsel</a>
                         <a href="/skills" class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'skills' %}bg-indigo-800 text-white{% endif %}">💡 Skills</a>
                         <a href="/fortschritt" class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'fortschritt' %}bg-indigo-800 text-white{% endif %}">📊 Fortschritt</a>
-                        <button onclick="switchDesign(event)" class="text-amber-300 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors cursor-pointer bg-transparent border-0 w-full text-left">✨ Editorial (Beta)</button>
+                        <button onclick="switchDesign()" class="design-toggle-btn text-amber-300 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors cursor-pointer bg-transparent border-0 w-full text-left">
+                            <span class="show-classic">✨ Editorial</span>
+                            <span class="show-editorial">← Klassisch</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -103,22 +119,18 @@
         }
     });
 
-    // Design switching
-    var _DESIGN_MAP = {
-        '/': 'dashboard', '/spiele': 'spiele', '/konzepte': 'konzepte',
-        '/lernpfade': 'lernpfade', '/fortschritt': 'fortschritt'
-    };
-    function switchDesign(e) {
-        e.preventDefault();
-        localStorage.setItem('app_design', 'editorial');
-        var ep = _DESIGN_MAP[window.location.pathname] || 'dashboard';
-        window.location.href = '/redesign?page=' + ep;
+    // Design-Switching: nur CSS-Attribut umschalten, keine Weiterleitung
+    function switchDesign() {
+        var html = document.documentElement;
+        var isEditorial = html.dataset.design === 'editorial';
+        if (isEditorial) {
+            delete html.dataset.design;
+            localStorage.setItem('app_design', 'classic');
+        } else {
+            html.dataset.design = 'editorial';
+            localStorage.setItem('app_design', 'editorial');
+        }
     }
-    (function autoRedirectToEditorial() {
-        if (localStorage.getItem('app_design') !== 'editorial') return;
-        var ep = _DESIGN_MAP[window.location.pathname];
-        if (ep) window.location.replace('/redesign?page=' + ep);
-    })();
 
     // Rätsel-Completion-Tracking
     (function() {
@@ -129,12 +141,10 @@
         function mark() {
             if (!localStorage.getItem(KEY)) localStorage.setItem(KEY, Date.now().toString());
         }
-        // htmx-based reveals (spiel-area / game-area swaps)
         document.body.addEventListener('htmx:afterSwap', function(e) {
             var tid = e.detail && e.detail.target && e.detail.target.id;
             if (tid === 'spiel-area' || tid === 'game-area' || tid === 'question-area') mark();
         });
-        // JS-based reveals (hidden class removed from #solution or similar)
         var obs = new MutationObserver(function(muts) {
             muts.forEach(function(m) {
                 if (m.type === 'attributes' && !m.target.classList.contains('hidden')) mark();
