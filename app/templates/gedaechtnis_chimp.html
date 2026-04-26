@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+{% block title %}Schimpansen-Test – Gedächtnis & Kognition – VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="Schimpansen-Test: Merke dir Positionen von Zahlen auf einem Raster und klicke sie in der richtigen Reihenfolge. Testet Arbeitsgedächtnis.">{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+
+  <a href="/gedaechtnis" class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 mb-6 transition-colors">
+    ← Zurück zum Gedächtnistraining
+  </a>
+
+  <div class="mb-6 flex items-start gap-4">
+    <div class="text-5xl">🐒</div>
+    <div>
+      <h1 class="text-2xl font-extrabold text-slate-800">Schimpansen-Test</h1>
+      <p class="text-slate-500 text-sm mt-1">Zahlen erscheinen kurz auf dem Raster. Merke dir ihre Positionen und klicke sie danach in der richtigen Reihenfolge (1, 2, 3…).</p>
+    </div>
+  </div>
+
+  <!-- Score bar -->
+  <div class="flex gap-3 mb-4">
+    <div class="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-3 text-center">
+      <div class="text-xs text-slate-400">Aktuelles Level</div>
+      <div class="text-2xl font-extrabold text-slate-800" id="display-level">4</div>
+    </div>
+    <div class="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-3 text-center">
+      <div class="text-xs text-slate-400">Persönliche Bestleistung</div>
+      <div class="text-2xl font-extrabold text-indigo-700" id="display-best">–</div>
+    </div>
+    <div class="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-3 text-center">
+      <div class="text-xs text-slate-400">Fortschritt</div>
+      <div class="text-2xl font-extrabold text-slate-800" id="display-progress">–</div>
+    </div>
+  </div>
+
+  <!-- Game area -->
+  <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5 mb-6">
+
+    <!-- Status message -->
+    <div id="status-msg" class="text-center text-sm font-medium text-slate-500 mb-4 h-5"></div>
+
+    <!-- Grid -->
+    <div id="grid" class="grid gap-2 mx-auto mb-4"
+         style="max-width:360px; grid-template-columns: repeat(5, 1fr);">
+    </div>
+
+    <!-- Action buttons -->
+    <div class="text-center mt-4">
+      <button id="btn-start" onclick="startRound()"
+              class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 rounded-xl text-sm transition-colors">
+        Starten
+      </button>
+    </div>
+  </div>
+
+  <!-- Result overlay (hidden) -->
+  <div id="result-overlay" class="hidden bg-white border border-slate-200 rounded-2xl shadow p-8 text-center mb-6">
+    <div class="text-5xl mb-3" id="result-icon">🐒</div>
+    <div class="text-3xl font-extrabold text-slate-800 mb-1" id="result-level">Level 4</div>
+    <div class="text-slate-500 text-sm mb-1" id="result-msg"></div>
+    <div class="text-xs text-slate-400 mb-6" id="result-best-msg"></div>
+
+    <div class="w-full max-w-xs mx-auto mb-4">
+      <div class="flex gap-2">
+        <input id="player-name" type="text" placeholder="Dein Name (optional)" maxlength="30"
+               class="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300">
+        <button onclick="submitScore()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition-colors">
+          Eintragen
+        </button>
+      </div>
+      <div id="rank-badge" class="hidden mt-2 text-center text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg py-2"></div>
+    </div>
+
+    <button onclick="resetGame()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 rounded-xl text-sm transition-colors">
+      Nochmal
+    </button>
+  </div>
+
+  <!-- Global leaderboard -->
+  <div class="bg-white border border-slate-200 rounded-2xl p-5 mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-bold text-slate-800">🏆 Globale Top 10</h2>
+      <button onclick="loadGlobal()" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Aktualisieren</button>
+    </div>
+    <div id="global-list"><div class="text-sm text-slate-400 text-center py-4">Lade…</div></div>
+  </div>
+
+  <!-- Info -->
+  <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-sm text-slate-600">
+    <h3 class="font-bold text-slate-800 mb-2">🐒 Schimpansen vs. Menschen</h3>
+    <p>Schimpansen zeigen in diesem Test oft bessere Ergebnisse als Menschen – besonders bei höheren Levels. Ihre fotografische Kurzzeitgedächtnis-Kapazität für räumliche Positionen übertrifft die des Menschen. Ayumu, ein Schimpanse im Primate Research Institute Kyoto, erreichte Level 9 problemlos.</p>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  var KEY_BEST = 'chimp_best';
+  var COLS = 5, ROWS = 4;
+  var TOTAL_CELLS = COLS * ROWS;
+  var SHOW_MS = 800;
+
+  var level = 4;
+  var currentLevel = 4;
+  var sequence = [];
+  var clickIndex = 0;
+  var phase = 'idle'; // idle | show | input | result
+  var lastScore = null;
+
+  function getBest() { return parseInt(localStorage.getItem(KEY_BEST)) || 0; }
+  function updateBestDisplay() {
+    var b = getBest();
+    document.getElementById('display-best').textContent = b > 0 ? 'Level ' + b : '–';
+  }
+
+  function setStatus(msg) { document.getElementById('status-msg').textContent = msg; }
+
+  function buildGrid() {
+    var grid = document.getElementById('grid');
+    grid.innerHTML = '';
+    for (var i = 0; i < TOTAL_CELLS; i++) {
+      var cell = document.createElement('div');
+      cell.dataset.index = i;
+      cell.className = 'chimp-cell aspect-square rounded-lg flex items-center justify-center text-xl font-extrabold cursor-pointer select-none transition-all';
+      cell.style.minHeight = '56px';
+      cell.addEventListener('click', onCellClick);
+      grid.appendChild(cell);
+    }
+  }
+
+  function setCellState(index, stateClass, text) {
+    var cells = document.querySelectorAll('.chimp-cell');
+    var cell = cells[index];
+    cell.className = 'chimp-cell aspect-square rounded-lg flex items-center justify-center text-xl font-extrabold cursor-pointer select-none transition-all ' + stateClass;
+    cell.textContent = text || '';
+  }
+
+  function allBlank() {
+    document.querySelectorAll('.chimp-cell').forEach(function(c) {
+      c.className = 'chimp-cell aspect-square rounded-lg flex items-center justify-center text-xl font-extrabold cursor-pointer select-none transition-all bg-slate-100 hover:bg-slate-200';
+      c.textContent = '';
+    });
+  }
+
+  function showNumbers() {
+    allBlank();
+    sequence.forEach(function(cellIdx, num) {
+      setCellState(cellIdx, 'bg-indigo-500 text-white', num + 1);
+    });
+  }
+
+  function hideNumbers() {
+    allBlank();
+  }
+
+  window.startRound = function() {
+    document.getElementById('btn-start').classList.add('hidden');
+    document.getElementById('result-overlay').classList.add('hidden');
+    clickIndex = 0;
+    currentLevel = level;
+    document.getElementById('display-level').textContent = level;
+    document.getElementById('display-progress').textContent = '0 / ' + level;
+
+    // Pick random cells
+    var shuffled = Array.from({length: TOTAL_CELLS}, function(_, i) { return i; });
+    for (var i = shuffled.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = tmp;
+    }
+    sequence = shuffled.slice(0, level);
+
+    phase = 'show';
+    setStatus('Merke dir die Positionen…');
+    showNumbers();
+
+    setTimeout(function() {
+      hideNumbers();
+      phase = 'input';
+      setStatus('Klicke in der Reihenfolge: 1, 2, 3…');
+    }, SHOW_MS + level * 120);
+  };
+
+  function onCellClick(e) {
+    if (phase !== 'input') return;
+    var idx = parseInt(e.currentTarget.dataset.index);
+    var expected = sequence[clickIndex];
+
+    if (idx === expected) {
+      setCellState(idx, 'bg-green-400 text-white', clickIndex + 1);
+      clickIndex++;
+      document.getElementById('display-progress').textContent = clickIndex + ' / ' + currentLevel;
+
+      if (clickIndex === currentLevel) {
+        // Level passed
+        phase = 'idle';
+        setStatus('✅ Level ' + currentLevel + ' bestanden!');
+        level++;
+        setTimeout(function() {
+          document.getElementById('display-level').textContent = level;
+          window.startRound();
+        }, 700);
+      }
+    } else {
+      // Wrong – game over
+      phase = 'result';
+      var score = currentLevel - 1;
+      lastScore = score;
+      setCellState(idx, 'bg-red-400 text-white', '✗');
+      // Reveal correct next
+      setCellState(expected, 'bg-yellow-300 text-slate-800', clickIndex + 1);
+      var best = getBest();
+      var isNew = score > best;
+      if (isNew) localStorage.setItem(KEY_BEST, score);
+      updateBestDisplay();
+
+      setTimeout(function() { showResult(score, isNew, best); }, 600);
+    }
+  }
+
+  function showResult(score, isNew, prevBest) {
+    document.getElementById('result-overlay').classList.remove('hidden');
+    document.getElementById('result-icon').textContent = score >= 7 ? '🏆' : score >= 5 ? '🐒' : '😅';
+    document.getElementById('result-level').textContent = 'Level ' + score + ' erreicht';
+    document.getElementById('result-msg').textContent =
+      score >= 9 ? 'Absolut außergewöhnlich!' :
+      score >= 7 ? 'Besser als die meisten Schimpansen!' :
+      score >= 5 ? 'Gutes Kurzzeit-Gedächtnis!' : 'Weiter üben!';
+    document.getElementById('result-best-msg').textContent = isNew
+      ? '🎉 Neue persönliche Bestleistung!'
+      : 'Deine Bestleistung: Level ' + (prevBest || score);
+    document.getElementById('rank-badge').classList.add('hidden');
+    var btn = document.querySelector('#result-overlay button[onclick="submitScore()"]');
+    if (btn) btn.disabled = false;
+  }
+
+  window.resetGame = function() {
+    level = 4;
+    document.getElementById('result-overlay').classList.add('hidden');
+    document.getElementById('btn-start').classList.remove('hidden');
+    document.getElementById('display-level').textContent = level;
+    document.getElementById('display-progress').textContent = '–';
+    allBlank();
+    setStatus('');
+    phase = 'idle';
+  };
+
+  window.submitScore = function() {
+    if (!lastScore) return;
+    var name = (document.getElementById('player-name').value || 'Anonym').trim() || 'Anonym';
+    fetch('/gedaechtnis/score', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ game_type: 'chimp', score: lastScore, player_name: name })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var badge = document.getElementById('rank-badge');
+      badge.textContent = 'Platz ' + d.rank + ' von ' + d.total + ' – eingetragen!';
+      badge.classList.remove('hidden');
+      var btn = document.querySelector('#result-overlay button[onclick="submitScore()"]');
+      if (btn) btn.disabled = true;
+      loadGlobal();
+    });
+  };
+
+  window.loadGlobal = function() {
+    var el = document.getElementById('global-list');
+    el.innerHTML = '<div class="text-sm text-slate-400 text-center py-4">Lade…</div>';
+    fetch('/gedaechtnis/scores/chimp')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (!d.scores || d.scores.length === 0) {
+        el.innerHTML = '<div class="text-sm text-slate-400 text-center py-4">Noch keine Einträge. Sei der Erste!</div>';
+        return;
+      }
+      var html = '<div class="space-y-1">';
+      d.scores.forEach(function(s) {
+        var medal = s.rank === 1 ? '🥇' : s.rank === 2 ? '🥈' : s.rank === 3 ? '🥉' : s.rank + '.';
+        html += '<div class="flex items-center justify-between py-2 px-3 rounded-lg ' +
+          (s.rank <= 3 ? 'bg-amber-50' : 'hover:bg-slate-50') + '">' +
+          '<span class="text-sm font-medium text-slate-700">' + medal + ' ' + escHtml(s.player) + '</span>' +
+          '<span class="text-sm font-bold text-indigo-700">Level ' + s.score + '</span>' +
+          '</div>';
+      });
+      html += '</div>';
+      el.innerHTML = html;
+    })
+    .catch(function() { el.innerHTML = '<div class="text-sm text-red-400 text-center py-4">Fehler beim Laden.</div>'; });
+  };
+
+  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  buildGrid();
+  allBlank();
+  updateBestDisplay();
+  loadGlobal();
+})();
+</script>
+
+{% endblock %}

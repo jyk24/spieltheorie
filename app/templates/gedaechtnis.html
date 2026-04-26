@@ -11,9 +11,14 @@
       <h1 class="text-3xl font-bold text-slate-800">🧠 Gedächtnis & Mnemonik</h1>
       <p class="text-slate-500 mt-1">Lerne die wichtigsten Merktechniken — und trainiere sie mit gezielten Spielen.</p>
     </div>
-    <a href="/gedaechtnis/theorie" class="text-sm border border-indigo-200 text-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-50 shrink-0">
-      🔬 Theorie & Wissenschaft →
-    </a>
+    <div class="flex gap-2 flex-wrap shrink-0">
+      <a href="/gedaechtnis/bestenliste" class="text-sm bg-amber-500 hover:bg-amber-600 text-white font-bold px-4 py-2 rounded-lg transition-colors">
+        🏆 Bestenliste
+      </a>
+      <a href="/gedaechtnis/theorie" class="text-sm border border-indigo-200 text-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-50">
+        🔬 Theorie →
+      </a>
+    </div>
   </div>
 
   <!-- ── Merktechniken ── -->
@@ -270,21 +275,30 @@
   </div>
 
   <!-- ── Trainings-Spiele ── -->
-  <h2 class="text-xl font-bold text-slate-700 mb-4">Trainings-Spiele</h2>
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-bold text-slate-700">Trainings-Spiele</h2>
+    <a href="/gedaechtnis/bestenliste" class="text-sm text-amber-600 hover:text-amber-800 font-medium">🏆 Bestenliste →</a>
+  </div>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
 
     {% set spiele = [
-      ("corsi",     "🟦", "Blockspanne",      "Tippe die leuchtende Sequenz nach — klassischer Corsi-Block-Test.",                  "Spatial",    "5 min",  "border-blue-200",   "bg-blue-50",    "text-blue-700"),
-      ("zahlen",    "🔢", "Ziffernfolge",     "Zahlen erscheinen und verschwinden — klicke sie in richtiger Reihenfolge.",          "Zahlen",     "5 min",  "border-violet-200", "bg-violet-50",  "text-violet-700"),
-      ("memory",    "🃏", "Memory",           "Finde alle Paare — je schneller und mit weniger Zügen, desto besser.",               "Visuell",    "3 min",  "border-emerald-200","bg-emerald-50", "text-emerald-700"),
-      ("namen",     "👤", "Namen & Gesichter","Präge dir Namen ein und werde danach abgefragt.",                                    "Assoziativ", "5 min",  "border-amber-200",  "bg-amber-50",   "text-amber-700"),
-      ("karten",    "🎴", "Kartendeck",        "Merke die Reihenfolge von Spielkarten — trainiere Major-System und PAO.",            "Sequenz",    "10 min", "border-rose-200",   "bg-rose-50",    "text-rose-700"),
-      ("wortfolge", "📝", "Wortfolge",         "Wörter erscheinen einzeln — verknüpfe sie zur Geschichte und rekonstruiere die Reihenfolge.", "Linking", "5 min", "border-teal-200",   "bg-teal-50",   "text-teal-700"),
+      ("reaktionszeit","⚡","Reaktionszeit",      "Klicke so schnell wie möglich wenn es grün wird — testet Reaktionsfähigkeit und Wachheit.",    "Reaktion",   "2 min",  "border-yellow-200", "bg-yellow-50",  "text-yellow-700"),
+      ("chimp",        "🐒","Schimpansen-Test",   "Merke dir Positionen von Zahlen — Schimpansen schlagen Menschen oft in diesem Test.",           "Räumlich",   "5 min",  "border-orange-200", "bg-orange-50",  "text-orange-700"),
+      ("verbal",       "💬","Verbales Gedächtnis","Gesehen oder neu? Erkenne welche Wörter du schon gesehen hast — 3 Leben.",                      "Verbal",     "5 min",  "border-sky-200",    "bg-sky-50",     "text-sky-700"),
+      ("corsi",        "🟦","Blockspanne",        "Tippe die leuchtende Sequenz nach — klassischer Corsi-Block-Test.",                             "Spatial",    "5 min",  "border-blue-200",   "bg-blue-50",    "text-blue-700"),
+      ("zahlen",       "🔢","Ziffernfolge",       "Zahlen erscheinen und verschwinden — klicke sie in richtiger Reihenfolge.",                     "Zahlen",     "5 min",  "border-violet-200", "bg-violet-50",  "text-violet-700"),
+      ("memory",       "🃏","Memory",             "Finde alle Paare — je schneller und mit weniger Zügen, desto besser.",                          "Visuell",    "3 min",  "border-emerald-200","bg-emerald-50", "text-emerald-700"),
+      ("namen",        "👤","Namen & Gesichter",  "Präge dir Namen ein und werde danach abgefragt.",                                               "Assoziativ", "5 min",  "border-amber-200",  "bg-amber-50",   "text-amber-700"),
+      ("karten",       "🎴","Kartendeck",         "Merke die Reihenfolge von Spielkarten — trainiere Major-System und PAO.",                       "Sequenz",    "10 min", "border-rose-200",   "bg-rose-50",    "text-rose-700"),
+      ("wortfolge",    "📝","Wortfolge",          "Wörter erscheinen einzeln — verknüpfe sie zur Geschichte und rekonstruiere die Reihenfolge.",   "Linking",    "5 min",  "border-teal-200",   "bg-teal-50",    "text-teal-700"),
     ] %}
 
     {% for id, icon, name, beschreibung, typ, dauer, border, bg, text in spiele %}
     <a href="/gedaechtnis/{{ id }}"
-       class="bg-white rounded-xl border {{ border }} p-5 shadow-sm hover:shadow-md transition-all group">
+       class="bg-white rounded-xl border {{ border }} p-5 shadow-sm hover:shadow-md transition-all group relative">
+      {% if id in ["reaktionszeit", "chimp", "verbal"] %}
+      <span class="absolute top-3 right-3 text-xs bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full font-medium">NEU</span>
+      {% endif %}
       <div class="flex items-start justify-between mb-3">
         <span class="text-3xl">{{ icon }}</span>
         <span class="text-xs px-2 py-0.5 rounded-full {{ bg }} {{ text }} font-medium">{{ typ }}</span>

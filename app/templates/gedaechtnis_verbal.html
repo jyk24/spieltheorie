@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+{% block title %}Verbales Gedächtnis – Wörter merken – VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="Verbales Gedächtnis-Training: Erkenne, ob du ein Wort schon gesehen hast. Testet Kurzzeitgedächtnis und Sprachverarbeitung.">{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+
+  <a href="/gedaechtnis" class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 mb-6 transition-colors">
+    ← Zurück zum Gedächtnistraining
+  </a>
+
+  <div class="mb-6 flex items-start gap-4">
+    <div class="text-5xl">💬</div>
+    <div>
+      <h1 class="text-2xl font-extrabold text-slate-800">Verbales Gedächtnis</h1>
+      <p class="text-slate-500 text-sm mt-1">Wörter erscheinen nacheinander. Entscheide: Hast du dieses Wort in dieser Runde schon gesehen? Du hast 3 Leben.</p>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-3 gap-3 mb-5">
+    <div class="bg-white border border-slate-200 rounded-xl p-3 text-center">
+      <div class="text-xs text-slate-400 mb-0.5">Punkte</div>
+      <div class="text-2xl font-extrabold text-slate-800" id="display-score">0</div>
+    </div>
+    <div class="bg-white border border-slate-200 rounded-xl p-3 text-center">
+      <div class="text-xs text-slate-400 mb-0.5">Leben</div>
+      <div class="text-2xl font-extrabold" id="display-lives">❤️❤️❤️</div>
+    </div>
+    <div class="bg-white border border-slate-200 rounded-xl p-3 text-center">
+      <div class="text-xs text-slate-400 mb-0.5">Bestleistung</div>
+      <div class="text-2xl font-extrabold text-indigo-700" id="display-best">–</div>
+    </div>
+  </div>
+
+  <!-- Game card -->
+  <div class="bg-white border border-slate-200 rounded-2xl shadow-sm mb-5">
+
+    <!-- Idle state -->
+    <div id="state-idle" class="flex flex-col items-center justify-center p-12 text-center">
+      <div class="text-5xl mb-4">💬</div>
+      <h2 class="text-xl font-bold text-slate-800 mb-2">Verbales Gedächtnis</h2>
+      <p class="text-slate-500 text-sm mb-6 max-w-sm">Wörter erscheinen eines nach dem anderen. Klicke <strong>Gesehen</strong>, wenn du das Wort in dieser Runde schon gesehen hast, sonst <strong>Neu</strong>.</p>
+      <button onclick="startGame()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 rounded-xl text-sm transition-colors">
+        Starten
+      </button>
+    </div>
+
+    <!-- Play state -->
+    <div id="state-play" class="hidden">
+      <div class="p-8 text-center">
+        <div class="text-xs text-slate-400 mb-3 uppercase tracking-widest">Wort</div>
+        <div id="current-word" class="text-4xl font-extrabold text-slate-800 mb-2 min-h-12"></div>
+        <div id="word-feedback" class="text-sm font-medium h-6"></div>
+      </div>
+      <div class="border-t border-slate-100 grid grid-cols-2">
+        <button onclick="answer('seen')"
+                class="py-5 text-center font-bold text-blue-700 hover:bg-blue-50 transition-colors border-r border-slate-100 text-lg active:bg-blue-100">
+          👁 Gesehen
+        </button>
+        <button onclick="answer('new')"
+                class="py-5 text-center font-bold text-green-700 hover:bg-green-50 transition-colors text-lg active:bg-green-100">
+          ✨ Neu
+        </button>
+      </div>
+    </div>
+
+    <!-- Game over state -->
+    <div id="state-over" class="hidden flex-col items-center justify-center p-10 text-center">
+      <div class="text-5xl mb-3" id="over-icon">💬</div>
+      <div class="text-3xl font-extrabold text-slate-800 mb-1" id="over-score">0 Punkte</div>
+      <div class="text-slate-500 text-sm mb-1" id="over-msg"></div>
+      <div class="text-xs text-slate-400 mb-6" id="over-best"></div>
+
+      <div class="w-full max-w-xs mb-5">
+        <div class="flex gap-2">
+          <input id="player-name" type="text" placeholder="Dein Name (optional)" maxlength="30"
+                 class="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300">
+          <button onclick="submitScore()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition-colors">
+            Eintragen
+          </button>
+        </div>
+        <div id="rank-badge" class="hidden mt-2 text-center text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg py-2"></div>
+      </div>
+
+      <button onclick="startGame()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 rounded-xl text-sm transition-colors">
+        Nochmal
+      </button>
+    </div>
+  </div>
+
+  <!-- Global Leaderboard -->
+  <div class="bg-white border border-slate-200 rounded-2xl p-5 mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-bold text-slate-800">🏆 Globale Top 10</h2>
+      <button onclick="loadGlobal()" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Aktualisieren</button>
+    </div>
+    <div id="global-list"><div class="text-sm text-slate-400 text-center py-4">Lade…</div></div>
+  </div>
+
+  <!-- Info -->
+  <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-sm text-slate-600">
+    <h3 class="font-bold text-slate-800 mb-2">💡 Was wird hier trainiert?</h3>
+    <p>Das verbale Gedächtnis ist Teil des <strong>episodischen Gedächtnisses</strong>. Es wird durch den Hippocampus gesteuert und ist grundlegend für Sprache, Lernen und Kommunikation. Menschen erkennen im Durchschnitt 25–35 Wörter korrekt, bevor Verwechslungen auftreten.</p>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  var KEY_BEST = 'verbal_best';
+
+  var WORDS = [
+    'Apfel','Buch','Haus','Hund','Wasser','Baum','Tisch','Fenster','Sonne','Mond',
+    'Berg','Fluss','Garten','Vogel','Fisch','Auto','Stadt','Land','Schule','Musik',
+    'Freund','Brief','Lampe','Kaffee','Tee','Brot','Stuhl','Bett','Uhr','Glas',
+    'Nacht','Tag','Jahr','Welt','Hand','Weg','Zeit','Herz','Geist','Kraft',
+    'Traum','Stimme','Licht','Schatten','Feuer','Eis','Wind','Regen','Schnee','Stern',
+    'Blume','Stein','Gold','Silber','Farbe','Form','Zahl','Wort','Satz','Frage',
+    'Antwort','Idee','Plan','Ziel','Weg','Schritt','Raum','Tür','Schloss','Schluessel',
+    'Spiel','Sport','Kunst','Natur','Tier','Mensch','Leben','Tod','Liebe','Hoffnung',
+    'Glaube','Wissen','Erfahrung','Gedanke','Gefuehl','Wunsch','Angst','Mut','Freude','Trauer'
+  ];
+
+  var score = 0;
+  var lives = 3;
+  var seenWords = [];
+  var wordPool = [];
+  var currentWord = '';
+  var lastScore = null;
+
+  function getBest() { return parseInt(localStorage.getItem(KEY_BEST)) || 0; }
+
+  function updateUI() {
+    document.getElementById('display-score').textContent = score;
+    var hearts = '';
+    for (var i = 0; i < lives; i++) hearts += '❤️';
+    for (var j = lives; j < 3; j++) hearts += '🖤';
+    document.getElementById('display-lives').textContent = hearts;
+    document.getElementById('display-best').textContent = getBest() > 0 ? getBest() : '–';
+  }
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  window.startGame = function() {
+    score = 0; lives = 3; seenWords = [];
+    wordPool = shuffle(WORDS).slice();
+    lastScore = null;
+    document.getElementById('state-idle').classList.add('hidden');
+    document.getElementById('state-over').classList.add('hidden');
+    document.getElementById('state-play').classList.remove('hidden');
+    nextWord();
+    updateUI();
+  };
+
+  function nextWord() {
+    // 30% chance to show a seen word (if any available)
+    var showSeen = seenWords.length > 0 && Math.random() < 0.35;
+    if (showSeen) {
+      currentWord = seenWords[Math.floor(Math.random() * seenWords.length)];
+    } else {
+      if (wordPool.length === 0) wordPool = shuffle(WORDS).slice();
+      currentWord = wordPool.pop();
+      // Make sure it's not already in seenWords
+      while (seenWords.indexOf(currentWord) !== -1 && wordPool.length > 0) {
+        currentWord = wordPool.pop();
+      }
+    }
+    document.getElementById('current-word').textContent = currentWord;
+    document.getElementById('word-feedback').textContent = '';
+    document.getElementById('word-feedback').className = 'text-sm font-medium h-6';
+  }
+
+  window.answer = function(choice) {
+    var isSeen = seenWords.indexOf(currentWord) !== -1;
+    var correct = (choice === 'seen' && isSeen) || (choice === 'new' && !isSeen);
+    var fb = document.getElementById('word-feedback');
+
+    if (correct) {
+      score++;
+      fb.textContent = '✅ Richtig! +1';
+      fb.className = 'text-sm font-medium h-6 text-green-600';
+      if (!isSeen) seenWords.push(currentWord);
+    } else {
+      lives--;
+      fb.textContent = isSeen ? '❌ Falsch – das Wort hattest du schon gesehen.' : '❌ Falsch – das war ein neues Wort.';
+      fb.className = 'text-sm font-medium h-6 text-red-500';
+      if (!isSeen) seenWords.push(currentWord);
+    }
+
+    updateUI();
+
+    if (lives <= 0) {
+      setTimeout(endGame, 500);
+    } else {
+      setTimeout(nextWord, 700);
+    }
+  };
+
+  function endGame() {
+    lastScore = score;
+    var best = getBest();
+    var isNew = score > best;
+    if (isNew) localStorage.setItem(KEY_BEST, score);
+
+    document.getElementById('state-play').classList.add('hidden');
+    document.getElementById('state-over').classList.remove('hidden');
+    document.getElementById('state-over').style.display = 'flex';
+    document.getElementById('over-icon').textContent = score >= 40 ? '🧠' : score >= 25 ? '💬' : score >= 15 ? '😊' : '💡';
+    document.getElementById('over-score').textContent = score + ' Punkte';
+    document.getElementById('over-msg').textContent =
+      score >= 40 ? 'Außergewöhnliches verbales Gedächtnis!' :
+      score >= 25 ? 'Sehr gutes Ergebnis!' :
+      score >= 15 ? 'Solides verbales Gedächtnis.' : 'Weiter üben – es wird besser!';
+    document.getElementById('over-best').textContent = isNew
+      ? '🎉 Neue persönliche Bestleistung!'
+      : 'Deine Bestleistung: ' + (best || score) + ' Punkte';
+    document.getElementById('rank-badge').classList.add('hidden');
+    var btn = document.querySelector('#state-over button[onclick="submitScore()"]');
+    if (btn) btn.disabled = false;
+    updateUI();
+  }
+
+  window.submitScore = function() {
+    if (lastScore === null) return;
+    var name = (document.getElementById('player-name').value || 'Anonym').trim() || 'Anonym';
+    fetch('/gedaechtnis/score', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ game_type: 'verbal', score: lastScore, player_name: name })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var badge = document.getElementById('rank-badge');
+      badge.textContent = 'Platz ' + d.rank + ' von ' + d.total + ' – eingetragen!';
+      badge.classList.remove('hidden');
+      var btn = document.querySelector('#state-over button[onclick="submitScore()"]');
+      if (btn) btn.disabled = true;
+      loadGlobal();
+    });
+  };
+
+  window.loadGlobal = function() {
+    var el = document.getElementById('global-list');
+    el.innerHTML = '<div class="text-sm text-slate-400 text-center py-4">Lade…</div>';
+    fetch('/gedaechtnis/scores/verbal')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (!d.scores || d.scores.length === 0) {
+        el.innerHTML = '<div class="text-sm text-slate-400 text-center py-4">Noch keine Einträge. Sei der Erste!</div>';
+        return;
+      }
+      var html = '<div class="space-y-1">';
+      d.scores.forEach(function(s) {
+        var medal = s.rank === 1 ? '🥇' : s.rank === 2 ? '🥈' : s.rank === 3 ? '🥉' : s.rank + '.';
+        html += '<div class="flex items-center justify-between py-2 px-3 rounded-lg ' +
+          (s.rank <= 3 ? 'bg-amber-50' : 'hover:bg-slate-50') + '">' +
+          '<span class="text-sm font-medium text-slate-700">' + medal + ' ' + escHtml(s.player) + '</span>' +
+          '<span class="text-sm font-bold text-indigo-700">' + s.score + ' Punkte</span>' +
+          '</div>';
+      });
+      html += '</div>';
+      el.innerHTML = html;
+    })
+    .catch(function() { el.innerHTML = '<div class="text-sm text-red-400 text-center py-4">Fehler beim Laden.</div>'; });
+  };
+
+  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  updateUI();
+  loadGlobal();
+})();
+</script>
+
+{% endblock %}

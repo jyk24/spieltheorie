@@ -53,3 +53,13 @@ class UserAchievement(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     slug: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     unlocked_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
+class GedaechtnisScore(Base):
+    __tablename__ = "gedaechtnis_scores"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    game_type: Mapped[str] = mapped_column(String(50), index=True, nullable=False)
+    score: Mapped[int] = mapped_column(Integer, nullable=False)
+    player_name: Mapped[str] = mapped_column(String(50), default="Anonym")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

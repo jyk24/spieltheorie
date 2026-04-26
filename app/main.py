@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .database import Base, engine, SessionLocal
 from .seed import seed_lessons, seed_progress
-from .routers import dashboard, lektionen, spiele, fortschritt, raetsel, grundlagen, spielpfad, konzepte, lernpfade, skills, redesign, gedaechtnis, spieltheorie_hub, denkraetsel, soziales
+from .routers import dashboard, lektionen, spiele, fortschritt, raetsel, grundlagen, spielpfad, konzepte, lernpfade, skills, redesign, gedaechtnis, spieltheorie_hub, denkraetsel, soziales, glossar
 
 
 @asynccontextmanager
@@ -39,6 +39,7 @@ app.include_router(gedaechtnis.router)
 app.include_router(spieltheorie_hub.router)
 app.include_router(denkraetsel.router)
 app.include_router(soziales.router)
+app.include_router(glossar.router)
 
 
 BASE_URL = "https://imaginative-fulfillment-production.up.railway.app"
@@ -46,7 +47,7 @@ BASE_URL = "https://imaginative-fulfillment-production.up.railway.app"
 _SITEMAP_URLS = [
     "/", "/lernpfade", "/spieltheorie", "/denkraetsel", "/soziales",
     "/grundlagen", "/konzepte", "/spiele", "/raetsel",
-    "/skills", "/gedaechtnis", "/fortschritt",
+    "/skills", "/gedaechtnis", "/fortschritt", "/glossar",
     "/gedaechtnis/theorie", "/gedaechtnis/wortfolge", "/gedaechtnis/zahlen",
     "/gedaechtnis/corsi", "/gedaechtnis/memory", "/gedaechtnis/namen", "/gedaechtnis/karten",
     "/gedaechtnis/technik/gedaechtnispalast", "/gedaechtnis/technik/major-system",
@@ -54,6 +55,8 @@ _SITEMAP_URLS = [
     "/gedaechtnis/technik/spaced-repetition", "/gedaechtnis/technik/akrostichon",
     "/gedaechtnis/technik/geschichten", "/gedaechtnis/technik/schluesselwort",
     "/gedaechtnis/technik/elaborative-enkodierung", "/gedaechtnis/technik/zeigarnik",
+    "/gedaechtnis/reaktionszeit", "/gedaechtnis/chimp", "/gedaechtnis/verbal",
+    "/gedaechtnis/bestenliste",
 ]
 
 

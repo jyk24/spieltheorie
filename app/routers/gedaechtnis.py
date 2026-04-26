@@ -1,6 +1,12 @@
-from fastapi import APIRouter, HTTPException, Request
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel
+from sqlalchemy import asc, desc
+from sqlalchemy.orm import Session
+
+from ..database import get_db
+from ..models import GedaechtnisScore
 
 router = APIRouter(prefix="/gedaechtnis")
 templates = Jinja2Templates(directory="app/templates")
@@ -44,6 +50,104 @@ def wortfolge(request: Request):
 @router.get("/theorie", response_class=HTMLResponse)
 def theorie(request: Request):
     return templates.TemplateResponse(request, "gedaechtnis_theorie.html", {"active_page": "gedaechtnis"})
+
+
+@router.get("/reaktionszeit", response_class=HTMLResponse)
+def reaktionszeit(request: Request):
+    return templates.TemplateResponse(request, "gedaechtnis_reaktionszeit.html", {"active_page": "gedaechtnis"})
+
+
+@router.get("/chimp", response_class=HTMLResponse)
+def chimp(request: Request):
+    return templates.TemplateResponse(request, "gedaechtnis_chimp.html", {"active_page": "gedaechtnis"})
+
+
+@router.get("/verbal", response_class=HTMLResponse)
+def verbal(request: Request):
+    return templates.TemplateResponse(request, "gedaechtnis_verbal.html", {"active_page": "gedaechtnis"})
+
+
+@router.get("/bestenliste", response_class=HTMLResponse)
+def bestenliste(request: Request):
+    return templates.TemplateResponse(request, "gedaechtnis_bestenliste.html", {"active_page": "gedaechtnis"})
+
+
+# ── Score-API ────────────────────────────────────────────────────────────────
+
+# Games where lower score = better (reaction time in ms)
+_LOWER_IS_BETTER = {"reaktionszeit"}
+
+# Human-readable labels per game
+GAME_META_GEDAECHTNIS = {
+    "corsi":        {"name": "Blockspanne",           "unit": "Span",    "icon": "🔵"},
+    "zahlen":       {"name": "Ziffernfolge",           "unit": "Ziffern", "icon": "🔢"},
+    "memory":       {"name": "Memory",                 "unit": "Punkte",  "icon": "🃏"},
+    "wortfolge":    {"name": "Wortfolge",              "unit": "Woerter", "icon": "📝"},
+    "namen":        {"name": "Namen & Gesichter",      "unit": "Punkte",  "icon": "👤"},
+    "karten":       {"name": "Kartendeck",             "unit": "Karten",  "icon": "🂡"},
+    "reaktionszeit":{"name": "Reaktionszeit",          "unit": "ms",      "icon": "⚡"},
+    "chimp":        {"name": "Schimpansen-Test",       "unit": "Level",   "icon": "🐒"},
+    "verbal":       {"name": "Verbales Gedaechtnis",   "unit": "Punkte",  "icon": "💬"},
+}
+
+
+class ScoreIn(BaseModel):
+    game_type: str
+    score: int
+    player_name: str = "Anonym"
+
+
+@router.post("/score")
+def submit_score(payload: ScoreIn, db: Session = Depends(get_db)):
+    if payload.game_type not in GAME_META_GEDAECHTNIS:
+        raise HTTPException(status_code=400, detail="Unbekannter Spieltyp")
+    if len(payload.player_name.strip()) == 0:
+        payload.player_name = "Anonym"
+    entry = GedaechtnisScore(
+        game_type=payload.game_type,
+        score=payload.score,
+        player_name=payload.player_name[:30],
+    )
+    db.add(entry)
+    db.commit()
+    db.refresh(entry)
+    # Compute rank
+    lower_better = payload.game_type in _LOWER_IS_BETTER
+    if lower_better:
+        rank = db.query(GedaechtnisScore).filter(
+            GedaechtnisScore.game_type == payload.game_type,
+            GedaechtnisScore.score < payload.score,
+        ).count() + 1
+    else:
+        rank = db.query(GedaechtnisScore).filter(
+            GedaechtnisScore.game_type == payload.game_type,
+            GedaechtnisScore.score > payload.score,
+        ).count() + 1
+    total = db.query(GedaechtnisScore).filter(GedaechtnisScore.game_type == payload.game_type).count()
+    return {"ok": True, "rank": rank, "total": total}
+
+
+@router.get("/scores/{game_type}")
+def get_scores(game_type: str, db: Session = Depends(get_db)):
+    if game_type not in GAME_META_GEDAECHTNIS:
+        raise HTTPException(status_code=400, detail="Unbekannter Spieltyp")
+    lower_better = game_type in _LOWER_IS_BETTER
+    order_col = asc(GedaechtnisScore.score) if lower_better else desc(GedaechtnisScore.score)
+    rows = (
+        db.query(GedaechtnisScore)
+        .filter(GedaechtnisScore.game_type == game_type)
+        .order_by(order_col)
+        .limit(10)
+        .all()
+    )
+    meta = GAME_META_GEDAECHTNIS[game_type]
+    return {
+        "game_type": game_type,
+        "name": meta["name"],
+        "unit": meta["unit"],
+        "lower_is_better": lower_better,
+        "scores": [{"rank": i + 1, "player": r.player_name, "score": r.score} for i, r in enumerate(rows)],
+    }
 
 
 # ── Technik-Detailseiten ─────────────────────────────────────────────────────

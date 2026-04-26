@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+{% block title %}Reaktionszeit-Test – Gedächtnis & Kognition – VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="Teste deine Reaktionszeit: Warte auf Grün, dann klicke so schnell wie möglich. Persönliche Bestleistung und globale Rangliste.">{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+
+  <!-- Back -->
+  <a href="/gedaechtnis" class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 mb-6 transition-colors">
+    ← Zurück zum Gedächtnistraining
+  </a>
+
+  <!-- Header -->
+  <div class="mb-6 flex items-start gap-4">
+    <div class="text-5xl">⚡</div>
+    <div>
+      <h1 class="text-2xl font-extrabold text-slate-800">Reaktionszeit</h1>
+      <p class="text-slate-500 text-sm mt-1">Klicke so schnell wie möglich, sobald der Bereich grün wird. Durchschnitt: 200–250 ms.</p>
+    </div>
+  </div>
+
+  <!-- Game Area -->
+  <div id="game-container" class="rounded-2xl overflow-hidden shadow-lg mb-6 select-none cursor-pointer"
+       onclick="handleClick()" style="min-height:260px;">
+
+    <!-- State: idle -->
+    <div id="state-idle" class="flex flex-col items-center justify-center p-10 bg-slate-700 text-white" style="min-height:260px;">
+      <div class="text-5xl mb-4">⚡</div>
+      <div class="text-xl font-bold mb-2">Reaktionszeit testen</div>
+      <div class="text-slate-300 text-sm mb-6 text-center">Warte auf Grün – dann klicke so schnell wie möglich</div>
+      <button onclick="startGame(event)" class="bg-indigo-500 hover:bg-indigo-400 text-white font-bold px-8 py-3 rounded-xl text-sm transition-colors">
+        Starten
+      </button>
+    </div>
+
+    <!-- State: waiting -->
+    <div id="state-waiting" class="hidden flex-col items-center justify-center p-10 bg-slate-600 text-white" style="min-height:260px;">
+      <div class="text-5xl mb-4 animate-pulse">⏳</div>
+      <div class="text-xl font-bold">Warte auf Grün…</div>
+      <div class="text-slate-300 text-sm mt-2">Nicht zu früh klicken!</div>
+    </div>
+
+    <!-- State: ready (GREEN) -->
+    <div id="state-ready" class="hidden flex-col items-center justify-center p-10 bg-green-500 text-white" style="min-height:260px;">
+      <div class="text-6xl mb-3">🟢</div>
+      <div class="text-2xl font-extrabold">JETZT!</div>
+    </div>
+
+    <!-- State: too early -->
+    <div id="state-early" class="hidden flex-col items-center justify-center p-10 bg-red-500 text-white" style="min-height:260px;">
+      <div class="text-5xl mb-4">❌</div>
+      <div class="text-xl font-bold">Zu früh!</div>
+      <div class="text-slate-100 text-sm mt-2 mb-6">Warte auf das Grün.</div>
+      <button onclick="startGame(event)" class="bg-white text-red-600 font-bold px-8 py-3 rounded-xl text-sm hover:bg-red-50 transition-colors">
+        Nochmal
+      </button>
+    </div>
+
+    <!-- State: result -->
+    <div id="state-result" class="hidden flex-col items-center justify-center p-10 bg-white" style="min-height:260px;">
+      <div class="text-5xl mb-3">⚡</div>
+      <div class="text-4xl font-extrabold text-slate-800 mb-1" id="result-ms">–</div>
+      <div class="text-slate-500 text-sm mb-1">Millisekunden</div>
+      <div class="text-sm font-medium mb-1" id="result-rating"></div>
+      <div class="text-xs text-slate-400 mb-5" id="result-best"></div>
+
+      <!-- Globale Rangliste nach Abschicken -->
+      <div id="submit-area" class="w-full max-w-xs mb-4">
+        <div class="flex gap-2">
+          <input id="player-name" type="text" placeholder="Dein Name (optional)"
+                 maxlength="30"
+                 class="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300">
+          <button onclick="submitScore()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition-colors whitespace-nowrap">
+            Eintragen
+          </button>
+        </div>
+        <div id="rank-badge" class="hidden mt-2 text-center text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg py-2"></div>
+      </div>
+
+      <div class="flex gap-3">
+        <button onclick="startGame(event)" class="bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition-colors">
+          Nochmal
+        </button>
+        <a href="/gedaechtnis/bestenliste" class="border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium px-6 py-2.5 rounded-xl text-sm transition-colors">
+          Bestenliste
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats bar -->
+  <div class="grid grid-cols-3 gap-3 mb-8">
+    <div class="bg-white border border-slate-200 rounded-xl p-4 text-center">
+      <div class="text-xs text-slate-400 mb-1">Persönliche Bestzeit</div>
+      <div class="text-xl font-extrabold text-slate-800" id="stat-best">–</div>
+      <div class="text-xs text-slate-400">ms</div>
+    </div>
+    <div class="bg-white border border-slate-200 rounded-xl p-4 text-center">
+      <div class="text-xs text-slate-400 mb-1">Letzter Versuch</div>
+      <div class="text-xl font-extrabold text-slate-800" id="stat-last">–</div>
+      <div class="text-xs text-slate-400">ms</div>
+    </div>
+    <div class="bg-white border border-slate-200 rounded-xl p-4 text-center">
+      <div class="text-xs text-slate-400 mb-1">Versuche</div>
+      <div class="text-xl font-extrabold text-slate-800" id="stat-count">0</div>
+    </div>
+  </div>
+
+  <!-- Globale Bestenliste -->
+  <div class="bg-white border border-slate-200 rounded-2xl p-5 mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-bold text-slate-800">🏆 Globale Top 10</h2>
+      <button onclick="loadGlobal()" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Aktualisieren</button>
+    </div>
+    <div id="global-list">
+      <div class="text-sm text-slate-400 text-center py-4">Lade Bestenliste…</div>
+    </div>
+  </div>
+
+  <!-- Info -->
+  <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-sm text-slate-600">
+    <h3 class="font-bold text-slate-800 mb-2">💡 Was misst dieser Test?</h3>
+    <p class="mb-2">Der Test misst deine <strong>Einfach-Reaktionszeit</strong> – die Zeit von einem visuellen Reiz bis zur Motorreaktion. Der Durchschnitt liegt bei <strong>200–250 ms</strong>.</p>
+    <ul class="list-disc list-inside space-y-1 text-xs text-slate-500">
+      <li>Unter 150 ms: Außergewöhnlich schnell (Wettkampfsportler)</li>
+      <li>150–200 ms: Sehr gut</li>
+      <li>200–250 ms: Durchschnitt</li>
+      <li>250–300 ms: Leicht unter Durchschnitt</li>
+      <li>Über 300 ms: Müdigkeit oder Ablenkung kann eine Rolle spielen</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  var KEY_BEST  = 'rz_best';
+  var KEY_COUNT = 'rz_count';
+  var KEY_LAST  = 'rz_last';
+
+  var state = 'idle';
+  var timer = null;
+  var t0 = null;
+  var lastScore = null;
+
+  function show(id) {
+    ['idle','waiting','ready','early','result'].forEach(function(s) {
+      var el = document.getElementById('state-' + s);
+      if (el) { el.style.display = s === id ? 'flex' : 'none'; }
+    });
+    state = id;
+  }
+
+  function rating(ms) {
+    if (ms < 150) return { text: '🚀 Außergewöhnlich!', color: 'text-green-600' };
+    if (ms < 200) return { text: '⚡ Sehr schnell!', color: 'text-green-500' };
+    if (ms < 250) return { text: '✅ Durchschnitt', color: 'text-blue-500' };
+    if (ms < 300) return { text: '🙂 Knapp darunter', color: 'text-amber-500' };
+    return { text: '😴 Etwas langsam', color: 'text-red-500' };
+  }
+
+  function updateStats() {
+    var best  = localStorage.getItem(KEY_BEST);
+    var last  = localStorage.getItem(KEY_LAST);
+    var count = localStorage.getItem(KEY_COUNT) || 0;
+    document.getElementById('stat-best').textContent  = best  ? best  + ' ms' : '–';
+    document.getElementById('stat-last').textContent  = last  ? last  + ' ms' : '–';
+    document.getElementById('stat-count').textContent = count;
+  }
+
+  window.startGame = function(e) {
+    if (e) e.stopPropagation();
+    clearTimeout(timer);
+    show('waiting');
+    var delay = 1500 + Math.random() * 3500;
+    timer = setTimeout(function() {
+      show('ready');
+      t0 = Date.now();
+    }, delay);
+  };
+
+  window.handleClick = function() {
+    if (state === 'waiting') {
+      clearTimeout(timer);
+      show('early');
+    } else if (state === 'ready') {
+      var ms = Date.now() - t0;
+      lastScore = ms;
+      var best = parseInt(localStorage.getItem(KEY_BEST)) || null;
+      var isNew = !best || ms < best;
+      if (isNew) localStorage.setItem(KEY_BEST, ms);
+      localStorage.setItem(KEY_LAST, ms);
+      var count = parseInt(localStorage.getItem(KEY_COUNT) || 0) + 1;
+      localStorage.setItem(KEY_COUNT, count);
+
+      document.getElementById('result-ms').textContent = ms + ' ms';
+      var r = rating(ms);
+      var rEl = document.getElementById('result-rating');
+      rEl.textContent = r.text;
+      rEl.className = 'text-sm font-medium mb-1 ' + r.color;
+      document.getElementById('result-best').textContent = isNew
+        ? '🎉 Neue persönliche Bestzeit!'
+        : 'Bestzeit: ' + (best || ms) + ' ms';
+      document.getElementById('rank-badge').classList.add('hidden');
+      updateStats();
+      show('result');
+    }
+  };
+
+  window.submitScore = function() {
+    var name = (document.getElementById('player-name').value || 'Anonym').trim() || 'Anonym';
+    fetch('/gedaechtnis/score', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ game_type: 'reaktionszeit', score: lastScore, player_name: name })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var badge = document.getElementById('rank-badge');
+      badge.textContent = 'Platz ' + d.rank + ' von ' + d.total + ' – eingetragen!';
+      badge.classList.remove('hidden');
+      document.getElementById('submit-area').querySelector('button').disabled = true;
+      loadGlobal();
+    });
+  };
+
+  window.loadGlobal = function() {
+    var el = document.getElementById('global-list');
+    el.innerHTML = '<div class="text-sm text-slate-400 text-center py-4">Lade…</div>';
+    fetch('/gedaechtnis/scores/reaktionszeit')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (!d.scores || d.scores.length === 0) {
+        el.innerHTML = '<div class="text-sm text-slate-400 text-center py-4">Noch keine Einträge. Sei der Erste!</div>';
+        return;
+      }
+      var html = '<div class="space-y-1">';
+      d.scores.forEach(function(s) {
+        var medal = s.rank === 1 ? '🥇' : s.rank === 2 ? '🥈' : s.rank === 3 ? '🥉' : s.rank + '.';
+        html += '<div class="flex items-center justify-between py-2 px-3 rounded-lg ' +
+          (s.rank <= 3 ? 'bg-amber-50' : 'hover:bg-slate-50') + '">' +
+          '<span class="text-sm font-medium text-slate-700">' + medal + ' ' + escHtml(s.player) + '</span>' +
+          '<span class="text-sm font-bold text-indigo-700">' + s.score + ' ms</span>' +
+          '</div>';
+      });
+      html += '</div>';
+      el.innerHTML = html;
+    })
+    .catch(function() { el.innerHTML = '<div class="text-sm text-red-400 text-center py-4">Fehler beim Laden.</div>'; });
+  };
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // Init
+  show('idle');
+  updateStats();
+  loadGlobal();
+})();
+</script>
+
+{% endblock %}
