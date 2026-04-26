@@ -3,7 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Spieltheorie & Verhandlung{% endblock %}</title>
+    <title>{% block title %}Spieltheorie & Verhandlung – VerhandlungsTrainer{% endblock %}</title>
+
+    <!-- SEO -->
+    {% block meta_description %}<meta name="description" content="VerhandlungsTrainer – interaktive Spieltheorie, Rätsel, Gedächtnistraining und Verhandlungsstrategien. Wissenschaftlich fundiert, kostenlos.">{% endblock %}
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="VerhandlungsTrainer">
+    <meta property="og:title" content="{% block og_title %}VerhandlungsTrainer – Spieltheorie & Entscheidung{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Interaktive Spieltheorie, Rätsel und Gedächtnistraining. Lerne Verhandlungsstrategien wissenschaftlich fundiert – kostenlos.{% endblock %}">
 
     <!-- Design-Präferenz vor dem ersten Paint setzen, verhindert Flicker -->
     <script>
@@ -12,6 +22,11 @@
             document.documentElement.dataset.design = 'editorial';
     })();
     </script>
+
+    <!-- Preconnect für CDN-Ressourcen -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@2.0.3"></script>
@@ -34,69 +49,137 @@
         .prose code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
         .prose pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 1rem 0; }
         .prose strong { font-weight: 700; }
+        /* Sichtbarer Fokus-Ring für Tastaturnavigation */
+        :focus-visible { outline: 3px solid #6366f1; outline-offset: 2px; }
     </style>
+
+    <!-- JSON-LD: Website + EducationalApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "VerhandlungsTrainer",
+      "url": "https://imaginative-fulfillment-production.up.railway.app",
+      "description": "Interaktive Spieltheorie, Rätsel und Gedächtnistraining für Verhandlungsstrategien.",
+      "inLanguage": "de",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://imaginative-fulfillment-production.up.railway.app/raetsel",
+        "query-input": "required name=query"
+      }
+    }
+    </script>
 </head>
 <body class="h-full bg-slate-50">
-    <div class="min-h-full">
-        <nav class="bg-indigo-700 shadow-lg">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between h-16">
-                    <!-- Logo -->
-                    <a href="/" class="text-white font-bold text-base sm:text-lg whitespace-nowrap shrink-0">🎯 VerhandlungsTrainer</a>
+    <!-- Skip-Link für Tastaturnavigation / Screenreader -->
+    <a href="#main-content"
+       class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-white focus:text-indigo-700 focus:px-4 focus:py-2 focus:rounded-lg focus:font-medium focus:shadow-lg">
+        Zum Hauptinhalt springen
+    </a>
 
-                    <!-- Desktop nav -->
-                    <div class="hidden md:flex items-center space-x-1">
-                        <a href="/lernpfade" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'lernpfade' %}bg-indigo-800 text-white{% endif %}">🗺️ Lernpfade</a>
-                        <a href="/grundlagen" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'grundlagen' %}bg-indigo-800 text-white{% endif %}">Grundlagen</a>
-                        <a href="/konzepte" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'konzepte' %}bg-indigo-800 text-white{% endif %}">🧠 Konzepte</a>
-                        <a href="/spiele" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'spiele' %}bg-indigo-800 text-white{% endif %}">Spiele</a>
-                        <a href="/raetsel" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'raetsel' %}bg-indigo-800 text-white{% endif %}">Rätsel</a>
-                        <a href="/skills" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'skills' %}bg-indigo-800 text-white{% endif %}">💡 Skills</a>
-                        <a href="/gedaechtnis" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'gedaechtnis' %}bg-indigo-800 text-white{% endif %}">🧠 Gedächtnis</a>
-                        <a href="/fortschritt" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'fortschritt' %}bg-indigo-800 text-white{% endif %}">Fortschritt</a>
-                        <button onclick="switchDesign()" class="design-toggle-btn text-amber-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer bg-transparent border-0">
-                            <span class="show-classic">✨ Editorial</span>
-                            <span class="show-editorial">← Klassisch</span>
+    <div class="min-h-full flex flex-col">
+        <header role="banner">
+            <nav aria-label="Hauptnavigation" class="bg-indigo-700 shadow-lg">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center justify-between h-16">
+                        <!-- Logo -->
+                        <a href="/" class="text-white font-bold text-base sm:text-lg whitespace-nowrap shrink-0" aria-label="VerhandlungsTrainer – Startseite">🎯 VerhandlungsTrainer</a>
+
+                        <!-- Desktop nav -->
+                        <div class="hidden md:flex items-center space-x-1" role="list">
+                            <a href="/lernpfade" role="listitem"
+                               {% if active_page == 'lernpfade' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'lernpfade' %}bg-indigo-800 text-white{% endif %}">🗺️ Lernpfade</a>
+                            <a href="/grundlagen" role="listitem"
+                               {% if active_page == 'grundlagen' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'grundlagen' %}bg-indigo-800 text-white{% endif %}">Grundlagen</a>
+                            <a href="/konzepte" role="listitem"
+                               {% if active_page == 'konzepte' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'konzepte' %}bg-indigo-800 text-white{% endif %}">🧠 Konzepte</a>
+                            <a href="/spiele" role="listitem"
+                               {% if active_page == 'spiele' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'spiele' %}bg-indigo-800 text-white{% endif %}">Spiele</a>
+                            <a href="/raetsel" role="listitem"
+                               {% if active_page == 'raetsel' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'raetsel' %}bg-indigo-800 text-white{% endif %}">Rätsel</a>
+                            <a href="/skills" role="listitem"
+                               {% if active_page == 'skills' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'skills' %}bg-indigo-800 text-white{% endif %}">💡 Skills</a>
+                            <a href="/gedaechtnis" role="listitem"
+                               {% if active_page == 'gedaechtnis' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'gedaechtnis' %}bg-indigo-800 text-white{% endif %}">🧠 Gedächtnis</a>
+                            <a href="/fortschritt" role="listitem"
+                               {% if active_page == 'fortschritt' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'fortschritt' %}bg-indigo-800 text-white{% endif %}">Fortschritt</a>
+                            <button onclick="switchDesign()" class="design-toggle-btn text-amber-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer bg-transparent border-0" aria-label="Design wechseln">
+                                <span class="show-classic">✨ Editorial</span>
+                                <span class="show-editorial">← Klassisch</span>
+                            </button>
+                        </div>
+
+                        <!-- Mobile hamburger -->
+                        <button id="nav-toggle"
+                                class="md:hidden text-indigo-200 hover:text-white p-2 rounded-md focus:outline-none"
+                                aria-label="Menü öffnen"
+                                aria-expanded="false"
+                                aria-controls="nav-mobile">
+                            <svg id="nav-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                            </svg>
+                            <svg id="nav-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
                         </button>
                     </div>
 
-                    <!-- Mobile hamburger -->
-                    <button id="nav-toggle" class="md:hidden text-indigo-200 hover:text-white p-2 rounded-md focus:outline-none" aria-label="Menü öffnen">
-                        <svg id="nav-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                        </svg>
-                        <svg id="nav-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- Mobile dropdown -->
-                <div id="nav-mobile" class="hidden md:hidden pb-3 border-t border-indigo-600 mt-1 pt-2">
-                    <div class="flex flex-col space-y-1">
-                        <a href="/lernpfade" class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'lernpfade' %}bg-indigo-800 text-white{% endif %}">🗺️ Lernpfade</a>
-                        <a href="/grundlagen" class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'grundlagen' %}bg-indigo-800 text-white{% endif %}">📚 Grundlagen</a>
-                        <a href="/konzepte" class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'konzepte' %}bg-indigo-800 text-white{% endif %}">🧠 Konzepte</a>
-                        <a href="/spiele" class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'spiele' %}bg-indigo-800 text-white{% endif %}">🎮 Spiele</a>
-                        <a href="/raetsel" class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'raetsel' %}bg-indigo-800 text-white{% endif %}">🧩 Rätsel</a>
-                        <a href="/skills" class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'skills' %}bg-indigo-800 text-white{% endif %}">💡 Skills</a>
-                        <a href="/gedaechtnis" class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'gedaechtnis' %}bg-indigo-800 text-white{% endif %}">🧠 Gedächtnis</a>
-                        <a href="/fortschritt" class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'fortschritt' %}bg-indigo-800 text-white{% endif %}">📊 Fortschritt</a>
-                        <button onclick="switchDesign()" class="design-toggle-btn text-amber-300 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors cursor-pointer bg-transparent border-0 w-full text-left">
-                            <span class="show-classic">✨ Editorial</span>
-                            <span class="show-editorial">← Klassisch</span>
-                        </button>
+                    <!-- Mobile dropdown -->
+                    <div id="nav-mobile" class="hidden md:hidden pb-3 border-t border-indigo-600 mt-1 pt-2">
+                        <div class="flex flex-col space-y-1">
+                            <a href="/lernpfade" {% if active_page == 'lernpfade' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'lernpfade' %}bg-indigo-800 text-white{% endif %}">🗺️ Lernpfade</a>
+                            <a href="/grundlagen" {% if active_page == 'grundlagen' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'grundlagen' %}bg-indigo-800 text-white{% endif %}">📚 Grundlagen</a>
+                            <a href="/konzepte" {% if active_page == 'konzepte' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'konzepte' %}bg-indigo-800 text-white{% endif %}">🧠 Konzepte</a>
+                            <a href="/spiele" {% if active_page == 'spiele' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'spiele' %}bg-indigo-800 text-white{% endif %}">🎮 Spiele</a>
+                            <a href="/raetsel" {% if active_page == 'raetsel' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'raetsel' %}bg-indigo-800 text-white{% endif %}">🧩 Rätsel</a>
+                            <a href="/skills" {% if active_page == 'skills' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'skills' %}bg-indigo-800 text-white{% endif %}">💡 Skills</a>
+                            <a href="/gedaechtnis" {% if active_page == 'gedaechtnis' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'gedaechtnis' %}bg-indigo-800 text-white{% endif %}">🧠 Gedächtnis</a>
+                            <a href="/fortschritt" {% if active_page == 'fortschritt' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'fortschritt' %}bg-indigo-800 text-white{% endif %}">📊 Fortschritt</a>
+                            <button onclick="switchDesign()" class="design-toggle-btn text-amber-300 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors cursor-pointer bg-transparent border-0 w-full text-left" aria-label="Design wechseln">
+                                <span class="show-classic">✨ Editorial</span>
+                                <span class="show-editorial">← Klassisch</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </header>
 
-        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main id="main-content" role="main" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {% block content %}{% endblock %}
         </main>
+
+        <footer role="contentinfo" class="border-t border-slate-200 py-6 mt-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+                <span>© 2025 VerhandlungsTrainer – Spieltheorie & Entscheidungslehre</span>
+                <nav aria-label="Footer-Navigation" class="flex gap-4">
+                    <a href="/grundlagen" class="hover:text-slate-600 transition-colors">Grundlagen</a>
+                    <a href="/raetsel" class="hover:text-slate-600 transition-colors">Rätsel</a>
+                    <a href="/gedaechtnis" class="hover:text-slate-600 transition-colors">Gedächtnis</a>
+                    <a href="/fortschritt" class="hover:text-slate-600 transition-colors">Fortschritt</a>
+                </nav>
+            </div>
+        </footer>
     </div>
+
     <script>
-    // Mobile nav toggle
+    // Mobile nav toggle mit aria-expanded
     (function() {
         var btn = document.getElementById('nav-toggle');
         var menu = document.getElementById('nav-mobile');
@@ -107,6 +190,8 @@
                 var hidden = menu.classList.toggle('hidden');
                 iconOpen.classList.toggle('hidden', !hidden);
                 iconClose.classList.toggle('hidden', hidden);
+                btn.setAttribute('aria-expanded', hidden ? 'false' : 'true');
+                btn.setAttribute('aria-label', hidden ? 'Menü öffnen' : 'Menü schließen');
             });
         }
     })();

@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.responses import PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from .database import Base, engine, SessionLocal
@@ -35,3 +36,28 @@ app.include_router(lernpfade.router)
 app.include_router(skills.router)
 app.include_router(redesign.router)
 app.include_router(gedaechtnis.router)
+
+
+BASE_URL = "https://imaginative-fulfillment-production.up.railway.app"
+
+_SITEMAP_URLS = [
+    "/", "/lernpfade", "/grundlagen", "/konzepte", "/spiele", "/raetsel",
+    "/skills", "/gedaechtnis", "/fortschritt",
+    "/gedaechtnis/theorie", "/gedaechtnis/wortfolge", "/gedaechtnis/zahlen",
+    "/gedaechtnis/corsi", "/gedaechtnis/memory", "/gedaechtnis/namen", "/gedaechtnis/karten",
+]
+
+
+@app.get("/robots.txt", response_class=PlainTextResponse, include_in_schema=False)
+def robots_txt():
+    return f"User-agent: *\nAllow: /\nSitemap: {BASE_URL}/sitemap.xml\n"
+
+
+@app.get("/sitemap.xml", include_in_schema=False)
+def sitemap_xml():
+    lines = ['<?xml version="1.0" encoding="UTF-8"?>',
+             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for path in _SITEMAP_URLS:
+        lines.append(f"  <url><loc>{BASE_URL}{path}</loc></url>")
+    lines.append("</urlset>")
+    return Response(content="\n".join(lines), media_type="application/xml")
