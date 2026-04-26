@@ -39,3 +39,8 @@ def karten(request: Request):
 @router.get("/wortfolge", response_class=HTMLResponse)
 def wortfolge(request: Request):
     return templates.TemplateResponse(request, "gedaechtnis_wortfolge.html", {"active_page": "gedaechtnis"})
+
+
+@router.get("/theorie", response_class=HTMLResponse)
+def theorie(request: Request):
+    return templates.TemplateResponse(request, "gedaechtnis_theorie.html", {"active_page": "gedaechtnis"})

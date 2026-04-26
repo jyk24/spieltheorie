@@ -1,0 +1,718 @@
+{% extends "base.html" %}
+{% block title %}Gedächtnis – Theorie & Wissenschaft{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto">
+
+  <!-- Hero -->
+  <div class="mb-10">
+    <a href="/gedaechtnis" class="text-sm text-slate-400 hover:text-indigo-600">← Gedächtnis</a>
+    <h1 class="text-4xl font-black text-slate-800 mt-3 mb-3">Gedächtnis: Theorie & Wissenschaft</h1>
+    <p class="text-lg text-slate-500 max-w-2xl">Wie Erinnerungen entstehen, warum wir vergessen — und welche Techniken die Neurowissenschaft als wirksam bestätigt. Von Ebbinghaus bis zu modernen fMRT-Studien.</p>
+    <div class="flex gap-3 mt-5 flex-wrap">
+      <a href="/gedaechtnis" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">Direkt trainieren →</a>
+      <a href="/gedaechtnis/wortfolge" class="border border-indigo-200 text-indigo-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50">Wortfolge spielen →</a>
+      <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">Rätsel erkunden →</a>
+    </div>
+  </div>
+
+  <!-- Inhaltsübersicht -->
+  <div class="bg-white border border-slate-200 rounded-xl p-5 mb-10 shadow-sm">
+    <div class="font-semibold text-slate-700 mb-4 flex items-center gap-2 text-sm">
+      📚 Auf dieser Seite — vier aufbauende Bereiche
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+
+      <div class="border border-indigo-100 rounded-xl p-3 bg-indigo-50">
+        <div class="flex items-center justify-between mb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="bg-indigo-600 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">I</span>
+            <span class="font-bold text-indigo-800">🏗️ Architektur</span>
+          </div>
+          <span class="text-xs text-indigo-400">Einsteiger</span>
+        </div>
+        <div class="space-y-1 ml-1">
+          <a href="#section-1" class="flex items-center gap-2 text-indigo-700 hover:text-indigo-900 text-xs py-0.5">
+            <span class="bg-white border border-indigo-200 text-indigo-600 font-bold w-4 h-4 rounded flex items-center justify-center shrink-0 text-[10px]">1</span>
+            Die drei Speichersysteme
+          </a>
+          <a href="#section-2" class="flex items-center gap-2 text-indigo-700 hover:text-indigo-900 text-xs py-0.5">
+            <span class="bg-white border border-indigo-200 text-indigo-600 font-bold w-4 h-4 rounded flex items-center justify-center shrink-0 text-[10px]">2</span>
+            Die Vergessenskurve
+          </a>
+          <a href="#section-3" class="flex items-center gap-2 text-indigo-700 hover:text-indigo-900 text-xs py-0.5">
+            <span class="bg-white border border-indigo-200 text-indigo-600 font-bold w-4 h-4 rounded flex items-center justify-center shrink-0 text-[10px]">3</span>
+            Enkodierung &amp; Konsolidierung
+          </a>
+        </div>
+      </div>
+
+      <div class="border border-violet-100 rounded-xl p-3 bg-violet-50">
+        <div class="flex items-center justify-between mb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="bg-violet-600 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">II</span>
+            <span class="font-bold text-violet-800">🛠️ Techniken in der Tiefe</span>
+          </div>
+          <span class="text-xs text-violet-400">Einsteiger – Mittel</span>
+        </div>
+        <div class="space-y-1 ml-1">
+          <a href="#section-4" class="flex items-center gap-2 text-violet-700 hover:text-violet-900 text-xs py-0.5">
+            <span class="bg-white border border-violet-200 text-violet-600 font-bold w-4 h-4 rounded flex items-center justify-center shrink-0 text-[10px]">4</span>
+            Gedächtnispalast &amp; Method of Loci
+          </a>
+          <a href="#section-5" class="flex items-center gap-2 text-violet-700 hover:text-violet-900 text-xs py-0.5">
+            <span class="bg-white border border-violet-200 text-violet-600 font-bold w-4 h-4 rounded flex items-center justify-center shrink-0 text-[10px]">5</span>
+            Zahlen-Codes: Major-System &amp; PAO
+          </a>
+          <a href="#section-6" class="flex items-center gap-2 text-violet-700 hover:text-violet-900 text-xs py-0.5">
+            <span class="bg-white border border-violet-200 text-violet-600 font-bold w-4 h-4 rounded flex items-center justify-center shrink-0 text-[10px]">6</span>
+            Verknüpfen: Linking &amp; Schlüsselwort
+          </a>
+        </div>
+      </div>
+
+      <div class="border border-emerald-100 rounded-xl p-3 bg-emerald-50">
+        <div class="flex items-center justify-between mb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="bg-emerald-600 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">III</span>
+            <span class="font-bold text-emerald-800">🔬 Kognitive Prinzipien</span>
+          </div>
+          <span class="text-xs text-emerald-400">Mittel</span>
+        </div>
+        <div class="space-y-1 ml-1">
+          <a href="#section-7" class="flex items-center gap-2 text-emerald-700 hover:text-emerald-900 text-xs py-0.5">
+            <span class="bg-white border border-emerald-200 text-emerald-600 font-bold w-4 h-4 rounded flex items-center justify-center shrink-0 text-[10px]">7</span>
+            Dual Coding &amp; Elaboration
+          </a>
+          <a href="#section-8" class="flex items-center gap-2 text-emerald-700 hover:text-emerald-900 text-xs py-0.5">
+            <span class="bg-white border border-emerald-200 text-emerald-600 font-bold w-4 h-4 rounded flex items-center justify-center shrink-0 text-[10px]">8</span>
+            Spaced Repetition &amp; Testing Effect
+          </a>
+          <a href="#section-9" class="flex items-center gap-2 text-emerald-700 hover:text-emerald-900 text-xs py-0.5">
+            <span class="bg-white border border-emerald-200 text-emerald-600 font-bold w-4 h-4 rounded flex items-center justify-center shrink-0 text-[10px]">9</span>
+            Von-Restorff &amp; emotionales Gedächtnis
+          </a>
+        </div>
+      </div>
+
+      <div class="border border-amber-100 rounded-xl p-3 bg-amber-50">
+        <div class="flex items-center justify-between mb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="bg-amber-500 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">IV</span>
+            <span class="font-bold text-amber-800">🎯 Training &amp; Anwendung</span>
+          </div>
+          <span class="text-xs text-amber-400">Fortgeschritten</span>
+        </div>
+        <div class="space-y-1 ml-1">
+          <a href="#section-10" class="flex items-center gap-2 text-amber-700 hover:text-amber-900 text-xs py-0.5">
+            <span class="bg-white border border-amber-200 text-amber-600 font-bold w-4 h-4 rounded flex items-center justify-center shrink-0 text-[10px]">10</span>
+            Die Dresler-Studie
+          </a>
+          <a href="#section-11" class="flex items-center gap-2 text-amber-700 hover:text-amber-900 text-xs py-0.5">
+            <span class="bg-white border border-amber-200 text-amber-600 font-bold w-4 h-4 rounded flex items-center justify-center shrink-0 text-[10px]">11</span>
+            Trainingsplan aufbauen
+          </a>
+          <a href="#section-12" class="flex items-center gap-2 text-amber-700 hover:text-amber-900 text-xs py-0.5">
+            <span class="bg-white border border-amber-200 text-amber-600 font-bold w-4 h-4 rounded flex items-center justify-center shrink-0 text-[10px]">12</span>
+            Anwendung in Verhandlung &amp; Rhetorik
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- CLUSTER I: ARCHITEKTUR DES GEDÄCHTNISSES                   -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="mb-12">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="bg-indigo-600 text-white text-sm font-black w-8 h-8 rounded-full flex items-center justify-center shrink-0">I</span>
+      <h2 class="text-2xl font-black text-slate-800">Die Architektur des Gedächtnisses</h2>
+      <span class="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-medium">Einsteiger</span>
+    </div>
+
+    <!-- Section 1 -->
+    <div id="section-1" class="mb-8 scroll-mt-6">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="bg-indigo-100 text-indigo-700 font-black text-xs w-5 h-5 rounded flex items-center justify-center shrink-0">1</span>
+        <h3 class="text-lg font-bold text-slate-800">Die drei Speichersysteme</h3>
+      </div>
+      <div class="prose max-w-none text-slate-700">
+        <p>Das Atkinson-Shiffrin-Modell (1968) unterscheidet drei voneinander getrennte Speichersysteme, die Informationen sequenziell verarbeiten:</p>
+
+        <div class="not-prose grid grid-cols-1 md:grid-cols-3 gap-4 my-5">
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+            <div class="text-2xl mb-2">👁️</div>
+            <h4 class="font-bold text-slate-800 mb-1">Sensorischer Speicher</h4>
+            <p class="text-sm text-slate-600 leading-relaxed">Hält Sinneseindrücke für <strong>Millisekunden bis 4 Sekunden</strong>. Ikonisches Gedächtnis (visuell) und echoisches Gedächtnis (auditiv). Kapazität: nahezu unbegrenzt, aber flüchtig. Nur aufmerksamkeitsgelenkte Inhalte gelangen weiter.</p>
+          </div>
+          <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+            <div class="text-2xl mb-2">🔄</div>
+            <h4 class="font-bold text-indigo-800 mb-1">Arbeitsgedächtnis</h4>
+            <p class="text-sm text-indigo-700 leading-relaxed">Aktive Verarbeitung für <strong>15–30 Sekunden</strong>. Baddeley (1974): phonologische Schleife, visuell-räumlicher Notizblock, zentraler Exekutivprozessor. Kapazität: <strong>7 ± 2 Einheiten</strong> (Miller, 1956). Engpass des Denkens.</p>
+          </div>
+          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+            <div class="text-2xl mb-2">🗄️</div>
+            <h4 class="font-bold text-emerald-800 mb-1">Langzeitgedächtnis</h4>
+            <p class="text-sm text-emerald-700 leading-relaxed">Potenziell <strong>lebenslange Speicherung</strong>, praktisch unbegrenzte Kapazität. Deklarativ (episodisch + semantisch) vs. prozedural (Fertigkeiten). Konsolidierung hauptsächlich im Schlaf durch Hippocampus-Transfer.</p>
+          </div>
+        </div>
+
+        <p>Der kritische Engpass ist das Arbeitsgedächtnis: Es kann gleichzeitig nur 7 ± 2 Einheiten aktiv halten. Alle Merktechniken zielen darauf ab, diesen Engpass durch <em>Chunking</em> (Zusammenfassen) und <em>Enkodierung</em> (Umwandlung in langzeitstabile Formate) zu überwinden.</p>
+
+        <div class="not-prose bg-indigo-50 border border-indigo-200 rounded-xl p-4 my-4">
+          <p class="text-sm font-semibold text-indigo-800 mb-1">🔬 Neuronale Grundlage</p>
+          <p class="text-sm text-indigo-700">Der <strong>Hippocampus</strong> ist das Tor zum Langzeitgedächtnis. Patienten mit beidseitiger Hippocampusläsion (wie H.M., 1953) können keine neuen deklarativen Erinnerungen mehr bilden — aber prozedurales Lernen (z.&nbsp;B. Motorik) bleibt intakt. Das beweist die anatomische Trennung der Gedächtnissysteme.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div id="section-2" class="mb-8 scroll-mt-6">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="bg-indigo-100 text-indigo-700 font-black text-xs w-5 h-5 rounded flex items-center justify-center shrink-0">2</span>
+        <h3 class="text-lg font-bold text-slate-800">Die Vergessenskurve — Ebbinghaus 1885</h3>
+      </div>
+      <div class="prose max-w-none text-slate-700">
+        <p>Hermann Ebbinghaus lernte 1885 tausende sinnlose Silbenreihen auswendig und testete sich selbst in systematischen Abständen. Das Ergebnis war die erste empirisch bestimmte Vergessenskurve der Psychologie:</p>
+
+        <div class="not-prose bg-white border border-slate-200 rounded-xl p-5 my-5">
+          <p class="text-sm font-semibold text-slate-700 mb-3">Behaltenrate nach einmaligem Lernen:</p>
+          <div class="space-y-2">
+            {% set balken = [
+              ("20 Minuten", 58, "bg-emerald-400"),
+              ("1 Stunde",   44, "bg-yellow-400"),
+              ("8 Stunden",  36, "bg-amber-400"),
+              ("1 Tag",      33, "bg-orange-400"),
+              ("2 Tage",     28, "bg-rose-400"),
+              ("6 Tage",     25, "bg-red-400"),
+              ("31 Tage",    21, "bg-red-600"),
+            ] %}
+            {% for label, pct, color in balken %}
+            <div class="flex items-center gap-3 text-sm">
+              <span class="w-24 text-slate-500 text-xs shrink-0">{{ label }}</span>
+              <div class="flex-1 bg-slate-100 rounded-full h-4 overflow-hidden">
+                <div class="{{ color }} h-4 rounded-full flex items-center justify-end pr-2 transition-all" style="width:{{ pct }}%">
+                  <span class="text-white text-xs font-bold">{{ pct }}%</span>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <p class="text-xs text-slate-400 mt-3">Quelle: Ebbinghaus (1885). Werte für sinnlose Silben — bedeutungsvoller Stoff vergisst sich langsamer.</p>
+        </div>
+
+        <p>Die Kurve hat drei praktische Konsequenzen:</p>
+        <ul>
+          <li><strong>Der stärkste Vergessensschub passiert in der ersten Stunde.</strong> Eine kurze Wiederholung direkt nach dem Lernen (nach 20 Minuten) rettet den Großteil.</li>
+          <li><strong>Bedeutung verlangsamt das Vergessen.</strong> Inhalte, die emotional oder semantisch verankert sind, folgen einer flacheren Kurve.</li>
+          <li><strong>Jede Wiederholung erhöht die Stabilität.</strong> Nach der dritten Wiederholung im richtigen Abstand (Spaced Repetition) sitzt ein Inhalt für Wochen.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div id="section-3" class="mb-8 scroll-mt-6">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="bg-indigo-100 text-indigo-700 font-black text-xs w-5 h-5 rounded flex items-center justify-center shrink-0">3</span>
+        <h3 class="text-lg font-bold text-slate-800">Enkodierung, Konsolidierung, Abruf</h3>
+      </div>
+      <div class="prose max-w-none text-slate-700">
+        <p>Gedächtnisbildung läuft in drei Phasen ab — jede kann gezielt verbessert werden:</p>
+
+        <div class="not-prose space-y-3 my-5">
+          <div class="flex gap-4 bg-white border border-slate-200 rounded-xl p-4">
+            <div class="text-2xl shrink-0">1️⃣</div>
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">Enkodierung — Wie geht Information rein?</h4>
+              <p class="text-sm text-slate-600 leading-relaxed">Transformation von Sinnesinput in eine neuronale Repräsentation. <strong>Tiefe Verarbeitung</strong> (semantisch, emotional, visuell) erzeugt stärkere Spuren als oberflächliche Verarbeitung (phonologisch). Merktechniken operieren hier: Sie erzwingen tiefe, multimodale Enkodierung.</p>
+            </div>
+          </div>
+          <div class="flex gap-4 bg-white border border-slate-200 rounded-xl p-4">
+            <div class="text-2xl shrink-0">2️⃣</div>
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">Konsolidierung — Wie wird es stabil?</h4>
+              <p class="text-sm text-slate-600 leading-relaxed">Überführung vom fragilen Kurzzeit- ins stabile Langzeitgedächtnis. Hauptsächlich im Schlaf: Der Hippocampus „replayed" Tagwissen in den Neokortex (Sharp-wave-Ripple-Prozesse). <strong>Schlaf ist kein Luxus — er ist das Speichermedium.</strong> Kortisol (Stress) hemmt die Konsolidierung.</p>
+            </div>
+          </div>
+          <div class="flex gap-4 bg-white border border-slate-200 rounded-xl p-4">
+            <div class="text-2xl shrink-0">3️⃣</div>
+            <div>
+              <h4 class="font-bold text-slate-800 mb-1">Abruf — Wie kommt es wieder raus?</h4>
+              <p class="text-sm text-slate-600 leading-relaxed">Aktive Rekonstruktion, nicht passive Wiedergabe. Jeder Abruf verändert die Erinnerung leicht (<strong>Rekonstruktionsfehler</strong>). Kontext-Abhängigkeit: Unter Wasser Gelerntes wird unter Wasser besser abgerufen (Godden &amp; Baddeley, 1975). Merktechniken schaffen Abruf-Cues (Routen, Bilder) als stabile Trigger.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="not-prose bg-amber-50 border border-amber-200 rounded-xl p-4">
+          <p class="text-sm font-semibold text-amber-800 mb-1">💡 Kernerkennntnis</p>
+          <p class="text-sm text-amber-700">Gedächtnis ist kein passives Aufnehmen — es ist aktives Konstruieren. Wer das versteht, optimiert alle drei Phasen: bessere Enkodierung durch Techniken, bessere Konsolidierung durch Schlaf, besseren Abruf durch Cues und Testing.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- CLUSTER II: TECHNIKEN IN DER TIEFE                         -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="mb-12">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="bg-violet-600 text-white text-sm font-black w-8 h-8 rounded-full flex items-center justify-center shrink-0">II</span>
+      <h2 class="text-2xl font-black text-slate-800">Die Techniken in der Tiefe</h2>
+      <span class="text-xs bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-medium">Einsteiger – Mittel</span>
+    </div>
+
+    <!-- Section 4 -->
+    <div id="section-4" class="mb-8 scroll-mt-6">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="bg-violet-100 text-violet-700 font-black text-xs w-5 h-5 rounded flex items-center justify-center shrink-0">4</span>
+        <h3 class="text-lg font-bold text-slate-800">Gedächtnispalast &amp; Method of Loci</h3>
+      </div>
+      <div class="prose max-w-none text-slate-700">
+        <p>Die Method of Loci ist die älteste dokumentierte Merktechnik. Die Überlieferung setzt sie im 5. Jahrhundert v.&nbsp;Chr. an: Der Dichter Simonides von Keos soll nach einem Einsturz eines Bankettsaals die Toten identifiziert haben, indem er sich vorstellte, an jedem Platz zu stehen, wo ein Gast gesessen hatte.</p>
+        <p>Cicero beschrieb die Methode systematisch in <em>De Oratore</em> (55 v.&nbsp;Chr.): Redner lernten damit stundenlange Reden ohne Notizen, indem sie Argumente als Bilder an Orten einer vertrauten Route platzierten.</p>
+
+        <div class="not-prose bg-violet-50 border border-violet-200 rounded-xl p-5 my-5">
+          <h4 class="font-bold text-violet-800 mb-3">Wie der Gedächtnispalast funktioniert</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-violet-700">
+            <div>
+              <p class="font-semibold mb-1">Die Route</p>
+              <p>Wähle einen gut vertrauten Ort (Wohnung, Schulweg, Körper von Kopf bis Fuß). Die Route muss immer dieselbe sein — Abweichungen zerstören die Abruf-Kette.</p>
+            </div>
+            <div>
+              <p class="font-semibold mb-1">Die Bilder</p>
+              <p>Jedes zu merkende Element wird in ein konkretes, lebhaftes, ungewöhnliches Bild umgewandelt. Abstrakte Begriffe werden personifiziert oder durch Klang-Ähnlichkeit ersetzt.</p>
+            </div>
+            <div>
+              <p class="font-semibold mb-1">Die Platzierung</p>
+              <p>Das Bild interagiert mit dem Ort — physisch, absurd, emotional. Ein Anker, der im Kühlschrank explodiert, ist unvergesslicher als ein Anker, der auf dem Boden liegt.</p>
+            </div>
+            <div>
+              <p class="font-semibold mb-1">Der Abruf</p>
+              <p>Mental durch die Route gehen — die Bilder erscheinen automatisch. Vorwärts und rückwärts funktioniert gleich gut. Bei langen Listen: mehrere Paläste anlegen.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="not-prose bg-white border border-slate-200 rounded-xl p-4 my-4">
+          <p class="text-sm font-semibold text-slate-700 mb-2">📖 Beispiel: 5 Verhandlungsbegriffe merken</p>
+          <div class="space-y-2 text-sm text-slate-600">
+            <div class="flex gap-3"><span class="shrink-0 w-6 text-violet-500">🚪</span><span><strong>Eingang:</strong> BATNA — ein riesiges Bat (Fledermaus) hängt am Türrahmen und hält ein Netz (NA)</span></div>
+            <div class="flex gap-3"><span class="shrink-0 w-6 text-violet-500">🛋️</span><span><strong>Sofa:</strong> ZOPA — eine Zope (Karpfenfisch) liegt entspannt auf dem Sofa</span></div>
+            <div class="flex gap-3"><span class="shrink-0 w-6 text-violet-500">🍳</span><span><strong>Herd:</strong> Anker — ein riesiger Schiffsanker kocht in einem Topf</span></div>
+            <div class="flex gap-3"><span class="shrink-0 w-6 text-violet-500">🚿</span><span><strong>Dusche:</strong> Reframing — ein Bilderrahmen hängt unter der Dusche und wird immer größer</span></div>
+            <div class="flex gap-3"><span class="shrink-0 w-6 text-violet-500">🛏️</span><span><strong>Bett:</strong> Logrolling — ein riesiger Baumstamm (Log) rollt über das Bett</span></div>
+          </div>
+        </div>
+
+        <p><strong>Wissenschaftliche Evidenz:</strong> Dresler et al. (2017, Neuron) zeigten, dass bereits 40 Tage Training mit dem Gedächtnispalast die Merkspanne von 26 auf 62 Wörter erhöhte — und diese Verbesserung war 4 Monate nach dem Training noch messbar. fMRT-Scans zeigten strukturelle Veränderungen im Hippocampus.</p>
+      </div>
+    </div>
+
+    <!-- Section 5 -->
+    <div id="section-5" class="mb-8 scroll-mt-6">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="bg-violet-100 text-violet-700 font-black text-xs w-5 h-5 rounded flex items-center justify-center shrink-0">5</span>
+        <h3 class="text-lg font-bold text-slate-800">Zahlen-Codes: Major-System &amp; PAO</h3>
+      </div>
+      <div class="prose max-w-none text-slate-700">
+        <p>Das Major-System löst das grundlegende Problem: Zahlen sind abstrakt und schwer visualisierbar. Die Technik mappt Ziffern auf Konsonanten-Klänge und macht damit jede Zahl zu einem konkreten Wort.</p>
+
+        <div class="not-prose bg-white border border-slate-200 rounded-xl p-4 my-5">
+          <p class="text-sm font-semibold text-slate-700 mb-3">Das Major-System — vollständige Zuordnung:</p>
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center">
+            {% set major = [
+              ("0","S/Z","Satz, See"),
+              ("1","T/D","Tee, Dach"),
+              ("2","N","Nase, Noah"),
+              ("3","M","Mond, Mama"),
+              ("4","R","Regen, Rohr"),
+              ("5","L","Löwe, Loch"),
+              ("6","Sch/Ch","Schuh, Chef"),
+              ("7","K/G","Kuh, Gabel"),
+              ("8","F/V","Feuer, Vogel"),
+              ("9","P/B","Pille, Boot"),
+            ] %}
+            {% for ziffer, klang, beispiel in major %}
+            <div class="bg-violet-50 rounded-lg p-2">
+              <div class="text-2xl font-black text-violet-700">{{ ziffer }}</div>
+              <div class="text-xs font-bold text-violet-600">{{ klang }}</div>
+              <div class="text-xs text-violet-500 mt-0.5">{{ beispiel }}</div>
+            </div>
+            {% endfor %}
+          </div>
+          <p class="text-xs text-slate-400 mt-3">Nur Konsonanten zählen — Vokale und H, W, Y sind frei wählbar, um Wörter zu bilden.</p>
+        </div>
+
+        <p><strong>Das PAO-System</strong> (Person–Aktion–Objekt) baut auf dem Major-System auf. Jeder Element bekommt eine feste <em>Person</em>, eine feste <em>Aktion</em> und ein festes <em>Objekt</em>. Drei Elemente (z.&nbsp;B. drei Karten) ergeben eine einzige Szene:</p>
+
+        <div class="not-prose bg-violet-50 border border-violet-200 rounded-xl p-4 my-4">
+          <p class="text-sm font-semibold text-violet-800 mb-2">PAO-Beispiel: As♠ → 2♥ → K♦</p>
+          <div class="grid grid-cols-3 gap-3 text-sm text-center text-violet-700">
+            <div><div class="text-xl mb-1">👨‍🔬</div><strong>As♠</strong><br><span class="text-xs">Person: Einstein</span></div>
+            <div><div class="text-xl mb-1">🎳</div><strong>2♥</strong><br><span class="text-xs">Aktion: wirft (Bowling)</span></div>
+            <div><div class="text-xl mb-1">🍎</div><strong>K♦</strong><br><span class="text-xs">Objekt: Apfel</span></div>
+          </div>
+          <p class="text-xs text-violet-600 mt-3 text-center">Szene: <em>Einstein wirft einen Apfel durch die Luft.</em> — Drei Karten, eine Szene.</p>
+        </div>
+
+        <p>Mit PAO braucht man für ein 52-Karten-Deck nur noch 18 Szenen statt 52 Einzelbilder. Weltmeister merken ein ganzes Deck in 60–90 Sekunden.</p>
+        <a href="/gedaechtnis/karten" class="not-prose inline-block mt-2 px-4 py-1.5 bg-violet-600 text-white text-xs font-semibold rounded-lg hover:bg-violet-700 transition-colors">🎴 Kartendeck trainieren →</a>
+      </div>
+    </div>
+
+    <!-- Section 6 -->
+    <div id="section-6" class="mb-8 scroll-mt-6">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="bg-violet-100 text-violet-700 font-black text-xs w-5 h-5 rounded flex items-center justify-center shrink-0">6</span>
+        <h3 class="text-lg font-bold text-slate-800">Verknüpfen: Linking &amp; Schlüsselwort-Methode</h3>
+      </div>
+      <div class="prose max-w-none text-slate-700">
+        <p>Nicht alle Merksituationen erfordern einen aufwendigen Gedächtnispalast. Für kürzere Listen ist die <strong>Geschichten-Methode</strong> (Linking) schneller einsetzbar: Elemente werden durch eine absurde, kausale Geschichte verkettet.</p>
+
+        <p>Das Prinzip nutzt eine bekannte neuronale Eigenschaft: Das Gehirn speichert Ereignisse nicht isoliert, sondern als verknüpfte episodische Netze. Eine Geschichte <em>ist</em> das neuronale Netz — deshalb aktiviert ein Bild automatisch das nächste.</p>
+
+        <div class="not-prose bg-teal-50 border border-teal-200 rounded-xl p-4 my-4">
+          <p class="text-sm font-semibold text-teal-800 mb-2">Geschichten-Methode: Schlüsselprinzipien</p>
+          <ul class="text-sm text-teal-700 space-y-1 list-disc list-inside">
+            <li><strong>Kausalität:</strong> Bild A <em>verursacht</em> Bild B (nicht nur nebeneinander)</li>
+            <li><strong>Absurdität:</strong> Ungewöhnliche Bilder erzeugen stärkere Spuren (Von-Restorff-Effekt)</li>
+            <li><strong>Bewegung:</strong> Dynamische Szenen bleiben besser als statische Bilder</li>
+            <li><strong>Sinne:</strong> Je mehr Sinne aktiviert (Geruch, Geräusch, Textur), desto stärker</li>
+          </ul>
+        </div>
+
+        <p>Die <strong>Schlüsselwort-Methode</strong> (Atkinson &amp; Raugh, 1975) ist der Spezialfall für Vokabeln: Ein Fremdwort wird durch ein klanglich ähnliches Wort der Muttersprache ersetzt (<em>Schlüsselwort</em>), das dann mit der Bedeutung zu einem Bild verknüpft wird.</p>
+
+        <div class="not-prose overflow-x-auto my-4">
+          <table class="w-full text-sm border-collapse">
+            <thead>
+              <tr class="bg-slate-100">
+                <th class="border border-slate-200 px-3 py-2 text-left font-semibold text-slate-700">Fremdwort</th>
+                <th class="border border-slate-200 px-3 py-2 text-left font-semibold text-slate-700">Bedeutung</th>
+                <th class="border border-slate-200 px-3 py-2 text-left font-semibold text-slate-700">Schlüsselwort (klingt wie)</th>
+                <th class="border border-slate-200 px-3 py-2 text-left font-semibold text-slate-700">Bild</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% set vokabeln = [
+                ("carta (span.)", "Brief", "Karte", "Eine Postkarte klebt auf einem Brief"),
+                ("farfalla (it.)", "Schmetterling", "Farbe + Fall", "Ein Schmetterling fällt in bunte Farbe"),
+                ("gato (span.)", "Katze", "Gatter", "Eine Katze springt über ein Gatter"),
+                ("livre (frz.)", "Buch", "Lieber", "Du liest lieber ein Buch als fernzuschauen"),
+              ] %}
+              {% for fw, bed, sw, bild in vokabeln %}
+              <tr class="{% if loop.index is odd %}bg-white{% else %}bg-slate-50{% endif %}">
+                <td class="border border-slate-200 px-3 py-2 font-medium text-violet-700">{{ fw }}</td>
+                <td class="border border-slate-200 px-3 py-2">{{ bed }}</td>
+                <td class="border border-slate-200 px-3 py-2 text-teal-700">{{ sw }}</td>
+                <td class="border border-slate-200 px-3 py-2 text-slate-500 text-xs">{{ bild }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <p>Atkinson &amp; Raugh (1975) fanden, dass Probanden mit Schlüsselwort-Methode im Schnitt <strong>72 % der Vokabeln</strong> behielten, gegenüber 46 % in der Kontrollgruppe — ein Anstieg von über 50 %.</p>
+        <a href="/gedaechtnis/wortfolge" class="not-prose inline-block mt-2 px-4 py-1.5 bg-teal-600 text-white text-xs font-semibold rounded-lg hover:bg-teal-700 transition-colors">📝 Wortfolge trainieren →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- CLUSTER III: KOGNITIVE PRINZIPIEN                          -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="mb-12">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="bg-emerald-600 text-white text-sm font-black w-8 h-8 rounded-full flex items-center justify-center shrink-0">III</span>
+      <h2 class="text-2xl font-black text-slate-800">Kognitive Prinzipien — Warum Techniken wirken</h2>
+      <span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">Mittel</span>
+    </div>
+
+    <!-- Section 7 -->
+    <div id="section-7" class="mb-8 scroll-mt-6">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="bg-emerald-100 text-emerald-700 font-black text-xs w-5 h-5 rounded flex items-center justify-center shrink-0">7</span>
+        <h3 class="text-lg font-bold text-slate-800">Dual Coding &amp; Elaborative Enkodierung</h3>
+      </div>
+      <div class="prose max-w-none text-slate-700">
+        <p><strong>Dual Coding</strong> (Paivio, 1971): Information wird sowohl verbal als auch bildlich enkodiert — und in zwei getrennten, aber verbundenen Systemen gespeichert. Kann man auf <em>beide</em> Repräsentationen zugreifen, verdoppelt sich die Abrufwahrscheinlichkeit. Ein Wort mit einem lebhaften Bild verbunden ist zweimal so gut erinnerbar wie das Wort allein.</p>
+
+        <div class="not-prose flex gap-4 my-5">
+          <div class="flex-1 bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800">
+            <div class="text-xl mb-1">🔤</div>
+            <strong>Verbales System</strong>
+            <p class="text-blue-700 mt-1 text-xs">Sprache, Konzepte, abstrakte Ideen. Sequenziell, propositional. Stärken: Logik, Argumentation. Schwäche: Abstraktion schwer merkbar.</p>
+          </div>
+          <div class="flex items-center text-2xl text-slate-400 shrink-0">+</div>
+          <div class="flex-1 bg-violet-50 border border-violet-200 rounded-xl p-4 text-sm text-violet-800">
+            <div class="text-xl mb-1">🖼️</div>
+            <strong>Bildliches System</strong>
+            <p class="text-violet-700 mt-1 text-xs">Konkrete Bilder, räumliche Muster. Parallele Verarbeitung. Stärken: schneller Abruf, emotionale Tiefe. Schwäche: abstrakte Konzepte.</p>
+          </div>
+          <div class="flex items-center text-2xl text-slate-400 shrink-0">=</div>
+          <div class="flex-1 bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-sm text-emerald-800">
+            <div class="text-xl mb-1">⚡</div>
+            <strong>Dual Coded</strong>
+            <p class="text-emerald-700 mt-1 text-xs">Zwei Abrufwege. Wenn einer blockiert ist, steht der andere bereit. Maximale Retention.</p>
+          </div>
+        </div>
+
+        <p><strong>Elaborative Enkodierung</strong> (Craik &amp; Lockhart, 1972) zeigt: Die <em>Tiefe</em> der Verarbeitung bestimmt die Erinnerungsqualität, nicht die Häufigkeit der Wiederholung. Drei Ebenen:</p>
+        <ul>
+          <li><strong>Oberflächlich (phonologisch):</strong> „Reimt sich das Wort auf X?" → schwache Spur</li>
+          <li><strong>Strukturell:</strong> „Wie viele Buchstaben hat es?" → mittlere Spur</li>
+          <li><strong>Semantisch:</strong> „Was bedeutet es? Wann würde ich es nutzen?" → starke, dauerhafte Spur</li>
+        </ul>
+        <p>Alle Merktechniken erzwingen semantische und bildliche Verarbeitung — deshalb sind sie so viel effektiver als bloßes Wiederholen.</p>
+      </div>
+    </div>
+
+    <!-- Section 8 -->
+    <div id="section-8" class="mb-8 scroll-mt-6">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="bg-emerald-100 text-emerald-700 font-black text-xs w-5 h-5 rounded flex items-center justify-center shrink-0">8</span>
+        <h3 class="text-lg font-bold text-slate-800">Spaced Repetition &amp; Testing Effect</h3>
+      </div>
+      <div class="prose max-w-none text-slate-700">
+        <p><strong>Spaced Repetition</strong> löst das Problem der Vergessenskurve: Statt einen Inhalt viele Male kurz hintereinander zu üben (<em>massed practice</em>), wird er in wachsenden Zeitabständen wiederholt. Kurz vor dem drohenden Vergessen abgerufen, werden die neuronalen Spuren jedes Mal stärker reaktiviert.</p>
+
+        <div class="not-prose bg-white border border-slate-200 rounded-xl p-4 my-5">
+          <p class="text-sm font-semibold text-slate-700 mb-3">Optimale Wiederholungsabstände (Leitner-Prinzip):</p>
+          <div class="flex flex-wrap gap-2 text-xs">
+            {% set stufen = [
+              ("Neu", "Heute", "bg-red-100 text-red-700"),
+              ("Stufe 1", "Morgen", "bg-orange-100 text-orange-700"),
+              ("Stufe 2", "3 Tage", "bg-amber-100 text-amber-700"),
+              ("Stufe 3", "1 Woche", "bg-yellow-100 text-yellow-700"),
+              ("Stufe 4", "2 Wochen", "bg-lime-100 text-lime-700"),
+              ("Stufe 5", "1 Monat", "bg-emerald-100 text-emerald-700"),
+              ("Stufe 6", "3 Monate", "bg-teal-100 text-teal-700"),
+              ("Beherrscht", "6+ Monate", "bg-blue-100 text-blue-700"),
+            ] %}
+            {% for stufe, abstand, farbe in stufen %}
+            <div class="{{ farbe }} rounded-lg px-3 py-2 text-center">
+              <div class="font-bold">{{ stufe }}</div>
+              <div>{{ abstand }}</div>
+            </div>
+            {% endfor %}
+          </div>
+          <p class="text-xs text-slate-400 mt-3">Bei Fehlern: zurück auf Stufe 1. Bei Erfolg: eine Stufe höher. Das Leitner-System (1972) implementiert dies mit physischen Karteikästen.</p>
+        </div>
+
+        <p>Der <strong>Testing Effect</strong> (Roediger &amp; Karpicke, 2006) ist eine der robustesten Erkenntnisse der Lernpsychologie: Sich aktiv zu testen ist deutlich effektiver als passives Nochmal-Lesen. Eine Studie zeigte, dass Probanden nach einer Woche 50 % mehr behielten, wenn sie sich nach dem Lesen testeten statt nochmals zu lesen.</p>
+
+        <div class="not-prose bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+          <p class="text-sm font-semibold text-emerald-800 mb-1">💡 Warum ist Abruf besser als Lesen?</p>
+          <p class="text-sm text-emerald-700">Aktiver Abruf erzwingt neuronale Rekonstruktion — dieselben Schaltkreise, die beim späteren Erinnern aktiv sind. Nochmal-Lesen erzeugt Flüssigkeits-Illusion (<em>Fluency Effect</em>): Man fühlt sich bekannt, ohne tatsächlich abrufbereit zu sein.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 9 -->
+    <div id="section-9" class="mb-8 scroll-mt-6">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="bg-emerald-100 text-emerald-700 font-black text-xs w-5 h-5 rounded flex items-center justify-center shrink-0">9</span>
+        <h3 class="text-lg font-bold text-slate-800">Von-Restorff-Effekt &amp; emotionales Gedächtnis</h3>
+      </div>
+      <div class="prose max-w-none text-slate-700">
+        <p>Hedwig von Restorff zeigte 1933: In einer Reihe ähnlicher Elemente wird das herausstechende Element mit deutlich höherer Wahrscheinlichkeit erinnert. Dieses <strong>Isolationsphänomen</strong> erklärt, warum:</p>
+        <ul>
+          <li>Das eine rote Element in einer Liste blauer Punkte sofort ins Auge fällt</li>
+          <li>Absurde, übertriebene Bilder im Gedächtnispalast besser haften</li>
+          <li>Das erste und letzte Element einer Liste besser erinnert werden (Primacy/Recency Effect)</li>
+        </ul>
+
+        <p>Das <strong>emotionale Gedächtnis</strong> arbeitet über einen separaten Pfad: Die Amygdala verstärkt Hippocampus-Konsolidierung bei emotional relevanten Ereignissen. Epinephrin (Adrenalin) nach einem aufregenden Erlebnis wirkt als natürlicher Gedächtnisbooster.</p>
+
+        <div class="not-prose grid grid-cols-1 sm:grid-cols-2 gap-4 my-5">
+          <div class="bg-white border border-slate-200 rounded-xl p-4">
+            <p class="text-sm font-semibold text-slate-700 mb-2">🔴 Was besonders gut erinnert wird:</p>
+            <ul class="text-sm text-slate-600 space-y-1 list-disc list-inside">
+              <li>Emotional bedeutsame Ereignisse</li>
+              <li>Erste und letzte Eindrücke</li>
+              <li>Überraschungen und Regelbrüche</li>
+              <li>Körperlich verankerte Erfahrungen</li>
+              <li>Selbstbezogene Information</li>
+            </ul>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-xl p-4">
+            <p class="text-sm font-semibold text-slate-700 mb-2">🔵 Was schlecht erinnert wird:</p>
+            <ul class="text-sm text-slate-600 space-y-1 list-disc list-inside">
+              <li>Neutrale, bedeutungslose Fakten</li>
+              <li>Mittelelemente langer Listen</li>
+              <li>Passive, konzentrationsferne Information</li>
+              <li>Stress-überladene Lernsituationen</li>
+              <li>Schlecht geschlafene Inhalte</li>
+            </ul>
+          </div>
+        </div>
+
+        <p><strong>Praktische Konsequenz für Merktechniken:</strong> Je lebhafter, emotionaler, absurder und selbstbezogener ein Bild ist, desto stärker arbeiten Von-Restorff-Effekt und emotionales Gedächtnis zusammen. Gute Mnemotechniker nutzen genau das — keine blassen Symbole, sondern exzessive, bewegliche, manchmal schockierende Szenen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- CLUSTER IV: TRAINING & ANWENDUNG                           -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="mb-12">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="bg-amber-500 text-white text-sm font-black w-8 h-8 rounded-full flex items-center justify-center shrink-0">IV</span>
+      <h2 class="text-2xl font-black text-slate-800">Training &amp; Anwendung</h2>
+      <span class="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">Fortgeschritten</span>
+    </div>
+
+    <!-- Section 10 -->
+    <div id="section-10" class="mb-8 scroll-mt-6">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="bg-amber-100 text-amber-700 font-black text-xs w-5 h-5 rounded flex items-center justify-center shrink-0">10</span>
+        <h3 class="text-lg font-bold text-slate-800">Die Dresler-Studie: Was 40 Tage Training bewirken</h3>
+      </div>
+      <div class="prose max-w-none text-slate-700">
+        <p>Martin Dresler und Kollegen (2017, <em>Neuron</em>) führten die bis dahin rigoroseste Studie zur Trainierbarkeit des menschlichen Gedächtnisses durch:</p>
+
+        <div class="not-prose bg-amber-50 border border-amber-200 rounded-xl p-5 my-5">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-center">
+            <div>
+              <div class="text-3xl font-black text-amber-700 mb-1">72</div>
+              <div class="text-amber-800 font-semibold">Probanden</div>
+              <div class="text-amber-600 text-xs mt-1">Alle gedächtnisuntrained, zufällig zugeteilt</div>
+            </div>
+            <div>
+              <div class="text-3xl font-black text-amber-700 mb-1">40</div>
+              <div class="text-amber-800 font-semibold">Trainingstage</div>
+              <div class="text-amber-600 text-xs mt-1">30 Minuten täglich, Method of Loci</div>
+            </div>
+            <div>
+              <div class="text-3xl font-black text-amber-700 mb-1">+35</div>
+              <div class="text-amber-800 font-semibold">Wörter mehr</div>
+              <div class="text-amber-600 text-xs mt-1">Von 26 auf 62 Wörter Merkspanne</div>
+            </div>
+          </div>
+        </div>
+
+        <p><strong>Drei Gruppen wurden verglichen:</strong></p>
+        <ul>
+          <li><strong>Method-of-Loci-Gruppe:</strong> +35 Wörter (26 → 62). Verbesserung noch nach 4 Monaten messbar.</li>
+          <li><strong>N-Back-Training-Gruppe</strong> (klassisches Arbeitsgedächtnis-Training): +11 Wörter. Kein Transfer auf andere Aufgaben.</li>
+          <li><strong>Kontrollgruppe:</strong> +4 Wörter (natürliche Variation).</li>
+        </ul>
+
+        <p>fMRT-Scans zeigten nach dem Loci-Training stärkere funktionale Konnektivität zwischen Hippocampus, medialem präfrontalen Kortex und lateralem parietalem Kortex — die klassische Gedächtnis-Netzwerk-Triade. Diese Veränderungen waren bei der N-Back-Gruppe nicht sichtbar.</p>
+
+        <div class="not-prose bg-white border border-slate-200 rounded-xl p-4">
+          <p class="text-sm font-semibold text-slate-700 mb-1">📌 Kernaussage der Studie</p>
+          <p class="text-sm text-slate-600">Gedächtnissportler haben keine angeborenen Vorteile — sie haben spezifische Strategien internalisiert. Das Gehirn strukturiert sich dabei um. Das ist trainierbar für jeden.</p>
+          <p class="text-xs text-slate-400 mt-2">Dresler et al. (2017). <em>Mnemonic training reshapes brain networks to support superior memory.</em> Neuron, 93(5), 1227–1235.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 11 -->
+    <div id="section-11" class="mb-8 scroll-mt-6">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="bg-amber-100 text-amber-700 font-black text-xs w-5 h-5 rounded flex items-center justify-center shrink-0">11</span>
+        <h3 class="text-lg font-bold text-slate-800">Einen Trainingsplan aufbauen</h3>
+      </div>
+      <div class="prose max-w-none text-slate-700">
+        <p>Gedächtnisleistung verbessert sich am schnellsten durch strukturiertes, regelmäßiges Training — nicht durch intensive Einzelsessions. Hier ein realistischer 8-Wochen-Plan:</p>
+
+        <div class="not-prose space-y-3 my-5">
+          {% set phasen = [
+            ("Wochen 1–2", "Fundament", "indigo", "Gedächtnispalast anlegen (eine Route, 10 Loci). Täglich: 5 Begriffe platzieren und abrufen. Spiel: Wortfolge (5 Wörter). Fokus: Bilder werden lebhafter.", "/gedaechtnis/wortfolge"),
+            ("Wochen 3–4", "Major-System", "violet", "Major-System Zuordnungen auswendig lernen (0–9). Täglich: 10 Ziffern als Wörter codieren. Spiel: Ziffernfolge. Fokus: Automatisierung der Codes.", "/gedaechtnis/zahlen"),
+            ("Wochen 5–6", "Karten & PAO", "rose", "Erste PAO-Zuordnungen für 26 Karten. Täglich: 10 Karten in Reihenfolge merken. Spiel: Kartendeck. Fokus: Szenen-Bildung beschleunigen.", "/gedaechtnis/karten"),
+            ("Wochen 7–8", "Integration", "emerald", "Kombination: Gedächtnispalast + PAO. Täglich: 15 Karten oder 15 Wörter. Spiel: Alle Spiele wechselnd. Fokus: Geschwindigkeit und Zuverlässigkeit.", "/gedaechtnis"),
+          ] %}
+          {% for zeitraum, titel, farbe, beschreibung, link in phasen %}
+          {% set fmap = {"indigo": "bg-indigo-50 border-indigo-200 text-indigo-800", "violet": "bg-violet-50 border-violet-200 text-violet-800", "rose": "bg-rose-50 border-rose-200 text-rose-800", "emerald": "bg-emerald-50 border-emerald-200 text-emerald-800"} %}
+          {% set tmap = {"indigo": "text-indigo-600", "violet": "text-violet-600", "rose": "text-rose-600", "emerald": "text-emerald-600"} %}
+          <div class="bg-white border border-slate-200 rounded-xl p-4 flex gap-4">
+            <div class="shrink-0 text-center w-20">
+              <div class="text-xs {{ tmap[farbe] }} font-bold">{{ zeitraum }}</div>
+              <div class="text-sm font-bold text-slate-700 mt-0.5">{{ titel }}</div>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm text-slate-600">{{ beschreibung }}</p>
+            </div>
+            <a href="{{ link }}" class="shrink-0 self-center text-xs px-3 py-1.5 {{ fmap[farbe] }} border rounded-lg font-semibold hover:opacity-80 transition-opacity">Üben →</a>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="not-prose bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <p class="text-sm font-semibold text-slate-700 mb-2">Allgemeine Trainingsregeln:</p>
+          <ul class="text-sm text-slate-600 space-y-1">
+            <li>✅ <strong>Regelmäßigkeit schlägt Intensität:</strong> 15 Minuten täglich &gt; 2 Stunden einmal die Woche</li>
+            <li>✅ <strong>Schwierigkeit anpassen:</strong> Immer leicht über dem aktuellen Niveau arbeiten (Flow-Kanal)</li>
+            <li>✅ <strong>Schlaf priorisieren:</strong> Konsolidierung passiert im Schlaf — Spätabend-Training + ausreichend Schlaf</li>
+            <li>✅ <strong>Fehler nutzen:</strong> Falsch Erinnertes zeigt, wo Bilder zu schwach sind — dort verbessern</li>
+            <li>❌ <strong>Kein passives Wiederlesen:</strong> Immer aktiv testen, nie nur nochmal durchgehen</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 12 -->
+    <div id="section-12" class="mb-8 scroll-mt-6">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="bg-amber-100 text-amber-700 font-black text-xs w-5 h-5 rounded flex items-center justify-center shrink-0">12</span>
+        <h3 class="text-lg font-bold text-slate-800">Anwendung in Verhandlung &amp; Rhetorik</h3>
+      </div>
+      <div class="prose max-w-none text-slate-700">
+        <p>Die ursprünglichste Anwendung von Gedächtnistechniken war rhetorisch: Cicero und römische Redner lernten Reden von Stunden Länge auswendig. Dasselbe Prinzip gilt heute für Verhandlungsführer, Präsentatoren und Führungskräfte.</p>
+
+        <div class="not-prose grid grid-cols-1 sm:grid-cols-2 gap-4 my-5">
+          <div class="bg-white border border-slate-200 rounded-xl p-4">
+            <h4 class="font-bold text-slate-800 mb-2 text-sm">🤝 In Verhandlungen</h4>
+            <ul class="text-sm text-slate-600 space-y-1.5">
+              <li><strong>Namen merken:</strong> PAO für Teilnehmer — jeder Person eine Szene</li>
+              <li><strong>Zahlen behalten:</strong> Major-System für Preise, Fristen, Kennzahlen</li>
+              <li><strong>Argumente strukturieren:</strong> Gedächtnispalast für die eigene Argumentationskette</li>
+              <li><strong>Gegenargumente vorbereiten:</strong> Zweiter Palast für antizipierte Einwände</li>
+            </ul>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-xl p-4">
+            <h4 class="font-bold text-slate-800 mb-2 text-sm">🎙️ In Präsentationen</h4>
+            <ul class="text-sm text-slate-600 space-y-1.5">
+              <li><strong>Freies Sprechen:</strong> Route durch Präsentation statt Abzulesen</li>
+              <li><strong>Beispiele griffbereit:</strong> Linking-Kette durch alle Beispiele</li>
+              <li><strong>Zahlen &amp; Statistiken:</strong> Major-System für einprägsame Nennung</li>
+              <li><strong>Q&amp;A vorbereiten:</strong> Loci für häufige Fragen und Antworten</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="not-prose bg-amber-50 border border-amber-200 rounded-xl p-4">
+          <p class="text-sm font-semibold text-amber-800 mb-2">💡 Der entscheidende Vorteil</p>
+          <p class="text-sm text-amber-700">Wer Inhalte auswendig beherrscht, kann seinen <strong>kognitiven Fokus vollständig auf das Gegenüber richten</strong> — auf Körpersprache, Reaktion, Emotionen. Notizen-Abhängigkeit verteilt Aufmerksamkeit. Gedächtnistechniken befreien sie.</p>
+        </div>
+
+        <div class="not-prose mt-5 flex flex-wrap gap-3">
+          <a href="/gedaechtnis" class="px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-colors">🧠 Alle Trainings-Spiele</a>
+          <a href="/raetsel/batna" class="px-4 py-2 border border-slate-200 text-slate-600 text-sm font-semibold rounded-lg hover:bg-slate-50 transition-colors">🧩 BATNA-Rätsel</a>
+          <a href="/skills" class="px-4 py-2 border border-slate-200 text-slate-600 text-sm font-semibold rounded-lg hover:bg-slate-50 transition-colors">💡 Skills-Bereich</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quellenangaben -->
+  <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 text-sm text-slate-600 mb-8">
+    <strong class="text-slate-700">Weiterführende Quellen:</strong>
+    <ul class="mt-2 space-y-1 text-xs text-slate-500">
+      <li>Atkinson & Shiffrin (1968). <em>Human memory: A proposed system and its control processes.</em></li>
+      <li>Baddeley (1974). <em>Working memory.</em> Psychology of Learning and Motivation, 8.</li>
+      <li>Craik & Lockhart (1972). <em>Levels of processing: A framework for memory research.</em></li>
+      <li>Dresler et al. (2017). <em>Mnemonic training reshapes brain networks to support superior memory.</em> Neuron, 93(5).</li>
+      <li>Ebbinghaus (1885). <em>Über das Gedächtnis: Untersuchungen zur experimentellen Psychologie.</em></li>
+      <li>Miller (1956). <em>The magical number seven, plus or minus two.</em> Psychological Review, 63(2).</li>
+      <li>Paivio (1971). <em>Imagery and verbal processes.</em></li>
+      <li>Roediger & Karpicke (2006). <em>Test-enhanced learning.</em> Psychological Science, 17(3).</li>
+      <li>Atkinson & Raugh (1975). <em>An application of the mnemonic keyword method to the acquisition of Russian vocabulary.</em></li>
+    </ul>
+  </div>
+
+</div>
+{% endblock %}
