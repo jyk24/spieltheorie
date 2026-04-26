@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% block title %}Kartendeck – Gedächtnis{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+
+  <div class="mb-6 flex items-center gap-3">
+    <a href="/gedaechtnis" class="text-slate-400 hover:text-slate-600 text-sm">← Gedächtnis</a>
+    <span class="text-slate-300">/</span>
+    <h1 class="text-2xl font-bold text-slate-800">🎴 Kartendeck</h1>
+  </div>
+
+  <p class="text-slate-500 text-sm mb-5">Karten werden einzeln gezeigt — merke dir die Reihenfolge. Dann kannst du sie in der richtigen Reihenfolge per Klick rekonstruieren.</p>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-3 gap-3 mb-5">
+    <div class="bg-white rounded-xl border border-slate-200 p-3 text-center shadow-sm">
+      <div class="text-2xl font-bold text-rose-600" id="stat-level">5</div>
+      <div class="text-xs text-slate-500 mt-0.5">Karten</div>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-3 text-center shadow-sm">
+      <div class="text-2xl font-bold text-emerald-600" id="stat-streak">0</div>
+      <div class="text-xs text-slate-500 mt-0.5">Serie</div>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-3 text-center shadow-sm">
+      <div class="text-2xl font-bold text-amber-600" id="stat-best">–</div>
+      <div class="text-xs text-slate-500 mt-0.5">Rekord</div>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div id="status-bar" class="text-center text-sm font-semibold text-slate-500 mb-4 h-7 flex items-center justify-center">
+    Drücke Start
+  </div>
+
+  <!-- Lernphase: Karte für Karte -->
+  <div id="phase-show" class="hidden mb-4">
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 text-center">
+      <div class="text-xs text-slate-400 mb-4" id="show-progress"></div>
+      <div id="show-card" class="inline-block w-28 h-40 rounded-xl border-2 border-rose-300 bg-rose-50 shadow-md flex flex-col items-center justify-center text-5xl cursor-default select-none" style="display:inline-flex!important;flex-direction:column;align-items:center;justify-content:center;">
+        <span id="show-card-symbol" class="leading-none"></span>
+        <span id="show-card-label" class="text-sm font-bold mt-1"></span>
+      </div>
+      <div class="mt-4 w-full max-w-xs mx-auto bg-slate-100 rounded-full h-1.5">
+        <div id="show-bar" class="bg-rose-400 h-1.5 rounded-full transition-all duration-200" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Abfragephase: Karten in richtiger Reihenfolge klicken -->
+  <div id="phase-recall" class="hidden mb-4">
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+      <p class="text-xs text-slate-400 text-center mb-1" id="recall-hint">Klicke die Karten in der gemerkten Reihenfolge</p>
+      <div class="flex flex-wrap gap-1 justify-center mb-3 min-h-8" id="recall-order"></div>
+      <hr class="border-slate-200 mb-3">
+      <div id="recall-grid" class="flex flex-wrap gap-2 justify-center"></div>
+    </div>
+  </div>
+
+  <div class="flex gap-3 justify-center mb-6">
+    <button id="btn-start" onclick="startGame()"
+      class="px-6 py-2.5 bg-rose-600 text-white rounded-lg font-medium hover:bg-rose-700 transition-colors">
+      ▶ Start
+    </button>
+  </div>
+
+  <!-- Major-System Referenz -->
+  <div class="bg-rose-50 border border-rose-100 rounded-xl p-4 text-sm text-rose-800">
+    <strong>Major-System Referenz:</strong>
+    <div class="grid grid-cols-5 gap-1 mt-2 font-mono text-xs">
+      <span>A=Pik</span><span>♠=schwarz</span><span>K=König</span><span>D=Dame</span><span>B=Bube</span>
+      <span>0→S</span><span>1→T/D</span><span>2→N</span><span>3→M</span><span>4→R</span>
+      <span>5→L</span><span>6→Sch</span><span>7→K/G</span><span>8→F/V</span><span>9→P/B</span>
+    </div>
+    <p class="mt-2 text-xs text-rose-600">Tipp: Verwandle jede Karte in eine lebhafte Person oder ein Objekt — so entsteht eine merkbare Geschichte.</p>
+  </div>
+</div>
+
+<script>
+const SUITS = [
+  { name: 'Pik',   symbol: '♠', color: '#334155' },
+  { name: 'Kreuz', symbol: '♣', color: '#1e293b' },
+  { name: 'Herz',  symbol: '♥', color: '#dc2626' },
+  { name: 'Karo',  symbol: '♦', color: '#e25822' },
+];
+const VALUES = ['A','2','3','4','5','6','7','8','9','10','B','D','K'];
+
+// Build full deck
+const DECK = [];
+SUITS.forEach(s => VALUES.forEach(v => DECK.push({ suit: s, value: v, id: `${v}${s.symbol}` })));
+
+const SHOW_MS_PER_CARD = 1800;
+
+let state = {
+  level: 5,
+  streak: 0,
+  sequence: [],
+  recallOrder: [],
+  remaining: [],
+  phase: 'idle',
+  showTimer: null,
+  best: parseInt(localStorage.getItem('karten_best') || '0'),
+};
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - .5); }
+
+function setStatus(msg, color='text-slate-500') {
+  const el = document.getElementById('status-bar');
+  el.textContent = msg;
+  el.className = `text-center text-sm font-semibold mb-4 h-7 flex items-center justify-center ${color}`;
+}
+
+function updateStats() {
+  document.getElementById('stat-level').textContent = state.level;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-best').textContent = state.best || '–';
+}
+
+function setPhase(p) {
+  ['phase-show','phase-recall'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  if (p) document.getElementById('phase-' + p).classList.remove('hidden');
+}
+
+function startGame() {
+  clearTimeout(state.showTimer);
+  state.sequence = shuffle(DECK).slice(0, state.level);
+  state.recallOrder = [];
+  state.remaining = [...state.sequence];
+  state.phase = 'showing';
+  document.getElementById('btn-start').textContent = '↺ Nochmal';
+  updateStats();
+  showSequence(0);
+}
+
+function showSequence(i) {
+  setPhase('show');
+  if (i >= state.sequence.length) {
+    startRecall();
+    return;
+  }
+  const card = state.sequence[i];
+  const pct = ((i + 1) / state.sequence.length) * 100;
+  document.getElementById('show-progress').textContent = `Karte ${i + 1} von ${state.sequence.length}`;
+  document.getElementById('show-card-symbol').textContent = card.suit.symbol;
+  document.getElementById('show-card-symbol').style.color = card.suit.color;
+  document.getElementById('show-card-label').textContent = `${card.value} ${card.suit.name}`;
+  document.getElementById('show-card-label').style.color = card.suit.color;
+  document.getElementById('show-bar').style.width = pct + '%';
+  setStatus(`Merke: ${card.value} ${card.suit.name}`, 'text-rose-600');
+  state.showTimer = setTimeout(() => showSequence(i + 1), SHOW_MS_PER_CARD);
+}
+
+function startRecall() {
+  setPhase('recall');
+  state.phase = 'recall';
+  state.recallOrder = [];
+  setStatus(`Klicke die ${state.level} Karten in richtiger Reihenfolge`, 'text-slate-600');
+  renderRecall();
+}
+
+function renderRecall() {
+  // Top row: order so far
+  const orderEl = document.getElementById('recall-order');
+  orderEl.innerHTML = '';
+  state.recallOrder.forEach((c, i) => {
+    const span = document.createElement('span');
+    span.className = 'text-xs px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 font-mono font-bold';
+    span.textContent = `${i+1}.${c.value}${c.suit.symbol}`;
+    orderEl.appendChild(span);
+  });
+
+  // Remaining cards as clickable buttons
+  const grid = document.getElementById('recall-grid');
+  grid.innerHTML = '';
+  state.remaining.sort((a, b) => a.id.localeCompare(b.id)).forEach(card => {
+    const btn = document.createElement('button');
+    btn.className = 'w-14 h-20 rounded-lg border-2 border-slate-200 bg-white flex flex-col items-center justify-center shadow-sm hover:shadow-md hover:border-rose-300 transition-all text-lg font-bold';
+    btn.innerHTML = `<span style="color:${card.suit.color}">${card.suit.symbol}</span><span class="text-xs" style="color:${card.suit.color}">${card.value}</span>`;
+    btn.onclick = () => onCardPick(card);
+    grid.appendChild(btn);
+  });
+
+  document.getElementById('recall-hint').textContent =
+    `Noch ${state.remaining.length} Karte${state.remaining.length !== 1 ? 'n' : ''} übrig — Position ${state.recallOrder.length + 1}`;
+}
+
+function onCardPick(card) {
+  const expected = state.sequence[state.recallOrder.length];
+  if (card.id === expected.id) {
+    state.recallOrder.push(card);
+    state.remaining = state.remaining.filter(c => c.id !== card.id);
+    if (state.recallOrder.length === state.sequence.length) {
+      // All correct
+      state.streak++;
+      state.level++;
+      if (state.level > state.best) {
+        state.best = state.level;
+        localStorage.setItem('karten_best', state.best);
+      }
+      updateStats();
+      setPhase(null);
+      setStatus('🏆 Perfekt! Nächste Runde…', 'text-emerald-600');
+      setTimeout(startGame, 1200);
+    } else {
+      renderRecall();
+    }
+  } else {
+    // Wrong
+    state.streak = 0;
+    state.level = Math.max(5, state.level - 1);
+    updateStats();
+    setStatus(`✗ Falsch – richtig war ${expected.value}${expected.suit.symbol}. Nochmal…`, 'text-red-500');
+    setPhase(null);
+    setTimeout(startGame, 1800);
+  }
+}
+
+updateStats();
+</script>
+{% endblock %}

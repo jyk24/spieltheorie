@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Gedächtnis & Mnemonik – VerhandlungsTrainer{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto">
+
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-800">🧠 Gedächtnis & Mnemonik</h1>
+    <p class="text-slate-500 mt-1">Lerne die wichtigsten Merktechniken — und trainiere sie mit gezielten Spielen.</p>
+  </div>
+
+  <!-- Techniken -->
+  <h2 class="text-xl font-bold text-slate-700 mb-4">Merktechniken</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+
+    <div class="bg-white rounded-xl border border-indigo-100 p-5 shadow-sm">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-2xl">🏛️</span>
+        <h3 class="font-bold text-slate-800">Gedächtnispalast</h3>
+      </div>
+      <p class="text-sm text-slate-600 leading-relaxed">Platziere Informationen gedanklich an bekannten Orten (z.&nbsp;B. dein Zuhause). Beim „Durchgehen" der Route erinnerst du dich an die platzierten Bilder. Die älteste und mächtigste Merktechnik.</p>
+      <div class="mt-3 text-xs bg-indigo-50 text-indigo-700 rounded-lg px-3 py-2">💡 Auch bekannt als <em>Method of Loci</em> – von Cicero beschrieben.</div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-violet-100 p-5 shadow-sm">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-2xl">🔢</span>
+        <h3 class="font-bold text-slate-800">Major-System</h3>
+      </div>
+      <p class="text-sm text-slate-600 leading-relaxed">Jede Ziffer wird einem Konsonanten-Klang zugeordnet (0=s, 1=t, 2=n…). Daraus formt man Wörter und Bilder – Zahlen werden so zu einprägsamen Geschichten.</p>
+      <div class="mt-3 font-mono text-xs bg-violet-50 text-violet-700 rounded-lg px-3 py-2">1→T, 2→N, 3→M, 4→R, 5→L, 6→Sch, 7→K, 8→F, 9→P, 0→S</div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-emerald-100 p-5 shadow-sm">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-2xl">📦</span>
+        <h3 class="font-bold text-slate-800">Chunking</h3>
+      </div>
+      <p class="text-sm text-slate-600 leading-relaxed">Große Informationsmengen werden in bedeutungsvolle Gruppen aufgeteilt. Eine Telefonnummer merkt man sich nicht als 10 Ziffern, sondern als 3–4 Blöcke.</p>
+      <div class="mt-3 text-xs bg-emerald-50 text-emerald-700 rounded-lg px-3 py-2">💡 Das menschliche Arbeitsgedächtnis fasst ~7 ± 2 Einheiten (Miller, 1956).</div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-amber-100 p-5 shadow-sm">
+      <div class="flex items-center gap-3 mb-2">
+        <span class="text-2xl">🎭</span>
+        <h3 class="font-bold text-slate-800">PAO-System</h3>
+      </div>
+      <p class="text-sm text-slate-600 leading-relaxed">Für jedes Element (Karte, Zahl) wird eine <em>Person + Aktion + Objekt</em> festgelegt. Drei Elemente ergeben eine lebhafte Szene — ideal für Karten- und Zahlenmerken.</p>
+      <div class="mt-3 text-xs bg-amber-50 text-amber-700 rounded-lg px-3 py-2">💡 World Memory Champions nutzen PAO für ein ganzes Kartendeck in &lt; 2 Minuten.</div>
+    </div>
+
+  </div>
+
+  <!-- Spiele -->
+  <h2 class="text-xl font-bold text-slate-700 mb-4">Trainings-Spiele</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+
+    {% set spiele = [
+      ("corsi",  "🟦", "Blockspanne",     "Tippe die leuchtende Sequenz nach — klassischer Corsi-Block-Test.",               "Spatial",    "5 min",  "border-blue-200",   "bg-blue-50",   "text-blue-700"),
+      ("zahlen", "🔢", "Ziffernfolge",    "Zahlen erscheinen und verschwinden — klicke sie in richtiger Reihenfolge.",       "Zahlen",     "5 min",  "border-violet-200", "bg-violet-50", "text-violet-700"),
+      ("memory", "🃏", "Memory",          "Finde alle Paare — je schneller und mit weniger Zügen, desto besser.",            "Visuell",    "3 min",  "border-emerald-200","bg-emerald-50","text-emerald-700"),
+      ("namen",  "👤", "Namen & Gesichter","Präge dir Namen ein und werde danach abgefragt.",                                "Assoziativ", "5 min",  "border-amber-200",  "bg-amber-50",  "text-amber-700"),
+      ("karten", "🎴", "Kartendeck",       "Merke die Reihenfolge von Spielkarten — trainiere das Major-System.",            "Sequenz",    "10 min", "border-rose-200",   "bg-rose-50",   "text-rose-700"),
+    ] %}
+
+    {% for id, icon, name, beschreibung, typ, dauer, border, bg, text in spiele %}
+    <a href="/gedaechtnis/{{ id }}"
+       class="bg-white rounded-xl border {{ border }} p-5 shadow-sm hover:shadow-md transition-all group">
+      <div class="flex items-start justify-between mb-3">
+        <span class="text-3xl">{{ icon }}</span>
+        <span class="text-xs px-2 py-0.5 rounded-full {{ bg }} {{ text }} font-medium">{{ typ }}</span>
+      </div>
+      <h3 class="font-bold text-slate-800 group-hover:{{ text }} transition-colors mb-1">{{ name }}</h3>
+      <p class="text-sm text-slate-500 leading-relaxed">{{ beschreibung }}</p>
+      <div class="mt-3 text-xs text-slate-400">⏱ {{ dauer }}</div>
+    </a>
+    {% endfor %}
+
+  </div>
+
+  <!-- Wissensbaustein -->
+  <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 text-sm text-slate-600">
+    <strong>Wie effektiv sind Merktechniken?</strong> Studien zeigen, dass trainierte Gedächtnissportler keine biologischen Vorteile haben — sie nutzen systematisch Techniken wie den Gedächtnispalast. Nach 6 Wochen Übung können durchschnittliche Erwachsene ihre Merkspanne für Zahlen von ~7 auf 80+ steigern.
+    <span class="block mt-1 text-slate-400">Dresler et al. (2017), Neuron — <em>Mnemonic training reshapes brain networks to support superior memory</em>.</span>
+  </div>
+
+</div>
+{% endblock %}

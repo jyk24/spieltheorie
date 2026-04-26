@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %}Ziffernfolge – Gedächtnis{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+
+  <div class="mb-6 flex items-center gap-3">
+    <a href="/gedaechtnis" class="text-slate-400 hover:text-slate-600 text-sm">← Gedächtnis</a>
+    <span class="text-slate-300">/</span>
+    <h1 class="text-2xl font-bold text-slate-800">🔢 Ziffernfolge</h1>
+  </div>
+
+  <p class="text-slate-500 text-sm mb-5">Zahlen erscheinen kurz auf dem Feld — dann verschwinden die Ziffern. Klicke die Felder in aufsteigender Reihenfolge (1, 2, 3 …).</p>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-3 gap-3 mb-5">
+    <div class="bg-white rounded-xl border border-slate-200 p-3 text-center shadow-sm">
+      <div class="text-2xl font-bold text-violet-600" id="stat-level">4</div>
+      <div class="text-xs text-slate-500 mt-0.5">Zahlen</div>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-3 text-center shadow-sm">
+      <div class="text-2xl font-bold text-emerald-600" id="stat-streak">0</div>
+      <div class="text-xs text-slate-500 mt-0.5">Serie</div>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-3 text-center shadow-sm">
+      <div class="text-2xl font-bold text-amber-600" id="stat-best">–</div>
+      <div class="text-xs text-slate-500 mt-0.5">Rekord</div>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div id="status-bar" class="text-center text-sm font-semibold text-slate-500 mb-3 h-7 flex items-center justify-center gap-2">
+    Drücke Start
+  </div>
+
+  <!-- Spielfeld 5×5 -->
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 mb-4">
+    <div id="zahlen-field" class="grid gap-2 mx-auto" style="grid-template-columns:repeat(5,1fr);max-width:380px;">
+    </div>
+  </div>
+
+  <div class="flex gap-3 justify-center mb-6">
+    <button id="btn-start" onclick="startGame()"
+      class="px-6 py-2.5 bg-violet-600 text-white rounded-lg font-medium hover:bg-violet-700 transition-colors">
+      ▶ Start
+    </button>
+  </div>
+
+  <!-- Tip -->
+  <div class="bg-violet-50 border border-violet-100 rounded-xl p-4 text-sm text-violet-800">
+    <strong>Technik-Tipp:</strong> Nutze <em>Chunking</em> — gruppiere die Zahlen in Paare oder Dreiergruppen, bevor sie verschwinden. Statt 1,4,7,2,9 merke dir "14", "72" und "9".
+  </div>
+</div>
+
+<script>
+const GRID = 25; // 5×5
+let state = {
+  level: 4, streak: 0, nextClick: 1,
+  phase: 'idle', // idle|show|input|over
+  positions: {}, // number → cell index
+  best: parseInt(localStorage.getItem('zahlen_best') || '0'),
+};
+
+function buildGrid() {
+  const field = document.getElementById('zahlen-field');
+  field.innerHTML = '';
+  for (let i = 0; i < GRID; i++) {
+    const btn = document.createElement('button');
+    btn.id = 'cell-' + i;
+    btn.className = 'aspect-square rounded-lg border-2 border-slate-200 bg-slate-50 text-lg font-bold text-slate-700 hover:bg-slate-100 transition-colors';
+    btn.onclick = () => onCellClick(i);
+    field.appendChild(btn);
+  }
+  updateStats();
+}
+
+function setCell(i, mode, label) {
+  const el = document.getElementById('cell-' + i);
+  if (!el) return;
+  el.textContent = label ?? '';
+  el.className = 'aspect-square rounded-lg border-2 font-bold text-lg transition-colors';
+  if (mode === 'number')  el.className += ' border-violet-300 bg-violet-50 text-violet-700';
+  else if (mode === 'hidden') el.className += ' border-slate-300 bg-slate-100 text-transparent hover:bg-slate-200 cursor-pointer';
+  else if (mode === 'ok')    el.className += ' border-emerald-400 bg-emerald-100 text-emerald-700';
+  else if (mode === 'err')   el.className += ' border-red-400 bg-red-100 text-red-600';
+  else                        el.className += ' border-slate-200 bg-slate-50 text-slate-700';
+}
+
+function setStatus(msg, color='text-slate-500') {
+  const el = document.getElementById('status-bar');
+  el.textContent = msg;
+  el.className = `text-center text-sm font-semibold mb-3 h-7 flex items-center justify-center ${color}`;
+}
+
+function updateStats() {
+  document.getElementById('stat-level').textContent = state.level;
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('stat-best').textContent = state.best || '–';
+}
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - .5); }
+
+function startGame() {
+  document.getElementById('btn-start').textContent = '↺ Nochmal';
+  state.phase = 'show';
+  state.nextClick = 1;
+  state.positions = {};
+
+  // Pick random cells for the numbers
+  const cells = shuffle([...Array(GRID).keys()]).slice(0, state.level);
+  cells.forEach((cellIdx, numIdx) => {
+    state.positions[numIdx + 1] = cellIdx;
+    setCell(cellIdx, 'number', numIdx + 1);
+  });
+
+  setStatus('Merke dir die Zahlen!', 'text-violet-600');
+
+  // After 1.5s hide numbers
+  setTimeout(() => {
+    Object.values(state.positions).forEach(ci => setCell(ci, 'hidden', ''));
+    state.phase = 'input';
+    setStatus(`Klicke: 1 → ${state.level}`, 'text-slate-600');
+  }, 1500 + state.level * 100);
+}
+
+function onCellClick(cellIdx) {
+  if (state.phase !== 'input') return;
+  const expected = state.positions[state.nextClick];
+  if (cellIdx === expected) {
+    setCell(cellIdx, 'ok', state.nextClick);
+    state.nextClick++;
+    if (state.nextClick > state.level) {
+      // Success
+      state.streak++;
+      state.level++;
+      if (state.level > state.best) {
+        state.best = state.level;
+        localStorage.setItem('zahlen_best', state.best);
+      }
+      updateStats();
+      setStatus('✓ Richtig! Nächste Runde…', 'text-emerald-600');
+      setTimeout(startGame, 900);
+    }
+  } else {
+    // Wrong
+    setCell(cellIdx, 'err', '✗');
+    state.streak = 0;
+    state.level = Math.max(4, state.level - 1);
+    state.phase = 'idle';
+    // Reveal answer briefly
+    Object.entries(state.positions).forEach(([num, ci]) => {
+      if (parseInt(num) >= state.nextClick) setCell(ci, 'number', num);
+    });
+    updateStats();
+    setStatus('✗ Falsch — Zahlen werden kurz gezeigt', 'text-red-500');
+    setTimeout(startGame, 1800);
+  }
+}
+
+buildGrid();
+</script>
+{% endblock %}

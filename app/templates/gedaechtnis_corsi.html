@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% block title %}Blockspanne – Gedächtnis{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+
+  <div class="mb-6 flex items-center gap-3">
+    <a href="/gedaechtnis" class="text-slate-400 hover:text-slate-600 text-sm">← Gedächtnis</a>
+    <span class="text-slate-300">/</span>
+    <h1 class="text-2xl font-bold text-slate-800">🟦 Blockspanne</h1>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-3 gap-3 mb-6">
+    <div class="bg-white rounded-xl border border-slate-200 p-3 text-center shadow-sm">
+      <div class="text-2xl font-bold text-indigo-600" id="stat-span">2</div>
+      <div class="text-xs text-slate-500 mt-0.5">Aktuelle Spanne</div>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-3 text-center shadow-sm">
+      <div class="text-2xl font-bold text-emerald-600" id="stat-score">0</div>
+      <div class="text-xs text-slate-500 mt-0.5">Richtig</div>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-3 text-center shadow-sm">
+      <div class="text-2xl font-bold text-amber-600" id="stat-best">–</div>
+      <div class="text-xs text-slate-500 mt-0.5">Rekord-Spanne</div>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div id="status-bar" class="text-center text-sm font-medium text-slate-500 mb-4 h-6">
+    Drücke Start um zu beginnen
+  </div>
+
+  <!-- Spielfeld -->
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 mb-4">
+    <div id="corsi-field" class="relative mx-auto" style="width:100%; max-width:480px; height:340px;">
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="flex gap-3 justify-center mb-6">
+    <button id="btn-start" onclick="startGame()"
+      class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+      ▶ Start
+    </button>
+    <button id="btn-reset" onclick="resetGame()"
+      class="px-6 py-2.5 bg-slate-100 text-slate-600 rounded-lg font-medium hover:bg-slate-200 transition-colors hidden">
+      ↺ Neu
+    </button>
+  </div>
+
+  <!-- Tip -->
+  <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-800">
+    <strong>Technik-Tipp:</strong> Verbinde jeden Block mit einem Ort in deinem Gedächtnispalast. Wenn Block 3 leuchtet, stelle dir vor, du platzierst dort ein Bild. So wirst du deutlich besser als mit reinem Wiederholen.
+  </div>
+</div>
+
+<script>
+const POSITIONS = [
+  {x:8,  y:10}, {x:42, y:5},  {x:72, y:15},
+  {x:15, y:45}, {x:50, y:38}, {x:80, y:50},
+  {x:5,  y:72}, {x:40, y:75}, {x:72, y:78},
+];
+const SZ = 56; // px block size
+
+let state = {
+  span: 2, score: 0, errors: 0, tries: 0,
+  sequence: [], inputIdx: 0,
+  phase: 'idle', // idle|showing|input|over
+  maxSpan: parseInt(localStorage.getItem('corsi_best') || '0'),
+};
+
+function buildField() {
+  const field = document.getElementById('corsi-field');
+  field.innerHTML = '';
+  POSITIONS.forEach((p, i) => {
+    const btn = document.createElement('button');
+    btn.id = 'block-' + i;
+    btn.className = 'absolute rounded-xl border-2 border-slate-300 bg-slate-100 hover:bg-slate-200 transition-all cursor-pointer';
+    btn.style.cssText = `left:${p.x}%;top:${p.y}%;width:${SZ}px;height:${SZ}px;transform:translateY(0)`;
+    btn.onclick = () => onBlockClick(i);
+    field.appendChild(btn);
+  });
+  updateStats();
+}
+
+function setBlock(i, state) {
+  const el = document.getElementById('block-' + i);
+  if (!el) return;
+  el.className = 'absolute rounded-xl border-2 transition-all cursor-pointer';
+  if (state === 'active')   el.className += ' bg-indigo-500 border-indigo-600 shadow-lg scale-105';
+  else if (state === 'ok')  el.className += ' bg-emerald-400 border-emerald-500';
+  else if (state === 'err') el.className += ' bg-red-400 border-red-500';
+  else                      el.className += ' border-slate-300 bg-slate-100 hover:bg-slate-200';
+}
+
+function setStatus(msg) { document.getElementById('status-bar').textContent = msg; }
+function updateStats() {
+  document.getElementById('stat-span').textContent = state.span;
+  document.getElementById('stat-score').textContent = state.score;
+  document.getElementById('stat-best').textContent = state.maxSpan || '–';
+}
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - .5); }
+
+function startGame() {
+  document.getElementById('btn-start').classList.add('hidden');
+  document.getElementById('btn-reset').classList.remove('hidden');
+  state = { ...state, span: 2, score: 0, errors: 0, tries: 0, phase: 'idle' };
+  updateStats();
+  newRound();
+}
+
+function resetGame() {
+  state.phase = 'idle';
+  document.getElementById('btn-start').classList.remove('hidden');
+  document.getElementById('btn-reset').classList.add('hidden');
+  setStatus('Drücke Start um zu beginnen');
+  buildField();
+}
+
+function newRound() {
+  const idxs = shuffle([0,1,2,3,4,5,6,7,8]).slice(0, state.span);
+  state.sequence = idxs;
+  state.inputIdx = 0;
+  state.phase = 'showing';
+  setStatus('Merke dir die Reihenfolge…');
+  setTimeout(() => showSequence(0), 600);
+}
+
+function showSequence(i) {
+  if (i > 0) setBlock(state.sequence[i-1], 'normal');
+  if (i < state.sequence.length) {
+    setBlock(state.sequence[i], 'active');
+    setTimeout(() => showSequence(i + 1), 800);
+  } else {
+    setTimeout(() => {
+      state.phase = 'input';
+      setStatus('Klicke die Blöcke in derselben Reihenfolge!');
+    }, 600);
+  }
+}
+
+function onBlockClick(idx) {
+  if (state.phase !== 'input') return;
+  if (idx === state.sequence[state.inputIdx]) {
+    setBlock(idx, 'ok');
+    setTimeout(() => setBlock(idx, 'normal'), 300);
+    state.inputIdx++;
+    if (state.inputIdx === state.sequence.length) {
+      state.score++;
+      state.tries++;
+      if (state.tries >= 2) { state.span++; state.tries = 0; }
+      if (state.span > state.maxSpan) {
+        state.maxSpan = state.span;
+        localStorage.setItem('corsi_best', state.maxSpan);
+      }
+      state.errors = 0;
+      updateStats();
+      setStatus('✓ Richtig!');
+      setTimeout(newRound, 700);
+    }
+  } else {
+    setBlock(idx, 'err');
+    state.errors++;
+    if (state.errors >= 2) {
+      state.phase = 'over';
+      setStatus(`Spiel vorbei! Erreichte Spanne: ${state.span}`);
+      setTimeout(() => {
+        setBlock(idx, 'normal');
+        document.getElementById('btn-start').classList.remove('hidden');
+        document.getElementById('btn-reset').classList.add('hidden');
+      }, 1000);
+    } else {
+      setStatus('✗ Falsch – nochmal!');
+      setTimeout(() => {
+        setBlock(idx, 'normal');
+        state.inputIdx = 0;
+        state.phase = 'showing';
+        setTimeout(() => showSequence(0), 500);
+      }, 800);
+    }
+  }
+}
+
+buildField();
+</script>
+{% endblock %}

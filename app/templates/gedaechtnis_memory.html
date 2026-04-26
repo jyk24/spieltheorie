@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %}Memory – Gedächtnis{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+
+  <div class="mb-6 flex items-center gap-3">
+    <a href="/gedaechtnis" class="text-slate-400 hover:text-slate-600 text-sm">← Gedächtnis</a>
+    <span class="text-slate-300">/</span>
+    <h1 class="text-2xl font-bold text-slate-800">🃏 Memory</h1>
+  </div>
+
+  <p class="text-slate-500 text-sm mb-5">Finde alle Paare. Je weniger Züge und je schneller, desto besser. Konzentriere dich auf die Position jeder Karte.</p>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-4 gap-3 mb-5">
+    <div class="bg-white rounded-xl border border-slate-200 p-3 text-center shadow-sm">
+      <div class="text-2xl font-bold text-emerald-600" id="stat-pairs">0</div>
+      <div class="text-xs text-slate-500 mt-0.5">Paare</div>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-3 text-center shadow-sm">
+      <div class="text-2xl font-bold text-violet-600" id="stat-moves">0</div>
+      <div class="text-xs text-slate-500 mt-0.5">Züge</div>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-3 text-center shadow-sm">
+      <div class="text-2xl font-bold text-indigo-600" id="stat-time">0</div>
+      <div class="text-xs text-slate-500 mt-0.5">Sek.</div>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-3 text-center shadow-sm">
+      <div class="text-2xl font-bold text-amber-600" id="stat-best">–</div>
+      <div class="text-xs text-slate-500 mt-0.5">Rekord</div>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div id="status-bar" class="text-center text-sm font-semibold text-slate-500 mb-3 h-7 flex items-center justify-center">
+    Drücke Start
+  </div>
+
+  <!-- Spielfeld -->
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 mb-4">
+    <div id="memory-field" class="grid gap-2 mx-auto" style="grid-template-columns:repeat(6,1fr);max-width:420px;">
+    </div>
+  </div>
+
+  <div class="flex gap-3 justify-center mb-6">
+    <button id="btn-start" onclick="startGame()"
+      class="px-6 py-2.5 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors">
+      ▶ Start
+    </button>
+  </div>
+
+  <!-- Tip -->
+  <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4 text-sm text-emerald-800">
+    <strong>Technik-Tipp:</strong> Verknüpfe jedes Symbol mit einem Ort in deinem Gedächtnispalast. Wenn du die erste Karte eines Paares aufdeckst, „siehst" du bereits den Ort — so findest du die zweite Karte instinktiv.
+  </div>
+</div>
+
+<style>
+.card-inner { transition: transform 0.35s; transform-style: preserve-3d; }
+.card-flipped .card-inner { transform: rotateY(180deg); }
+.card-front, .card-back { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.card-back { transform: rotateY(180deg); }
+</style>
+
+<script>
+const EMOJIS = ['🦊','🐬','🌺','🍕','🎸','🚀','⚡','🎯','🦋','🍄','🏔️','🎪'];
+const TOTAL_PAIRS = 12;
+
+let state = {
+  cards: [],       // {id, emoji, flipped, matched}
+  flipped: [],     // indices of currently revealed cards (max 2)
+  moves: 0,
+  pairs: 0,
+  locked: false,
+  timer: null,
+  seconds: 0,
+  best: parseInt(localStorage.getItem('memory_best') || '0'),
+};
+
+function buildGrid() {
+  const field = document.getElementById('memory-field');
+  field.innerHTML = '';
+  const pairs = [...EMOJIS.slice(0, TOTAL_PAIRS), ...EMOJIS.slice(0, TOTAL_PAIRS)];
+  pairs.sort(() => Math.random() - .5);
+
+  state.cards = pairs.map((emoji, i) => ({ id: i, emoji, flipped: false, matched: false }));
+
+  state.cards.forEach((card, i) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'aspect-square cursor-pointer perspective-500';
+    wrapper.style.perspective = '500px';
+    wrapper.innerHTML = `
+      <div class="card-inner w-full h-full relative" id="inner-${i}">
+        <div class="card-front absolute inset-0 rounded-lg border-2 border-slate-200 bg-slate-100 flex items-center justify-center text-2xl"></div>
+        <div class="card-back absolute inset-0 rounded-lg border-2 border-emerald-300 bg-emerald-50 flex items-center justify-center text-2xl">${card.emoji}</div>
+      </div>`;
+    wrapper.addEventListener('click', () => onCardClick(i));
+    wrapper.id = 'card-' + i;
+    field.appendChild(wrapper);
+  });
+  updateStats();
+}
+
+function flip(i, on) {
+  const inner = document.getElementById('inner-' + i);
+  if (!inner) return;
+  if (on) inner.parentElement.classList.add('card-flipped');
+  else inner.parentElement.classList.remove('card-flipped');
+}
+
+function markMatched(i) {
+  const inner = document.getElementById('inner-' + i);
+  if (!inner) return;
+  inner.querySelector('.card-back').classList.remove('border-emerald-300', 'bg-emerald-50');
+  inner.querySelector('.card-back').classList.add('border-emerald-500', 'bg-emerald-100', 'opacity-60');
+}
+
+function setStatus(msg, color='text-slate-500') {
+  const el = document.getElementById('status-bar');
+  el.textContent = msg;
+  el.className = `text-center text-sm font-semibold mb-3 h-7 flex items-center justify-center ${color}`;
+}
+
+function updateStats() {
+  document.getElementById('stat-pairs').textContent = state.pairs;
+  document.getElementById('stat-moves').textContent = state.moves;
+  document.getElementById('stat-time').textContent = state.seconds;
+  document.getElementById('stat-best').textContent = state.best || '–';
+}
+
+function startGame() {
+  clearInterval(state.timer);
+  state = { ...state, moves: 0, pairs: 0, flipped: [], locked: false, seconds: 0 };
+  document.getElementById('btn-start').textContent = '↺ Nochmal';
+  buildGrid();
+  setStatus('Finde alle Paare!', 'text-emerald-600');
+
+  state.timer = setInterval(() => {
+    state.seconds++;
+    document.getElementById('stat-time').textContent = state.seconds;
+  }, 1000);
+}
+
+function onCardClick(i) {
+  if (state.locked) return;
+  const card = state.cards[i];
+  if (card.matched || card.flipped) return;
+  if (state.flipped.length >= 2) return;
+
+  card.flipped = true;
+  flip(i, true);
+  state.flipped.push(i);
+
+  if (state.flipped.length === 2) {
+    state.moves++;
+    updateStats();
+    const [a, b] = state.flipped;
+    if (state.cards[a].emoji === state.cards[b].emoji) {
+      state.cards[a].matched = state.cards[b].matched = true;
+      markMatched(a); markMatched(b);
+      state.pairs++;
+      state.flipped = [];
+      updateStats();
+      if (state.pairs === TOTAL_PAIRS) {
+        clearInterval(state.timer);
+        const score = state.moves * 10 + state.seconds;
+        if (!state.best || score < state.best) {
+          state.best = score;
+          localStorage.setItem('memory_best', state.best);
+        }
+        updateStats();
+        setStatus(`🎉 Alle Paare! ${state.moves} Züge in ${state.seconds}s`, 'text-emerald-600');
+      } else {
+        setStatus(`✓ Treffer! ${TOTAL_PAIRS - state.pairs} Paare übrig`, 'text-emerald-600');
+      }
+    } else {
+      state.locked = true;
+      setTimeout(() => {
+        state.cards[a].flipped = state.cards[b].flipped = false;
+        flip(a, false); flip(b, false);
+        state.flipped = [];
+        state.locked = false;
+        setStatus('Finde alle Paare!', 'text-slate-500');
+      }, 900);
+    }
+  }
+}
+
+buildGrid();
+</script>
+{% endblock %}
