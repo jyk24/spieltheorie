@@ -57,11 +57,14 @@
             ("Wahrscheinlichkeit", "🎲"),
             ("Statistik",          "📊"),
             ("Mathematik",         "📐"),
+            ("Physik",             "⚛️"),
             ("Logik",              "🧩"),
             ("Kognition",          "🧠"),
             ("Spieltheorie",       "♟️"),
             ("Psychologie",        "🧬"),
             ("Kommunikation",      "💬"),
+            ("Rhetorik",           "🎙️"),
+            ("Verhandlung",        "🤝"),
         ] %}
         {% for kat_name, kat_icon in kategorien_meta %}
         {% set count = raetsel | selectattr('kategorie', 'equalto', kat_name) | list | length %}
@@ -86,11 +89,14 @@
         ("Wahrscheinlichkeit", "🎲", "bg-blue-100", "text-blue-700", "border-blue-200", "hover:border-blue-300"),
         ("Statistik",          "📊", "bg-emerald-100", "text-emerald-700", "border-emerald-200", "hover:border-emerald-300"),
         ("Mathematik",         "📐", "bg-violet-100", "text-violet-700", "border-violet-200", "hover:border-violet-300"),
+        ("Physik",             "⚛️", "bg-sky-100", "text-sky-700", "border-sky-200", "hover:border-sky-300"),
         ("Logik",              "🧩", "bg-amber-100", "text-amber-700", "border-amber-200", "hover:border-amber-300"),
         ("Kognition",          "🧠", "bg-rose-100", "text-rose-700", "border-rose-200", "hover:border-rose-300"),
         ("Spieltheorie",       "♟️", "bg-indigo-100", "text-indigo-700", "border-indigo-200", "hover:border-indigo-300"),
         ("Psychologie",        "🧬", "bg-pink-100", "text-pink-700", "border-pink-200", "hover:border-pink-300"),
         ("Kommunikation",      "💬", "bg-teal-100", "text-teal-700", "border-teal-200", "hover:border-teal-300"),
+        ("Rhetorik",           "🎙️", "bg-orange-100", "text-orange-700", "border-orange-200", "hover:border-orange-300"),
+        ("Verhandlung",        "🤝", "bg-cyan-100", "text-cyan-700", "border-cyan-200", "hover:border-cyan-300"),
     ] %}
 
     {% for kat_name, kat_icon, kat_bg, kat_text, kat_border, kat_hover in kategorien %}
