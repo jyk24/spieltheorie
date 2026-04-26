@@ -11,6 +11,117 @@ templates = Jinja2Templates(directory="app/templates")
 # ---------------------------------------------------------------------------
 
 LERNPFADE = [
+    # ── Neue multi-modale Pfade ────────────────────────────────────────────────
+    {
+        "id": "spieltheorie-einstieg",
+        "title": "Einstieg: Spieltheorie kennenlernen",
+        "subtitle": "Theorie, Spiele und Paradoxe im Mix",
+        "icon": "♟️",
+        "color": "indigo",
+        "level": "Einsteiger",
+        "dauer": "ca. 45 min",
+        "beschreibung": (
+            "Der perfekte Start: Spieltheorie live erleben – mit Theorie, einem echten Spiel und klassischen Paradoxen. "
+            "Du verstehst danach, was Nash-Gleichgewichte sind und warum Kooperation so schwierig ist."
+        ),
+        "was_du_lernst": [
+            "Was Spieltheorie ist und warum sie überall auftaucht",
+            "Das Gefangenendilemma – das wichtigste Spiel der Theorie",
+            "Das Monty-Hall-Problem – Intuition schlägt Logik",
+            "Das Nash-Gleichgewicht: kein Spieler will abweichen",
+        ],
+        "steps": [
+            {"typ": "theorie", "titel": "Was ist Spieltheorie?",     "icon": "📖", "dauer": "8 min", "schwierigkeit": "Einstieg",  "url": "/grundlagen",           "beschreibung": "Grundkonzepte: Auszahlungsmatrizen, Strategien, Gleichgewichte"},
+            {"typ": "spiel",   "titel": "Gefangenendilemma",          "icon": "🎮", "dauer": "5 min", "schwierigkeit": "Einstieg",  "url": "/spiele/gefangenendilemma", "beschreibung": "Kooperieren oder Verraten? Das Kernspiel der Spieltheorie"},
+            {"typ": "raetsel", "titel": "Monty Hall Problem",         "icon": "🚪", "dauer": "3 min", "schwierigkeit": "Einstieg",  "id": "monty-hall",             "beschreibung": "Wechseln oder bleiben? Deine Intuition täuscht dich"},
+            {"typ": "spiel",   "titel": "Ultimatumspiel",             "icon": "🎮", "dauer": "5 min", "schwierigkeit": "Einstieg",  "url": "/spiele/ultimatum",     "beschreibung": "Faire Angebote vs. rationale Maximierung"},
+            {"typ": "raetsel", "titel": "Newcomb-Paradoxon",          "icon": "📦", "dauer": "5 min", "schwierigkeit": "Fortgeschritten", "id": "newcomb",         "beschreibung": "Kausalität vs. Evidenz – ein philosophisches Dilemma"},
+            {"typ": "theorie", "titel": "Nash-Gleichgewicht vertiefen","icon": "📖", "dauer": "8 min", "schwierigkeit": "Mittel",   "url": "/grundlagen",           "beschreibung": "Nash-Finder, Gleichgewichtstypen und ihre Anwendungen"},
+        ],
+    },
+    {
+        "id": "entscheidung-unsicherheit",
+        "title": "Entscheidungen unter Unsicherheit",
+        "subtitle": "Prospect Theory, Paradoxe und Auktionen",
+        "icon": "🎲",
+        "color": "amber",
+        "level": "Mittel",
+        "dauer": "ca. 60 min",
+        "beschreibung": (
+            "Warum handeln Menschen nicht wie rationale Nutzenmaximierer? "
+            "Dieser Pfad verbindet Prospect Theory mit klassischen Entscheidungsparadoxen und zeigt, "
+            "wie du unter echter Unsicherheit besser entscheidest."
+        ),
+        "was_du_lernst": [
+            "Prospect Theory: Verluste wiegen schwerer als Gewinne",
+            "Allais- und Ellsberg-Paradoxon: rationale Theorie scheitert",
+            "Warum Auktionsgewinner oft zu viel zahlen",
+            "Bounded Rationality: optimale Entscheidungen mit begrenztem Wissen",
+        ],
+        "steps": [
+            {"typ": "theorie", "titel": "Prospect Theory",            "icon": "📖", "dauer": "8 min", "schwierigkeit": "Mittel",   "url": "/grundlagen",            "beschreibung": "Kahneman & Tversky: wie Menschen Risiken wirklich bewerten"},
+            {"typ": "raetsel", "titel": "Allais-Paradoxon",           "icon": "🎰", "dauer": "5 min", "schwierigkeit": "Mittel",   "id": "allais",                  "beschreibung": "Erwartungsnutzen-Theorie bricht zusammen"},
+            {"typ": "raetsel", "titel": "Ellsberg-Paradoxon",         "icon": "🪬", "dauer": "5 min", "schwierigkeit": "Mittel",   "id": "ellsberg",                "beschreibung": "Ambiguitätsaversion vs. kalkuliertes Risiko"},
+            {"typ": "spiel",   "titel": "Der Fluch des Gewinners",    "icon": "🎮", "dauer": "5 min", "schwierigkeit": "Fortgeschritten", "url": "/spiele/gewinner-fluch", "beschreibung": "Wer gewinnt, zahlt meist zu viel"},
+            {"typ": "raetsel", "titel": "St. Petersburger Paradoxon", "icon": "🎲", "dauer": "4 min", "schwierigkeit": "Mittel",   "id": "st-petersburg",           "beschreibung": "Unendlicher Erwartungswert, endliche Zahlungsbereitschaft"},
+            {"typ": "theorie", "titel": "Bounded Rationality",        "icon": "📖", "dauer": "8 min", "schwierigkeit": "Mittel",   "url": "/grundlagen",            "beschreibung": "Simon: Satisficing statt Optimierung"},
+        ],
+    },
+    {
+        "id": "verhandlung-meistern",
+        "title": "Verhandlung meistern",
+        "subtitle": "BATNA, Signaling und Informationsasymmetrie",
+        "icon": "🤝",
+        "color": "teal",
+        "level": "Mittel",
+        "dauer": "ca. 60 min",
+        "beschreibung": (
+            "Verhandlung ist angewandte Spieltheorie. "
+            "Dieser Pfad zeigt dir die wichtigsten Konzepte – von BATNA über Ankereffekte bis zu Marktversagen durch Informationsasymmetrie."
+        ),
+        "was_du_lernst": [
+            "BATNA: Verhandlungsmacht kommt aus der besten Alternative",
+            "Ankereffekte: der erste Wert prägt das gesamte Ergebnis",
+            "Signaling: glaubwürdige Signale in asymmetrischer Information",
+            "Markt für Zitronen: wie Informationsasymmetrie Märkte zerstört",
+        ],
+        "steps": [
+            {"typ": "theorie", "titel": "Verhandlungstheorie & BATNA", "icon": "📖", "dauer": "8 min", "schwierigkeit": "Einstieg",  "url": "/grundlagen",            "beschreibung": "BATNA, ZOPA, Rubinstein Bargaining"},
+            {"typ": "raetsel", "titel": "Der Anker-Effekt",            "icon": "⚓", "dauer": "4 min", "schwierigkeit": "Einstieg",  "id": "anker-experiment",        "beschreibung": "Wie willkürliche Zahlen Urteile verzerren"},
+            {"typ": "spiel",   "titel": "Verhandlungssimulation",      "icon": "🎮", "dauer": "6 min", "schwierigkeit": "Fortgeschritten", "url": "/spiele/verhandlung",  "beschreibung": "Mehrrunden-Verhandlung mit realen Szenarien"},
+            {"typ": "raetsel", "titel": "Markt für Zitronen",          "icon": "🍋", "dauer": "5 min", "schwierigkeit": "Mittel",   "id": "marktverlust",            "beschreibung": "Akerlof: Informationsasymmetrie zerstört Märkte"},
+            {"typ": "raetsel", "titel": "BATNA – Verhandlungsmacht",   "icon": "🤝", "dauer": "5 min", "schwierigkeit": "Einstieg",  "id": "batna",                   "beschreibung": "Wann solltest du abbrechen?"},
+            {"typ": "theorie", "titel": "Signaling & Screening",       "icon": "📖", "dauer": "8 min", "schwierigkeit": "Fortgeschritten", "url": "/grundlagen",         "beschreibung": "Spence-Modell: wie glaubwürdige Signale funktionieren"},
+        ],
+    },
+    {
+        "id": "soziale-dynamiken",
+        "title": "Soziale Dynamiken",
+        "subtitle": "Kooperation, Herdenverhalten und Evolution",
+        "icon": "🌐",
+        "color": "emerald",
+        "level": "Fortgeschritten",
+        "dauer": "ca. 60 min",
+        "beschreibung": (
+            "Wie entstehen kollektive Muster aus individuellen Entscheidungen? "
+            "Von Informationskaskaden über Public Goods bis zur evolutionären Spieltheorie."
+        ),
+        "was_du_lernst": [
+            "Informationskaskaden: warum Herden irren können",
+            "Public Goods: das Trittbrettfahrerproblem in der Praxis",
+            "Evolutionäre Spieltheorie: welche Strategien überleben?",
+            "Das Braess-Paradoxon: mehr Kapazität kann alle schlechter stellen",
+        ],
+        "steps": [
+            {"typ": "raetsel", "titel": "Informationskaskade",         "icon": "🫧", "dauer": "5 min", "schwierigkeit": "Mittel",          "id": "informationskaskade",     "beschreibung": "Warum rationale Individuen kollektiv irren"},
+            {"typ": "spiel",   "titel": "Öffentliche-Güter-Spiel",     "icon": "🎮", "dauer": "5 min", "schwierigkeit": "Einstieg",         "url": "/spiele/public-goods",   "beschreibung": "Trittbrettfahrer vs. Kooperation im Gruppenspiel"},
+            {"typ": "raetsel", "titel": "Stag Hunt – Hirschjagd",      "icon": "🦌", "dauer": "5 min", "schwierigkeit": "Mittel",          "id": "hirschjagd",              "beschreibung": "Koordinationsdilemma: Sicherheit vs. hoher Lohn"},
+            {"typ": "theorie", "titel": "Evolutionäre Spieltheorie",   "icon": "📖", "dauer": "8 min", "schwierigkeit": "Fortgeschritten",  "url": "/grundlagen",            "beschreibung": "ESS, Replikator-Dynamik und evolutionäre Stabilität"},
+            {"typ": "spiel",   "titel": "Iterated Prisoner's Dilemma", "icon": "🎮", "dauer": "5 min", "schwierigkeit": "Mittel",          "url": "/spiele/gefangenendilemma", "beschreibung": "Tit-for-Tat und die Macht der Wiederholung"},
+            {"typ": "raetsel", "titel": "Braess-Paradoxon",            "icon": "🛣️","dauer": "5 min", "schwierigkeit": "Fortgeschritten",  "id": "braess",                  "beschreibung": "Eine neue Straße macht alle langsamer – warum?"},
+        ],
+    },
+    # ── Bestehende Rätsel-Pfade ────────────────────────────────────────────────
     {
         "id": "wahrscheinlichkeit",
         "title": "Wahrscheinlichkeit",
@@ -29,14 +140,14 @@ LERNPFADE = [
             "Wie unabhängige Zufallsereignisse funktionieren (Spielerfehlschluss)",
             "Warum ‚zufällig' präziser Definition bedarf (Bertrand)",
         ],
-        "puzzles": [
-            {"id": "geburtstag",         "name": "Geburtstagsparadoxon",          "icon": "🎂",  "dauer": "3 min", "schwierigkeit": "Einstieg"},
-            {"id": "spielerfehlschluss", "name": "Der Spielerfehlschluss",         "icon": "🎰",  "dauer": "3 min", "schwierigkeit": "Einstieg"},
-            {"id": "monty-hall",         "name": "Monty Hall Problem",             "icon": "🚪",  "dauer": "3 min", "schwierigkeit": "Mittel"},
-            {"id": "hundert-gefangene",  "name": "100-Gefangenen-Problem",         "icon": "📦",  "dauer": "5 min", "schwierigkeit": "Mittel"},
-            {"id": "coupon-sammler",     "name": "Coupon-Sammler-Problem",         "icon": "🎟️", "dauer": "4 min", "schwierigkeit": "Mittel"},
-            {"id": "bertrand-paradoxon", "name": "Bertrand-Paradoxon",             "icon": "⭕",  "dauer": "5 min", "schwierigkeit": "Fortgeschritten"},
-            {"id": "schlafendes-maedchen","name": "Schlafendes-Mädchen",           "icon": "😴",  "dauer": "5 min", "schwierigkeit": "Fortgeschritten"},
+        "steps": [
+            {"typ": "raetsel", "id": "geburtstag",          "titel": "Geburtstagsparadoxon",          "icon": "🎂",  "dauer": "3 min", "schwierigkeit": "Einstieg",       "beschreibung": ""},
+            {"typ": "raetsel", "id": "spielerfehlschluss",  "titel": "Der Spielerfehlschluss",         "icon": "🎰",  "dauer": "3 min", "schwierigkeit": "Einstieg",       "beschreibung": ""},
+            {"typ": "raetsel", "id": "monty-hall",          "titel": "Monty Hall Problem",             "icon": "🚪",  "dauer": "3 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "hundert-gefangene",   "titel": "100-Gefangenen-Problem",         "icon": "📦",  "dauer": "5 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "coupon-sammler",      "titel": "Coupon-Sammler-Problem",         "icon": "🎟️", "dauer": "4 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "bertrand-paradoxon",  "titel": "Bertrand-Paradoxon",             "icon": "⭕",  "dauer": "5 min", "schwierigkeit": "Fortgeschritten","beschreibung": ""},
+            {"typ": "raetsel", "id": "schlafendes-maedchen","titel": "Schlafendes-Mädchen",            "icon": "😴",  "dauer": "5 min", "schwierigkeit": "Fortgeschritten","beschreibung": ""},
         ],
     },
     {
@@ -57,13 +168,13 @@ LERNPFADE = [
             "Warum Sieger immer wieder zur Mitte tendieren (Regression)",
             "Den Survivorship Bias: wir sehen nur was überlebt hat",
         ],
-        "puzzles": [
-            {"id": "falsch-positiv",        "name": "Falsch-Positiv-Paradoxon",  "icon": "🔬", "dauer": "4 min", "schwierigkeit": "Einstieg"},
-            {"id": "bayes-theorem",         "name": "Das Bayes-Theorem",         "icon": "📐", "dauer": "5 min", "schwierigkeit": "Mittel"},
-            {"id": "gesetz-grosse-zahlen",  "name": "Gesetz der großen Zahlen",  "icon": "📈", "dauer": "4 min", "schwierigkeit": "Mittel"},
-            {"id": "survivorship-bias",     "name": "Survivorship Bias",         "icon": "✈️", "dauer": "5 min", "schwierigkeit": "Mittel"},
-            {"id": "regression-zur-mitte",  "name": "Regression zur Mitte",      "icon": "📊", "dauer": "4 min", "schwierigkeit": "Mittel"},
-            {"id": "simpson",               "name": "Simpson-Paradoxon",         "icon": "📊", "dauer": "4 min", "schwierigkeit": "Fortgeschritten"},
+        "steps": [
+            {"typ": "raetsel", "id": "falsch-positiv",       "titel": "Falsch-Positiv-Paradoxon",  "icon": "🔬", "dauer": "4 min", "schwierigkeit": "Einstieg",       "beschreibung": ""},
+            {"typ": "raetsel", "id": "bayes-theorem",        "titel": "Das Bayes-Theorem",         "icon": "📐", "dauer": "5 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "gesetz-grosse-zahlen", "titel": "Gesetz der großen Zahlen",  "icon": "📈", "dauer": "4 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "survivorship-bias",    "titel": "Survivorship Bias",         "icon": "✈️", "dauer": "5 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "regression-zur-mitte", "titel": "Regression zur Mitte",      "icon": "📊", "dauer": "4 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "simpson",              "titel": "Simpson-Paradoxon",         "icon": "📊", "dauer": "4 min", "schwierigkeit": "Fortgeschritten","beschreibung": ""},
         ],
     },
     {
@@ -85,15 +196,15 @@ LERNPFADE = [
             "Was Ramanujan über die Summe aller natürlichen Zahlen behauptete",
             "Warum die Collatz-Vermutung seit 1937 unbewiesen ist",
         ],
-        "puzzles": [
-            {"id": "geschwindigkeit",   "name": "Durchschnittsgeschwindigkeit",  "icon": "🚗", "dauer": "4 min", "schwierigkeit": "Einstieg"},
-            {"id": "achilles",          "name": "Achilles & die Schildkröte",   "icon": "🐢", "dauer": "5 min", "schwierigkeit": "Einstieg"},
-            {"id": "hilberts-hotel",    "name": "Hilberts Hotel",               "icon": "🏨", "dauer": "5 min", "schwierigkeit": "Mittel"},
-            {"id": "grandis-serie",     "name": "Grandis Serie",                "icon": "∞",  "dauer": "4 min", "schwierigkeit": "Mittel"},
-            {"id": "harmonische-reihe", "name": "Die Harmonische Reihe",        "icon": "🌊", "dauer": "4 min", "schwierigkeit": "Mittel"},
-            {"id": "collatz-vermutung", "name": "Collatz-Vermutung",            "icon": "🔄", "dauer": "5 min", "schwierigkeit": "Mittel"},
-            {"id": "gabriels-trompete", "name": "Gabriels Trompete",            "icon": "🎺", "dauer": "5 min", "schwierigkeit": "Fortgeschritten"},
-            {"id": "ramanujan-summe",   "name": "1+2+3+… = −1/12",             "icon": "🔢", "dauer": "5 min", "schwierigkeit": "Experte"},
+        "steps": [
+            {"typ": "raetsel", "id": "geschwindigkeit",   "titel": "Durchschnittsgeschwindigkeit",  "icon": "🚗", "dauer": "4 min", "schwierigkeit": "Einstieg",       "beschreibung": ""},
+            {"typ": "raetsel", "id": "achilles",          "titel": "Achilles & die Schildkröte",   "icon": "🐢", "dauer": "5 min", "schwierigkeit": "Einstieg",       "beschreibung": ""},
+            {"typ": "raetsel", "id": "hilberts-hotel",    "titel": "Hilberts Hotel",               "icon": "🏨", "dauer": "5 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "grandis-serie",     "titel": "Grandis Serie",                "icon": "∞",  "dauer": "4 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "harmonische-reihe", "titel": "Die Harmonische Reihe",        "icon": "🌊", "dauer": "4 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "collatz-vermutung", "titel": "Collatz-Vermutung",            "icon": "🔄", "dauer": "5 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "gabriels-trompete", "titel": "Gabriels Trompete",            "icon": "🎺", "dauer": "5 min", "schwierigkeit": "Fortgeschritten","beschreibung": ""},
+            {"typ": "raetsel", "id": "ramanujan-summe",   "titel": "1+2+3+… = −1/12",             "icon": "🔢", "dauer": "5 min", "schwierigkeit": "Experte",        "beschreibung": ""},
         ],
     },
     {
@@ -114,16 +225,16 @@ LERNPFADE = [
             "Wie Sprache Logik verzerren kann (Wason-Test)",
             "Wo selbst Logik paradox wird (Barbier, Henker)",
         ],
-        "puzzles": [
-            {"id": "wasserkrug",         "name": "Das Wasserkrug-Problem",    "icon": "🫙",  "dauer": "5 min", "schwierigkeit": "Einstieg"},
-            {"id": "muenzwaegen",        "name": "Die falsche Münze",         "icon": "🪙",  "dauer": "5 min", "schwierigkeit": "Einstieg"},
-            {"id": "vergiftete-faesser", "name": "Vergiftete Fässer",         "icon": "🪣",  "dauer": "4 min", "schwierigkeit": "Mittel"},
-            {"id": "huete-spiel",        "name": "Das Hüte-Rätsel",           "icon": "🎩",  "dauer": "5 min", "schwierigkeit": "Mittel"},
-            {"id": "wason",              "name": "Wason-Auswahlaufgabe",      "icon": "🃏",  "dauer": "5 min", "schwierigkeit": "Mittel"},
-            {"id": "josephus",           "name": "Das Josephus-Problem",      "icon": "⚔️", "dauer": "4 min", "schwierigkeit": "Mittel"},
-            {"id": "barbier-paradoxon",  "name": "Das Barbier-Paradoxon",     "icon": "✂️", "dauer": "4 min", "schwierigkeit": "Fortgeschritten"},
-            {"id": "piraten",            "name": "Das Piratenspiel",          "icon": "🏴‍☠️", "dauer": "5 min", "schwierigkeit": "Fortgeschritten"},
-            {"id": "henker",             "name": "Das Henkerparadoxon",       "icon": "⚖️", "dauer": "5 min", "schwierigkeit": "Fortgeschritten"},
+        "steps": [
+            {"typ": "raetsel", "id": "wasserkrug",         "titel": "Das Wasserkrug-Problem",    "icon": "🫙",  "dauer": "5 min", "schwierigkeit": "Einstieg",       "beschreibung": ""},
+            {"typ": "raetsel", "id": "muenzwaegen",        "titel": "Die falsche Münze",         "icon": "🪙",  "dauer": "5 min", "schwierigkeit": "Einstieg",       "beschreibung": ""},
+            {"typ": "raetsel", "id": "vergiftete-faesser", "titel": "Vergiftete Fässer",         "icon": "🪣",  "dauer": "4 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "huete-spiel",        "titel": "Das Hüte-Rätsel",           "icon": "🎩",  "dauer": "5 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "wason",              "titel": "Wason-Auswahlaufgabe",      "icon": "🃏",  "dauer": "5 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "josephus",           "titel": "Das Josephus-Problem",      "icon": "⚔️", "dauer": "4 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "barbier-paradoxon",  "titel": "Das Barbier-Paradoxon",     "icon": "✂️", "dauer": "4 min", "schwierigkeit": "Fortgeschritten","beschreibung": ""},
+            {"typ": "raetsel", "id": "piraten",            "titel": "Das Piratenspiel",          "icon": "🏴‍☠️", "dauer": "5 min", "schwierigkeit": "Fortgeschritten","beschreibung": ""},
+            {"typ": "raetsel", "id": "henker",             "titel": "Das Henkerparadoxon",       "icon": "⚖️", "dauer": "5 min", "schwierigkeit": "Fortgeschritten","beschreibung": ""},
         ],
     },
     {
@@ -144,11 +255,11 @@ LERNPFADE = [
             "Weshalb wir Bestätigung suchen statt Widerlegung (Konfirmationsfehler)",
             "Das Dunning-Kruger-Paradox: Unwissenheit und Selbstüberschätzung",
         ],
-        "puzzles": [
-            {"id": "anker-experiment",    "name": "Der Anker-Effekt",          "icon": "⚓",  "dauer": "4 min", "schwierigkeit": "Einstieg"},
-            {"id": "framing",             "name": "Framing-Effekt",            "icon": "🖼️", "dauer": "4 min", "schwierigkeit": "Einstieg"},
-            {"id": "konfirmationsfehler", "name": "Der Konfirmationsfehler",   "icon": "🔍",  "dauer": "4 min", "schwierigkeit": "Einstieg"},
-            {"id": "dunning-kruger",      "name": "Dunning-Kruger-Effekt",     "icon": "📉",  "dauer": "5 min", "schwierigkeit": "Mittel"},
+        "steps": [
+            {"typ": "raetsel", "id": "anker-experiment",    "titel": "Der Anker-Effekt",          "icon": "⚓",  "dauer": "4 min", "schwierigkeit": "Einstieg","beschreibung": ""},
+            {"typ": "raetsel", "id": "framing",             "titel": "Framing-Effekt",            "icon": "🖼️", "dauer": "4 min", "schwierigkeit": "Einstieg","beschreibung": ""},
+            {"typ": "raetsel", "id": "konfirmationsfehler", "titel": "Der Konfirmationsfehler",   "icon": "🔍",  "dauer": "4 min", "schwierigkeit": "Einstieg","beschreibung": ""},
+            {"typ": "raetsel", "id": "dunning-kruger",      "titel": "Dunning-Kruger-Effekt",     "icon": "📉",  "dauer": "5 min", "schwierigkeit": "Mittel", "beschreibung": ""},
         ],
     },
     {
@@ -171,15 +282,15 @@ LERNPFADE = [
             "Den Konfirmationsfehler: Wir suchen Bestätigung, nicht Widerlegung",
             "Dunning-Kruger: Unwissenheit über die eigene Unwissenheit",
         ],
-        "puzzles": [
-            {"id": "priming",              "name": "Das Priming-Experiment",    "icon": "💡",  "dauer": "4 min", "schwierigkeit": "Einstieg"},
-            {"id": "kognitive-dissonanz",  "name": "Kognitive Dissonanz",       "icon": "🔄",  "dauer": "5 min", "schwierigkeit": "Mittel"},
-            {"id": "informationskaskade",  "name": "Informationskaskade",       "icon": "🫧",  "dauer": "5 min", "schwierigkeit": "Mittel"},
-            {"id": "konfirmationsfehler",  "name": "Der Konfirmationsfehler",   "icon": "🔍",  "dauer": "4 min", "schwierigkeit": "Einstieg"},
-            {"id": "dunning-kruger",       "name": "Dunning-Kruger-Effekt",     "icon": "📉",  "dauer": "5 min", "schwierigkeit": "Mittel"},
-            {"id": "framing",              "name": "Framing-Effekt",            "icon": "🖼️", "dauer": "4 min", "schwierigkeit": "Einstieg"},
-            {"id": "anker-experiment",     "name": "Der Anker-Effekt",          "icon": "⚓",  "dauer": "4 min", "schwierigkeit": "Einstieg"},
-            {"id": "survivorship-bias",    "name": "Survivorship Bias",         "icon": "✈️", "dauer": "5 min", "schwierigkeit": "Mittel"},
+        "steps": [
+            {"typ": "raetsel", "id": "priming",              "titel": "Das Priming-Experiment",    "icon": "💡",  "dauer": "4 min", "schwierigkeit": "Einstieg","beschreibung": ""},
+            {"typ": "raetsel", "id": "kognitive-dissonanz",  "titel": "Kognitive Dissonanz",       "icon": "🔄",  "dauer": "5 min", "schwierigkeit": "Mittel", "beschreibung": ""},
+            {"typ": "raetsel", "id": "informationskaskade",  "titel": "Informationskaskade",       "icon": "🫧",  "dauer": "5 min", "schwierigkeit": "Mittel", "beschreibung": ""},
+            {"typ": "raetsel", "id": "konfirmationsfehler",  "titel": "Der Konfirmationsfehler",   "icon": "🔍",  "dauer": "4 min", "schwierigkeit": "Einstieg","beschreibung": ""},
+            {"typ": "raetsel", "id": "dunning-kruger",       "titel": "Dunning-Kruger-Effekt",     "icon": "📉",  "dauer": "5 min", "schwierigkeit": "Mittel", "beschreibung": ""},
+            {"typ": "raetsel", "id": "framing",              "titel": "Framing-Effekt",            "icon": "🖼️", "dauer": "4 min", "schwierigkeit": "Einstieg","beschreibung": ""},
+            {"typ": "raetsel", "id": "anker-experiment",     "titel": "Der Anker-Effekt",          "icon": "⚓",  "dauer": "4 min", "schwierigkeit": "Einstieg","beschreibung": ""},
+            {"typ": "raetsel", "id": "survivorship-bias",    "titel": "Survivorship Bias",         "icon": "✈️", "dauer": "5 min", "schwierigkeit": "Mittel", "beschreibung": ""},
         ],
     },
     {
@@ -202,15 +313,15 @@ LERNPFADE = [
             "Informationsasymmetrie als Verhandlungsvorteil (Akerlof, Spence)",
             "Anker setzen: der erste Wert prägt das gesamte Ergebnis",
         ],
-        "puzzles": [
-            {"id": "batna",            "name": "BATNA – Verhandlungsmacht",   "icon": "🤝",  "dauer": "5 min", "schwierigkeit": "Einstieg"},
-            {"id": "trugschluesse",    "name": "Trugschlüsse erkennen",       "icon": "🧩",  "dauer": "5 min", "schwierigkeit": "Mittel"},
-            {"id": "marktverlust",     "name": "Markt für Zitronen",          "icon": "🍋",  "dauer": "5 min", "schwierigkeit": "Mittel"},
-            {"id": "anker-experiment", "name": "Der Anker-Effekt",            "icon": "⚓",  "dauer": "4 min", "schwierigkeit": "Einstieg"},
-            {"id": "reisenden-dilemma","name": "Reisenden-Dilemma",          "icon": "🧳",  "dauer": "4 min", "schwierigkeit": "Mittel"},
-            {"id": "hotelling",        "name": "Hotelling-Gesetz",            "icon": "🏖️", "dauer": "3 min", "schwierigkeit": "Einstieg"},
-            {"id": "allais",           "name": "Allais-Paradoxon",            "icon": "🎰",  "dauer": "5 min", "schwierigkeit": "Mittel"},
-            {"id": "condorcet",        "name": "Condorcet-Paradoxon",         "icon": "🗳️", "dauer": "5 min", "schwierigkeit": "Fortgeschritten"},
+        "steps": [
+            {"typ": "raetsel", "id": "batna",            "titel": "BATNA – Verhandlungsmacht",   "icon": "🤝",  "dauer": "5 min", "schwierigkeit": "Einstieg",       "beschreibung": ""},
+            {"typ": "raetsel", "id": "trugschluesse",    "titel": "Trugschlüsse erkennen",       "icon": "🧩",  "dauer": "5 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "marktverlust",     "titel": "Markt für Zitronen",          "icon": "🍋",  "dauer": "5 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "anker-experiment", "titel": "Der Anker-Effekt",            "icon": "⚓",  "dauer": "4 min", "schwierigkeit": "Einstieg",       "beschreibung": ""},
+            {"typ": "raetsel", "id": "reisenden-dilemma","titel": "Reisenden-Dilemma",           "icon": "🧳",  "dauer": "4 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "hotelling",        "titel": "Hotelling-Gesetz",            "icon": "🏖️", "dauer": "3 min", "schwierigkeit": "Einstieg",       "beschreibung": ""},
+            {"typ": "raetsel", "id": "allais",           "titel": "Allais-Paradoxon",            "icon": "🎰",  "dauer": "5 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "condorcet",        "titel": "Condorcet-Paradoxon",         "icon": "🗳️", "dauer": "5 min", "schwierigkeit": "Fortgeschritten","beschreibung": ""},
         ],
     },
     {
@@ -231,17 +342,17 @@ LERNPFADE = [
             "Wenn Nash-Gleichgewichte schlecht für alle sind (Braess, Hotelling)",
             "Optimales Stoppen und soziale Wahlparadoxe",
         ],
-        "puzzles": [
-            {"id": "hotelling",        "name": "Hotelling-Gesetz",          "icon": "🏖️", "dauer": "3 min", "schwierigkeit": "Einstieg"},
-            {"id": "st-petersburg",    "name": "St. Petersburger Paradoxon","icon": "🎲",  "dauer": "4 min", "schwierigkeit": "Mittel"},
-            {"id": "allais",           "name": "Allais-Paradoxon",          "icon": "🎰",  "dauer": "5 min", "schwierigkeit": "Mittel"},
-            {"id": "ellsberg",         "name": "Ellsberg-Paradoxon",        "icon": "🪬",  "dauer": "5 min", "schwierigkeit": "Mittel"},
-            {"id": "zwei-umschlag",    "name": "Zwei-Umschlag-Problem",     "icon": "✉️", "dauer": "5 min", "schwierigkeit": "Mittel"},
-            {"id": "newcomb",          "name": "Newcomb-Paradoxon",         "icon": "📦",  "dauer": "5 min", "schwierigkeit": "Fortgeschritten"},
-            {"id": "reisenden-dilemma","name": "Reisenden-Dilemma",         "icon": "🧳",  "dauer": "4 min", "schwierigkeit": "Fortgeschritten"},
-            {"id": "braess",           "name": "Braess-Paradoxon",          "icon": "🛣️", "dauer": "5 min", "schwierigkeit": "Fortgeschritten"},
-            {"id": "condorcet",        "name": "Condorcet-Paradoxon",       "icon": "🗳️", "dauer": "5 min", "schwierigkeit": "Fortgeschritten"},
-            {"id": "sekretaerin",      "name": "Sekretärinnen-Problem",     "icon": "📋",  "dauer": "5 min", "schwierigkeit": "Fortgeschritten"},
+        "steps": [
+            {"typ": "raetsel", "id": "hotelling",        "titel": "Hotelling-Gesetz",          "icon": "🏖️", "dauer": "3 min", "schwierigkeit": "Einstieg",       "beschreibung": ""},
+            {"typ": "raetsel", "id": "st-petersburg",    "titel": "St. Petersburger Paradoxon","icon": "🎲",  "dauer": "4 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "allais",           "titel": "Allais-Paradoxon",          "icon": "🎰",  "dauer": "5 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "ellsberg",         "titel": "Ellsberg-Paradoxon",        "icon": "🪬",  "dauer": "5 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "zwei-umschlag",    "titel": "Zwei-Umschlag-Problem",     "icon": "✉️", "dauer": "5 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "newcomb",          "titel": "Newcomb-Paradoxon",         "icon": "📦",  "dauer": "5 min", "schwierigkeit": "Fortgeschritten","beschreibung": ""},
+            {"typ": "raetsel", "id": "reisenden-dilemma","titel": "Reisenden-Dilemma",         "icon": "🧳",  "dauer": "4 min", "schwierigkeit": "Fortgeschritten","beschreibung": ""},
+            {"typ": "raetsel", "id": "braess",           "titel": "Braess-Paradoxon",          "icon": "🛣️", "dauer": "5 min", "schwierigkeit": "Fortgeschritten","beschreibung": ""},
+            {"typ": "raetsel", "id": "condorcet",        "titel": "Condorcet-Paradoxon",       "icon": "🗳️", "dauer": "5 min", "schwierigkeit": "Fortgeschritten","beschreibung": ""},
+            {"typ": "raetsel", "id": "sekretaerin",      "titel": "Sekretärinnen-Problem",     "icon": "📋",  "dauer": "5 min", "schwierigkeit": "Fortgeschritten","beschreibung": ""},
         ],
     },
 ]

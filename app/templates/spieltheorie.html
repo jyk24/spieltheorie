@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% block title %}Spieltheorie & Entscheidung – VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="Spieltheorie interaktiv: Grundlagen, Nash-Gleichgewichte, 23 Spiele, Rätsel und Verhandlungsstrategien – alles an einem Ort.">{% endblock %}
+{% block og_title %}Spieltheorie & Entscheidung – VerhandlungsTrainer{% endblock %}
+{% block og_description %}Grundlagen, interaktive Spiele, Paradoxe und Verhandlungs-Skills – Spieltheorie von A bis Z.{% endblock %}
+{% block content %}
+
+<div class="max-w-6xl mx-auto">
+
+  <!-- Hero -->
+  <div class="mb-10">
+    <div class="flex items-start gap-4 mb-3">
+      <div class="text-5xl">♟️</div>
+      <div>
+        <h1 class="text-3xl font-extrabold text-slate-800">Spieltheorie & Entscheidung</h1>
+        <p class="text-slate-500 mt-1 max-w-2xl">Vom Nash-Gleichgewicht bis zur Verhandlungsstrategie: Hier findest du alles rund um rationale Entscheidungen, strategische Interaktion und Paradoxe.</p>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-2 mt-4">
+      <span class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-medium">{{ grundlagen | length }} Theorie-Sektionen</span>
+      <span class="text-xs bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium">{{ games | length }} interaktive Spiele</span>
+      <span class="text-xs bg-amber-100 text-amber-700 px-3 py-1 rounded-full font-medium">{{ raetsel | length }} Rätsel & Paradoxe</span>
+    </div>
+  </div>
+
+  <!-- ── 1. Theorie ─────────────────────────────────────────────────────────── -->
+  <section class="mb-12">
+    <div class="flex items-center gap-3 mb-5">
+      <span class="bg-indigo-100 text-indigo-700 w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">📖</span>
+      <div>
+        <h2 class="text-xl font-bold text-slate-800">Theorie & Grundlagen</h2>
+        <p class="text-sm text-slate-500">Konzepte von A bis Z – wissenschaftlich fundiert und verständlich erklärt.</p>
+      </div>
+      <a href="/grundlagen" class="ml-auto text-sm text-indigo-600 hover:text-indigo-800 font-medium shrink-0">Alle Grundlagen →</a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      {% for s in grundlagen %}
+      <a href="/grundlagen#{{ s.slug }}"
+         class="flex items-center gap-3 bg-white border border-slate-200 rounded-xl p-4 hover:border-indigo-200 hover:shadow-sm transition-all group">
+        <span class="text-2xl shrink-0">{{ s.icon }}</span>
+        <div class="flex-1 min-w-0">
+          <div class="font-semibold text-slate-800 text-sm group-hover:text-indigo-700 transition-colors">{{ s.titel }}</div>
+          <div class="text-xs text-slate-400 mt-0.5">⏱ {{ s.dauer }}</div>
+        </div>
+        <span class="text-slate-300 group-hover:text-indigo-400 transition-colors shrink-0">→</span>
+      </a>
+      {% endfor %}
+      <a href="/konzepte"
+         class="flex items-center gap-3 bg-indigo-50 border border-indigo-200 rounded-xl p-4 hover:border-indigo-400 hover:shadow-sm transition-all group">
+        <span class="text-2xl shrink-0">🧠</span>
+        <div class="flex-1 min-w-0">
+          <div class="font-semibold text-indigo-700 text-sm">Nash-Finder & Spieltypen</div>
+          <div class="text-xs text-indigo-400 mt-0.5">Interaktive Konzept-Tools</div>
+        </div>
+        <span class="text-indigo-300 group-hover:text-indigo-600 transition-colors shrink-0">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── 2. Interaktive Spiele ──────────────────────────────────────────────── -->
+  <section class="mb-12">
+    <div class="flex items-center gap-3 mb-5">
+      <span class="bg-emerald-100 text-emerald-700 w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">🎮</span>
+      <div>
+        <h2 class="text-xl font-bold text-slate-800">Interaktive Spiele</h2>
+        <p class="text-sm text-slate-500">Spieltheorie live erleben – spiele gegen KI und sieh sofort, was hinter der Strategie steckt.</p>
+      </div>
+      <a href="/spiele" class="ml-auto text-sm text-emerald-600 hover:text-emerald-800 font-medium shrink-0">Alle Spiele →</a>
+    </div>
+
+    {% set gruppen = [
+      ("🤝 Kooperation & Fairness",  "emerald", ["gefangenendilemma","ultimatum","vertrauen","diktator","public-goods","stag-hunt","freiwilligen-dilemma"]),
+      ("⚡ Koordination & Konflikt", "blue",    ["chicken","koordination","geschlechter-kampf","rps","gleiche-muenzen","habicht-taube","minderheit"]),
+      ("🧠 Strategie & Information", "violet",  ["verhandlung","beauty-contest","centipede","el-farol"]),
+      ("🏛️ Auktionen & Märkte",     "amber",   ["auktion","englische-auktion","hollaendische-auktion","dollarauktion","gewinner-fluch","cournot"]),
+    ] %}
+
+    <div class="space-y-6">
+    {% for grp_name, farbe, ids in gruppen %}
+    {% set grp_games = [] %}
+    {% for id in ids %}{% for g in games %}{% if g.id == id %}{% if grp_games.append(g) %}{% endif %}{% endif %}{% endfor %}{% endfor %}
+    {% if grp_games %}
+    <div>
+      <div class="flex items-center gap-3 mb-3">
+        <span class="bg-{{ farbe }}-100 text-{{ farbe }}-700 text-xs font-bold px-3 py-1 rounded-lg">{{ grp_name }}</span>
+        <div class="h-px bg-slate-200 flex-1"></div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+      {% for g in grp_games %}
+      <a href="/spiele/{{ g.id }}"
+         class="bg-white border border-slate-100 rounded-xl p-4 hover:border-{{ farbe }}-200 hover:shadow-sm transition-all group">
+        <div class="text-2xl mb-2">{{ g.icon }}</div>
+        <div class="font-semibold text-slate-800 text-sm group-hover:text-{{ farbe }}-700 transition-colors mb-1">{{ g.name }}</div>
+        <div class="text-xs text-slate-400 truncate">{{ g.konzept.split(',')[0] }}</div>
+      </a>
+      {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+    </div>
+  </section>
+
+  <!-- ── 3. Rätsel & Paradoxe ───────────────────────────────────────────────── -->
+  <section class="mb-12">
+    <div class="flex items-center gap-3 mb-5">
+      <span class="bg-amber-100 text-amber-700 w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">🧩</span>
+      <div>
+        <h2 class="text-xl font-bold text-slate-800">Rätsel & Paradoxe</h2>
+        <p class="text-sm text-slate-500">Spieltheorie, Wahrscheinlichkeit, Statistik und Kognition – denk nach, bevor du antwortest.</p>
+      </div>
+      <a href="/raetsel" class="ml-auto text-sm text-amber-600 hover:text-amber-800 font-medium shrink-0">Alle Rätsel →</a>
+    </div>
+
+    {% set kat_farben = {"Spieltheorie": ("indigo","🎯"), "Wahrscheinlichkeit": ("blue","🎲"), "Statistik": ("emerald","📊"), "Kognition": ("rose","🧠")} %}
+    {% set kategorien = ["Spieltheorie", "Wahrscheinlichkeit", "Statistik", "Kognition"] %}
+
+    <div class="space-y-4" id="raetsel-acc">
+    {% for kat in kategorien %}
+    {% set kat_raetsel = raetsel | selectattr("kategorie", "equalto", kat) | list %}
+    {% if kat_raetsel %}
+    {% set farbe = kat_farben[kat][0] %}
+    {% set kat_icon = kat_farben[kat][1] %}
+    <div class="raetsel-grp" data-kat="{{ kat }}">
+      <button class="raetsel-grp-btn w-full flex items-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-3 hover:border-{{ farbe }}-200 transition-all text-left select-none">
+        <span class="text-xl">{{ kat_icon }}</span>
+        <span class="font-semibold text-slate-800 flex-1">{{ kat }}</span>
+        <span class="text-xs text-slate-400">{{ kat_raetsel | length }} Rätsel</span>
+        <svg class="raetsel-chev w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+      </button>
+      <div class="raetsel-grp-body hidden mt-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 pl-1">
+        {% for r in kat_raetsel %}
+        <a href="/raetsel/{{ r.id }}"
+           class="flex items-start gap-2 bg-white border border-slate-100 rounded-xl p-3 hover:border-{{ farbe }}-200 hover:shadow-sm transition-all group">
+          <span class="text-xl shrink-0 mt-0.5">{{ r.icon }}</span>
+          <div class="min-w-0">
+            <div class="font-medium text-slate-800 text-xs group-hover:text-{{ farbe }}-700 transition-colors leading-tight">{{ r.name }}</div>
+            <div class="text-xs text-slate-400 mt-0.5">{{ r.schwierigkeit }} · {{ r.dauer }}</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+    </div>
+  </section>
+
+  <!-- ── 4. Verhandlungs-Skills ─────────────────────────────────────────────── -->
+  <section class="mb-8">
+    <div class="flex items-center gap-3 mb-5">
+      <span class="bg-violet-100 text-violet-700 w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">💡</span>
+      <div>
+        <h2 class="text-xl font-bold text-slate-800">Verhandlungs-Skills</h2>
+        <p class="text-sm text-slate-500">Spieltheorie in der Praxis – die wichtigsten Frameworks auf einen Blick.</p>
+      </div>
+      <a href="/skills" class="ml-auto text-sm text-violet-600 hover:text-violet-800 font-medium shrink-0">Alle Skills →</a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {% for s in skills %}
+      <a href="{{ s.url }}"
+         class="bg-white border border-slate-200 rounded-xl p-4 hover:border-violet-200 hover:shadow-sm transition-all group">
+        <div class="text-2xl mb-2">{{ s.icon }}</div>
+        <div class="font-semibold text-slate-800 text-sm group-hover:text-violet-700 transition-colors mb-1">{{ s.titel }}</div>
+        <div class="text-xs text-slate-500 leading-relaxed">{{ s.beschreibung }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function() {
+  document.querySelectorAll('.raetsel-grp-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var body = btn.nextElementSibling;
+      var chev = btn.querySelector('.raetsel-chev');
+      var hidden = body.classList.toggle('hidden');
+      if (chev) chev.style.transform = hidden ? '' : 'rotate(180deg)';
+    });
+  });
+})();
+</script>
+
+{% endblock %}

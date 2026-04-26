@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}Soziale Intelligenz – Kommunikation, Psychologie & Rhetorik – VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="Soziale Intelligenz trainieren: Kommunikation, Psychologie, Rhetorik und Verhandlung – Rätsel, Frameworks und praktische Tools.">{% endblock %}
+{% block og_title %}Soziale Intelligenz – VerhandlungsTrainer{% endblock %}
+{% block og_description %}Kommunikation, Psychologie, Rhetorik, Verhandlung: Rätsel und Frameworks für soziale Intelligenz.{% endblock %}
+{% block content %}
+
+<div class="max-w-5xl mx-auto">
+
+  <!-- Hero -->
+  <div class="mb-10">
+    <div class="flex items-start gap-4 mb-3">
+      <div class="text-5xl">💬</div>
+      <div>
+        <h1 class="text-3xl font-extrabold text-slate-800">Soziale Intelligenz</h1>
+        <p class="text-slate-500 mt-1 max-w-2xl">Kommunikation, Psychologie, Rhetorik und Verhandlung – die Wissenschaft hinter menschlichem Verhalten und wie du besser damit umgehst.</p>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-2 mt-4">
+      <span class="text-xs bg-teal-100 text-teal-700 px-3 py-1 rounded-full font-medium">💬 Kommunikation</span>
+      <span class="text-xs bg-pink-100 text-pink-700 px-3 py-1 rounded-full font-medium">🧬 Psychologie</span>
+      <span class="text-xs bg-violet-100 text-violet-700 px-3 py-1 rounded-full font-medium">🗣️ Rhetorik</span>
+      <span class="text-xs bg-rose-100 text-rose-700 px-3 py-1 rounded-full font-medium">🤝 Verhandlung</span>
+      <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">{{ raetsel | length }} Rätsel gesamt</span>
+    </div>
+  </div>
+
+  <!-- ── 1. Rätsel nach Kategorie ────────────────────────────────────────────── -->
+  <section class="mb-12">
+    <div class="flex items-center gap-3 mb-5">
+      <span class="bg-teal-100 text-teal-700 w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">🧩</span>
+      <div>
+        <h2 class="text-xl font-bold text-slate-800">Rätsel & Denkexperimente</h2>
+        <p class="text-sm text-slate-500">Echte Situationen – denk nach, bevor du antwortest.</p>
+      </div>
+      <a href="/raetsel" class="ml-auto text-sm text-teal-600 hover:text-teal-800 font-medium shrink-0">Alle Rätsel →</a>
+    </div>
+
+    {% set kat_config = [
+      ("Kommunikation", "teal",   "💬", "Missverständnisse, 4-Ohren, aktives Zuhören"),
+      ("Psychologie",   "pink",   "🧬", "Kognitive Verzerrungen, Priming, Herdenverhalten"),
+      ("Rhetorik",      "violet", "🗣️", "Überzeugen, Argumentieren, Trugschlüsse erkennen"),
+      ("Verhandlung",   "rose",   "🤝", "BATNA, Ankern, Informationsasymmetrie"),
+    ] %}
+
+    <div class="space-y-4" id="kat-acc">
+    {% for kat, farbe, kat_icon, beschreibung in kat_config %}
+    {% set kat_raetsel = raetsel | selectattr("kategorie", "equalto", kat) | list %}
+    {% if kat_raetsel %}
+    <div class="kat-grp" data-kat="{{ kat }}">
+      <button class="kat-grp-btn w-full flex items-center gap-3 bg-white border border-slate-200 rounded-2xl px-5 py-4 hover:border-{{ farbe }}-300 transition-all text-left select-none shadow-sm group">
+        <span class="text-2xl shrink-0">{{ kat_icon }}</span>
+        <div class="flex-1 min-w-0">
+          <div class="font-bold text-slate-800 group-hover:text-{{ farbe }}-700 transition-colors">{{ kat }}</div>
+          <div class="text-xs text-slate-400 mt-0.5">{{ beschreibung }}</div>
+        </div>
+        <span class="text-xs bg-{{ farbe }}-100 text-{{ farbe }}-700 px-2 py-0.5 rounded-full font-medium shrink-0">{{ kat_raetsel | length }} Rätsel</span>
+        <svg class="kat-chev w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+      </button>
+      <div class="kat-grp-body mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {% for r in kat_raetsel %}
+        <a href="/raetsel/{{ r.id }}"
+           class="flex items-start gap-3 bg-white border border-slate-100 rounded-xl p-4 hover:border-{{ farbe }}-200 hover:shadow-md transition-all group">
+          <span class="text-2xl shrink-0 mt-0.5">{{ r.icon }}</span>
+          <div class="flex-1 min-w-0">
+            <div class="font-semibold text-slate-800 text-sm group-hover:text-{{ farbe }}-700 transition-colors mb-1">{{ r.name }}</div>
+            <p class="text-xs text-slate-500 leading-relaxed line-clamp-2">{{ r.beschreibung }}</p>
+            <div class="flex items-center gap-2 mt-2 text-xs text-slate-400">
+              <span class="bg-{{ farbe }}-50 text-{{ farbe }}-600 px-1.5 py-0.5 rounded-full">{{ r.schwierigkeit }}</span>
+              <span>·</span>
+              <span>{{ r.dauer }}</span>
+            </div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+    </div>
+  </section>
+
+  <!-- ── 2. Frameworks ──────────────────────────────────────────────────────── -->
+  <section class="mb-8">
+    <div class="flex items-center gap-3 mb-5">
+      <span class="bg-violet-100 text-violet-700 w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">💡</span>
+      <div>
+        <h2 class="text-xl font-bold text-slate-800">Frameworks & Methoden</h2>
+        <p class="text-sm text-slate-500">Die wichtigsten Werkzeuge für Kommunikation und Verhandlung.</p>
+      </div>
+      <a href="/skills" class="ml-auto text-sm text-violet-600 hover:text-violet-800 font-medium shrink-0">Alle Skills →</a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {% for f in frameworks %}
+      <a href="{{ f.url }}"
+         class="bg-white border border-slate-200 rounded-xl p-5 hover:border-violet-200 hover:shadow-sm transition-all group">
+        <div class="text-2xl mb-3">{{ f.icon }}</div>
+        <div class="font-semibold text-slate-800 text-sm group-hover:text-violet-700 transition-colors mb-2">{{ f.titel }}</div>
+        <p class="text-xs text-slate-500 leading-relaxed">{{ f.beschreibung }}</p>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Bottom CTA -->
+  <div class="mt-8 bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center">
+    <p class="font-bold text-slate-800 mb-1">Mehr entdecken</p>
+    <p class="text-sm text-slate-500 mb-4">Spieltheorie, Denkrätsel und Gedächtnistraining – weitere thematische Bereiche.</p>
+    <div class="flex gap-3 justify-center flex-wrap">
+      <a href="/spieltheorie" class="inline-block bg-indigo-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors text-sm">♟️ Spieltheorie</a>
+      <a href="/denkraetsel" class="inline-block bg-amber-500 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-amber-600 transition-colors text-sm">🧩 Denkrätsel</a>
+      <a href="/lernpfade" class="inline-block border border-slate-300 text-slate-600 font-medium px-5 py-2.5 rounded-xl hover:bg-slate-100 transition-colors text-sm">🗺️ Lernpfade</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  var STORAGE = 'soziales_acc_v1';
+  var state = {};
+  try { state = JSON.parse(sessionStorage.getItem(STORAGE) || '{}'); } catch(e) {}
+  function save() { try { sessionStorage.setItem(STORAGE, JSON.stringify(state)); } catch(e) {} }
+
+  document.querySelectorAll('.kat-grp-btn').forEach(function(btn) {
+    var grp = btn.closest('.kat-grp');
+    var kat = grp.dataset.kat;
+    var body = grp.querySelector('.kat-grp-body');
+    var chev = btn.querySelector('.kat-chev');
+
+    if (state[kat] === 'collapsed') {
+      body.classList.add('hidden');
+      if (chev) chev.style.transform = 'rotate(180deg)';
+    }
+
+    btn.addEventListener('click', function() {
+      var hidden = body.classList.toggle('hidden');
+      if (chev) chev.style.transform = hidden ? 'rotate(180deg)' : '';
+      state[kat] = hidden ? 'collapsed' : 'expanded';
+      save();
+    });
+  });
+})();
+</script>
+
+{% endblock %}

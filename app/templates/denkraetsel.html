@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}Denkrätsel – Analytisches Denken – VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="Analytische Denkrätsel: Mathematik, Physik und Logik – von Achilles bis Gabriels Trompete. Trainiere scharf denken und streng schlussfolgern.">{% endblock %}
+{% block og_title %}Denkrätsel – Analytisches Denken{% endblock %}
+{% block og_description %}Mathematik, Physik, Logik: klassische Denkrätsel und Paradoxe für analytisches Denken – von Einsteiger bis Experte.{% endblock %}
+{% block content %}
+
+<div class="max-w-5xl mx-auto">
+
+  <!-- Hero -->
+  <div class="mb-10">
+    <div class="flex items-start gap-4 mb-3">
+      <div class="text-5xl">🧩</div>
+      <div>
+        <h1 class="text-3xl font-extrabold text-slate-800">Denkrätsel</h1>
+        <p class="text-slate-500 mt-1 max-w-2xl">Mathematik, Physik, Logik – Rätsel, die dein analytisches Denken schärfen. Manche haben elegante Lösungen, manche keine.</p>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-2 mt-4">
+      <span class="text-xs bg-violet-100 text-violet-700 px-3 py-1 rounded-full font-medium">📐 Mathematik</span>
+      <span class="text-xs bg-sky-100 text-sky-700 px-3 py-1 rounded-full font-medium">⚡ Physik</span>
+      <span class="text-xs bg-amber-100 text-amber-700 px-3 py-1 rounded-full font-medium">🧩 Logik</span>
+      <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">{{ raetsel | length }} Rätsel gesamt</span>
+    </div>
+  </div>
+
+  <!-- Intro-Box -->
+  <div class="bg-gradient-to-r from-violet-50 to-sky-50 border border-violet-200 rounded-2xl p-6 mb-10">
+    <h2 class="font-bold text-slate-800 mb-3">Was hier trainiert wird</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="flex items-start gap-3">
+        <span class="text-2xl shrink-0">📐</span>
+        <div>
+          <div class="font-semibold text-slate-800 text-sm mb-1">Mathematisches Denken</div>
+          <p class="text-xs text-slate-500 leading-relaxed">Unendlichkeit, Konvergenz, Paradoxe – wo Intuition endet, beginnt echte Mathematik.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="text-2xl shrink-0">⚡</span>
+        <div>
+          <div class="font-semibold text-slate-800 text-sm mb-1">Physikalische Intuition</div>
+          <p class="text-xs text-slate-500 leading-relaxed">Kräfte, Bewegung, Energie – Phänomene, die gegen jede Erwartung verstoßen.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="text-2xl shrink-0">🧩</span>
+        <div>
+          <div class="font-semibold text-slate-800 text-sm mb-1">Logisches Schlussfolgern</div>
+          <p class="text-xs text-slate-500 leading-relaxed">Präzise Folgerungen aus wenigen Informationen – Kombinatorik bis selbstbezügliche Paradoxe.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kategorien als Akkordeon -->
+  {% set kat_config = [
+    ("Mathematik", "violet", "📐", "Unendlichkeit, Reihen, Paradoxe – Intuition trifft Beweise"),
+    ("Physik",     "sky",    "⚡", "Kräfte, Energie, Bewegung – gegen jede Erwartung"),
+    ("Logik",      "amber",  "🧩", "Schlussfolgern, Kombinatorik, selbstbezügliche Paradoxe"),
+  ] %}
+
+  <div class="space-y-4" id="kat-acc">
+  {% for kat, farbe, kat_icon, beschreibung in kat_config %}
+  {% set kat_raetsel = raetsel | selectattr("kategorie", "equalto", kat) | list %}
+  {% if kat_raetsel %}
+  <div class="kat-grp" data-kat="{{ kat }}">
+    <button class="kat-grp-btn w-full flex items-center gap-3 bg-white border border-slate-200 rounded-2xl px-5 py-4 hover:border-{{ farbe }}-300 transition-all text-left select-none shadow-sm group">
+      <span class="text-2xl shrink-0">{{ kat_icon }}</span>
+      <div class="flex-1 min-w-0">
+        <div class="font-bold text-slate-800 group-hover:text-{{ farbe }}-700 transition-colors">{{ kat }}</div>
+        <div class="text-xs text-slate-400 mt-0.5">{{ beschreibung }}</div>
+      </div>
+      <span class="text-xs bg-{{ farbe }}-100 text-{{ farbe }}-700 px-2 py-0.5 rounded-full font-medium shrink-0">{{ kat_raetsel | length }} Rätsel</span>
+      <svg class="kat-chev w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+    </button>
+    <div class="kat-grp-body mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      {% for r in kat_raetsel %}
+      <a href="/raetsel/{{ r.id }}"
+         class="flex items-start gap-3 bg-white border border-slate-100 rounded-xl p-4 hover:border-{{ farbe }}-200 hover:shadow-md transition-all group">
+        <span class="text-2xl shrink-0 mt-0.5">{{ r.icon }}</span>
+        <div class="flex-1 min-w-0">
+          <div class="font-semibold text-slate-800 text-sm group-hover:text-{{ farbe }}-700 transition-colors mb-1">{{ r.name }}</div>
+          <p class="text-xs text-slate-500 leading-relaxed line-clamp-2">{{ r.beschreibung }}</p>
+          <div class="flex items-center gap-2 mt-2 text-xs text-slate-400">
+            <span class="bg-{{ farbe }}-50 text-{{ farbe }}-600 px-1.5 py-0.5 rounded-full">{{ r.schwierigkeit }}</span>
+            <span>·</span>
+            <span>{{ r.dauer }}</span>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+  </div>
+
+  <!-- Bottom CTA -->
+  <div class="mt-10 bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center">
+    <p class="font-bold text-slate-800 mb-1">Alle Kategorien auf einen Blick?</p>
+    <p class="text-sm text-slate-500 mb-4">Rätsel, Spieltheorie, Psychologie und mehr – die vollständige Sammlung.</p>
+    <div class="flex gap-3 justify-center flex-wrap">
+      <a href="/raetsel" class="inline-block bg-indigo-600 text-white font-bold px-6 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors text-sm">Alle Rätsel →</a>
+      <a href="/lernpfade" class="inline-block border border-slate-300 text-slate-600 font-medium px-6 py-2.5 rounded-xl hover:bg-slate-100 transition-colors text-sm">Lernpfade →</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  var STORAGE = 'denkraetsel_acc_v1';
+  var state = {};
+  try { state = JSON.parse(sessionStorage.getItem(STORAGE) || '{}'); } catch(e) {}
+  function save() { try { sessionStorage.setItem(STORAGE, JSON.stringify(state)); } catch(e) {} }
+
+  document.querySelectorAll('.kat-grp-btn').forEach(function(btn) {
+    var grp = btn.closest('.kat-grp');
+    var kat = grp.dataset.kat;
+    var body = grp.querySelector('.kat-grp-body');
+    var chev = btn.querySelector('.kat-chev');
+
+    if (state[kat] === 'collapsed') {
+      body.classList.add('hidden');
+      if (chev) chev.style.transform = 'rotate(180deg)';
+    }
+
+    btn.addEventListener('click', function() {
+      var hidden = body.classList.toggle('hidden');
+      if (chev) chev.style.transform = hidden ? 'rotate(180deg)' : '';
+      state[kat] = hidden ? 'collapsed' : 'expanded';
+      save();
+    });
+  });
+})();
+</script>
+
+{% endblock %}

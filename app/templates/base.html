@@ -90,27 +90,21 @@
                             <a href="/lernpfade" role="listitem"
                                {% if active_page == 'lernpfade' %}aria-current="page"{% endif %}
                                class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'lernpfade' %}bg-indigo-800 text-white{% endif %}">🗺️ Lernpfade</a>
-                            <a href="/grundlagen" role="listitem"
-                               {% if active_page == 'grundlagen' %}aria-current="page"{% endif %}
-                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'grundlagen' %}bg-indigo-800 text-white{% endif %}">Grundlagen</a>
-                            <a href="/konzepte" role="listitem"
-                               {% if active_page == 'konzepte' %}aria-current="page"{% endif %}
-                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'konzepte' %}bg-indigo-800 text-white{% endif %}">🧠 Konzepte</a>
-                            <a href="/spiele" role="listitem"
-                               {% if active_page == 'spiele' %}aria-current="page"{% endif %}
-                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'spiele' %}bg-indigo-800 text-white{% endif %}">Spiele</a>
-                            <a href="/raetsel" role="listitem"
-                               {% if active_page == 'raetsel' %}aria-current="page"{% endif %}
-                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'raetsel' %}bg-indigo-800 text-white{% endif %}">Rätsel</a>
-                            <a href="/skills" role="listitem"
-                               {% if active_page == 'skills' %}aria-current="page"{% endif %}
-                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'skills' %}bg-indigo-800 text-white{% endif %}">💡 Skills</a>
+                            <a href="/spieltheorie" role="listitem"
+                               {% if active_page == 'spieltheorie' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'spieltheorie' %}bg-indigo-800 text-white{% endif %}">♟️ Spieltheorie</a>
+                            <a href="/denkraetsel" role="listitem"
+                               {% if active_page == 'denkraetsel' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'denkraetsel' %}bg-indigo-800 text-white{% endif %}">🧩 Denkrätsel</a>
+                            <a href="/soziales" role="listitem"
+                               {% if active_page == 'soziales' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'soziales' %}bg-indigo-800 text-white{% endif %}">💬 Soziales</a>
                             <a href="/gedaechtnis" role="listitem"
                                {% if active_page == 'gedaechtnis' %}aria-current="page"{% endif %}
                                class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'gedaechtnis' %}bg-indigo-800 text-white{% endif %}">🧠 Gedächtnis</a>
                             <a href="/fortschritt" role="listitem"
                                {% if active_page == 'fortschritt' %}aria-current="page"{% endif %}
-                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'fortschritt' %}bg-indigo-800 text-white{% endif %}">Fortschritt</a>
+                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'fortschritt' %}bg-indigo-800 text-white{% endif %}">📊 Fortschritt</a>
                             <button onclick="switchDesign()" class="design-toggle-btn text-amber-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer bg-transparent border-0" aria-label="Design wechseln">
                                 <span class="show-classic">✨ Editorial</span>
                                 <span class="show-editorial">← Klassisch</span>
@@ -137,16 +131,12 @@
                         <div class="flex flex-col space-y-1">
                             <a href="/lernpfade" {% if active_page == 'lernpfade' %}aria-current="page"{% endif %}
                                class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'lernpfade' %}bg-indigo-800 text-white{% endif %}">🗺️ Lernpfade</a>
-                            <a href="/grundlagen" {% if active_page == 'grundlagen' %}aria-current="page"{% endif %}
-                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'grundlagen' %}bg-indigo-800 text-white{% endif %}">📚 Grundlagen</a>
-                            <a href="/konzepte" {% if active_page == 'konzepte' %}aria-current="page"{% endif %}
-                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'konzepte' %}bg-indigo-800 text-white{% endif %}">🧠 Konzepte</a>
-                            <a href="/spiele" {% if active_page == 'spiele' %}aria-current="page"{% endif %}
-                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'spiele' %}bg-indigo-800 text-white{% endif %}">🎮 Spiele</a>
-                            <a href="/raetsel" {% if active_page == 'raetsel' %}aria-current="page"{% endif %}
-                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'raetsel' %}bg-indigo-800 text-white{% endif %}">🧩 Rätsel</a>
-                            <a href="/skills" {% if active_page == 'skills' %}aria-current="page"{% endif %}
-                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'skills' %}bg-indigo-800 text-white{% endif %}">💡 Skills</a>
+                            <a href="/spieltheorie" {% if active_page == 'spieltheorie' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'spieltheorie' %}bg-indigo-800 text-white{% endif %}">♟️ Spieltheorie</a>
+                            <a href="/denkraetsel" {% if active_page == 'denkraetsel' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'denkraetsel' %}bg-indigo-800 text-white{% endif %}">🧩 Denkrätsel</a>
+                            <a href="/soziales" {% if active_page == 'soziales' %}aria-current="page"{% endif %}
+                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'soziales' %}bg-indigo-800 text-white{% endif %}">💬 Soziales</a>
                             <a href="/gedaechtnis" {% if active_page == 'gedaechtnis' %}aria-current="page"{% endif %}
                                class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'gedaechtnis' %}bg-indigo-800 text-white{% endif %}">🧠 Gedächtnis</a>
                             <a href="/fortschritt" {% if active_page == 'fortschritt' %}aria-current="page"{% endif %}

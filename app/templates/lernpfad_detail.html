@@ -19,12 +19,25 @@
             </div>
         </div>
         <p class="text-white/85 text-sm leading-relaxed mb-4">{{ pfad.beschreibung }}</p>
-        <div class="flex items-center gap-4 text-white/70 text-xs">
-            <span>📚 {{ pfad.puzzles | length }} Rätsel</span>
+        <div class="flex items-center gap-4 text-white/70 text-xs flex-wrap">
+            <span>📚 {{ pfad.steps | length }} Stationen</span>
             <span>·</span>
             <span>⏱ {{ pfad.dauer }}</span>
             <span>·</span>
             <span>{{ pfad.level }}</span>
+            {% set theorie_count = pfad.steps | selectattr("typ", "equalto", "theorie") | list | length %}
+            {% set spiel_count = pfad.steps | selectattr("typ", "equalto", "spiel") | list | length %}
+            {% set raetsel_count = pfad.steps | selectattr("typ", "equalto", "raetsel") | list | length %}
+            {% if theorie_count or spiel_count %}
+            <span>·</span>
+            <span class="text-white/60">
+                {% if theorie_count %}📖 {{ theorie_count }} Theorie{% endif %}
+                {% if theorie_count and (spiel_count or raetsel_count) %} · {% endif %}
+                {% if spiel_count %}🎮 {{ spiel_count }} Spiele{% endif %}
+                {% if spiel_count and raetsel_count %} · {% endif %}
+                {% if raetsel_count %}🧩 {{ raetsel_count }} Rätsel{% endif %}
+            </span>
+            {% endif %}
         </div>
     </div>
 
@@ -41,39 +54,86 @@
         </ul>
     </div>
 
-    <!-- Puzzle-Sequenz -->
-    <h2 class="font-bold text-slate-800 mb-4 text-lg">Dein Pfad – {{ pfad.puzzles | length }} Stationen</h2>
+    <!-- Schritt-Legende (nur bei multi-modalen Pfaden) -->
+    {% set theorie_count = pfad.steps | selectattr("typ", "equalto", "theorie") | list | length %}
+    {% set spiel_count = pfad.steps | selectattr("typ", "equalto", "spiel") | list | length %}
+    {% if theorie_count or spiel_count %}
+    <div class="flex flex-wrap gap-3 mb-5 text-xs">
+        <span class="flex items-center gap-1.5 bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full border border-indigo-200">
+            <span>📖</span> Theorie lesen
+        </span>
+        <span class="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full border border-emerald-200">
+            <span>🎮</span> Spiel spielen
+        </span>
+        <span class="flex items-center gap-1.5 bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full border border-amber-200">
+            <span>🧩</span> Rätsel lösen
+        </span>
+    </div>
+    {% endif %}
+
+    <!-- Step-Sequenz -->
+    <h2 class="font-bold text-slate-800 mb-4 text-lg">Dein Pfad – {{ pfad.steps | length }} Stationen</h2>
 
     <div class="space-y-3" id="pfad-list">
-    {% for puzzle in pfad.puzzles %}
+    {% for step in pfad.steps %}
     {% set idx = loop.index %}
-    <a href="/raetsel/{{ puzzle.id }}"
+
+    {% if step.typ == "theorie" %}
+      {% set step_url = step.url %}
+      {% set card_bg = "bg-indigo-50" %}
+      {% set card_border = "border-indigo-200" %}
+      {% set card_text = "text-indigo-700" %}
+      {% set badge_bg = "bg-indigo-100 text-indigo-700" %}
+      {% set typ_label = "Theorie" %}
+    {% elif step.typ == "spiel" %}
+      {% set step_url = step.url %}
+      {% set card_bg = "bg-emerald-50" %}
+      {% set card_border = "border-emerald-200" %}
+      {% set card_text = "text-emerald-700" %}
+      {% set badge_bg = "bg-emerald-100 text-emerald-700" %}
+      {% set typ_label = "Spiel" %}
+    {% else %}
+      {% set step_url = "/raetsel/" ~ step.id %}
+      {% set card_bg = "bg-white" %}
+      {% set card_border = c.border %}
+      {% set card_text = c.text %}
+      {% set badge_bg = c.badge %}
+      {% set typ_label = "Rätsel" %}
+    {% endif %}
+
+    <a href="{{ step_url }}"
        data-pfad="{{ pfad.id }}"
        data-idx="{{ idx }}"
        onclick="savePfadProgress('{{ pfad.id }}', {{ idx }})"
-       class="pfad-item flex items-center gap-4 bg-white rounded-xl border-2 {{ c.border }} p-4 hover:shadow-md hover:{{ c.bg }} hover:border-transparent hover:text-white transition-all group">
+       class="pfad-item flex items-center gap-4 {{ card_bg }} rounded-xl border-2 {{ card_border }} p-4 hover:shadow-md transition-all group">
 
         <!-- Step number -->
-        <div class="{{ c.bg }} text-white w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm shrink-0 group-hover:bg-white/20 transition-colors">
+        <div class="{{ c.bg }} text-white w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm shrink-0">
             {{ idx }}
         </div>
 
         <!-- Emoji -->
-        <div class="text-2xl shrink-0">{{ puzzle.icon }}</div>
+        <div class="text-2xl shrink-0">{{ step.icon }}</div>
 
         <!-- Info -->
         <div class="flex-1 min-w-0">
-            <div class="font-bold text-slate-800 group-hover:text-white transition-colors text-sm">{{ puzzle.name }}</div>
-            <div class="flex items-center gap-3 text-xs text-slate-400 group-hover:text-white/70 mt-0.5 transition-colors">
-                <span>⏱ {{ puzzle.dauer }}</span>
+            <div class="flex items-center gap-2 mb-0.5 flex-wrap">
+                <div class="font-bold text-slate-800 text-sm">{{ step.titel }}</div>
+                <span class="text-xs px-1.5 py-0.5 rounded-full font-medium {{ badge_bg }}">{{ typ_label }}</span>
+            </div>
+            {% if step.beschreibung %}
+            <div class="text-xs text-slate-500 leading-relaxed mb-0.5">{{ step.beschreibung }}</div>
+            {% endif %}
+            <div class="flex items-center gap-3 text-xs text-slate-400">
+                <span>⏱ {{ step.dauer }}</span>
                 <span>·</span>
-                <span class="{{ c.badge }} group-hover:bg-white/20 group-hover:text-white px-1.5 py-0.5 rounded-full transition-colors text-xs font-medium">{{ puzzle.schwierigkeit }}</span>
+                <span>{{ step.schwierigkeit }}</span>
             </div>
         </div>
 
         <!-- Visited indicator (JS-managed) -->
-        <div class="visited-check hidden text-xl shrink-0" data-id="{{ puzzle.id }}">✓</div>
-        <div class="arrow-icon {{ c.text }} group-hover:text-white transition-colors text-lg shrink-0">→</div>
+        <div class="visited-check hidden text-xl shrink-0 {{ card_text }}" data-id="{{ step.id if step.typ == 'raetsel' else step_url }}">✓</div>
+        <div class="arrow-icon {{ card_text }} text-lg shrink-0">→</div>
     </a>
     {% endfor %}
     </div>
@@ -110,7 +170,6 @@ function loadPfadProgress() {
             item.classList.add('opacity-80');
         }
     });
-    // Count and show progress
     if (visited.length > 0) {
         const total = document.querySelectorAll('.pfad-item').length;
         const pct = Math.round(visited.length / total * 100);

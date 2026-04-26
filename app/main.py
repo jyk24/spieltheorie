@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .database import Base, engine, SessionLocal
 from .seed import seed_lessons, seed_progress
-from .routers import dashboard, lektionen, spiele, fortschritt, raetsel, grundlagen, spielpfad, konzepte, lernpfade, skills, redesign, gedaechtnis
+from .routers import dashboard, lektionen, spiele, fortschritt, raetsel, grundlagen, spielpfad, konzepte, lernpfade, skills, redesign, gedaechtnis, spieltheorie_hub, denkraetsel, soziales
 
 
 @asynccontextmanager
@@ -36,12 +36,16 @@ app.include_router(lernpfade.router)
 app.include_router(skills.router)
 app.include_router(redesign.router)
 app.include_router(gedaechtnis.router)
+app.include_router(spieltheorie_hub.router)
+app.include_router(denkraetsel.router)
+app.include_router(soziales.router)
 
 
 BASE_URL = "https://imaginative-fulfillment-production.up.railway.app"
 
 _SITEMAP_URLS = [
-    "/", "/lernpfade", "/grundlagen", "/konzepte", "/spiele", "/raetsel",
+    "/", "/lernpfade", "/spieltheorie", "/denkraetsel", "/soziales",
+    "/grundlagen", "/konzepte", "/spiele", "/raetsel",
     "/skills", "/gedaechtnis", "/fortschritt",
     "/gedaechtnis/theorie", "/gedaechtnis/wortfolge", "/gedaechtnis/zahlen",
     "/gedaechtnis/corsi", "/gedaechtnis/memory", "/gedaechtnis/namen", "/gedaechtnis/karten",
