@@ -45,6 +45,11 @@ _SITEMAP_URLS = [
     "/skills", "/gedaechtnis", "/fortschritt",
     "/gedaechtnis/theorie", "/gedaechtnis/wortfolge", "/gedaechtnis/zahlen",
     "/gedaechtnis/corsi", "/gedaechtnis/memory", "/gedaechtnis/namen", "/gedaechtnis/karten",
+    "/gedaechtnis/technik/gedaechtnispalast", "/gedaechtnis/technik/major-system",
+    "/gedaechtnis/technik/chunking", "/gedaechtnis/technik/pao-system",
+    "/gedaechtnis/technik/spaced-repetition", "/gedaechtnis/technik/akrostichon",
+    "/gedaechtnis/technik/geschichten", "/gedaechtnis/technik/schluesselwort",
+    "/gedaechtnis/technik/elaborative-enkodierung", "/gedaechtnis/technik/zeigarnik",
 ]
 
 

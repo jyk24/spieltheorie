@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% block title %}{{ t.titel }} – Merktechnik – VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="{{ t.meta_desc }}">{% endblock %}
+{% block content %}
+
+{% set farben = {
+  "indigo":  ("bg-indigo-50",  "border-indigo-200",  "text-indigo-800",  "text-indigo-600",  "bg-indigo-600",  "bg-indigo-100"),
+  "violet":  ("bg-violet-50",  "border-violet-200",  "text-violet-800",  "text-violet-600",  "bg-violet-600",  "bg-violet-100"),
+  "emerald": ("bg-emerald-50", "border-emerald-200", "text-emerald-800", "text-emerald-600", "bg-emerald-600", "bg-emerald-100"),
+  "amber":   ("bg-amber-50",   "border-amber-200",   "text-amber-800",   "text-amber-600",   "bg-amber-500",   "bg-amber-100"),
+  "sky":     ("bg-sky-50",     "border-sky-200",     "text-sky-800",     "text-sky-600",     "bg-sky-600",     "bg-sky-100"),
+  "rose":    ("bg-rose-50",    "border-rose-200",    "text-rose-800",    "text-rose-600",    "bg-rose-600",    "bg-rose-100"),
+  "teal":    ("bg-teal-50",    "border-teal-200",    "text-teal-800",    "text-teal-600",    "bg-teal-600",    "bg-teal-100"),
+  "orange":  ("bg-orange-50",  "border-orange-200",  "text-orange-800",  "text-orange-600",  "bg-orange-500",  "bg-orange-100"),
+  "pink":    ("bg-pink-50",    "border-pink-200",    "text-pink-800",    "text-pink-600",    "bg-pink-600",    "bg-pink-100"),
+  "lime":    ("bg-lime-50",    "border-lime-200",    "text-lime-800",    "text-lime-600",    "bg-lime-600",    "bg-lime-100"),
+} %}
+{% set c = t.farbe %}
+{% set fbg, fborder, ftext, flink, fbtn, ficon = farben[c] %}
+
+<div class="max-w-3xl mx-auto">
+
+  <!-- Breadcrumb -->
+  <div class="mb-6 flex items-center gap-2 text-sm text-slate-400">
+    <a href="/gedaechtnis" class="hover:text-indigo-600 transition-colors">← Gedächtnis & Mnemonik</a>
+  </div>
+
+  <!-- Hero -->
+  <div class="{{ fbg }} {{ fborder }} border-2 rounded-2xl p-7 mb-8 shadow-sm">
+    <div class="flex items-start gap-5">
+      <span class="text-5xl shrink-0 mt-1">{{ t.icon }}</span>
+      <div class="flex-1">
+        <div class="flex flex-wrap gap-2 mb-3">
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-full {{ ficon }} {{ ftext }}">{{ t.typ }}</span>
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">{{ t.schwierigkeit }}</span>
+        </div>
+        <h1 class="text-3xl font-extrabold {{ ftext }} mb-2">{{ t.titel }}</h1>
+        <p class="text-slate-600 leading-relaxed">{{ t.kurz }}</p>
+      </div>
+    </div>
+
+    <!-- Quick facts -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6 pt-5 border-t {{ fborder }}">
+      <div class="text-center">
+        <div class="text-xs text-slate-400 mb-1">Lernzeit</div>
+        <div class="text-sm font-semibold text-slate-700">{{ t.lernzeit }}</div>
+      </div>
+      <div class="text-center">
+        <div class="text-xs text-slate-400 mb-1">Am besten für</div>
+        <div class="text-sm font-semibold text-slate-700">{{ t.best_fuer }}</div>
+      </div>
+      <div class="text-center">
+        <div class="text-xs text-slate-400 mb-1">Schwierigkeit</div>
+        <div class="text-sm font-semibold {{ ftext }}">{{ t.schwierigkeit }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Was passiert im Gehirn -->
+  <section class="mb-8">
+    <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+      <span class="{{ ficon }} {{ ftext }} w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold shrink-0">🧬</span>
+      Was passiert im Gehirn?
+    </h2>
+    <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
+      {% for absatz in t.gehirn %}
+      <p class="text-slate-600 leading-relaxed text-sm">{{ absatz }}</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Schritt-für-Schritt -->
+  <section class="mb-8">
+    <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+      <span class="{{ ficon }} {{ ftext }} w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold shrink-0">📋</span>
+      Schritt-für-Schritt
+    </h2>
+    <div class="space-y-3">
+      {% for s in t.schritte %}
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex gap-4">
+        <div class="{{ ficon }} {{ ftext }} w-8 h-8 rounded-full flex items-center justify-center text-sm font-extrabold shrink-0 mt-0.5">{{ s.nr }}</div>
+        <div class="flex-1">
+          <div class="font-bold text-slate-800 mb-1">{{ s.titel }}</div>
+          <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-line">{{ s.text }}</p>
+          {% if s.tipp %}
+          <div class="mt-2.5 text-xs {{ fbg }} {{ ftext }} rounded-lg px-3 py-2">
+            💡 <strong>Tipp:</strong> {{ s.tipp }}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Ausführliche Beispiele -->
+  <section class="mb-8">
+    <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+      <span class="{{ ficon }} {{ ftext }} w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold shrink-0">✏️</span>
+      Ausführliche Beispiele
+    </h2>
+    <div class="space-y-4">
+      {% for b in t.beispiele %}
+      <div class="{{ fbg }} {{ fborder }} border rounded-xl p-5">
+        <div class="font-bold {{ ftext }} mb-2 text-sm">{{ b.titel }}</div>
+        <p class="text-sm text-slate-700 leading-relaxed whitespace-pre-line">{{ b.inhalt }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Typische Fehler -->
+  <section class="mb-8">
+    <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+      <span class="bg-red-100 text-red-600 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold shrink-0">⚠️</span>
+      Typische Fehler
+    </h2>
+    <div class="bg-white border border-red-100 rounded-xl p-5 shadow-sm">
+      <ul class="space-y-2.5">
+        {% for f in t.fehler %}
+        <li class="flex items-start gap-2.5 text-sm text-slate-600">
+          <span class="text-red-400 mt-0.5 shrink-0">✗</span>
+          <span>{{ f }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Pro-Tipps -->
+  <section class="mb-8">
+    <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+      <span class="bg-emerald-100 text-emerald-600 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold shrink-0">✓</span>
+      Pro-Tipps
+    </h2>
+    <div class="bg-white border border-emerald-100 rounded-xl p-5 shadow-sm">
+      <ul class="space-y-2.5">
+        {% for tip in t.tipps %}
+        <li class="flex items-start gap-2.5 text-sm text-slate-600">
+          <span class="text-emerald-500 mt-0.5 shrink-0">→</span>
+          <span>{{ tip }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Kombinieren mit -->
+  {% if t.kombination %}
+  <section class="mb-8">
+    <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+      <span class="{{ ficon }} {{ ftext }} w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold shrink-0">🔗</span>
+      Kombinieren mit
+    </h2>
+    <div class="grid gap-3">
+      {% for k in t.kombination %}
+      <a href="/gedaechtnis/technik/{{ k.slug }}"
+         class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all flex items-start gap-3 group">
+        <span class="text-2xl shrink-0">{{ k.icon }}</span>
+        <div class="flex-1">
+          <div class="font-bold text-slate-800 group-hover:text-indigo-600 transition-colors text-sm">{{ k.titel }}</div>
+          <div class="text-xs text-slate-500 mt-0.5 leading-relaxed">{{ k.grund }}</div>
+        </div>
+        <span class="text-slate-300 group-hover:text-indigo-400 transition-colors text-lg mt-0.5">→</span>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Training CTA -->
+  {% if t.spiel %}
+  <div class="{{ fbg }} {{ fborder }} border-2 rounded-2xl p-6 mb-6 text-center">
+    <div class="text-2xl mb-2">🎯</div>
+    <div class="font-bold text-slate-800 mb-1">Technik direkt trainieren</div>
+    <p class="text-sm text-slate-500 mb-4">Das beste Lernformat: Theorie sofort in die Praxis umsetzen.</p>
+    <a href="/gedaechtnis/{{ t.spiel }}"
+       class="{{ fbtn }} text-white px-6 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity inline-block">
+      {{ t.spiel_label }}
+    </a>
+  </div>
+  {% endif %}
+
+  <!-- Back link -->
+  <div class="border-t border-slate-200 pt-5">
+    <a href="/gedaechtnis" class="text-sm text-slate-400 hover:text-indigo-600 transition-colors">← Alle Merktechniken</a>
+  </div>
+
+</div>
+{% endblock %}
