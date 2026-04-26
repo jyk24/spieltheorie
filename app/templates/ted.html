@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}TED Insights – Wissen aus den wichtigsten TED Talks – VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="18 der einflussreichsten TED Talks – Kernkonzepte zu Entscheidung, Kommunikation, Verhandlung und Kognition. Mit interaktivem Quiz.">{% endblock %}
+{% block og_title %}TED Insights – VerhandlungsTrainer{% endblock %}
+{% block og_description %}Die wichtigsten TED Talks zu Entscheidung, Kommunikation und Verhandlung – kompakt erklärt und interaktiv abgefragt.{% endblock %}
+{% block content %}
+
+<div class="max-w-5xl mx-auto">
+
+  <!-- Hero -->
+  <div class="mb-8">
+    <div class="flex items-start gap-4 mb-3">
+      <div class="text-5xl">🎤</div>
+      <div>
+        <h1 class="text-3xl font-extrabold text-slate-800">TED Insights</h1>
+        <p class="text-slate-500 mt-1 max-w-2xl">Die wichtigsten TED Talks zu Entscheidung, Kommunikation, Verhandlung und Kognition – Kernkonzepte kompakt erklärt und mit Quiz testbar.</p>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-2 mt-4">
+      <span class="text-xs bg-red-100 text-red-700 px-3 py-1 rounded-full font-medium">🧠 Entscheidung</span>
+      <span class="text-xs bg-rose-100 text-rose-700 px-3 py-1 rounded-full font-medium">💬 Kommunikation</span>
+      <span class="text-xs bg-orange-100 text-orange-700 px-3 py-1 rounded-full font-medium">🤝 Verhandlung</span>
+      <span class="text-xs bg-pink-100 text-pink-700 px-3 py-1 rounded-full font-medium">🌊 Kognition</span>
+      <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">{{ talks | length }} Talks</span>
+    </div>
+  </div>
+
+  <!-- Quiz CTA Banner -->
+  <div class="bg-gradient-to-r from-red-600 to-rose-600 rounded-2xl p-5 mb-8 flex items-center justify-between gap-4 flex-wrap">
+    <div class="flex items-center gap-3">
+      <span class="text-3xl">🎯</span>
+      <div>
+        <div class="font-bold text-white text-sm">TED-Quiz spielen</div>
+        <div class="text-red-100 text-xs mt-0.5">10 zufällige Fragen aus allen Talks – teste dein Wissen.</div>
+      </div>
+    </div>
+    <div class="flex gap-2 flex-wrap">
+      <a href="/ted/quiz" class="bg-white text-red-700 font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-red-50 transition-colors shrink-0">Quiz starten →</a>
+    </div>
+  </div>
+
+  <!-- Category filter -->
+  <div class="flex flex-wrap gap-2 mb-6" id="kat-filter">
+    <button class="kat-btn active px-4 py-1.5 rounded-full text-sm font-medium transition-colors bg-red-600 text-white" data-kat="">Alle ({{ talks | length }})</button>
+    {% for kat in kategorien %}
+    {% set count = talks | selectattr("kategorie", "equalto", kat) | list | length %}
+    <button class="kat-btn px-4 py-1.5 rounded-full text-sm font-medium transition-colors bg-white border border-slate-200 text-slate-600 hover:border-red-300 hover:text-red-700" data-kat="{{ kat }}">{{ kat }} ({{ count }})</button>
+    {% endfor %}
+  </div>
+
+  <!-- Talk cards grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12" id="talk-grid">
+    {% for talk in talks %}
+    <a href="/ted/{{ talk.id }}"
+       class="talk-card bg-white border border-slate-200 rounded-2xl p-5 hover:border-red-200 hover:shadow-md transition-all group flex flex-col"
+       data-kat="{{ talk.kategorie }}">
+      <div class="flex items-start gap-3 mb-3">
+        <span class="text-3xl shrink-0">{{ talk.icon }}</span>
+        <div class="flex-1 min-w-0">
+          <div class="text-xs text-red-600 font-medium mb-0.5">{{ talk.kategorie }} · {{ talk.jahr }}</div>
+          <div class="font-bold text-slate-800 text-sm leading-snug group-hover:text-red-700 transition-colors">{{ talk.titel_de }}</div>
+          <div class="text-xs text-slate-400 mt-0.5">{{ talk.sprecher }}</div>
+        </div>
+      </div>
+      <p class="text-xs text-slate-500 leading-relaxed line-clamp-3 flex-1">{{ talk.kurzfassung }}</p>
+      <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+        <span class="text-xs text-slate-400 italic truncate pr-2">{{ talk.kernkonzept }}</span>
+        <span class="text-xs bg-red-50 text-red-600 px-2 py-0.5 rounded-full shrink-0">{{ talk.quiz | length }} Fragen</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- Bottom CTA -->
+  <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center">
+    <p class="font-bold text-slate-800 mb-1">Mehr entdecken</p>
+    <p class="text-sm text-slate-500 mb-4">Rätsel, Spieltheorie und Gedächtnistraining – weitere thematische Bereiche.</p>
+    <div class="flex gap-3 justify-center flex-wrap">
+      <a href="/soziales" class="inline-block bg-teal-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-teal-700 transition-colors text-sm">💬 Soziale Intelligenz</a>
+      <a href="/raetsel" class="inline-block bg-indigo-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors text-sm">🧩 Rätsel</a>
+      <a href="/skills" class="inline-block border border-slate-300 text-slate-600 font-medium px-5 py-2.5 rounded-xl hover:bg-slate-100 transition-colors text-sm">⚡ Skills</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  var btns = document.querySelectorAll('.kat-btn');
+  var cards = document.querySelectorAll('.talk-card');
+
+  btns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var kat = btn.dataset.kat;
+      btns.forEach(function(b) {
+        b.classList.remove('active', 'bg-red-600', 'text-white');
+        b.classList.add('bg-white', 'border', 'border-slate-200', 'text-slate-600');
+      });
+      btn.classList.add('active', 'bg-red-600', 'text-white');
+      btn.classList.remove('bg-white', 'border', 'border-slate-200', 'text-slate-600');
+      cards.forEach(function(card) {
+        if (!kat || card.dataset.kat === kat) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  });
+})();
+</script>
+
+{% endblock %}

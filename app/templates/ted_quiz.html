@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% block title %}TED-Quiz – 10 Fragen aus den wichtigsten TED Talks – VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="10 zufällige Fragen aus 18 TED Talks – teste dein Wissen zu Entscheidung, Kommunikation und Verhandlung.">{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+
+  <a href="/ted" class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 mb-6 transition-colors">
+    ← Zurück zu TED Insights
+  </a>
+
+  <div class="mb-6 flex items-start gap-4">
+    <div class="text-5xl">🎯</div>
+    <div>
+      <h1 class="text-2xl font-extrabold text-slate-800">TED-Quiz</h1>
+      <p class="text-slate-500 text-sm mt-1">10 zufällige Fragen aus den wichtigsten TED Talks – rapid fire.</p>
+    </div>
+  </div>
+
+  <!-- Stats bar -->
+  <div class="grid grid-cols-3 gap-3 mb-5">
+    <div class="bg-white border border-slate-200 rounded-xl p-3 text-center">
+      <div class="text-xs text-slate-400 mb-0.5">Frage</div>
+      <div class="text-2xl font-extrabold text-slate-800" id="stat-q">–</div>
+    </div>
+    <div class="bg-white border border-slate-200 rounded-xl p-3 text-center">
+      <div class="text-xs text-slate-400 mb-0.5">Richtig</div>
+      <div class="text-2xl font-extrabold text-green-600" id="stat-correct">0</div>
+    </div>
+    <div class="bg-white border border-slate-200 rounded-xl p-3 text-center">
+      <div class="text-xs text-slate-400 mb-0.5">Bestleistung</div>
+      <div class="text-2xl font-extrabold text-red-700" id="stat-best">–</div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="w-full bg-slate-100 rounded-full h-2 mb-5">
+    <div id="progress-bar" class="bg-red-500 h-2 rounded-full transition-all duration-300" style="width:0%"></div>
+  </div>
+
+  <!-- Quiz card -->
+  <div class="bg-white border border-slate-200 rounded-2xl shadow-sm">
+
+    <!-- Idle -->
+    <div id="state-idle" class="flex flex-col items-center justify-center p-12 text-center">
+      <div class="text-5xl mb-4">🎤</div>
+      <h2 class="text-xl font-bold text-slate-800 mb-2">TED-Quiz</h2>
+      <p class="text-slate-500 text-sm mb-6 max-w-sm">10 zufällige Fragen aus 18 TED Talks – Kernkonzepte zu Entscheidung, Kommunikation, Verhandlung und Kognition.</p>
+      {% if kategorie %}
+      <div class="text-xs bg-red-100 text-red-700 px-3 py-1 rounded-full mb-4 font-medium">Filter: {{ kategorie }}</div>
+      {% endif %}
+      <button onclick="startQuiz()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-3 rounded-xl text-sm transition-colors">
+        Quiz starten
+      </button>
+      {% if kategorien %}
+      <div class="mt-5 flex flex-wrap gap-2 justify-center">
+        <a href="/ted/quiz" class="text-xs px-3 py-1.5 rounded-full border transition-colors {% if not kategorie %}bg-red-600 text-white border-red-600{% else %}border-slate-200 text-slate-500 hover:border-red-300 hover:text-red-700{% endif %}">Alle</a>
+        {% for kat in kategorien %}
+        <a href="/ted/quiz?kategorie={{ kat }}" class="text-xs px-3 py-1.5 rounded-full border transition-colors {% if kategorie == kat %}bg-red-600 text-white border-red-600{% else %}border-slate-200 text-slate-500 hover:border-red-300 hover:text-red-700{% endif %}">{{ kat }}</a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Play -->
+    <div id="state-play" class="hidden p-6">
+      <div class="text-xs text-slate-400 mb-1 font-medium" id="q-meta"></div>
+      <div class="font-bold text-slate-800 text-base mb-5" id="q-text"></div>
+      <div class="space-y-2.5" id="q-options"></div>
+      <div id="q-feedback" class="hidden mt-4 rounded-xl px-4 py-3 text-sm"></div>
+      <div class="flex justify-end mt-5">
+        <button id="q-next" class="hidden bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition-colors" onclick="nextQ()">Weiter →</button>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div id="state-result" class="hidden flex flex-col items-center justify-center p-10 text-center">
+      <div class="text-5xl mb-3" id="res-icon">🎉</div>
+      <div class="text-3xl font-extrabold text-slate-800 mb-1" id="res-score"></div>
+      <div class="text-slate-500 text-sm mb-1" id="res-msg"></div>
+      <div class="text-xs text-slate-400 mb-6" id="res-best"></div>
+      <div class="flex gap-3 flex-wrap justify-center">
+        <button onclick="startQuiz()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition-colors">Nochmal</button>
+        <a href="/ted" class="border border-slate-200 text-slate-600 font-medium px-6 py-2.5 rounded-xl text-sm hover:bg-slate-50 transition-colors">Alle Talks →</a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+(function() {
+  var ALL_FRAGEN = {{ fragen | tojson }};
+  var KEY_BEST = 'ted_quiz_best';
+
+  var questions = [];
+  var current = 0;
+  var score = 0;
+  var answered = false;
+
+  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function getBest() { return parseInt(localStorage.getItem(KEY_BEST)) || 0; }
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function updateStats() {
+    document.getElementById('stat-q').textContent = questions.length > 0 ? (current + 1) + '/' + questions.length : '–';
+    document.getElementById('stat-correct').textContent = score;
+    var best = getBest();
+    document.getElementById('stat-best').textContent = best > 0 ? best + '/10' : '–';
+    var pct = questions.length > 0 ? Math.round((current / questions.length) * 100) : 0;
+    document.getElementById('progress-bar').style.width = pct + '%';
+  }
+
+  window.startQuiz = function() {
+    questions = shuffle(ALL_FRAGEN).slice(0, 10);
+    current = 0; score = 0; answered = false;
+    document.getElementById('state-idle').classList.add('hidden');
+    document.getElementById('state-result').classList.add('hidden');
+    document.getElementById('state-play').classList.remove('hidden');
+    renderQ();
+    updateStats();
+  };
+
+  function renderQ() {
+    if (current >= questions.length) { showResult(); return; }
+    answered = false;
+    var q = questions[current];
+
+    document.getElementById('q-meta').textContent = q.talk_icon + ' ' + q.sprecher + ' · Frage ' + (current + 1) + ' von ' + questions.length;
+    document.getElementById('q-text').textContent = q.frage;
+
+    var shuffled = shuffle(q.optionen);
+    var html = '';
+    shuffled.forEach(function(opt, idx) {
+      html += '<button onclick="pick(' + idx + ')" class="opt-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 hover:border-red-300 hover:bg-red-50 text-sm text-slate-700 transition-all" data-correct="' + opt.korrekt + '">' +
+        escHtml(opt.text) +
+        '</button>';
+    });
+    document.getElementById('q-options').innerHTML = html;
+    document.getElementById('q-feedback').classList.add('hidden');
+    document.getElementById('q-feedback').textContent = '';
+    document.getElementById('q-next').classList.add('hidden');
+    document.getElementById('q-next').textContent = current === questions.length - 1 ? 'Ergebnis →' : 'Weiter →';
+    updateStats();
+  }
+
+  window.pick = function(idx) {
+    if (answered) return;
+    answered = true;
+    var q = questions[current];
+    var shuffled = Array.from(document.querySelectorAll('.opt-btn'));
+    var clickedBtn = shuffled[idx];
+    var correct = clickedBtn.dataset.correct === 'true';
+    if (correct) score++;
+
+    shuffled.forEach(function(btn) {
+      btn.disabled = true;
+      if (btn.dataset.correct === 'true') {
+        btn.classList.add('border-green-400', 'bg-green-50', 'text-green-800', 'font-semibold');
+        btn.classList.remove('border-slate-200', 'bg-slate-50');
+      } else if (btn === clickedBtn && !correct) {
+        btn.classList.add('border-red-400', 'bg-red-50', 'text-red-800');
+        btn.classList.remove('border-slate-200', 'bg-slate-50');
+      }
+    });
+
+    var fb = document.getElementById('q-feedback');
+    fb.classList.remove('hidden');
+    if (correct) {
+      fb.className = 'mt-4 rounded-xl px-4 py-3 text-sm bg-green-50 border border-green-200 text-green-800';
+      fb.innerHTML = '<strong>✅ Richtig!</strong> ' + escHtml(q.erklaerung);
+    } else {
+      fb.className = 'mt-4 rounded-xl px-4 py-3 text-sm bg-red-50 border border-red-200 text-red-800';
+      fb.innerHTML = '<strong>❌ Falsch.</strong> ' + escHtml(q.erklaerung);
+    }
+
+    document.getElementById('stat-correct').textContent = score;
+    document.getElementById('q-next').classList.remove('hidden');
+  };
+
+  window.nextQ = function() {
+    current++;
+    renderQ();
+  };
+
+  function showResult() {
+    document.getElementById('state-play').classList.add('hidden');
+    document.getElementById('state-result').classList.remove('hidden');
+    document.getElementById('state-result').style.display = 'flex';
+    document.getElementById('progress-bar').style.width = '100%';
+
+    var pct = Math.round((score / questions.length) * 100);
+    var prev = getBest();
+    var isNew = score > prev;
+    if (isNew) localStorage.setItem(KEY_BEST, score);
+
+    document.getElementById('res-icon').textContent = pct >= 80 ? '🏆' : pct >= 60 ? '🎉' : pct >= 40 ? '💡' : '📚';
+    document.getElementById('res-score').textContent = score + ' / ' + questions.length + ' richtig';
+    document.getElementById('res-msg').textContent =
+      pct >= 80 ? 'Ausgezeichnet – du kennst die TED Talks sehr gut!' :
+      pct >= 60 ? 'Sehr gut! Starkes Wissen über Entscheidung und Kommunikation.' :
+      pct >= 40 ? 'Solides Ergebnis – beim nächsten Mal noch besser.' :
+      'Schau dir die einzelnen Talks an – das Wissen lohnt sich!';
+    document.getElementById('res-best').textContent = isNew
+      ? '🎉 Neue persönliche Bestleistung!'
+      : 'Deine Bestleistung: ' + (prev || score) + '/10';
+
+    document.getElementById('stat-q').textContent = questions.length + '/' + questions.length;
+    document.getElementById('stat-best').textContent = Math.max(score, prev) + '/10';
+  }
+
+  updateStats();
+})();
+</script>
+
+{% endblock %}

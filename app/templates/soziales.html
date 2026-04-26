@@ -102,6 +102,42 @@
     </div>
   </section>
 
+  <!-- ── 3. TED Insights ──────────────────────────────────────────────────────── -->
+  {% if ted_soziales %}
+  <section class="mb-8">
+    <div class="flex items-center gap-3 mb-5">
+      <span class="bg-red-100 text-red-700 w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">🎤</span>
+      <div>
+        <h2 class="text-xl font-bold text-slate-800">TED Insights</h2>
+        <p class="text-sm text-slate-500">Kommunikation, Verhandlung und Führung – die wichtigsten TED Talks kompakt.</p>
+      </div>
+      <a href="/ted" class="ml-auto text-sm text-red-600 hover:text-red-800 font-medium shrink-0">Alle Talks →</a>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {% for t in ted_soziales %}
+      <a href="/ted/{{ t.id }}"
+         class="bg-white border border-slate-200 rounded-xl p-4 hover:border-red-200 hover:shadow-sm transition-all group flex flex-col">
+        <div class="flex items-start gap-3 mb-2">
+          <span class="text-2xl shrink-0">{{ t.icon }}</span>
+          <div class="flex-1 min-w-0">
+            <div class="text-xs text-red-600 font-medium mb-0.5">{{ t.kategorie }}</div>
+            <div class="font-semibold text-slate-800 text-sm group-hover:text-red-700 transition-colors leading-snug">{{ t.titel_de }}</div>
+            <div class="text-xs text-slate-400">{{ t.sprecher }}</div>
+          </div>
+        </div>
+        <p class="text-xs text-slate-500 leading-relaxed line-clamp-2 flex-1">{{ t.kernkonzept }}</p>
+        <div class="mt-2 text-xs text-red-600 font-medium">{{ t.quiz | length }} Quizfragen →</div>
+      </a>
+      {% endfor %}
+    </div>
+    <div class="mt-4 text-center">
+      <a href="/ted/quiz?kategorie=Kommunikation" class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition-colors">
+        🎯 TED-Quiz: Kommunikation & Verhandlung
+      </a>
+    </div>
+  </section>
+  {% endif %}
+
   <!-- Bottom CTA -->
   <div class="mt-8 bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center">
     <p class="font-bold text-slate-800 mb-1">Mehr entdecken</p>

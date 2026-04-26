@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+{% block title %}{{ talk.sprecher }} – {{ talk.titel_de }} – TED Insights – VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="{{ talk.schluessel_erkenntnis }}">{% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+
+  <a href="/ted" class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 mb-6 transition-colors">
+    ← Zurück zu TED Insights
+  </a>
+
+  <!-- Talk header -->
+  <div class="bg-gradient-to-br from-red-600 to-rose-700 rounded-2xl p-6 mb-6 text-white">
+    <div class="flex items-start gap-4">
+      <span class="text-5xl shrink-0">{{ talk.icon }}</span>
+      <div class="flex-1 min-w-0">
+        <div class="text-red-200 text-xs font-medium mb-1">{{ talk.kategorie }} · {{ talk.jahr }}</div>
+        <h1 class="text-2xl font-extrabold leading-tight mb-1">{{ talk.titel_de }}</h1>
+        <div class="text-red-100 text-sm">{{ talk.sprecher }}</div>
+        <div class="text-red-200 text-xs mt-0.5 italic">{{ talk.titel_original }}</div>
+      </div>
+    </div>
+    <div class="mt-4 bg-white/15 rounded-xl px-4 py-3">
+      <div class="text-xs text-red-200 mb-1 font-medium uppercase tracking-wide">Kernkonzept</div>
+      <div class="font-bold text-white">{{ talk.kernkonzept }}</div>
+    </div>
+  </div>
+
+  <!-- Content grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+    <div class="sm:col-span-2 bg-white border border-slate-200 rounded-2xl p-5">
+      <h2 class="font-bold text-slate-800 mb-3 flex items-center gap-2"><span>📖</span> Zusammenfassung</h2>
+      <p class="text-sm text-slate-600 leading-relaxed">{{ talk.kurzfassung }}</p>
+    </div>
+    <div class="space-y-4">
+      <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+        <div class="text-xs font-bold text-amber-700 mb-1.5 uppercase tracking-wide">💡 Schlüsselerkenntnis</div>
+        <p class="text-sm text-amber-900 leading-relaxed">{{ talk.schluessel_erkenntnis }}</p>
+      </div>
+      <div class="bg-teal-50 border border-teal-200 rounded-2xl p-4">
+        <div class="text-xs font-bold text-teal-700 mb-1.5 uppercase tracking-wide">🎯 Anwendung</div>
+        <p class="text-sm text-teal-900 leading-relaxed">{{ talk.anwendung }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TED link -->
+  <div class="mb-6">
+    <a href="{{ talk.ted_url }}" target="_blank" rel="noopener noreferrer"
+       class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition-colors">
+      <span>▶</span> Talk auf TED.com ansehen
+    </a>
+  </div>
+
+  <!-- Inline Quiz -->
+  <div class="bg-white border border-slate-200 rounded-2xl p-6 mb-6">
+    <div class="flex items-center gap-3 mb-5">
+      <span class="bg-red-100 text-red-700 w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">🧠</span>
+      <div>
+        <h2 class="font-bold text-slate-800">Quiz: {{ talk.sprecher }}</h2>
+        <p class="text-xs text-slate-400">{{ talk.quiz | length }} Fragen · Wähle die richtige Antwort</p>
+      </div>
+      <div class="ml-auto text-right">
+        <div class="text-xs text-slate-400">Score</div>
+        <div class="font-extrabold text-red-700 text-lg" id="quiz-score-display">–</div>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="w-full bg-slate-100 rounded-full h-1.5 mb-5">
+      <div id="quiz-progress" class="bg-red-500 h-1.5 rounded-full transition-all duration-300" style="width:0%"></div>
+    </div>
+
+    <div id="quiz-container">
+      <!-- filled by JS -->
+    </div>
+
+    <div id="quiz-result" class="hidden text-center py-6">
+      <div class="text-4xl mb-3" id="quiz-result-icon">🎉</div>
+      <div class="text-2xl font-extrabold text-slate-800 mb-1" id="quiz-result-score"></div>
+      <div class="text-sm text-slate-500 mb-4" id="quiz-result-msg"></div>
+      <button onclick="restartQuiz()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition-colors">Nochmal</button>
+    </div>
+  </div>
+
+  <!-- Related puzzles -->
+  {% if verwandte_raetsel %}
+  <div class="bg-white border border-slate-200 rounded-2xl p-5 mb-6">
+    <h2 class="font-bold text-slate-800 mb-4 flex items-center gap-2"><span>🧩</span> Verwandte Rätsel</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {% for r in verwandte_raetsel %}
+      <a href="/raetsel/{{ r.id }}"
+         class="flex items-start gap-3 border border-slate-100 rounded-xl p-4 hover:border-red-200 hover:shadow-sm transition-all group">
+        <span class="text-xl shrink-0 mt-0.5">{{ r.icon }}</span>
+        <div>
+          <div class="font-semibold text-slate-800 text-sm group-hover:text-red-700 transition-colors">{{ r.name }}</div>
+          <p class="text-xs text-slate-400 mt-0.5 line-clamp-2">{{ r.beschreibung }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Prev / Next navigation -->
+  <div class="flex gap-3 justify-between">
+    {% if prev_talk %}
+    <a href="/ted/{{ prev_talk.id }}" class="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-4 py-3 hover:border-red-200 hover:shadow-sm transition-all group flex-1 min-w-0">
+      <span class="text-slate-400 group-hover:text-red-600 shrink-0">←</span>
+      <div class="min-w-0">
+        <div class="text-xs text-slate-400">Vorheriger Talk</div>
+        <div class="text-sm font-semibold text-slate-700 group-hover:text-red-700 transition-colors truncate">{{ prev_talk.sprecher }}</div>
+      </div>
+    </a>
+    {% else %}
+    <div class="flex-1"></div>
+    {% endif %}
+    {% if next_talk %}
+    <a href="/ted/{{ next_talk.id }}" class="flex items-center justify-end gap-2 bg-white border border-slate-200 rounded-xl px-4 py-3 hover:border-red-200 hover:shadow-sm transition-all group flex-1 min-w-0 text-right">
+      <div class="min-w-0">
+        <div class="text-xs text-slate-400">Nächster Talk</div>
+        <div class="text-sm font-semibold text-slate-700 group-hover:text-red-700 transition-colors truncate">{{ next_talk.sprecher }}</div>
+      </div>
+      <span class="text-slate-400 group-hover:text-red-600 shrink-0">→</span>
+    </a>
+    {% endif %}
+  </div>
+
+</div>
+
+<script>
+(function() {
+  var QUIZ_DATA = {{ talk.quiz | tojson }};
+  var TALK_ID = {{ talk.id | tojson }};
+  var KEY = 'ted_' + TALK_ID + '_score';
+
+  var current = 0;
+  var score = 0;
+  var answered = false;
+
+  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function updateProgress() {
+    var pct = Math.round((current / QUIZ_DATA.length) * 100);
+    document.getElementById('quiz-progress').style.width = pct + '%';
+    var best = parseInt(localStorage.getItem(KEY)) || 0;
+    document.getElementById('quiz-score-display').textContent = best > 0 ? best + '/' + QUIZ_DATA.length : '–';
+  }
+
+  function render() {
+    if (current >= QUIZ_DATA.length) { showResult(); return; }
+    var q = QUIZ_DATA[current];
+    answered = false;
+    var html = '<div class="mb-4">' +
+      '<div class="text-xs text-slate-400 mb-2 font-medium">Frage ' + (current + 1) + ' / ' + QUIZ_DATA.length + '</div>' +
+      '<div class="font-bold text-slate-800 text-base mb-4">' + escHtml(q.frage) + '</div>' +
+      '<div class="space-y-2.5">';
+    q.optionen.forEach(function(opt, idx) {
+      html += '<button onclick="pick(' + idx + ')" class="opt-btn w-full text-left px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 hover:border-red-300 hover:bg-red-50 text-sm text-slate-700 transition-all" data-idx="' + idx + '">' +
+        escHtml(opt.text) +
+        '</button>';
+    });
+    html += '</div>' +
+      '<div id="feedback-box" class="hidden mt-4 rounded-xl px-4 py-3 text-sm"></div>' +
+      '<div class="flex justify-end mt-4">' +
+        '<button id="next-btn" class="hidden bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-2 rounded-xl text-sm transition-colors" onclick="nextQ()">' +
+          (current === QUIZ_DATA.length - 1 ? 'Ergebnis →' : 'Weiter →') +
+        '</button>' +
+      '</div>' +
+      '</div>';
+    document.getElementById('quiz-container').innerHTML = html;
+    updateProgress();
+  }
+
+  window.pick = function(idx) {
+    if (answered) return;
+    answered = true;
+    var q = QUIZ_DATA[current];
+    var opt = q.optionen[idx];
+    var correct = opt.korrekt;
+    if (correct) score++;
+
+    document.querySelectorAll('.opt-btn').forEach(function(btn, i) {
+      btn.disabled = true;
+      var o = q.optionen[i];
+      if (o.korrekt) {
+        btn.className = btn.className.replace('border-slate-200 bg-slate-50', '') + ' border-green-400 bg-green-50 text-green-800 font-semibold';
+      } else if (i === idx && !correct) {
+        btn.className = btn.className.replace('border-slate-200 bg-slate-50', '') + ' border-red-400 bg-red-50 text-red-800';
+      }
+    });
+
+    var fb = document.getElementById('feedback-box');
+    fb.classList.remove('hidden');
+    if (correct) {
+      fb.className = 'mt-4 rounded-xl px-4 py-3 text-sm bg-green-50 border border-green-200 text-green-800';
+      fb.innerHTML = '<strong>✅ Richtig!</strong> ' + escHtml(q.erklaerung);
+    } else {
+      fb.className = 'mt-4 rounded-xl px-4 py-3 text-sm bg-red-50 border border-red-200 text-red-800';
+      fb.innerHTML = '<strong>❌ Falsch.</strong> ' + escHtml(q.erklaerung);
+    }
+
+    document.getElementById('next-btn').classList.remove('hidden');
+  };
+
+  window.nextQ = function() {
+    current++;
+    render();
+  };
+
+  function showResult() {
+    document.getElementById('quiz-container').classList.add('hidden');
+    document.getElementById('quiz-result').classList.remove('hidden');
+    document.getElementById('quiz-progress').style.width = '100%';
+
+    var pct = Math.round((score / QUIZ_DATA.length) * 100);
+    var prev = parseInt(localStorage.getItem(KEY)) || 0;
+    if (score > prev) localStorage.setItem(KEY, score);
+
+    document.getElementById('quiz-result-icon').textContent = pct >= 80 ? '🏆' : pct >= 60 ? '🎉' : pct >= 40 ? '💡' : '📚';
+    document.getElementById('quiz-result-score').textContent = score + ' / ' + QUIZ_DATA.length + ' richtig';
+    document.getElementById('quiz-result-msg').textContent =
+      pct >= 80 ? 'Ausgezeichnet – du kennst diesen Talk sehr gut!' :
+      pct >= 60 ? 'Sehr gut! Du hast den Talk gut verstanden.' :
+      pct >= 40 ? 'Solides Wissen – beim nächsten Mal noch besser.' :
+      'Schau dir den Talk noch einmal an – es lohnt sich!';
+
+    document.getElementById('quiz-score-display').textContent = score + '/' + QUIZ_DATA.length;
+  }
+
+  window.restartQuiz = function() {
+    current = 0; score = 0; answered = false;
+    document.getElementById('quiz-container').classList.remove('hidden');
+    document.getElementById('quiz-result').classList.add('hidden');
+    render();
+  };
+
+  render();
+})();
+</script>
+
+{% endblock %}

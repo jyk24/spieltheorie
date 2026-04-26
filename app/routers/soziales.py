@@ -4,6 +4,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from .raetsel import RAETSEL_META
+from .ted import TED_TALKS
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
@@ -50,11 +51,15 @@ FRAMEWORKS = [
 ]
 
 
+_TED_KAT = {"Kommunikation", "Verhandlung", "Fuehrung"}
+
+
 @router.get("/soziales", response_class=HTMLResponse)
 def soziales_hub(request: Request):
     raetsel = [r for r in RAETSEL_META if r.get("kategorie") in _KATEGORIEN]
+    ted_soziales = [t for t in TED_TALKS if t["kategorie"] in _TED_KAT]
     return templates.TemplateResponse(
         request,
         "soziales.html",
-        {"active_page": "soziales", "raetsel": raetsel, "frameworks": FRAMEWORKS},
+        {"active_page": "soziales", "raetsel": raetsel, "frameworks": FRAMEWORKS, "ted_soziales": ted_soziales},
     )
