@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Spieltheorie & Verhandlung – VerhandlungsTrainer{% endblock %}</title>
 
+    <!-- PWA -->
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="VTrainer">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192.svg">
+
     <!-- SEO -->
     {% block meta_description %}<meta name="description" content="VerhandlungsTrainer – interaktive Spieltheorie, Rätsel, Gedächtnistraining und Verhandlungsstrategien. Wissenschaftlich fundiert, kostenlos.">{% endblock %}
     <meta name="robots" content="index, follow">
@@ -265,6 +274,14 @@
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup);
         else setup();
     })();
+    </script>
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/static/sw.js')
+                .catch(function() {});
+        });
+    }
     </script>
 </body>
 </html>

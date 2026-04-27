@@ -1,0 +1,56 @@
+{
+  "name": "VerhandlungsTrainer",
+  "short_name": "VTrainer",
+  "description": "Spieltheorie, Gedächtnistraining und Verhandlungsstrategien – wissenschaftlich fundiert.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f8fafc",
+  "theme_color": "#4f46e5",
+  "lang": "de",
+  "scope": "/",
+  "categories": ["education", "games"],
+  "icons": [
+    {
+      "src": "/static/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/icons/maskable-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Spiele",
+      "short_name": "Spiele",
+      "description": "Direkt zu den Spielen",
+      "url": "/spiele",
+      "icons": [{ "src": "/static/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Gedächtnis",
+      "short_name": "Gedächtnis",
+      "description": "Gedächtnistraining starten",
+      "url": "/gedaechtnis",
+      "icons": [{ "src": "/static/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Tägliche Rätsel",
+      "short_name": "Rätsel",
+      "description": "Rätsel und Denkaufgaben",
+      "url": "/denkraetsel",
+      "icons": [{ "src": "/static/icons/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
+    }
+  ]
+}
