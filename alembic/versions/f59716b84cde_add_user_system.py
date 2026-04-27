@@ -28,8 +28,18 @@ def _column_exists(conn, table: str, column: str) -> bool:
     return column in cols
 
 
+def _constraint_exists(conn, table: str, constraint_name: str) -> bool:
+    """Check if a named constraint exists (works for PostgreSQL)."""
+    try:
+        ucs = inspect(conn).get_unique_constraints(table)
+        return any(uc["name"] == constraint_name for uc in ucs)
+    except Exception:
+        return False
+
+
 def upgrade() -> None:
     conn = op.get_bind()
+    is_pg = conn.dialect.name == "postgresql"
 
     # ── users ──────────────────────────────────────────────────────────────────
     if not _table_exists(conn, "users"):
@@ -45,8 +55,7 @@ def upgrade() -> None:
             sa.Column("last_login", sa.DateTime(), nullable=True),
             sa.PrimaryKeyConstraint("id"),
         )
-        with op.batch_alter_table("users") as batch_op:
-            batch_op.create_index(batch_op.f("ix_users_email"), ["email"], unique=True)
+        op.create_index("ix_users_email", "users", ["email"], unique=True)
 
     # ── gedaechtnis_scores ─────────────────────────────────────────────────────
     if not _table_exists(conn, "gedaechtnis_scores"):
@@ -58,51 +67,82 @@ def upgrade() -> None:
             sa.Column("score", sa.Integer(), nullable=False),
             sa.Column("player_name", sa.String(length=50), nullable=False),
             sa.Column("created_at", sa.DateTime(), nullable=False),
-            sa.ForeignKeyConstraint(["user_id"], ["users.id"]),
+            sa.ForeignKeyConstraint(["user_id"], ["users.id"], name="fk_gedaechtnis_scores_user_id"),
             sa.PrimaryKeyConstraint("id"),
         )
-        with op.batch_alter_table("gedaechtnis_scores") as batch_op:
-            batch_op.create_index(batch_op.f("ix_gedaechtnis_scores_game_type"), ["game_type"], unique=False)
-            batch_op.create_index(batch_op.f("ix_gedaechtnis_scores_user_id"), ["user_id"], unique=False)
+        op.create_index("ix_gedaechtnis_scores_game_type", "gedaechtnis_scores", ["game_type"])
+        op.create_index("ix_gedaechtnis_scores_user_id", "gedaechtnis_scores", ["user_id"])
 
     # ── game_sessions: add user_id ─────────────────────────────────────────────
     if not _column_exists(conn, "game_sessions", "user_id"):
-        with op.batch_alter_table("game_sessions") as batch_op:
-            batch_op.add_column(sa.Column("user_id", sa.Integer(), nullable=True))
-            batch_op.create_index(batch_op.f("ix_game_sessions_user_id"), ["user_id"], unique=False)
-            batch_op.create_foreign_key("fk_game_sessions_user_id", "users", ["user_id"], ["id"])
+        if is_pg:
+            op.add_column("game_sessions", sa.Column("user_id", sa.Integer(), nullable=True))
+            op.create_index("ix_game_sessions_user_id", "game_sessions", ["user_id"])
+            op.create_foreign_key("fk_game_sessions_user_id", "game_sessions", "users", ["user_id"], ["id"])
+        else:
+            with op.batch_alter_table("game_sessions") as batch_op:
+                batch_op.add_column(sa.Column("user_id", sa.Integer(), nullable=True))
+                batch_op.create_index("ix_game_sessions_user_id", ["user_id"])
+                batch_op.create_foreign_key("fk_game_sessions_user_id", "users", ["user_id"], ["id"])
 
-    # ── user_achievements: add user_id + composite unique ──────────────────────
+    # ── user_achievements: add user_id + drop old slug-unique + composite unique
     if not _column_exists(conn, "user_achievements", "user_id"):
-        with op.batch_alter_table("user_achievements", recreate="always") as batch_op:
-            batch_op.add_column(sa.Column("user_id", sa.Integer(), nullable=True))
-            batch_op.create_index(batch_op.f("ix_user_achievements_user_id"), ["user_id"], unique=False)
-            batch_op.create_unique_constraint("uq_achievement_slug_user", ["slug", "user_id"])
-            batch_op.create_foreign_key("fk_user_achievements_user_id", "users", ["user_id"], ["id"])
+        if is_pg:
+            op.add_column("user_achievements", sa.Column("user_id", sa.Integer(), nullable=True))
+            op.create_index("ix_user_achievements_user_id", "user_achievements", ["user_id"])
+            # Drop old single-column unique before adding composite unique
+            op.drop_constraint("user_achievements_slug_key", "user_achievements", type_="unique")
+            op.create_unique_constraint("uq_achievement_slug_user", "user_achievements", ["slug", "user_id"])
+            op.create_foreign_key("fk_user_achievements_user_id", "user_achievements", "users", ["user_id"], ["id"])
+        else:
+            with op.batch_alter_table("user_achievements") as batch_op:
+                batch_op.add_column(sa.Column("user_id", sa.Integer(), nullable=True))
+                batch_op.create_index("ix_user_achievements_user_id", ["user_id"])
+                batch_op.create_unique_constraint("uq_achievement_slug_user", ["slug", "user_id"])
 
-    # ── user_progress: add user_id + composite unique (replaces single-col) ────
+    # ── user_progress: add user_id + drop old game_type-unique + composite unique
     if not _column_exists(conn, "user_progress", "user_id"):
-        with op.batch_alter_table("user_progress", recreate="always") as batch_op:
-            batch_op.add_column(sa.Column("user_id", sa.Integer(), nullable=True))
-            batch_op.create_index(batch_op.f("ix_user_progress_user_id"), ["user_id"], unique=False)
-            batch_op.create_unique_constraint("uq_progress_game_user", ["game_type", "user_id"])
-            batch_op.create_foreign_key("fk_user_progress_user_id", "users", ["user_id"], ["id"])
+        if is_pg:
+            op.add_column("user_progress", sa.Column("user_id", sa.Integer(), nullable=True))
+            op.create_index("ix_user_progress_user_id", "user_progress", ["user_id"])
+            # Drop old single-column unique before adding composite unique
+            op.drop_constraint("user_progress_game_type_key", "user_progress", type_="unique")
+            op.create_unique_constraint("uq_progress_game_user", "user_progress", ["game_type", "user_id"])
+            op.create_foreign_key("fk_user_progress_user_id", "user_progress", "users", ["user_id"], ["id"])
+        else:
+            with op.batch_alter_table("user_progress") as batch_op:
+                batch_op.add_column(sa.Column("user_id", sa.Integer(), nullable=True))
+                batch_op.create_index("ix_user_progress_user_id", ["user_id"])
+                batch_op.create_unique_constraint("uq_progress_game_user", ["game_type", "user_id"])
 
 
 def downgrade() -> None:
-    with op.batch_alter_table("user_progress") as batch_op:
-        batch_op.drop_constraint("fk_user_progress_user_id", type_="foreignkey")
-        batch_op.drop_constraint("uq_progress_game_user", type_="unique")
-        batch_op.drop_index(batch_op.f("ix_user_progress_user_id"))
-        batch_op.drop_column("user_id")
+    conn = op.get_bind()
+    is_pg = conn.dialect.name == "postgresql"
 
-    with op.batch_alter_table("user_achievements") as batch_op:
-        batch_op.drop_constraint("fk_user_achievements_user_id", type_="foreignkey")
-        batch_op.drop_constraint("uq_achievement_slug_user", type_="unique")
-        batch_op.drop_index(batch_op.f("ix_user_achievements_user_id"))
-        batch_op.drop_column("user_id")
+    if is_pg:
+        op.drop_constraint("fk_user_progress_user_id", "user_progress", type_="foreignkey")
+        op.drop_constraint("uq_progress_game_user", "user_progress", type_="unique")
+        op.drop_index("ix_user_progress_user_id", table_name="user_progress")
+        op.drop_column("user_progress", "user_id")
 
-    with op.batch_alter_table("game_sessions") as batch_op:
-        batch_op.drop_constraint("fk_game_sessions_user_id", type_="foreignkey")
-        batch_op.drop_index(batch_op.f("ix_game_sessions_user_id"))
-        batch_op.drop_column("user_id")
+        op.drop_constraint("fk_user_achievements_user_id", "user_achievements", type_="foreignkey")
+        op.drop_constraint("uq_achievement_slug_user", "user_achievements", type_="unique")
+        op.drop_index("ix_user_achievements_user_id", table_name="user_achievements")
+        op.drop_column("user_achievements", "user_id")
+
+        op.drop_constraint("fk_game_sessions_user_id", "game_sessions", type_="foreignkey")
+        op.drop_index("ix_game_sessions_user_id", table_name="game_sessions")
+        op.drop_column("game_sessions", "user_id")
+    else:
+        with op.batch_alter_table("user_progress") as batch_op:
+            batch_op.drop_constraint("uq_progress_game_user", type_="unique")
+            batch_op.drop_index("ix_user_progress_user_id")
+            batch_op.drop_column("user_id")
+        with op.batch_alter_table("user_achievements") as batch_op:
+            batch_op.drop_constraint("uq_achievement_slug_user", type_="unique")
+            batch_op.drop_index("ix_user_achievements_user_id")
+            batch_op.drop_column("user_id")
+        with op.batch_alter_table("game_sessions") as batch_op:
+            batch_op.drop_index("ix_game_sessions_user_id")
+            batch_op.drop_column("user_id")
