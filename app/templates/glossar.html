@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% block title %}Glossar – Fachbegriffe erklärt – VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="Glossar: Alle Fachbegriffe aus Spieltheorie, Psychologie, Wahrscheinlichkeit, Mathematik und Rhetorik – einfach und verständlich erklärt.">{% endblock %}
+{% block og_title %}Glossar – VerhandlungsTrainer{% endblock %}
+{% block og_description %}{{ eintraege | length }} Fachbegriffe aus Spieltheorie, Psychologie, Physik, Mathematik und Rhetorik – kurz und verständlich erklärt.{% endblock %}
+{% block content %}
+
+<div class="max-w-4xl mx-auto">
+
+  <!-- Hero -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-extrabold text-slate-800 mb-2">📖 Glossar</h1>
+    <p class="text-slate-500 max-w-2xl">{{ eintraege | length }} Fachbegriffe aus Spieltheorie, Psychologie, Wahrscheinlichkeit, Mathematik und Rhetorik – kurz und verständlich erklärt.</p>
+  </div>
+
+  <!-- Suche + Filter -->
+  <div class="bg-white border border-slate-200 rounded-2xl p-5 mb-6 shadow-sm">
+    <div class="flex flex-col sm:flex-row gap-3">
+      <!-- Suchfeld -->
+      <div class="relative flex-1">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
+        </svg>
+        <input id="glossar-search"
+               type="text"
+               placeholder="Begriff suchen…"
+               autocomplete="off"
+               class="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400">
+      </div>
+      <!-- Kategorie-Filter -->
+      <select id="kat-filter" class="sm:w-48 px-3 py-2.5 border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+        <option value="">Alle Kategorien</option>
+        {% for k in kategorien %}
+        <option value="{{ k }}">{{ k }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Buchstaben-Navigation -->
+    <div class="flex flex-wrap gap-1 mt-4 pt-4 border-t border-slate-100" id="buchstaben-nav">
+      <button class="buch-btn text-xs px-2 py-1 rounded-lg font-medium bg-indigo-600 text-white transition-colors" data-letter="all">Alle</button>
+      {% for b in buchstaben %}
+      <button class="buch-btn text-xs px-2 py-1 rounded-lg font-medium bg-slate-100 text-slate-600 hover:bg-indigo-100 hover:text-indigo-700 transition-colors" data-letter="{{ b }}">{{ b }}</button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Ergebnis-Zähler -->
+  <div class="text-xs text-slate-400 mb-4" id="result-count">{{ eintraege | length }} Einträge</div>
+
+  <!-- Glossar-Einträge -->
+  <div class="space-y-3" id="glossar-list">
+    {% set kat_farben = {
+      "Spieltheorie": "indigo",
+      "Entscheidung": "violet",
+      "Wahrscheinlichkeit": "blue",
+      "Statistik": "emerald",
+      "Mathematik": "violet",
+      "Psychologie": "rose",
+      "Physik": "sky",
+      "Rhetorik": "orange",
+      "Verhandlung": "teal",
+    } %}
+
+    {% for e in eintraege %}
+    {% set farbe = kat_farben.get(e.kategorie, "slate") %}
+    <div class="glossar-item bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm"
+         data-titel="{{ e.titel | lower }}"
+         data-definition="{{ e.definition | lower }}"
+         data-kategorie="{{ e.kategorie }}"
+         data-letter="{{ e.titel[0] | upper }}">
+
+      <!-- Accordion Header -->
+      <button class="gloss-btn w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-50 transition-colors select-none group">
+        <div class="flex-1 min-w-0 flex items-center gap-3">
+          <span class="font-bold text-slate-800 text-sm group-hover:text-{{ farbe }}-700 transition-colors">{{ e.titel }}</span>
+          <span class="text-xs px-2 py-0.5 rounded-full font-medium bg-{{ farbe }}-100 text-{{ farbe }}-700 shrink-0">{{ e.kategorie }}</span>
+        </div>
+        <svg class="gloss-chev w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+        </svg>
+      </button>
+
+      <!-- Accordion Body -->
+      <div class="gloss-body hidden px-5 pb-5 pt-1">
+        <p class="text-sm text-slate-600 leading-relaxed">{{ e.definition }}</p>
+        {% if e.link %}
+        <a href="{{ e.link }}" class="inline-flex items-center gap-1.5 mt-3 text-xs text-{{ farbe }}-600 hover:text-{{ farbe }}-800 font-medium transition-colors">
+          <span>→ Zum passenden Inhalt</span>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Empty State -->
+  <div id="empty-state" class="hidden text-center py-16 text-slate-400">
+    <div class="text-4xl mb-3">🔍</div>
+    <div class="font-medium text-slate-600 mb-1">Kein Eintrag gefunden</div>
+    <div class="text-sm">Versuche einen anderen Suchbegriff oder wähle eine andere Kategorie.</div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  var items = Array.from(document.querySelectorAll('.glossar-item'));
+  var searchInput = document.getElementById('glossar-search');
+  var katFilter = document.getElementById('kat-filter');
+  var buchButtons = document.querySelectorAll('.buch-btn');
+  var resultCount = document.getElementById('result-count');
+  var emptyState = document.getElementById('empty-state');
+  var activeLetter = 'all';
+
+  // Accordion
+  document.querySelectorAll('.gloss-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var body = btn.nextElementSibling;
+      var chev = btn.querySelector('.gloss-chev');
+      var isOpen = !body.classList.contains('hidden');
+      body.classList.toggle('hidden', isOpen);
+      if (chev) chev.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    });
+  });
+
+  // Filter
+  function applyFilters() {
+    var q = searchInput.value.toLowerCase().trim();
+    var kat = katFilter.value;
+    var shown = 0;
+
+    items.forEach(function(item) {
+      var matchSearch = !q || item.dataset.titel.includes(q) || item.dataset.definition.includes(q);
+      var matchKat = !kat || item.dataset.kategorie === kat;
+      var matchLetter = activeLetter === 'all' || item.dataset.letter === activeLetter;
+      var visible = matchSearch && matchKat && matchLetter;
+      item.classList.toggle('hidden', !visible);
+      if (visible) shown++;
+    });
+
+    resultCount.textContent = shown + ' Eintr' + (shown === 1 ? 'ag' : 'äge');
+    emptyState.classList.toggle('hidden', shown > 0);
+  }
+
+  // Buchstaben-Buttons
+  buchButtons.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      activeLetter = btn.dataset.letter;
+      buchButtons.forEach(function(b) {
+        b.classList.remove('bg-indigo-600', 'text-white');
+        b.classList.add('bg-slate-100', 'text-slate-600');
+      });
+      btn.classList.remove('bg-slate-100', 'text-slate-600');
+      btn.classList.add('bg-indigo-600', 'text-white');
+      // Beim Buchstaben-Filter Suche leeren für bessere UX
+      if (activeLetter !== 'all') {
+        searchInput.value = '';
+      }
+      applyFilters();
+    });
+  });
+
+  searchInput.addEventListener('input', function() {
+    // Buchstaben-Filter zurücksetzen wenn Suche läuft
+    if (searchInput.value.length > 0) {
+      activeLetter = 'all';
+      buchButtons.forEach(function(b) {
+        b.classList.remove('bg-indigo-600', 'text-white');
+        b.classList.add('bg-slate-100', 'text-slate-600');
+      });
+      document.querySelector('[data-letter="all"]').classList.remove('bg-slate-100', 'text-slate-600');
+      document.querySelector('[data-letter="all"]').classList.add('bg-indigo-600', 'text-white');
+    }
+    applyFilters();
+  });
+
+  katFilter.addEventListener('change', applyFilters);
+
+  // URL-Hash: direkt zu Begriff springen
+  var hash = window.location.hash.slice(1);
+  if (hash) {
+    var target = document.querySelector('[data-titel*="' + hash.replace(/-/g, ' ') + '"]');
+    if (target) {
+      var body = target.querySelector('.gloss-body');
+      var chev = target.querySelector('.gloss-chev');
+      if (body) { body.classList.remove('hidden'); }
+      if (chev) { chev.style.transform = 'rotate(0deg)'; }
+      setTimeout(function() { target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+    }
+  }
+})();
+</script>
+
+{% endblock %}
