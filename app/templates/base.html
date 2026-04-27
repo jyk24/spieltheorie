@@ -111,6 +111,9 @@
                             <a href="/gedaechtnis" role="listitem"
                                {% if active_page == 'gedaechtnis' %}aria-current="page"{% endif %}
                                class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'gedaechtnis' %}bg-indigo-800 text-white{% endif %}">🧠 Gedächtnis</a>
+                            <a href="/tagesraetsel" role="listitem"
+                               {% if active_page == 'tagesraetsel' %}aria-current="page"{% endif %}
+                               class="text-amber-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'tagesraetsel' %}bg-indigo-800 text-amber-300{% endif %}">🔥 Heute</a>
                             <a href="/fortschritt" role="listitem"
                                {% if active_page == 'fortschritt' %}aria-current="page"{% endif %}
                                class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors {% if active_page == 'fortschritt' %}bg-indigo-800 text-white{% endif %}">📊 Fortschritt</a>
@@ -162,6 +165,8 @@
                                class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'soziales' %}bg-indigo-800 text-white{% endif %}">💬 Soziales</a>
                             <a href="/gedaechtnis" {% if active_page == 'gedaechtnis' %}aria-current="page"{% endif %}
                                class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'gedaechtnis' %}bg-indigo-800 text-white{% endif %}">🧠 Gedächtnis</a>
+                            <a href="/tagesraetsel" {% if active_page == 'tagesraetsel' %}aria-current="page"{% endif %}
+                               class="text-amber-300 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'tagesraetsel' %}bg-indigo-800 text-amber-300{% endif %}">🔥 Heute</a>
                             <a href="/fortschritt" {% if active_page == 'fortschritt' %}aria-current="page"{% endif %}
                                class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors {% if active_page == 'fortschritt' %}bg-indigo-800 text-white{% endif %}">📊 Fortschritt</a>
                             <button onclick="switchDesign()" class="design-toggle-btn text-amber-300 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors cursor-pointer bg-transparent border-0 w-full text-left" aria-label="Design wechseln">
