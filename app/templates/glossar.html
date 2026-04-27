@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% block title %}Glossar – Fachbegriffe aus Spieltheorie, Mathematik & Psychologie{% endblock %}
+{% block meta_description %}<meta name="description" content="Über 60 Fachbegriffe aus Spieltheorie, Verhandlung, Entscheidungstheorie, Psychologie und Mathematik – kompakt erklärt mit Querverweisen zu interaktiven Rätseln.">{% endblock %}
+{% block og_title %}Glossar – Spieltheorie, Mathematik & Psychologie kompakt{% endblock %}
+{% block og_description %}Nachschlagewerk: Nash, BATNA, Bayes, Verlustaversion und mehr – jeder Begriff verlinkt auf interaktive Übungen.{% endblock %}
+{% block content %}
+
+<div class="max-w-5xl mx-auto">
+
+    <!-- Hero -->
+    <div class="mb-8">
+        <h1 class="text-4xl font-black text-slate-800 mb-3">Glossar</h1>
+        <p class="text-lg text-slate-500 max-w-3xl">
+            {{ eintraege|length }} Fachbegriffe aus {{ kategorien|length }} Themengebieten – kompakt erklärt und mit interaktiven Rätseln verknüpft.
+        </p>
+    </div>
+
+    <!-- Suche & Kategorien -->
+    <div class="bg-white border border-slate-200 rounded-xl p-5 mb-6 shadow-sm">
+        <div class="mb-4">
+            <label for="glossar-search" class="block text-xs font-semibold text-slate-600 uppercase tracking-wide mb-1.5">Suche</label>
+            <input id="glossar-search" type="search" placeholder="Begriff oder Stichwort eingeben…"
+                   class="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                   autocomplete="off">
+        </div>
+
+        <div class="mb-4">
+            <div class="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2">Kategorie</div>
+            <div class="flex flex-wrap gap-2">
+                <button data-cat="alle" class="cat-btn cat-active text-xs px-3 py-1.5 rounded-full border border-indigo-500 bg-indigo-500 text-white font-medium transition-colors">Alle</button>
+                {% for kat in kategorien %}
+                <button data-cat="{{ kat }}" class="cat-btn text-xs px-3 py-1.5 rounded-full border border-slate-200 text-slate-600 hover:border-indigo-400 hover:text-indigo-600 font-medium transition-colors">{{ kat }}</button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div>
+            <div class="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2">Sprung zum Buchstaben</div>
+            <div class="flex flex-wrap gap-1.5">
+                {% for b in buchstaben %}
+                <a href="#letter-{{ b }}" class="text-xs px-2.5 py-1 rounded border border-slate-200 text-slate-500 hover:border-indigo-400 hover:text-indigo-600 font-mono font-bold transition-colors">{{ b }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Ergebniszähler -->
+    <div id="result-count" class="text-sm text-slate-500 mb-4">{{ eintraege|length }} Einträge</div>
+
+    <!-- Glossar-Liste -->
+    <div id="glossar-list" class="space-y-3">
+        {% set ns = namespace(prev_letter='') %}
+        {% for e in eintraege %}
+            {% set letter = e.titel[0]|upper %}
+            {% if letter != ns.prev_letter %}
+                <div id="letter-{{ letter }}" class="glossar-letter-header pt-4 pb-1 first:pt-0">
+                    <div class="text-3xl font-black text-indigo-300">{{ letter }}</div>
+                </div>
+                {% set ns.prev_letter = letter %}
+            {% endif %}
+            <article class="glossar-entry bg-white border border-slate-200 rounded-xl p-5 hover:border-indigo-300 transition-colors"
+                     data-cat="{{ e.kategorie }}"
+                     data-text="{{ (e.titel ~ ' ' ~ e.definition)|lower }}"
+                     id="{{ e.id }}">
+                <div class="flex items-start justify-between gap-3 mb-2 flex-wrap">
+                    <h2 class="text-lg font-bold text-slate-800">{{ e.titel }}</h2>
+                    <span class="text-xs px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-medium border border-indigo-100 shrink-0">{{ e.kategorie }}</span>
+                </div>
+                <p class="text-sm text-slate-600 leading-relaxed mb-3">{{ e.definition }}</p>
+                {% if e.link %}
+                <a href="{{ e.link }}" class="inline-flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-800 font-medium">
+                    → Interaktive Übung
+                </a>
+                {% endif %}
+            </article>
+        {% endfor %}
+    </div>
+
+    <!-- "Nichts gefunden" -->
+    <div id="no-results" class="hidden text-center py-12 text-slate-500">
+        <div class="text-5xl mb-3">🔍</div>
+        <p class="text-lg font-medium mb-1">Kein Treffer</p>
+        <p class="text-sm">Versuche einen anderen Suchbegriff oder eine andere Kategorie.</p>
+    </div>
+
+    <!-- Querverweise -->
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <a href="/raetsel" class="bg-white border border-slate-200 rounded-xl p-5 hover:border-indigo-300 transition-colors">
+            <div class="text-2xl mb-2">🧩</div>
+            <div class="font-bold text-slate-700 mb-1">Rätsel</div>
+            <p class="text-xs text-slate-500">Begriffe interaktiv erleben.</p>
+        </a>
+        <a href="/grundlagen" class="bg-white border border-slate-200 rounded-xl p-5 hover:border-indigo-300 transition-colors">
+            <div class="text-2xl mb-2">📚</div>
+            <div class="font-bold text-slate-700 mb-1">Grundlagen</div>
+            <p class="text-xs text-slate-500">Konzepte im Zusammenhang.</p>
+        </a>
+        <a href="/lernpfade" class="bg-white border border-slate-200 rounded-xl p-5 hover:border-indigo-300 transition-colors">
+            <div class="text-2xl mb-2">🗺️</div>
+            <div class="font-bold text-slate-700 mb-1">Lernpfade</div>
+            <p class="text-xs text-slate-500">Strukturiert von Einsteiger bis Profi.</p>
+        </a>
+    </div>
+
+</div>
+
+<script>
+(function() {
+    var search = document.getElementById('glossar-search');
+    var entries = document.querySelectorAll('.glossar-entry');
+    var letterHeaders = document.querySelectorAll('.glossar-letter-header');
+    var catBtns = document.querySelectorAll('.cat-btn');
+    var noResults = document.getElementById('no-results');
+    var resultCount = document.getElementById('result-count');
+    var currentCat = 'alle';
+    var currentQuery = '';
+
+    function activateCatButton(btn) {
+        catBtns.forEach(function(b) {
+            b.classList.remove('cat-active', 'bg-indigo-500', 'text-white', 'border-indigo-500');
+            b.classList.add('border-slate-200', 'text-slate-600');
+        });
+        btn.classList.add('cat-active', 'bg-indigo-500', 'text-white', 'border-indigo-500');
+        btn.classList.remove('border-slate-200', 'text-slate-600');
+    }
+
+    function applyFilter() {
+        var visibleCount = 0;
+        var visibleLetters = {};
+        entries.forEach(function(el) {
+            var matchCat = currentCat === 'alle' || el.dataset.cat === currentCat;
+            var matchText = currentQuery === '' || el.dataset.text.indexOf(currentQuery) !== -1;
+            var visible = matchCat && matchText;
+            el.classList.toggle('hidden', !visible);
+            if (visible) {
+                visibleCount++;
+                var letter = el.id ? '' : '';
+                var headerId = el.previousElementSibling;
+                while (headerId && !headerId.classList.contains('glossar-letter-header')) {
+                    headerId = headerId.previousElementSibling;
+                }
+                if (headerId) visibleLetters[headerId.id] = true;
+            }
+        });
+        letterHeaders.forEach(function(h) {
+            h.classList.toggle('hidden', !visibleLetters[h.id]);
+        });
+        noResults.classList.toggle('hidden', visibleCount > 0);
+        resultCount.textContent = visibleCount + ' Eintr' + (visibleCount === 1 ? 'ag' : 'äge');
+    }
+
+    search.addEventListener('input', function() {
+        currentQuery = search.value.toLowerCase().trim();
+        applyFilter();
+    });
+
+    catBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            currentCat = btn.dataset.cat;
+            activateCatButton(btn);
+            applyFilter();
+        });
+    });
+})();
+</script>
+
+{% endblock %}

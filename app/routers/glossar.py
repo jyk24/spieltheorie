@@ -134,7 +134,7 @@ GLOSSAR = [
             "Das ist keine Frage der Technologie - es ist ein fundamentales Prinzip der Quantenwelt."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "bounded-rationality",
@@ -534,7 +534,7 @@ GLOSSAR = [
             "Grundlage fuer Laser, Transistoren, MRT und Quantencomputer."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "regression-zur-mitte",
@@ -667,7 +667,7 @@ GLOSSAR = [
             "wenn dieses Prinzip auf makroskopische Objekte zutreffen wuerde."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "survivorship-bias",
@@ -763,7 +763,7 @@ GLOSSAR = [
             "Bei einer Messung 'kollabiert' die Wellenfunktion auf einen einzigen Wert."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "winner-fluch",

@@ -549,6 +549,8 @@ RAETSEL_META = [
     {"id":"moebius-band","name":"Das Möbius-Band","icon":"♾️","beschreibung":"Nimm einen Papierstreifen, dreh ein Ende um 180° und klebe die Enden zusammen. Was entsteht – und was passiert, wenn du die Mitte durchschneidest?","typ":"Topologie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Mathematik"},
     {"id":"ziegenproblem-2","name":"Ziegenproblem 2.0","icon":"🚪","beschreibung":"Das Monty-Hall-Problem mit n Türen: Bei 100 Türen öffnet der Moderator 98. Lohnt sich der Wechsel noch mehr? Die Mathematik überrascht erneut.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Mathematik"},
     {"id":"polyeder-check","name":"Polyeder & Euler-Formel","icon":"💠","beschreibung":"Ecken minus Kanten plus Flächen = 2. Diese Formel gilt für jeden konvexen Polyeder. Euler entdeckte sie 1750 – und sie ist bis heute grundlegend.","typ":"Geometrie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Mathematik"},
+    {"id":"banach-tarski","name":"Banach-Tarski-Paradoxon","icon":"🔮","beschreibung":"Eine Kugel lässt sich in endlich viele Teile zerlegen und so wieder zusammensetzen, dass zwei identische Kugeln entstehen. Wie kann das mathematisch wahr sein?","typ":"Mengenlehre","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Mathematik"},
+    {"id":"primzahl-luecken","name":"Primzahllücken","icon":"🔢","beschreibung":"Zwischen 9 999 900 und 10 000 000 liegt eine Lücke ohne Primzahlen. Werden diese Lücken beliebig groß? Die Antwort ist verblüffend einfach.","typ":"Zahlentheorie","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Mathematik"},
     # ── Physik (neu) ──────────────────────────────────────────────────────────
     {"id":"schroedinger-katze","name":"Schrödingers Katze","icon":"🐱","beschreibung":"Eine Katze, eine radioaktive Substanz, ein Giftbehälter – und die seltsamste Frage der Physik: Ist die Katze tot oder lebendig, bevor du nachschaust?","typ":"Quantenmechanik","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Physik"},
     {"id":"maxwells-daemon","name":"Maxwells Dämon","icon":"😈","beschreibung":"Ein winziges Wesen sortiert schnelle und langsame Moleküle – und scheint damit den zweiten Hauptsatz der Thermodynamik zu verletzen. Wie ist das möglich?","typ":"Thermodynamik","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Physik"},
@@ -562,6 +564,7 @@ RAETSEL_META = [
     # ── Spieltheorie (neu) ───────────────────────────────────────────────────
     {"id":"matching-pennies","name":"Matching Pennies","icon":"🪙","beschreibung":"Zwei Spieler legen gleichzeitig eine Münze auf den Tisch. Einer gewinnt bei gleichen Seiten, der andere bei verschiedenen. Gibt es eine optimale Strategie?","typ":"Nullsummenspiel","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Spieltheorie"},
     {"id":"cake-cutting","name":"Cake Cutting","icon":"🎂","beschreibung":"Wie teilt man einen Kuchen zwischen zwei Personen fair auf, ohne eine Instanz als Schiedsrichter? Die Lösung ist so einfach wie elegant.","typ":"Fairness-Algorithmus","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Spieltheorie"},
+    {"id":"diners-dilemma","name":"Das Diner-Dilemma","icon":"🍽️","beschreibung":"Zehn Freunde, eine geteilte Rechnung. Jeder bezahlt nur 1/10 dessen, was er bestellt – und alle bestellen das Teuerste. Ein Public-Goods-Spiel beim Abendessen.","typ":"Public-Goods","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Spieltheorie"},
     # ── Statistik (neu) ──────────────────────────────────────────────────────
     {"id":"berkson","name":"Das Berkson-Paradoxon","icon":"🏥","beschreibung":"Im Krankenhaus scheinen Raucher seltener Lungenkrebs zu haben. Ein scheinbarer Widerspruch – erklärt durch verzerrte Stichproben.","typ":"Statistik-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Statistik"},
     {"id":"p-hacking","name":"P-Hacking","icon":"🎰","beschreibung":"Ein Forscher testet 20 Hypothesen und findet eine mit p < 0,05. Ist das ein echter Befund? Die gefährlichste Methode der modernen Wissenschaft.","typ":"Wissenschaftsmethodik","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Statistik"},
@@ -3799,6 +3802,59 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>65 % der Teilnehmer verabreichten 450-Volt-Schocks — obwohl der 'Schüler' schrie und aufhörte zu reagieren. Die Erklärung: Gehorsam gegenüber legitimen Autoritäten, graduelles Commitment (jeder Schritt war nur klein größer), Verantwortungsdiffusion ('Ich folge nur Anweisungen'), physische Distanz zum Opfer.</p>",
         "kontext": "<p>Das Experiment wurde im Kontext des Eichmann-Prozesses (1960) geplant. Milgrams Frage: Ist Gehorsam im Nationalsozialismus ein deutsches Phänomen? Antwort: Nein — es ist ein menschliches. Ethisch hoch umstritten: Viele Teilnehmer litten unter den Erkenntnissen über sich selbst. Heute nicht mehr genehmigungsfähig.</p>",
         "erkenntnis": "Böses entsteht oft nicht aus Bösartigkeit, sondern aus Gehorsam. Die Absicht, das Richtige zu tun, schützt nicht vor dem Falschen, wenn Autoritäten Kontext definieren. Das ist die erschütternde Lektion.",
+    },
+    # ── Mathematik (Erweiterung) ──────────────────────────────────────────
+    "banach-tarski": {
+        "id": "banach-tarski", "name": "Banach-Tarski-Paradoxon", "icon": "🔮",
+        "farbe": "violet", "kategorie": "Mathematik",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": "Stefan Banach und Alfred Tarski bewiesen 1924: Eine massive Kugel im dreidimensionalen Raum lässt sich in endlich viele Teile zerlegen. Diese Teile können nur durch Drehung und Verschiebung — ohne Streckung oder Stauchung — so wieder zusammengesetzt werden, dass <em>zwei</em> Kugeln entstehen, jede so groß wie die Originalkugel.",
+        "frage": "Wie ist das mathematisch möglich — und warum widerspricht es nicht der Erhaltung des Volumens?",
+        "optionen": [
+            {"text": "Es ist ein Trick: die Teile dehnen sich heimlich aus", "hinweis": "Banach & Tarski erlauben nur starre Bewegungen"},
+            {"text": "Die Teile sind nicht messbar — ihnen lässt sich kein Volumen zuordnen", "hinweis": "Verletzung der σ-Additivität von Maßen"},
+            {"text": "Es funktioniert nur in unendlich-dimensionalen Räumen", "hinweis": "Nein — der Beweis ist im ℝ³"},
+            {"text": "Der Beweis ist falsch — wurde 1950 widerlegt", "hinweis": "Der Beweis ist als korrekt anerkannt"},
+        ],
+        "loesung_text": "Die Zerlegungsstücke sind nicht-messbare Mengen — ihnen kann kein Volumen zugeordnet werden",
+        "erklaerung": "<p>Der Beweis benötigt das Auswahlaxiom (Axiom of Choice) und konstruiert Mengen, die so &#8222;wild&#8220; sind, dass kein konsistentes Volumen für sie existiert. Volumenerhaltung gilt nur für <em>messbare</em> Mengen — die Banach-Tarski-Stücke fallen aus diesem Begriff heraus. In der Praxis (Atome, endlich teilbare Materie) ist das Paradox unmöglich.</p>",
+        "kontext": "<p>Das Paradoxon ist eines der stärksten Argumente <em>gegen</em> das Auswahlaxiom — und gleichzeitig keines, weil moderne Mathematik ohne dieses Axiom riesige Bereiche aufgeben müsste (z.B. den Satz, dass jeder Vektorraum eine Basis hat). Der Konsens: Mit AC leben, das Paradoxon als ‚nicht physikalisch&#8216; akzeptieren.</p>",
+        "erkenntnis": "Mathematik ist nicht durch unsere Intuition begrenzt. Konzepte wie ‚Volumen&#8216; sind Definitionen, keine Naturgesetze — und sie haben Grenzen. Was logisch widerspruchsfrei ist, kann physikalisch unmöglich sein.",
+    },
+    "primzahl-luecken": {
+        "id": "primzahl-luecken", "name": "Primzahllücken", "icon": "🔢",
+        "farbe": "teal", "kategorie": "Mathematik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Eine Primzahllücke ist die Differenz zwischen zwei aufeinanderfolgenden Primzahlen. Zwischen 2 und 3 ist die Lücke 1, zwischen 7 und 11 ist sie 4. Die Frage: Können diese Lücken beliebig groß werden — oder gibt es eine Obergrenze?",
+        "frage": "Gibt es Primzahllücken beliebiger Größe?",
+        "optionen": [
+            {"text": "Nein — die größtmögliche Lücke ist endlich (≈ 1500)", "hinweis": "Aber wo wäre die Grenze?"},
+            {"text": "Ja — und der Beweis ist erstaunlich einfach (Fakultäten!)", "hinweis": "n! + 2, n! + 3, …"},
+            {"text": "Nur unter der Riemannschen Vermutung beweisbar", "hinweis": "Nein, der Beweis ist elementar"},
+            {"text": "Ungelöstes Problem — nur empirisch gestützt", "hinweis": "Das ist nicht der Fall"},
+        ],
+        "loesung_text": "Ja — für jedes n existiert eine Lücke der Länge ≥ n",
+        "erklaerung": "<p>Beweis (4 Zeilen): Betrachte die n−1 aufeinanderfolgenden Zahlen<br>n! + 2, n! + 3, n! + 4, …, n! + n.<br>Die k-te dieser Zahlen ist durch k teilbar (denn n! ist durch jedes k von 2 bis n teilbar, also auch n! + k). Damit ist keine dieser n−1 Zahlen prim — wir haben eine Lücke der Länge mindestens n−1 konstruiert.</p>",
+        "kontext": "<p>Trotz beliebig großer Lücken liegen Primzahlen ‚im Mittel&#8216; immer dichter, je weiter man zählt — der Primzahlsatz quantifiziert das. Yitang Zhang bewies 2013, dass es <em>unendlich viele</em> Primzahlpaare mit Abstand ≤ 70 000 000 gibt (heute auf 246 verbessert) — die Primzahlzwillingsvermutung würde 2 erlauben, ist aber bis heute offen.</p>",
+        "erkenntnis": "Die spektakulärsten Sätze der Zahlentheorie haben oft kurze, elementare Beweise — sobald man den richtigen Trick sieht. Mathematische Schönheit liegt in der Eleganz, nicht in der Komplexität.",
+    },
+    # ── Spieltheorie (Erweiterung) ────────────────────────────────────────
+    "diners-dilemma": {
+        "id": "diners-dilemma", "name": "Das Diner-Dilemma", "icon": "🍽️",
+        "farbe": "amber", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup": "Zehn Freunde gehen essen und beschließen, die Rechnung am Ende zu gleichen Teilen aufzuteilen. Auf der Karte steht: ein einfaches Gericht für 15 €, das ein Genuss von 14 € wert ist (Nettonutzen +14 €), und ein Gourmet-Gericht für 25 €, das einen Genuss von 20 € wert ist (Nettonutzen wäre −5 €, wenn man es selbst zahlt).",
+        "frage": "Was bestellt der rationale Egoist — und was passiert, wenn alle so denken?",
+        "optionen": [
+            {"text": "Einfach. Es ist objektiv die bessere Wahl (höherer Nettonutzen).", "hinweis": "Das gilt nur, wenn man selbst voll zahlt"},
+            {"text": "Gourmet. Mein Mehrpreis verteilt sich auf alle (1/10), aber den Genuss habe ich allein.", "hinweis": "Nash-Gleichgewicht — alle bestellen Gourmet"},
+            {"text": "Gourmet — ich profitiere von den anderen, die einfach bestellen", "hinweis": "Nur wenn die anderen einfach bestellen"},
+            {"text": "Einfach — aus Solidarität mit der Gruppe", "hinweis": "Nicht spieltheoretisch rational"},
+        ],
+        "loesung_text": "Alle bestellen Gourmet — und alle sind am Ende schlechter dran als wenn alle einfach bestellt hätten",
+        "erklaerung": "<p>Mein individueller Mehrpreis bei Gourmet: (25 − 15) / 10 = 1 €. Mein Mehrgenuss: 20 − 14 = 6 €. Netto-Vorteil: +5 €. Also ist Gourmet eine <em>dominante Strategie</em>. Aber wenn alle so denken, zahlt jeder 25 €, hat aber nur 20 € Genuss — alle verlieren je 5 €. Hätten alle einfach bestellt, hätte jeder netto +14 € gewonnen. Das ist exakt das Gefangenendilemma in n-Personen-Form.</p>",
+        "kontext": "<p>Das Diner-Dilemma (Glance & Huberman, 1994) ist ein klassisches Public-Goods-Problem in Miniatur. Es taucht überall auf: Steuermoral (jeder profitiert von Straßen, niemand will zahlen), Klimaschutz (jeder Staat will, dass andere CO₂ reduzieren), Open Source (jeder nutzt, wenige beitragen). Lösung: explizite Regeln (jeder zahlt eigenes), soziale Sanktion oder kleinere Gruppen (Reziprozität).</p>",
+        "erkenntnis": "Wenn individuelle Anreize von kollektivem Nutzen entkoppelt werden, kollabiert die Kooperation — selbst unter Freunden, die sich mögen. Strukturen schlagen Tugend.",
     },
 }
 
