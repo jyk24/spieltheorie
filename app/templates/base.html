@@ -109,6 +109,19 @@
                                 <span class="show-classic">✨ Editorial</span>
                                 <span class="show-editorial">← Klassisch</span>
                             </button>
+                            <!-- Auth -->
+                            {% if request.state.current_user %}
+                            <a href="/profil" role="listitem"
+                               class="flex items-center gap-1.5 bg-indigo-800 hover:bg-indigo-900 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+                                <span class="w-6 h-6 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold">{{ request.state.current_user.display_name[0] | upper }}</span>
+                                <span class="hidden lg:inline">{{ request.state.current_user.display_name }}</span>
+                            </a>
+                            {% else %}
+                            <a href="/anmelden" role="listitem"
+                               class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Anmelden</a>
+                            <a href="/registrieren" role="listitem"
+                               class="bg-white text-indigo-700 hover:bg-indigo-50 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors">Registrieren</a>
+                            {% endif %}
                         </div>
 
                         <!-- Mobile hamburger -->
@@ -145,6 +158,19 @@
                                 <span class="show-classic">✨ Editorial</span>
                                 <span class="show-editorial">← Klassisch</span>
                             </button>
+                            <!-- Auth (Mobile) -->
+                            {% if request.state.current_user %}
+                            <a href="/profil"
+                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors flex items-center gap-2">
+                                <span class="w-5 h-5 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold">{{ request.state.current_user.display_name[0] | upper }}</span>
+                                {{ request.state.current_user.display_name }}
+                            </a>
+                            {% else %}
+                            <a href="/anmelden"
+                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors">Anmelden</a>
+                            <a href="/registrieren"
+                               class="text-indigo-200 hover:text-white hover:bg-indigo-600 px-3 py-2.5 rounded-md text-sm font-medium transition-colors">Registrieren</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

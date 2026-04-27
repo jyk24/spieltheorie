@@ -44,11 +44,15 @@ def check_achievements(
     result: str,
     score: int,
     ai_score: int,
+    user_id: int | None = None,
 ) -> list[dict]:
     """Prüft alle Achievements und gibt neu freigeschaltete zurück."""
-    already = {a.slug for a in db.query(UserAchievement).all()}
+    already = {
+        a.slug for a in db.query(UserAchievement).filter_by(user_id=user_id).all()
+    }
     all_progress: dict[str, int] = {
-        p.game_type: p.games_played for p in db.query(UserProgress).all()
+        p.game_type: p.games_played
+        for p in db.query(UserProgress).filter_by(user_id=user_id).all()
     }
 
     newly: list[dict] = []
@@ -57,7 +61,7 @@ def check_achievements(
         if slug in already:
             continue
         if _check_condition(slug, game_type, moves, result, score, ai_score, all_progress):
-            db.add(UserAchievement(slug=slug, unlocked_at=datetime.utcnow()))
+            db.add(UserAchievement(slug=slug, user_id=user_id, unlocked_at=datetime.utcnow()))
             newly.append(ach)
 
     if newly:

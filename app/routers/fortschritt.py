@@ -7,6 +7,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from ..achievements import ACHIEVEMENTS
+from ..auth import get_user_from_request
 from ..database import get_db
 from ..game_registry import GAME_ICONS, GAME_LABELS
 from ..models import GameSession, Lesson, UserAchievement, UserProgress
@@ -22,15 +23,16 @@ RESULT_COLORS = {"win": "emerald", "loss": "red", "draw": "amber"}
 
 @router.get("", response_class=HTMLResponse)
 def fortschritt(request: Request, db: Session = Depends(get_db)):
-    stats = get_all_progress(db)
+    current_user = get_user_from_request(request, db)
+    user_id = current_user.id if current_user else None
+
+    stats = get_all_progress(db, user_id=user_id)
 
     # Score-Verlauf für Chart.js (letzte 20 Sessions)
-    chart_sessions = (
-        db.query(GameSession)
-        .order_by(GameSession.created_at.asc())
-        .limit(20)
-        .all()
-    )
+    session_query = db.query(GameSession)
+    if user_id is not None:
+        session_query = session_query.filter(GameSession.user_id == user_id)
+    chart_sessions = session_query.order_by(GameSession.created_at.asc()).limit(20).all()
     chart_labels = [f"#{s.id}" for s in chart_sessions]
     chart_scores = [s.score for s in chart_sessions]
     chart_games = [GAME_LABELS.get(s.game_type, s.game_type) for s in chart_sessions]
@@ -38,7 +40,7 @@ def fortschritt(request: Request, db: Session = Depends(get_db)):
     # Lektionsfortschritt
     all_lessons = db.query(Lesson).order_by(Lesson.order_index).all()
     viewed_slugs: set[str] = set()
-    for p in db.query(UserProgress).all():
+    for p in db.query(UserProgress).filter_by(user_id=user_id).all():
         viewed_slugs.update(json.loads(p.lessons_viewed_json or "[]"))
 
     lessons_with_status = [
@@ -47,15 +49,13 @@ def fortschritt(request: Request, db: Session = Depends(get_db)):
     ]
 
     # Letzte 10 Sessionen (klickbar)
-    recent_sessions = (
-        db.query(GameSession)
-        .order_by(GameSession.created_at.desc())
-        .limit(10)
-        .all()
-    )
+    recent_query = db.query(GameSession)
+    if user_id is not None:
+        recent_query = recent_query.filter(GameSession.user_id == user_id)
+    recent_sessions = recent_query.order_by(GameSession.created_at.desc()).limit(10).all()
 
     # Errungenschaften
-    unlocked = db.query(UserAchievement).all()
+    unlocked = db.query(UserAchievement).filter_by(user_id=user_id).all()
     unlocked_slugs = {a.slug for a in unlocked}
     achievement_dates = {
         a.slug: a.unlocked_at.strftime("%d.%m.%Y") if a.unlocked_at else ""
@@ -67,6 +67,7 @@ def fortschritt(request: Request, db: Session = Depends(get_db)):
         "fortschritt.html",
         {
             "active_page": "fortschritt",
+            "current_user": current_user,
             "stats": stats,
             "chart_labels": json.dumps(chart_labels),
             "chart_scores": json.dumps(chart_scores),
@@ -81,6 +82,7 @@ def fortschritt(request: Request, db: Session = Depends(get_db)):
             "unlocked_slugs": unlocked_slugs,
             "achievement_dates": achievement_dates,
             "raetsel_meta": RAETSEL_META,
+            "is_logged_in": current_user is not None,
         },
     )
 

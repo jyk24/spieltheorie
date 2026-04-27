@@ -679,6 +679,7 @@ def gefangenendilemma_zug(
         evaluation = _gd_evaluate_response(strategy, history)
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="gefangenendilemma",
             ai_strategy=strategy,
             moves=history,
@@ -799,6 +800,7 @@ def ultimatum_zug(
         result = "win" if efficiency >= 55 else ("draw" if efficiency >= 30 else "loss")
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="ultimatum",
             ai_strategy=strategy,
             moves=history,
@@ -880,6 +882,7 @@ def vertrauen_zug(
     if is_final and final:
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="vertrauen",
             ai_strategy=strategy,
             moves=history,
@@ -957,6 +960,7 @@ def verhandlung_zug(
         score_data = verhandlung_score(scenario, final_price, round_num)
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="verhandlung",
             ai_strategy="nash_rubinstein",
             moves=history,
@@ -1028,6 +1032,7 @@ def chicken_zug(
     if is_final and final:
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="chicken",
             ai_strategy=strategy,
             moves=history,
@@ -1101,6 +1106,7 @@ def public_goods_zug(
     if is_final and final:
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="public_goods",
             ai_strategy=strategy,
             moves=history,
@@ -1206,6 +1212,7 @@ def beauty_contest_zug(
     if is_final and final:
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="beauty_contest",
             ai_strategy=strategy,
             moves=history,
@@ -1309,6 +1316,7 @@ def stag_hunt_zug(
     if is_final and final:
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="stag_hunt",
             ai_strategy=strategy,
             moves=history,
@@ -1414,6 +1422,7 @@ def centipede_zug(
         final = centipede_final_result(events, turn_result["final_player"], turn_result["final_ai"])
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="centipede",
             ai_strategy=strategy,
             moves=events,
@@ -1512,6 +1521,7 @@ def rps_zug(
     if is_final:
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="rps",
             ai_strategy=strategy,
             moves=history,
@@ -1608,6 +1618,7 @@ def koordination_zug(
     if is_final:
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="koordination",
             ai_strategy=strategy,
             moves=history,
@@ -1714,6 +1725,7 @@ def auktion_zug(
     if is_final:
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="auktion",
             ai_strategy=strategy,
             moves=history,
@@ -1813,6 +1825,7 @@ def diktator_zug(
     if is_final:
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="diktator",
             ai_strategy=strategy,
             moves=history,
@@ -1914,6 +1927,7 @@ def dollarauktion_zug(
         result = "win" if turn["winner"] == "player" else "loss"
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="dollarauktion",
             ai_strategy=strategy,
             moves=[turn],
@@ -2008,6 +2022,7 @@ def minderheit_zug(
     if is_final:
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="minderheit",
             ai_strategy=strategy,
             moves=history,
@@ -2104,6 +2119,7 @@ def habicht_taube_zug(
     if is_final:
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="habicht-taube",
             ai_strategy=strategy,
             moves=history,
@@ -2200,6 +2216,7 @@ def geschlechter_kampf_zug(
     if is_final:
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="geschlechter-kampf",
             ai_strategy=strategy,
             moves=history,
@@ -2296,6 +2313,7 @@ def freiwilligen_dilemma_zug(
     if is_final:
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="freiwilligen-dilemma",
             ai_strategy=strategy,
             moves=history,
@@ -2392,6 +2410,7 @@ def gleiche_muenzen_zug(
     if is_final:
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="gleiche-muenzen",
             ai_strategy=strategy,
             moves=history,
@@ -2490,6 +2509,7 @@ def gewinner_fluch_zug(
     if is_final:
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="gewinner-fluch",
             ai_strategy=strategy,
             moves=history,
@@ -2557,6 +2577,7 @@ def hollaendische_auktion_tick(
         if is_final:
             _, new_achievements = save_game_session(
                 db,
+                user_id=request.state.current_user.id if request.state.current_user else None,
                 game_type="hollaendische-auktion",
                 ai_strategy="dutch",
                 moves=history,
@@ -2636,6 +2657,7 @@ def englische_auktion_tick(
         if is_final:
             _, new_achievements = save_game_session(
                 db,
+                user_id=request.state.current_user.id if request.state.current_user else None,
                 game_type="englische-auktion",
                 ai_strategy="english",
                 moves=history,
@@ -2752,6 +2774,7 @@ def cournot_zug(
     if is_final:
         _, new_achievements = save_game_session(
             db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
             game_type="cournot",
             ai_strategy=strategy,
             moves=history,
