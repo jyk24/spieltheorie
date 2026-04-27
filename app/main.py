@@ -4,16 +4,22 @@ from fastapi import FastAPI, Request
 from fastapi.responses import PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
 
-from .auth import decode_token
+# ── AUTH-AKTIVIERUNG: diesen Block einkommentieren ────────────────────────────
+# from .auth import decode_token
+# from .models import User
+# ─────────────────────────────────────────────────────────────────────────────
+
 from .database import Base, SessionLocal, engine
-from .models import User
 from .seed import seed_lessons, seed_progress
 from .routers import (
     dashboard, lektionen, spiele, fortschritt, raetsel, grundlagen,
     spielpfad, konzepte, lernpfade, skills, redesign, gedaechtnis,
     spieltheorie_hub, denkraetsel, soziales, glossar, ted,
 )
-from .routers import auth_router
+
+# ── AUTH-AKTIVIERUNG: diese Zeile einkommentieren ─────────────────────────────
+# from .routers import auth_router
+# ─────────────────────────────────────────────────────────────────────────────
 
 
 @asynccontextmanager
@@ -32,23 +38,33 @@ app = FastAPI(title="Spieltheorie & Verhandlungstrainer", lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 
+# ── AUTH-AKTIVIERUNG: diesen Middleware-Block einkommentieren ─────────────────
+# @app.middleware("http")
+# async def auth_middleware(request: Request, call_next):
+#     request.state.current_user = None
+#     token = request.cookies.get("access_token")
+#     if token:
+#         user_id = decode_token(token)
+#         if user_id:
+#             db = SessionLocal()
+#             try:
+#                 user = db.query(User).filter(User.id == user_id, User.is_active == True).first()
+#                 request.state.current_user = user
+#             finally:
+#                 db.close()
+#     return await call_next(request)
+# ─────────────────────────────────────────────────────────────────────────────
+
 @app.middleware("http")
-async def auth_middleware(request: Request, call_next):
+async def set_current_user(request: Request, call_next):
     request.state.current_user = None
-    token = request.cookies.get("access_token")
-    if token:
-        user_id = decode_token(token)
-        if user_id:
-            db = SessionLocal()
-            try:
-                user = db.query(User).filter(User.id == user_id, User.is_active == True).first()
-                request.state.current_user = user
-            finally:
-                db.close()
     return await call_next(request)
 
 
-app.include_router(auth_router.router)
+# ── AUTH-AKTIVIERUNG: diese Zeile einkommentieren ─────────────────────────────
+# app.include_router(auth_router.router)
+# ─────────────────────────────────────────────────────────────────────────────
+
 app.include_router(dashboard.router)
 app.include_router(lektionen.router)
 app.include_router(spiele.router)
