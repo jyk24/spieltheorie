@@ -76,8 +76,9 @@
     <p class="font-bold text-slate-800 mb-1">Mehr entdecken</p>
     <p class="text-sm text-slate-500 mb-4">Rätsel, Spieltheorie und Gedächtnistraining – weitere thematische Bereiche.</p>
     <div class="flex gap-3 justify-center flex-wrap">
+      <a href="/spieltheorie" class="inline-block bg-indigo-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors text-sm">♟️ Spieltheorie</a>
       <a href="/soziales" class="inline-block bg-teal-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-teal-700 transition-colors text-sm">💬 Soziale Intelligenz</a>
-      <a href="/raetsel" class="inline-block bg-indigo-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors text-sm">🧩 Rätsel</a>
+      <a href="/raetsel" class="inline-block border border-slate-300 text-slate-600 font-medium px-5 py-2.5 rounded-xl hover:bg-slate-100 transition-colors text-sm">🧩 Rätsel</a>
       <a href="/skills" class="inline-block border border-slate-300 text-slate-600 font-medium px-5 py-2.5 rounded-xl hover:bg-slate-100 transition-colors text-sm">⚡ Skills</a>
     </div>
   </div>
@@ -89,24 +90,28 @@
   var btns = document.querySelectorAll('.kat-btn');
   var cards = document.querySelectorAll('.talk-card');
 
-  btns.forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var kat = btn.dataset.kat;
-      btns.forEach(function(b) {
-        b.classList.remove('active', 'bg-red-600', 'text-white');
-        b.classList.add('bg-white', 'border', 'border-slate-200', 'text-slate-600');
-      });
-      btn.classList.add('active', 'bg-red-600', 'text-white');
-      btn.classList.remove('bg-white', 'border', 'border-slate-200', 'text-slate-600');
-      cards.forEach(function(card) {
-        if (!kat || card.dataset.kat === kat) {
-          card.classList.remove('hidden');
-        } else {
-          card.classList.add('hidden');
-        }
-      });
+  function activateKat(kat) {
+    btns.forEach(function(b) {
+      var isActive = b.dataset.kat === kat;
+      b.classList.toggle('bg-red-600', isActive);
+      b.classList.toggle('text-white', isActive);
+      b.classList.toggle('bg-white', !isActive);
+      b.classList.toggle('border', !isActive);
+      b.classList.toggle('border-slate-200', !isActive);
+      b.classList.toggle('text-slate-600', !isActive);
     });
+    cards.forEach(function(card) {
+      card.classList.toggle('hidden', !(!kat || card.dataset.kat === kat));
+    });
+  }
+
+  btns.forEach(function(btn) {
+    btn.addEventListener('click', function() { activateKat(btn.dataset.kat); });
   });
+
+  // ?kat= URL-Parameter → passenden Filter vorauswählen
+  var urlKat = new URLSearchParams(location.search).get('kat') || '';
+  if (urlKat) activateKat(urlKat);
 })();
 </script>
 

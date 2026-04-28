@@ -8,7 +8,7 @@
 <div class="max-w-6xl mx-auto">
 
   <!-- Hero -->
-  <div class="mb-10">
+  <div class="mb-8">
     <div class="flex items-start gap-4 mb-3">
       <div class="text-5xl">♟️</div>
       <div>
@@ -23,8 +23,17 @@
     </div>
   </div>
 
+  <!-- Tab-Navigation -->
+  <div class="flex gap-2 mb-8 flex-wrap" id="section-tabs">
+    <button class="sec-btn bg-indigo-600 text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-sec="">Alle</button>
+    <button class="sec-btn bg-white border border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-sec="theorie">📖 Theorie</button>
+    <button class="sec-btn bg-white border border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-sec="spiele">🎮 Spiele</button>
+    <button class="sec-btn bg-white border border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-sec="raetsel">🧩 Rätsel</button>
+    <button class="sec-btn bg-white border border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-sec="skills">💡 Skills</button>
+  </div>
+
   <!-- ── 1. Theorie ─────────────────────────────────────────────────────────── -->
-  <section class="mb-12">
+  <section class="mb-12" id="sec-theorie">
     <div class="flex items-center gap-3 mb-5">
       <span class="bg-indigo-100 text-indigo-700 w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">📖</span>
       <div>
@@ -59,7 +68,7 @@
   </section>
 
   <!-- ── 2. Interaktive Spiele ──────────────────────────────────────────────── -->
-  <section class="mb-12">
+  <section class="mb-12" id="sec-spiele">
     <div class="flex items-center gap-3 mb-5">
       <span class="bg-emerald-100 text-emerald-700 w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">🎮</span>
       <div>
@@ -103,14 +112,17 @@
   </section>
 
   <!-- ── 3. Rätsel & Paradoxe ───────────────────────────────────────────────── -->
-  <section class="mb-12">
+  <section class="mb-12" id="sec-raetsel">
     <div class="flex items-center gap-3 mb-5">
       <span class="bg-amber-100 text-amber-700 w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">🧩</span>
       <div>
         <h2 class="text-xl font-bold text-slate-800">Rätsel & Paradoxe</h2>
         <p class="text-sm text-slate-500">Spieltheorie, Wahrscheinlichkeit, Statistik und Kognition – denk nach, bevor du antwortest.</p>
       </div>
-      <a href="/raetsel" class="ml-auto text-sm text-amber-600 hover:text-amber-800 font-medium shrink-0">Alle Rätsel →</a>
+      <div class="ml-auto flex items-center gap-3 shrink-0">
+        <a href="/ted?kat=Entscheidung" class="text-xs text-red-500 hover:text-red-700 font-medium">🎤 TED: Entscheidung →</a>
+        <a href="/raetsel" class="text-sm text-amber-600 hover:text-amber-800 font-medium">Alle Rätsel →</a>
+      </div>
     </div>
 
     {% set kat_farben = {"Spieltheorie": ("indigo","🎯"), "Wahrscheinlichkeit": ("blue","🎲"), "Statistik": ("emerald","📊"), "Kognition": ("rose","🧠")} %}
@@ -148,14 +160,17 @@
   </section>
 
   <!-- ── 4. Verhandlungs-Skills ─────────────────────────────────────────────── -->
-  <section class="mb-8">
+  <section class="mb-8" id="sec-skills">
     <div class="flex items-center gap-3 mb-5">
       <span class="bg-violet-100 text-violet-700 w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">💡</span>
       <div>
         <h2 class="text-xl font-bold text-slate-800">Verhandlungs-Skills</h2>
         <p class="text-sm text-slate-500">Spieltheorie in der Praxis – die wichtigsten Frameworks auf einen Blick.</p>
       </div>
-      <a href="/skills" class="ml-auto text-sm text-violet-600 hover:text-violet-800 font-medium shrink-0">Alle Skills →</a>
+      <div class="ml-auto flex items-center gap-3 shrink-0">
+        <a href="/ted?kat=Verhandlung" class="text-xs text-red-500 hover:text-red-700 font-medium">🎤 TED: Verhandlung →</a>
+        <a href="/skills" class="text-sm text-violet-600 hover:text-violet-800 font-medium">Alle Skills →</a>
+      </div>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {% for s in skills %}
@@ -173,6 +188,35 @@
 
 <script>
 (function() {
+  var btns = document.querySelectorAll('.sec-btn');
+  var secs = {
+    theorie: document.getElementById('sec-theorie'),
+    spiele:  document.getElementById('sec-spiele'),
+    raetsel: document.getElementById('sec-raetsel'),
+    skills:  document.getElementById('sec-skills'),
+  };
+
+  function activateTab(sec) {
+    btns.forEach(function(b) {
+      var isActive = b.dataset.sec === sec;
+      b.classList.toggle('bg-indigo-600', isActive);
+      b.classList.toggle('text-white', isActive);
+      b.classList.toggle('bg-white', !isActive);
+      b.classList.toggle('border', !isActive);
+      b.classList.toggle('border-slate-200', !isActive);
+      b.classList.toggle('text-slate-600', !isActive);
+    });
+    Object.keys(secs).forEach(function(key) {
+      secs[key].classList.toggle('hidden', sec !== '' && sec !== key);
+    });
+    history.replaceState(null, '', sec ? '#' + sec : location.pathname);
+  }
+
+  btns.forEach(function(btn) {
+    btn.addEventListener('click', function() { activateTab(btn.dataset.sec); });
+  });
+
+  // Accordion für Rätsel-Gruppen
   document.querySelectorAll('.raetsel-grp-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var body = btn.nextElementSibling;
@@ -181,6 +225,10 @@
       if (chev) chev.style.transform = hidden ? '' : 'rotate(180deg)';
     });
   });
+
+  // Hash beim Laden lesen → Tab vorauswählen
+  var initHash = location.hash.slice(1);
+  if (initHash && secs[initHash]) activateTab(initHash);
 })();
 </script>
 
