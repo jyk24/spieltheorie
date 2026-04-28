@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block title %}Major-System Referenz 0–99 – Gedächtnis{% endblock %}
+{% block meta_description %}<meta name="description" content="Vollständige Major-System Wortliste 0–99 auf Deutsch. Interaktive Ziffern-Tabelle, Spotlight 0–20 und Quiz-Training.">{% endblock %}
+
+{% block content %}
+
+{% set dcolors = {
+  0: ("bg-slate-100", "text-slate-700", "border-slate-300"),
+  1: ("bg-red-100",    "text-red-700",   "border-red-300"),
+  2: ("bg-orange-100", "text-orange-700","border-orange-300"),
+  3: ("bg-amber-100",  "text-amber-700", "border-amber-300"),
+  4: ("bg-yellow-100", "text-yellow-800","border-yellow-300"),
+  5: ("bg-lime-100",   "text-lime-700",  "border-lime-300"),
+  6: ("bg-green-100",  "text-green-700", "border-green-300"),
+  7: ("bg-teal-100",   "text-teal-700",  "border-teal-300"),
+  8: ("bg-blue-100",   "text-blue-700",  "border-blue-300"),
+  9: ("bg-violet-100", "text-violet-700","border-violet-300"),
+} %}
+
+<div class="max-w-3xl mx-auto">
+
+  <!-- Breadcrumb -->
+  <div class="mb-5 flex items-center gap-2 text-sm text-slate-400">
+    <a href="/gedaechtnis" class="hover:text-indigo-600 transition-colors">← Gedächtnis</a>
+    <span>/</span>
+    <a href="/gedaechtnis/technik/major-system" class="hover:text-indigo-600 transition-colors">Major-System</a>
+    <span>/</span>
+    <span class="text-slate-600">Referenz 0–99</span>
+  </div>
+
+  <!-- Header -->
+  <div class="bg-gradient-to-br from-violet-600 to-indigo-700 rounded-2xl p-7 mb-7 text-white shadow-lg">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <div class="text-4xl mb-2">🔢</div>
+        <h1 class="text-3xl font-bold mb-1">Major-System</h1>
+        <p class="text-violet-200 text-sm">Vollständige Wortliste 0–99 · Interaktiver Ziffernfilter · Spotlight 0–20</p>
+      </div>
+      <a href="/gedaechtnis/major-quiz"
+         class="flex-shrink-0 bg-white/20 hover:bg-white/30 text-white font-semibold px-4 py-2 rounded-xl text-sm transition-colors text-center">
+        🎯 Quiz starten
+      </a>
+    </div>
+  </div>
+
+  <!-- Goldene Regel -->
+  <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-7 flex gap-3">
+    <div class="text-2xl">💡</div>
+    <div>
+      <p class="font-semibold text-amber-800 text-sm">Die goldene Regel</p>
+      <p class="text-amber-700 text-sm mt-0.5">Nur <strong>Konsonanten</strong> zählen. Vokale (a, e, i, o, u) und h, w, y sind Füller ohne Zahlenwert.</p>
+    </div>
+  </div>
+
+  <!-- Ziffern-Karte interaktiv -->
+  <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-7">
+    <h2 class="text-base font-bold text-slate-800 mb-1">Ziffern-Code</h2>
+    <p class="text-xs text-slate-500 mb-4">Klicke eine Ziffer, um die zugehörigen Wörter in der Tabelle zu markieren.</p>
+    <div class="grid grid-cols-5 gap-2" id="digit-grid">
+      {% for d in digit_map %}
+      {% set bg, text, bdr = dcolors[d.digit] %}
+      <button onclick="filterDigit({{ d.digit }})"
+              data-digit="{{ d.digit }}"
+              class="digit-btn rounded-xl border-2 p-2.5 text-center transition-all hover:scale-105 active:scale-95 {{ bg }} {{ text }} border-transparent">
+        <div class="text-2xl font-black">{{ d.digit }}</div>
+        <div class="text-xs font-semibold leading-tight mt-0.5">{{ d.sounds }}</div>
+        <div class="text-xs opacity-70 mt-1 leading-tight hidden sm:block">{{ d.aid }}</div>
+      </button>
+      {% endfor %}
+    </div>
+    <p id="filter-hint" class="text-xs text-slate-400 text-center mt-3 hidden">
+      Klicke nochmal auf die Ziffer, um den Filter aufzuheben.
+    </p>
+  </div>
+
+  <!-- Spotlight 0–20 -->
+  <div class="mb-7">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-bold text-slate-800">🌟 Spotlight 0–20</h2>
+      <span class="text-xs text-slate-400">Mit diesen beginnt man – sie im Schlaf können!</span>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      {% for w in spotlight %}
+      {% set d1 = w.d[0] %}
+      {% set bg1, text1, bdr1 = dcolors[d1] %}
+      <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-3 hover:shadow-md transition-shadow cursor-pointer spotlight-card"
+           onclick="this.querySelector('.tip-text').classList.toggle('hidden')">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-2xl font-black text-slate-300">{{ '%02d' % w.num }}</span>
+          <span class="text-xl">{{ w.emoji }}</span>
+        </div>
+        <div class="text-lg font-bold text-slate-800">{{ w.word }}</div>
+        <div class="flex flex-wrap gap-1 mt-1.5">
+          {% for d in w.d %}
+          {% set bg, text, bdr = dcolors[d] %}
+          <span class="text-xs font-bold px-1.5 py-0.5 rounded {{ bg }} {{ text }}">{{ d }}</span>
+          {% endfor %}
+          {% for alt in w.alt %}
+          <span class="text-xs text-slate-400">· {{ alt }}</span>
+          {% endfor %}
+        </div>
+        <p class="tip-text hidden text-xs text-slate-500 mt-2 italic">{{ w.tip }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Volle 0–99 Tabelle -->
+  <div class="mb-7">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-bold text-slate-800">📋 Vollständige Liste 0–99</h2>
+      <button onclick="document.querySelectorAll('.word-row').forEach(r=>r.classList.remove('hidden'))"
+              class="text-xs text-indigo-600 hover:underline">alle anzeigen</button>
+    </div>
+
+    {% for decade_start in range(0, 100, 10) %}
+    {% set decade_words = words[decade_start : decade_start + 10] %}
+    <div class="bg-white rounded-xl border border-slate-100 shadow-sm mb-3 overflow-hidden">
+      <!-- Decade header -->
+      <div class="px-4 py-2.5 bg-slate-50 border-b border-slate-100 flex items-center gap-2">
+        {% set first = decade_words[0] %}
+        {% set last  = decade_words[-1] %}
+        {% set d1 = first.d[0] %}
+        {% set bg1, text1, bdr1 = dcolors[d1] %}
+        <span class="font-bold text-sm {{ text1 }}">{{ decade_start }}–{{ decade_start + 9 }}</span>
+        <span class="text-xs text-slate-400">
+          {{ digit_map[d1].sounds }}
+          {% if decade_start > 0 %} + …{% endif %}
+        </span>
+      </div>
+      <!-- Words -->
+      <div class="divide-y divide-slate-50">
+        {% for w in decade_words %}
+        {% set data_digits = w.d | join(",") %}
+        <div class="word-row px-4 py-2.5 hover:bg-slate-50 transition-colors" data-digits="{{ data_digits }}">
+          <div class="flex items-center gap-3 cursor-pointer" onclick="toggleDetails('detail-{{ w.num }}')">
+            <!-- Number -->
+            <span class="font-black text-slate-800 w-7 text-right shrink-0">{{ w.num }}</span>
+            <!-- Emoji -->
+            <span class="text-lg shrink-0">{{ w.emoji }}</span>
+            <!-- Word -->
+            <span class="font-semibold text-slate-800 flex-1">{{ w.word }}</span>
+            <!-- Digit badges -->
+            <div class="flex gap-1 shrink-0">
+              {% for d in w.d %}
+              {% set bg, text, bdr = dcolors[d] %}
+              <span class="text-xs font-bold px-1.5 py-0.5 rounded-md {{ bg }} {{ text }}">{{ d }}</span>
+              {% endfor %}
+            </div>
+            <!-- Expand arrow -->
+            <span class="text-slate-300 text-xs shrink-0">▾</span>
+          </div>
+          <!-- Expanded details -->
+          <div id="detail-{{ w.num }}" class="hidden mt-2 pl-10">
+            <div class="flex flex-wrap gap-2 items-center">
+              <span class="text-xs text-slate-500">Alternativen:</span>
+              {% for alt in w.alt %}
+              <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-medium">{{ alt }}</span>
+              {% endfor %}
+            </div>
+            <p class="text-xs text-slate-500 italic mt-1">💡 {{ w.tip }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Quiz CTA -->
+  <div class="bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-100 rounded-2xl p-6 text-center mb-8">
+    <div class="text-3xl mb-2">🎯</div>
+    <h3 class="font-bold text-slate-800 text-lg mb-1">Bereit zum Testen?</h3>
+    <p class="text-slate-500 text-sm mb-4">Teste dein Wissen im Major-System Quiz – Zahl → Wort und Wort → Zahl.</p>
+    <div class="flex gap-3 justify-center flex-wrap">
+      <a href="/gedaechtnis/major-quiz"
+         class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl transition-colors">
+        🎯 Quiz starten
+      </a>
+      <a href="/gedaechtnis/karten"
+         class="bg-white hover:bg-slate-50 text-slate-700 font-semibold px-5 py-2.5 rounded-xl border border-slate-200 transition-colors">
+        🎴 Kartendeck trainieren
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+var activeDigit = null;
+
+function filterDigit(digit) {
+    var buttons = document.querySelectorAll('.digit-btn');
+    var rows = document.querySelectorAll('.word-row');
+    var hint = document.getElementById('filter-hint');
+
+    if (activeDigit === digit) {
+        // Deselect
+        activeDigit = null;
+        buttons.forEach(function(b) {
+            b.style.outline = '';
+            b.style.transform = '';
+        });
+        rows.forEach(function(r) { r.classList.remove('hidden', 'opacity-30'); });
+        hint.classList.add('hidden');
+        return;
+    }
+
+    activeDigit = digit;
+    buttons.forEach(function(b) {
+        var d = parseInt(b.dataset.digit);
+        b.style.outline = d === digit ? '3px solid #6366f1' : '';
+        b.style.transform = d === digit ? 'scale(1.05)' : '';
+    });
+
+    rows.forEach(function(r) {
+        var digits = r.dataset.digits.split(',').map(Number);
+        if (digits.indexOf(digit) !== -1) {
+            r.classList.remove('hidden', 'opacity-30');
+        } else {
+            r.classList.add('opacity-30');
+            r.classList.remove('hidden');
+        }
+    });
+
+    hint.classList.remove('hidden');
+}
+
+function toggleDetails(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.toggle('hidden');
+}
+</script>
+
+{% endblock %}

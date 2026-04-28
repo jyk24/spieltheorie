@@ -86,3 +86,17 @@ class GedaechtnisScore(Base):
     score: Mapped[int] = mapped_column(Integer, nullable=False)
     player_name: Mapped[str] = mapped_column(String(50), default="Anonym")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
+class TagesraetselStreak(Base):
+    __tablename__ = "tagesraetsel_streaks"
+    __table_args__ = (
+        UniqueConstraint("session_id", "date", name="uq_streak_session_date"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    session_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    user_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("users.id"), nullable=True)
+    date: Mapped[str] = mapped_column(String(10), nullable=False)  # "YYYY-MM-DD"
+    puzzle_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

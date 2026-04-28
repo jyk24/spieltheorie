@@ -239,12 +239,14 @@
         <div class="mt-3 text-xs {{ bg_map[c] }} {{ text_map[c] }} rounded-lg px-3 py-2">💡 {{ t.fakt|safe }}</div>
       </div>
 
-      <!-- Expandable Detail -->
+      <!-- Detail (hidden in card, shown in modal on click) -->
       <div class="border-t {{ border_map[c] }}">
-        <button onclick="toggleDetail(this)"
-                class="w-full text-left px-5 py-2.5 text-xs font-semibold {{ text_map[c] }} hover:{{ bg_map[c] }} transition-colors flex items-center justify-between">
+        <button onclick="openModal(this)"
+                data-icon="{{ t.icon }}"
+                data-title="{{ t.titel }}"
+                class="w-full text-left px-5 py-2.5 text-xs font-semibold {{ text_map[c] }} hover:{{ bg_map[c] }} transition-colors flex items-center justify-between group">
           <span>Wie anwenden?</span>
-          <span class="toggle-arrow transition-transform duration-200">▼</span>
+          <span class="opacity-50 group-hover:opacity-100 transition-opacity">→</span>
         </button>
         <div class="detail-body hidden px-5 pb-4">
           <ol class="text-xs text-slate-600 space-y-1.5 list-decimal list-inside mb-3">
@@ -260,6 +262,16 @@
             <a href="/gedaechtnis/{{ t.spiel }}"
                class="inline-block px-4 py-1.5 rounded-lg text-xs font-semibold text-white {{ btn_map[c] }} transition-colors">
               {{ t.spiel_label }}
+            </a>
+            {% endif %}
+            {% if t.slug == 'major-system' %}
+            <a href="/gedaechtnis/major-system"
+               class="inline-block px-4 py-1.5 rounded-lg text-xs font-semibold text-white bg-violet-500 hover:bg-violet-600 transition-colors">
+              📋 Referenz 0–99
+            </a>
+            <a href="/gedaechtnis/major-quiz"
+               class="inline-block px-4 py-1.5 rounded-lg text-xs font-semibold text-white bg-indigo-500 hover:bg-indigo-600 transition-colors">
+              🎯 Quiz
             </a>
             {% endif %}
             <a href="/gedaechtnis/technik/{{ t.slug }}"
@@ -291,6 +303,7 @@
       ("namen",        "👤","Namen & Gesichter",  "Präge dir Namen ein und werde danach abgefragt.",                                               "Assoziativ", "5 min",  "border-amber-200",  "bg-amber-50",   "text-amber-700"),
       ("karten",       "🎴","Kartendeck",         "Merke die Reihenfolge von Spielkarten — trainiere Major-System und PAO.",                       "Sequenz",    "10 min", "border-rose-200",   "bg-rose-50",    "text-rose-700"),
       ("wortfolge",    "📝","Wortfolge",          "Wörter erscheinen einzeln — verknüpfe sie zur Geschichte und rekonstruiere die Reihenfolge.",   "Linking",    "5 min",  "border-teal-200",   "bg-teal-50",    "text-teal-700"),
+      ("major-quiz",   "🎯","Major-System Quiz",  "Zahl → Wort oder Wort → Zahl — teste dein Major-System-Wissen in drei Schwierigkeiten.",       "Zahlen",     "5 min",  "border-violet-200", "bg-violet-50",  "text-violet-700"),
     ] %}
 
     {% for id, icon, name, beschreibung, typ, dauer, border, bg, text in spiele %}
@@ -320,13 +333,64 @@
 
 </div>
 
+<!-- ── Technik-Modal ─────────────────────────────────────────────────────── -->
+<div id="technik-modal"
+     class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden"
+     onclick="if(event.target===this||event.target.id==='modal-backdrop') closeModal()">
+  <div id="modal-backdrop" class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+  <div id="technik-panel"
+       class="relative bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[88vh] overflow-y-auto
+              transform transition-all duration-200 ease-out scale-95 opacity-0">
+    <!-- Sticky header -->
+    <div class="sticky top-0 bg-white/95 backdrop-blur-sm rounded-t-2xl px-6 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between z-10">
+      <div class="flex items-center gap-3">
+        <span id="modal-icon" class="text-2xl"></span>
+        <h3 id="modal-title" class="font-bold text-slate-800 text-lg"></h3>
+      </div>
+      <button onclick="closeModal()"
+              class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors text-lg font-bold">
+        ✕
+      </button>
+    </div>
+    <!-- Content -->
+    <div id="modal-body" class="px-6 py-5"></div>
+  </div>
+</div>
+
 <script>
-function toggleDetail(btn) {
-  const body = btn.nextElementSibling;
-  const arrow = btn.querySelector('.toggle-arrow');
-  const open = !body.classList.contains('hidden');
-  body.classList.toggle('hidden', open);
-  arrow.style.transform = open ? '' : 'rotate(180deg)';
+var _modalPanel = document.getElementById('technik-panel');
+var _modalEl    = document.getElementById('technik-modal');
+
+function openModal(btn) {
+  var icon    = btn.dataset.icon;
+  var title   = btn.dataset.title;
+  var content = btn.nextElementSibling.innerHTML;
+
+  document.getElementById('modal-icon').textContent  = icon;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').innerHTML    = content;
+
+  _modalEl.classList.remove('hidden');
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      _modalPanel.classList.remove('scale-95', 'opacity-0');
+      _modalPanel.classList.add('scale-100', 'opacity-100');
+    });
+  });
+  document.body.style.overflow = 'hidden';
 }
+
+function closeModal() {
+  _modalPanel.classList.add('scale-95', 'opacity-0');
+  _modalPanel.classList.remove('scale-100', 'opacity-100');
+  setTimeout(function() {
+    _modalEl.classList.add('hidden');
+    document.body.style.overflow = '';
+  }, 200);
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
 </script>
 {% endblock %}

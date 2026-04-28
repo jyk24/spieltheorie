@@ -88,7 +88,136 @@ GAME_META_GEDAECHTNIS = {
     "reaktionszeit":{"name": "Reaktionszeit",          "unit": "ms",      "icon": "⚡"},
     "chimp":        {"name": "Schimpansen-Test",       "unit": "Level",   "icon": "🐒"},
     "verbal":       {"name": "Verbales Gedaechtnis",   "unit": "Punkte",  "icon": "💬"},
+    "major-quiz":   {"name": "Major-System Quiz",      "unit": "Punkte",  "icon": "🔢"},
 }
+
+# ── Major-System Daten ────────────────────────────────────────────────────────
+
+DIGIT_MAP = [
+    {"digit": 0, "sounds": "S · Z · ß",     "aid": '"Zero" beginnt mit Z',           "bg": "bg-slate-100",  "text": "text-slate-700"},
+    {"digit": 1, "sounds": "T · D",          "aid": "Je 1 senkrechter Strich",        "bg": "bg-red-100",    "text": "text-red-700"},
+    {"digit": 2, "sounds": "N",              "aid": "N hat 2 Striche nach unten",     "bg": "bg-orange-100", "text": "text-orange-700"},
+    {"digit": 3, "sounds": "M",              "aid": "M hat 3 Striche nach unten",     "bg": "bg-amber-100",  "text": "text-amber-700"},
+    {"digit": 4, "sounds": "R",              "aid": 'Letzter Laut von "Vie-R"',       "bg": "bg-yellow-100", "text": "text-yellow-700"},
+    {"digit": 5, "sounds": "L",              "aid": "Hand: 5 Finger bilden L-Form",   "bg": "bg-lime-100",   "text": "text-lime-700"},
+    {"digit": 6, "sounds": "Sch · Ch · J",   "aid": "J ähnelt einer gespiegelten 6",  "bg": "bg-green-100",  "text": "text-green-700"},
+    {"digit": 7, "sounds": "K · G · Ng",     "aid": "Zwei 7 ergeben ein K",           "bg": "bg-teal-100",   "text": "text-teal-700"},
+    {"digit": 8, "sounds": "F · V · W · Ph", "aid": "Schreibschrift-8 wie f-Schlinge","bg": "bg-blue-100",   "text": "text-blue-700"},
+    {"digit": 9, "sounds": "P · B",          "aid": "9 ist gespiegeltes p oder b",    "bg": "bg-violet-100", "text": "text-violet-700"},
+]
+
+MAJOR_WORDS = [
+    # 0–9
+    {"num": 0,  "word": "Zeus",   "alt": ["Zoo", "Sense"],    "emoji": "⚡", "tip": "Blitz des Göttervaters", "d": [0]},
+    {"num": 1,  "word": "Tee",    "alt": ["Tau", "Dose"],     "emoji": "☕", "tip": "Dampfende Tasse Tee",    "d": [1]},
+    {"num": 2,  "word": "Noah",   "alt": ["Neo", "Noa"],      "emoji": "🚢", "tip": "Noahs Arche im Sturm",   "d": [2]},
+    {"num": 3,  "word": "Oma",    "alt": ["Emu", "Miau"],     "emoji": "👵", "tip": "Die freundliche Großmutter", "d": [3]},
+    {"num": 4,  "word": "Ohr",    "alt": ["Uhr", "Eier"],     "emoji": "👂", "tip": "Riesiges menschliches Ohr", "d": [4]},
+    {"num": 5,  "word": "Aal",    "alt": ["Öl", "Eule"],      "emoji": "🐍", "tip": "Glitschiger Aal im Wasser", "d": [5]},
+    {"num": 6,  "word": "Schuh",  "alt": ["Joch", "Chef"],    "emoji": "👟", "tip": "Ein einzelner Schuh",    "d": [6]},
+    {"num": 7,  "word": "Kuh",    "alt": ["Gau", "Kay"],      "emoji": "🐄", "tip": "Moohende Kuh auf der Weide", "d": [7]},
+    {"num": 8,  "word": "Ufo",    "alt": ["Fee", "Iva"],      "emoji": "🛸", "tip": "Unbekanntes Flugobjekt", "d": [8]},
+    {"num": 9,  "word": "Opa",    "alt": ["Bau", "Puh"],      "emoji": "👴", "tip": "Der rüstige Großvater",  "d": [9]},
+    # 10–19
+    {"num": 10, "word": "Dose",   "alt": ["Düse", "Dias"],    "emoji": "🥫", "tip": "Konservendose mit Etikett",  "d": [1,0]},
+    {"num": 11, "word": "Tod",    "alt": ["Tüte", "Toto"],    "emoji": "💀", "tip": "Sense des Todes",            "d": [1,1]},
+    {"num": 12, "word": "Dune",   "alt": ["Odin", "Tonne"],   "emoji": "🏜️", "tip": "Riesige Wüstendüne",        "d": [1,2]},
+    {"num": 13, "word": "Adam",   "alt": ["Atom", "Datum"],   "emoji": "🍎", "tip": "Adam greift nach dem Apfel", "d": [1,3]},
+    {"num": 14, "word": "Otter",  "alt": ["Thor", "Tür"],     "emoji": "🦦", "tip": "Otter schwimmt auf Rücken",  "d": [1,4]},
+    {"num": 15, "word": "Adel",   "alt": ["Adele", "Ideal"],  "emoji": "👑", "tip": "Krone des Adels",            "d": [1,5]},
+    {"num": 16, "word": "Tasche", "alt": ["DJ", "Dach"],      "emoji": "👜", "tip": "Schwere Handtasche",         "d": [1,6]},
+    {"num": 17, "word": "Teig",   "alt": ["Deck", "Deich"],   "emoji": "🫓", "tip": "Klebriger Brotteig",         "d": [1,7]},
+    {"num": 18, "word": "Taufe",  "alt": ["Diva", "Tafel"],   "emoji": "💧", "tip": "Taufe am Fluss",             "d": [1,8]},
+    {"num": 19, "word": "Tipi",   "alt": ["Tuba", "Dieb"],    "emoji": "🏕️", "tip": "Indianisches Tipi-Zelt",    "d": [1,9]},
+    # 20–29
+    {"num": 20, "word": "Nase",   "alt": ["Nuss", "Nixe"],    "emoji": "👃", "tip": "Große Knollennase",          "d": [2,0]},
+    {"num": 21, "word": "NATO",   "alt": ["Nadel", "Note"],   "emoji": "🪖", "tip": "NATO-Militärhelm",           "d": [2,1]},
+    {"num": 22, "word": "Nonne",  "alt": ["Ananas", "Nana"],  "emoji": "⛪", "tip": "Nonne in schwarzer Kutte",   "d": [2,2]},
+    {"num": 23, "word": "Nemo",   "alt": ["Anime", "Name"],   "emoji": "🐠", "tip": "Nemo der Clownfisch",        "d": [2,3]},
+    {"num": 24, "word": "Narr",   "alt": ["Nero", "Nähre"],   "emoji": "🃏", "tip": "Hofnarr mit Schellen",       "d": [2,4]},
+    {"num": 25, "word": "Nil",    "alt": ["Enola", "Noel"],   "emoji": "🌊", "tip": "Der majestätische Nil",      "d": [2,5]},
+    {"num": 26, "word": "Nische", "alt": ["Eunuch", "Nacho"], "emoji": "🏛️", "tip": "Dunkle Nische in einer Wand","d": [2,6]},
+    {"num": 27, "word": "Nokia",  "alt": ["Niagara", "Nick"], "emoji": "📱", "tip": "Unzerstörbares Nokia-Handy", "d": [2,7]},
+    {"num": 28, "word": "Nivea",  "alt": ["Neve", "Naiv"],    "emoji": "🫙", "tip": "Blaue Nivea-Dose",           "d": [2,8]},
+    {"num": 29, "word": "Niobe",  "alt": ["Nabe", "Nabo"],    "emoji": "😢", "tip": "Weinende Göttin Niobe",      "d": [2,9]},
+    # 30–39
+    {"num": 30, "word": "Ameise", "alt": ["Moos", "Maus"],    "emoji": "🐜", "tip": "Fleißige Ameise",            "d": [3,0]},
+    {"num": 31, "word": "Matte",  "alt": ["Motte", "Mode"],   "emoji": "🥋", "tip": "Yoga- oder Kampfsportmatte", "d": [3,1]},
+    {"num": 32, "word": "Mine",   "alt": ["Mähne", "Mohn"],   "emoji": "💣", "tip": "Landmine im Boden",          "d": [3,2]},
+    {"num": 33, "word": "Mumie",  "alt": ["Mama", "Imame"],   "emoji": "🪦", "tip": "Bandagierte Mumie",          "d": [3,3]},
+    {"num": 34, "word": "Meer",   "alt": ["Mario", "Mohr"],   "emoji": "🌊", "tip": "Das weite blaue Meer",       "d": [3,4]},
+    {"num": 35, "word": "Mehl",   "alt": ["Miele", "Maul"],   "emoji": "🌾", "tip": "Mehltüte platzt auf",        "d": [3,5]},
+    {"num": 36, "word": "Macho",  "alt": ["Majo", "Musch"],   "emoji": "💪", "tip": "Macho mit Sonnenbrille",     "d": [3,6]},
+    {"num": 37, "word": "Mokka",  "alt": ["Magie", "Mock"],   "emoji": "☕", "tip": "Starker Mokka-Kaffee",       "d": [3,7]},
+    {"num": 38, "word": "Möwe",   "alt": ["Mafia", "Muffe"],  "emoji": "🐦", "tip": "Kreischende Möwe am Strand", "d": [3,8]},
+    {"num": 39, "word": "Mopp",   "alt": ["Mappe", "Mob"],    "emoji": "🧹", "tip": "Nasser Reinigungsmopp",      "d": [3,9]},
+    # 40–49
+    {"num": 40, "word": "Rose",   "alt": ["Russe", "Riese"],  "emoji": "🌹", "tip": "Rote Rose mit Dornen",       "d": [4,0]},
+    {"num": 41, "word": "Rad",    "alt": ["Rodeo", "Rede"],   "emoji": "🚲", "tip": "Fahrrad im Wind",            "d": [4,1]},
+    {"num": 42, "word": "Regen",  "alt": ["Rune", "Rhein"],   "emoji": "🌧️", "tip": "Starker Platzregen",        "d": [4,2]},
+    {"num": 43, "word": "Rum",    "alt": ["Rahmen", "Ruhm"],  "emoji": "🥃", "tip": "Karibischer Rum",            "d": [4,3]},
+    {"num": 44, "word": "Rohr",   "alt": ["Rohre", "Rühr"],   "emoji": "🔧", "tip": "Leckendes Wasserrohr",       "d": [4,4]},
+    {"num": 45, "word": "Rolle",  "alt": ["Rille", "Ural"],   "emoji": "🎬", "tip": "Filmrolle im Kino",          "d": [4,5]},
+    {"num": 46, "word": "Rauch",  "alt": ["Ranch", "Rausch"], "emoji": "💨", "tip": "Aufsteigender Rauch",        "d": [4,6]},
+    {"num": 47, "word": "Rock",   "alt": ["Reck", "Riege"],   "emoji": "🎸", "tip": "E-Gitarre auf der Bühne",    "d": [4,7]},
+    {"num": 48, "word": "Riff",   "alt": ["Harfe", "Ruf"],    "emoji": "🐠", "tip": "Buntes Korallenriff",        "d": [4,8]},
+    {"num": 49, "word": "Raupe",  "alt": ["Rippe", "Rübe"],   "emoji": "🐛", "tip": "Raupe auf dem Blatt",        "d": [4,9]},
+    # 50–59
+    {"num": 50, "word": "Lasso",  "alt": ["Lachs", "Los"],    "emoji": "🤠", "tip": "Cowboy schwingt das Lasso",  "d": [5,0]},
+    {"num": 51, "word": "Latte",  "alt": ["Lotto", "Lid"],    "emoji": "☕", "tip": "Cafe Latte mit Schaum",      "d": [5,1]},
+    {"num": 52, "word": "Leine",  "alt": ["Linie", "Lehne"],  "emoji": "🐕", "tip": "Hund zieht an der Leine",   "d": [5,2]},
+    {"num": 53, "word": "Lamm",   "alt": ["Lama", "Halm"],    "emoji": "🐑", "tip": "Weiches, wolliges Lamm",     "d": [5,3]},
+    {"num": 54, "word": "Leier",  "alt": ["Lore", "Lauer"],   "emoji": "🎵", "tip": "Antike Leier (Instrument)",  "d": [5,4]},
+    {"num": 55, "word": "Lilie",  "alt": ["Lola", "Lulu"],    "emoji": "🌷", "tip": "Weiße Lilie in Blüte",       "d": [5,5]},
+    {"num": 56, "word": "Lauch",  "alt": ["Leiche", "Loch"],  "emoji": "🧅", "tip": "Langer Lauchstengel",        "d": [5,6]},
+    {"num": 57, "word": "Lego",   "alt": ["Lacke", "Liege"],  "emoji": "🧱", "tip": "Bunte Legobausteine",        "d": [5,7]},
+    {"num": 58, "word": "Lava",   "alt": ["Leben", "Lauf"],   "emoji": "🌋", "tip": "Glühende Lava aus dem Vulkan","d": [5,8]},
+    {"num": 59, "word": "Lippe",  "alt": ["Liebe", "Lab"],    "emoji": "💋", "tip": "Rote Lippen",                "d": [5,9]},
+    # 60–69
+    {"num": 60, "word": "Schatz", "alt": ["Sauce", "Jazz"],   "emoji": "💎", "tip": "Glänzender Schatz im Tresor","d": [6,0]},
+    {"num": 61, "word": "Schotte","alt": ["Jade", "Shot"],    "emoji": "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "tip": "Schotte im Kilt",         "d": [6,1]},
+    {"num": 62, "word": "Schnee", "alt": ["Schiene", "Jean"], "emoji": "❄️", "tip": "Frisch gefallener Schnee",  "d": [6,2]},
+    {"num": 63, "word": "Schaum", "alt": ["Schirm", "Scham"], "emoji": "🧼", "tip": "Seifenschaum",               "d": [6,3]},
+    {"num": 64, "word": "Schiri", "alt": ["Schur", "Chair"],  "emoji": "🦺", "tip": "Schiedsrichter pfeift",      "d": [6,4]},
+    {"num": 65, "word": "Achill", "alt": ["Jässel", "Schule"],"emoji": "🏃", "tip": "Achillesferse des Helden",   "d": [6,5]},
+    {"num": 66, "word": "Schach", "alt": ["Josch", "Chchch"], "emoji": "♟️", "tip": "Schachfigur auf dem Brett",  "d": [6,6]},
+    {"num": 67, "word": "Schoko", "alt": ["Jacke", "Joga"],   "emoji": "🍫", "tip": "Schokolade schmilzt",        "d": [6,7]},
+    {"num": 68, "word": "Schiff", "alt": ["Joffe", "Schaf"],  "emoji": "🚢", "tip": "Großes Schiff auf See",      "d": [6,8]},
+    {"num": 69, "word": "Jeep",   "alt": ["Jipe", "Jupe"],    "emoji": "🚙", "tip": "Geländefahrzeug Jeep",       "d": [6,9]},
+    # 70–79
+    {"num": 70, "word": "Katze",  "alt": ["Gas", "Gasse"],    "emoji": "🐱", "tip": "Schnurrende Katze",          "d": [7,0]},
+    {"num": 71, "word": "Kette",  "alt": ["Gott", "Kita"],    "emoji": "⛓️", "tip": "Schwere Eisenkette",         "d": [7,1]},
+    {"num": 72, "word": "Kino",   "alt": ["Genie", "Gin"],    "emoji": "🎬", "tip": "Kinosaal mit Leinwand",      "d": [7,2]},
+    {"num": 73, "word": "Kamm",   "alt": ["Gamma", "Guam"],   "emoji": "💇", "tip": "Haarkamm",                   "d": [7,3]},
+    {"num": 74, "word": "Kur",    "alt": ["Korea", "Gier"],   "emoji": "🏥", "tip": "Erholungskur im Sanatorium", "d": [7,4]},
+    {"num": 75, "word": "Igel",   "alt": ["Iglu", "Agil"],    "emoji": "🦔", "tip": "Stacheliger Igel",           "d": [7,5]},
+    {"num": 76, "word": "Kujo",   "alt": ["Gesicht", "Geige"],"emoji": "🐕", "tip": "Bedrohlicher Hund (Kujo)",   "d": [7,6]},
+    {"num": 77, "word": "Geige",  "alt": ["Gaga", "Kekse"],   "emoji": "🎻", "tip": "Geige mit Bogen",            "d": [7,7]},
+    {"num": 78, "word": "Kaffee", "alt": ["Gaffe", "Gaffa"],  "emoji": "☕", "tip": "Dampfender Kaffee",          "d": [7,8]},
+    {"num": 79, "word": "Kappe",  "alt": ["Gippe", "Kabob"],  "emoji": "🧢", "tip": "Baseballkappe",              "d": [7,9]},
+    # 80–89
+    {"num": 80, "word": "Fass",   "alt": ["Vase", "Faser"],   "emoji": "🪣", "tip": "Holzfass im Keller",         "d": [8,0]},
+    {"num": 81, "word": "Voodoo", "alt": ["Waid", "Fado"],    "emoji": "🪆", "tip": "Voodoo-Puppe",               "d": [8,1]},
+    {"num": 82, "word": "Wein",   "alt": ["Wien", "Fahne"],   "emoji": "🍷", "tip": "Rotwein im Glas",            "d": [8,2]},
+    {"num": 83, "word": "Fama",   "alt": ["WM", "Fohm"],      "emoji": "📢", "tip": 'Gerücht (lat. Fama = Ruf)',  "d": [8,3]},
+    {"num": 84, "word": "Feuer",  "alt": ["Fury", "Fahrer"],  "emoji": "🔥", "tip": "Loderndes Feuer",            "d": [8,4]},
+    {"num": 85, "word": "Falle",  "alt": ["Wal", "Fülle"],    "emoji": "🪤", "tip": "Mausefalle schnappt zu",     "d": [8,5]},
+    {"num": 86, "word": "Fisch",  "alt": ["Wasch", "Viisch"], "emoji": "🐟", "tip": "Fisch im Wasser",            "d": [8,6]},
+    {"num": 87, "word": "Fuge",   "alt": ["Waage", "Fackel"], "emoji": "🎵", "tip": "Bachs berühmte Fuge",        "d": [8,7]},
+    {"num": 88, "word": "Waffe",  "alt": ["Fifi", "Wuff"],    "emoji": "⚔️", "tip": "Waffe in der Vitrine",       "d": [8,8]},
+    {"num": 89, "word": "Wippe",  "alt": ["Wappe", "Fibe"],   "emoji": "⚖️", "tip": "Wippe auf dem Spielplatz",   "d": [8,9]},
+    # 90–99
+    {"num": 90, "word": "Bus",    "alt": ["Base", "Pose"],    "emoji": "🚌", "tip": "Roter Doppeldeckerbus",      "d": [9,0]},
+    {"num": 91, "word": "Buddha", "alt": ["Bote", "Pedal"],   "emoji": "🧘", "tip": "Meditierender Buddha",       "d": [9,1]},
+    {"num": 92, "word": "Biene",  "alt": ["Bahn", "Pinie"],   "emoji": "🐝", "tip": "Biene sammelt Nektar",       "d": [9,2]},
+    {"num": 93, "word": "Puma",   "alt": ["Bombe", "Pampa"],  "emoji": "🐆", "tip": "Puma beim Sprung",           "d": [9,3]},
+    {"num": 94, "word": "Bär",    "alt": ["Beere", "Pore"],   "emoji": "🐻", "tip": "Grizzlybär im Wald",         "d": [9,4]},
+    {"num": 95, "word": "Bulle",  "alt": ["Bühl", "Pille"],   "emoji": "🐂", "tip": "Wütender Stier",             "d": [9,5]},
+    {"num": 96, "word": "Apache", "alt": ["Busch", "Posche"], "emoji": "🏹", "tip": "Apache-Krieger mit Pfeil",   "d": [9,6]},
+    {"num": 97, "word": "Bike",   "alt": ["Pike", "Puck"],    "emoji": "🚴", "tip": "Mountainbike auf dem Trail", "d": [9,7]},
+    {"num": 98, "word": "Pfau",   "alt": ["Pfiff", "Pave"],   "emoji": "🦚", "tip": "Pfau schlägt Rad",           "d": [9,8]},
+    {"num": 99, "word": "Puppe",  "alt": ["Papa", "Bube"],    "emoji": "🪆", "tip": "Matroschka-Puppe",           "d": [9,9]},
+]
 
 
 class ScoreIn(BaseModel):
@@ -689,4 +818,29 @@ def technik_detail(request: Request, slug: str):
         raise HTTPException(status_code=404, detail="Technik nicht gefunden")
     return templates.TemplateResponse(
         request, "gedaechtnis_technik.html", {"t": t, "active_page": "gedaechtnis"}
+    )
+
+
+@router.get("/major-system", response_class=HTMLResponse)
+def major_system(request: Request):
+    import json
+    return templates.TemplateResponse(
+        request, "gedaechtnis_major.html", {
+            "active_page": "gedaechtnis",
+            "digit_map": DIGIT_MAP,
+            "words": MAJOR_WORDS,
+            "words_json": json.dumps(MAJOR_WORDS, ensure_ascii=False),
+            "spotlight": MAJOR_WORDS[:21],  # 0–20
+        }
+    )
+
+
+@router.get("/major-quiz", response_class=HTMLResponse)
+def major_quiz(request: Request):
+    import json
+    return templates.TemplateResponse(
+        request, "gedaechtnis_major_quiz.html", {
+            "active_page": "gedaechtnis",
+            "words_json": json.dumps(MAJOR_WORDS, ensure_ascii=False),
+        }
     )

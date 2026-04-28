@@ -1,0 +1,394 @@
+{% extends "base.html" %}
+{% block title %}Major-System Quiz – Gedächtnis{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+
+  <div class="mb-5 flex items-center gap-2 text-sm text-slate-400">
+    <a href="/gedaechtnis" class="hover:text-indigo-600 transition-colors">← Gedächtnis</a>
+    <span>/</span>
+    <a href="/gedaechtnis/major-system" class="hover:text-indigo-600 transition-colors">Major-System</a>
+    <span>/</span>
+    <span class="text-slate-600">Quiz</span>
+  </div>
+
+  <h1 class="text-2xl font-bold text-slate-800 mb-1">🎯 Major-System Quiz</h1>
+  <p class="text-slate-500 text-sm mb-6">10 Fragen · Wähle den richtigen Major-System Begriff für die Zahl.</p>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-3 gap-3 mb-6">
+    <div class="bg-white rounded-xl border border-slate-200 p-3 text-center shadow-sm">
+      <div class="text-2xl font-bold text-indigo-600" id="stat-score">0</div>
+      <div class="text-xs text-slate-500 mt-0.5">Punkte</div>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-3 text-center shadow-sm">
+      <div class="text-2xl font-bold text-slate-600" id="stat-q">0/10</div>
+      <div class="text-xs text-slate-500 mt-0.5">Frage</div>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-3 text-center shadow-sm">
+      <div class="text-2xl font-bold text-amber-500" id="stat-best">–</div>
+      <div class="text-xs text-slate-500 mt-0.5">Rekord</div>
+    </div>
+  </div>
+
+  <!-- Mode selector -->
+  <div id="mode-screen">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-4">
+      <h2 class="font-semibold text-slate-700 mb-4 text-center">Modus wählen</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button onclick="startGame('num2word')"
+                class="flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-indigo-200 bg-indigo-50 hover:bg-indigo-100 transition-colors">
+          <span class="text-3xl">🔢 → 💬</span>
+          <span class="font-bold text-indigo-800">Zahl → Wort</span>
+          <span class="text-xs text-indigo-600 text-center">Du siehst eine Zahl und wählst das richtige Major-System-Wort.</span>
+        </button>
+        <button onclick="startGame('word2num')"
+                class="flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-violet-200 bg-violet-50 hover:bg-violet-100 transition-colors">
+          <span class="text-3xl">💬 → 🔢</span>
+          <span class="font-bold text-violet-800">Wort → Zahl</span>
+          <span class="text-xs text-violet-600 text-center">Du siehst ein Wort und tippst die zugehörige Zahl ein.</span>
+        </button>
+      </div>
+      <div class="mt-4 text-center">
+        <button onclick="startGame('mixed')"
+                class="px-5 py-2.5 bg-slate-700 hover:bg-slate-800 text-white font-semibold rounded-xl text-sm transition-colors">
+          🔀 Gemischt (beide Modi)
+        </button>
+      </div>
+    </div>
+
+    <!-- Difficulty -->
+    <div class="bg-white rounded-xl border border-slate-100 p-4 shadow-sm">
+      <p class="text-sm font-semibold text-slate-700 mb-3">Schwierigkeitsgrad</p>
+      <div class="flex gap-2">
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="diff" value="easy" checked class="accent-indigo-600">
+          <span class="text-sm text-slate-600">0–20 (Einsteiger)</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="diff" value="medium" class="accent-indigo-600">
+          <span class="text-sm text-slate-600">0–49 (Mittel)</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="diff" value="hard" class="accent-indigo-600">
+          <span class="text-sm text-slate-600">0–99 (Fortgeschritten)</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz screen -->
+  <div id="quiz-screen" class="hidden">
+    <!-- Progress bar -->
+    <div class="h-2 bg-slate-200 rounded-full mb-5 overflow-hidden">
+      <div id="progress-bar" class="h-full bg-indigo-500 rounded-full transition-all duration-300" style="width:0%"></div>
+    </div>
+
+    <!-- Question card -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-7 mb-4">
+      <p id="q-label" class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 text-center"></p>
+      <div id="q-main" class="text-center text-6xl font-black text-slate-800 mb-2"></div>
+      <div id="q-hint" class="text-center text-sm text-slate-400 mb-6"></div>
+
+      <!-- Multiple choice (num2word / mixed) -->
+      <div id="choices-block" class="grid grid-cols-2 gap-3"></div>
+
+      <!-- Text input (word2num) -->
+      <div id="input-block" class="hidden">
+        <div class="flex gap-3 justify-center">
+          <input id="num-input" type="number" min="0" max="99" placeholder="Zahl (0–99)"
+                 class="w-36 text-center text-2xl font-bold border-2 border-slate-300 rounded-xl py-3 focus:border-indigo-500 focus:outline-none"
+                 onkeydown="if(event.key==='Enter') submitInput()">
+          <button onclick="submitInput()"
+                  class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors">
+            ✓
+          </button>
+        </div>
+      </div>
+
+      <!-- Feedback -->
+      <div id="feedback" class="hidden mt-5 text-center">
+        <div id="feedback-icon" class="text-4xl mb-1"></div>
+        <div id="feedback-text" class="font-semibold text-lg"></div>
+        <div id="feedback-tip" class="text-sm text-slate-500 mt-1"></div>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <button id="btn-next" onclick="nextQuestion()"
+              class="hidden px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors">
+        Weiter →
+      </button>
+    </div>
+  </div>
+
+  <!-- Result screen -->
+  <div id="result-screen" class="hidden">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 text-center">
+      <div id="result-emoji" class="text-6xl mb-4"></div>
+      <h2 class="text-2xl font-bold text-slate-800 mb-1">Ergebnis</h2>
+      <div class="text-5xl font-black text-indigo-600 mb-1" id="result-score"></div>
+      <p class="text-slate-500 text-sm mb-2">von 10 Punkten</p>
+      <p id="result-msg" class="text-slate-600 mb-6"></p>
+
+      <!-- Mistakes -->
+      <div id="mistakes-block" class="text-left bg-red-50 border border-red-100 rounded-xl p-4 mb-6 hidden">
+        <p class="text-sm font-semibold text-red-700 mb-2">Falsch beantwortet:</p>
+        <div id="mistakes-list" class="space-y-1"></div>
+      </div>
+
+      <div class="flex gap-3 justify-center flex-wrap">
+        <button onclick="resetGame()"
+                class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors">
+          🔄 Nochmal
+        </button>
+        <a href="/gedaechtnis/major-system"
+           class="px-5 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold rounded-xl transition-colors">
+          📋 Referenzliste
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tip -->
+  <div class="bg-violet-50 border border-violet-100 rounded-xl p-4 mt-6 text-sm text-violet-800">
+    <strong>Tipp:</strong> Lerne erst die Wörter 0–20 auswendig, bevor du auf 0–49 oder 0–99 erweiterst.
+    <a href="/gedaechtnis/major-system" class="underline ml-1">Zur Referenzliste →</a>
+  </div>
+
+</div>
+
+<script>
+var WORDS = {{ words_json | safe }};
+
+var gameMode = 'num2word';
+var questions = [];
+var currentQ = 0;
+var score = 0;
+var mistakes = [];
+var answered = false;
+var bestKey = 'major_quiz_best';
+
+function getDiffWords() {
+    var diff = document.querySelector('input[name="diff"]:checked').value;
+    if (diff === 'easy')   return WORDS.filter(function(w) { return w.num <= 20; });
+    if (diff === 'medium') return WORDS.filter(function(w) { return w.num <= 49; });
+    return WORDS;
+}
+
+function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+}
+
+function pickDistractors(correct, pool, n) {
+    var others = pool.filter(function(w) { return w.num !== correct.num; });
+    shuffle(others);
+    return others.slice(0, n);
+}
+
+function startGame(mode) {
+    gameMode = mode;
+    var pool = getDiffWords();
+    if (pool.length < 4) { alert('Zu wenig Wörter für diesen Schwierigkeitsgrad.'); return; }
+
+    shuffle(pool);
+    questions = pool.slice(0, 10);
+    currentQ = 0;
+    score = 0;
+    mistakes = [];
+    answered = false;
+
+    document.getElementById('mode-screen').classList.add('hidden');
+    document.getElementById('quiz-screen').classList.remove('hidden');
+    document.getElementById('result-screen').classList.add('hidden');
+
+    var best = parseInt(localStorage.getItem(bestKey) || '0');
+    document.getElementById('stat-best').textContent = best > 0 ? best + '/10' : '–';
+
+    showQuestion();
+}
+
+function qMode() {
+    if (gameMode === 'mixed') return Math.random() < 0.5 ? 'num2word' : 'word2num';
+    return gameMode;
+}
+
+function showQuestion() {
+    answered = false;
+    var w = questions[currentQ];
+    var pool = getDiffWords();
+    var mode = qMode();
+    w._mode = mode;
+
+    document.getElementById('stat-q').textContent = (currentQ + 1) + '/10';
+    document.getElementById('stat-score').textContent = score;
+    document.getElementById('progress-bar').style.width = (currentQ / 10 * 100) + '%';
+    document.getElementById('feedback').classList.add('hidden');
+    document.getElementById('btn-next').classList.add('hidden');
+
+    if (mode === 'num2word') {
+        document.getElementById('q-label').textContent = 'Welches Wort gehört zu dieser Zahl?';
+        document.getElementById('q-main').textContent = w.num < 10 ? '0' + w.num : w.num;
+        var cons = w.d.map(function(d) {
+            var sounds = ['S/Z','T/D','N','M','R','L','Sch/Ch/J','K/G','F/V/W','P/B'];
+            return sounds[d];
+        }).join(' + ');
+        document.getElementById('q-hint').textContent = '→ Konsonanten: ' + cons;
+
+        document.getElementById('choices-block').classList.remove('hidden');
+        document.getElementById('input-block').classList.add('hidden');
+
+        var distractors = pickDistractors(w, pool, 3);
+        var options = shuffle([w].concat(distractors));
+        var cb = document.getElementById('choices-block');
+        cb.innerHTML = '';
+        options.forEach(function(opt) {
+            var btn = document.createElement('button');
+            btn.className = 'choice-btn w-full py-3 px-4 rounded-xl border-2 border-slate-200 bg-white hover:bg-indigo-50 hover:border-indigo-300 font-semibold text-slate-800 transition-all text-lg';
+            btn.textContent = opt.emoji + ' ' + opt.word;
+            btn.onclick = function() { selectChoice(opt.num === w.num, btn, w); };
+            cb.appendChild(btn);
+        });
+    } else {
+        document.getElementById('q-label').textContent = 'Welche Zahl steckt in diesem Wort?';
+        document.getElementById('q-main').textContent = w.emoji + ' ' + w.word;
+        document.getElementById('q-hint').textContent = 'Tippe die Zahl ein (0–99)';
+
+        document.getElementById('choices-block').classList.add('hidden');
+        document.getElementById('input-block').classList.remove('hidden');
+        var inp = document.getElementById('num-input');
+        inp.value = '';
+        inp.focus();
+    }
+}
+
+function selectChoice(correct, btn, w) {
+    if (answered) return;
+    answered = true;
+    var allBtns = document.querySelectorAll('.choice-btn');
+    allBtns.forEach(function(b) {
+        b.disabled = true;
+        b.classList.remove('hover:bg-indigo-50', 'hover:border-indigo-300');
+    });
+    if (correct) {
+        btn.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+        score++;
+        showFeedback(true, w);
+    } else {
+        btn.classList.add('bg-red-50', 'border-red-400', 'text-red-700');
+        // Highlight correct
+        allBtns.forEach(function(b) {
+            if (b.textContent.indexOf(w.word) !== -1) {
+                b.classList.add('bg-emerald-50', 'border-emerald-400');
+            }
+        });
+        mistakes.push(w);
+        showFeedback(false, w);
+    }
+}
+
+function submitInput() {
+    if (answered) return;
+    var inp = document.getElementById('num-input');
+    var val = parseInt(inp.value);
+    var w = questions[currentQ];
+    if (isNaN(val) || val < 0 || val > 99) {
+        inp.classList.add('border-red-400');
+        setTimeout(function() { inp.classList.remove('border-red-400'); }, 800);
+        return;
+    }
+    answered = true;
+    inp.disabled = true;
+    var correct = val === w.num;
+    if (correct) {
+        inp.classList.add('border-emerald-500', 'bg-emerald-50');
+        score++;
+    } else {
+        inp.classList.add('border-red-500', 'bg-red-50');
+        mistakes.push(w);
+    }
+    showFeedback(correct, w);
+}
+
+function showFeedback(correct, w) {
+    document.getElementById('stat-score').textContent = score;
+    var fb = document.getElementById('feedback');
+    fb.classList.remove('hidden');
+    document.getElementById('feedback-icon').textContent = correct ? '✅' : '❌';
+    document.getElementById('feedback-text').textContent = correct
+        ? 'Richtig!'
+        : w.num + ' = ' + w.emoji + ' ' + w.word;
+    document.getElementById('feedback-tip').textContent = correct ? w.tip : 'Alt: ' + w.alt.join(', ');
+    document.getElementById('btn-next').classList.remove('hidden');
+}
+
+function nextQuestion() {
+    currentQ++;
+    if (currentQ >= questions.length) {
+        showResult();
+    } else {
+        showQuestion();
+    }
+}
+
+function showResult() {
+    document.getElementById('quiz-screen').classList.add('hidden');
+    document.getElementById('result-screen').classList.remove('hidden');
+    document.getElementById('progress-bar').style.width = '100%';
+
+    document.getElementById('result-score').textContent = score + '/10';
+
+    var emoji = score >= 9 ? '🏆' : score >= 7 ? '🌟' : score >= 5 ? '👍' : '💪';
+    document.getElementById('result-emoji').textContent = emoji;
+
+    var msgs = ['Noch üben – die Wortliste hilft!', 'Guter Anfang – weiter so!', 'Solide Leistung!',
+                'Sehr gut!', 'Ausgezeichnet!', 'Perfekt! Major-System gemeistert!'];
+    document.getElementById('result-msg').textContent = msgs[Math.min(Math.floor(score/2), 5)];
+
+    // Best score
+    var best = parseInt(localStorage.getItem(bestKey) || '0');
+    if (score > best) {
+        localStorage.setItem(bestKey, score);
+        document.getElementById('stat-best').textContent = score + '/10';
+    }
+
+    // Submit to leaderboard
+    if (score > 0) {
+        fetch('/gedaechtnis/score', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({game_type: 'major-quiz', score: score, player_name: 'Anonym'})
+        }).catch(function() {});
+    }
+
+    // Mistakes
+    if (mistakes.length > 0) {
+        document.getElementById('mistakes-block').classList.remove('hidden');
+        var ml = document.getElementById('mistakes-list');
+        ml.innerHTML = '';
+        mistakes.forEach(function(w) {
+            var el = document.createElement('div');
+            el.className = 'text-sm text-red-700';
+            el.textContent = (w.num < 10 ? '0' : '') + w.num + ' → ' + w.emoji + ' ' + w.word + '  (Alt: ' + w.alt.join(', ') + ')';
+            ml.appendChild(el);
+        });
+    }
+}
+
+function resetGame() {
+    document.getElementById('mode-screen').classList.remove('hidden');
+    document.getElementById('quiz-screen').classList.add('hidden');
+    document.getElementById('result-screen').classList.add('hidden');
+    document.getElementById('mistakes-block').classList.add('hidden');
+    document.getElementById('progress-bar').style.width = '0%';
+    document.getElementById('stat-score').textContent = '0';
+    document.getElementById('stat-q').textContent = '0/10';
+    var best = parseInt(localStorage.getItem(bestKey) || '0');
+    document.getElementById('stat-best').textContent = best > 0 ? best + '/10' : '–';
+}
+</script>
+
+{% endblock %}

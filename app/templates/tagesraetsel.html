@@ -96,46 +96,34 @@
 (function() {
     var today = '{{ today_iso }}';
 
-    function loadData() {
+    function loadLocalData() {
         try { return JSON.parse(localStorage.getItem('challenge_streak') || '{"count":0,"last":""}'); }
         catch(e) { return {count: 0, last: ''}; }
     }
 
-    function saveData(d) {
-        localStorage.setItem('challenge_streak', JSON.stringify(d));
+    function loadLocalDates() {
+        try { return JSON.parse(localStorage.getItem('challenge_dates') || '[]'); }
+        catch(e) { return []; }
     }
 
-    function calcStreak(data) {
-        if (!data.last) return 0;
-        var last = new Date(data.last);
-        var todayD = new Date(today);
-        var diff = Math.round((todayD - last) / 86400000);
-        if (diff === 0 || diff === 1) return data.count;
-        return 0; // streak broken
-    }
-
-    function renderStreak(streak, data) {
+    function renderStreak(streak, doneToday, doneDates) {
         document.getElementById('streak-count').textContent = streak;
         var fireEl = document.getElementById('streak-fire');
         var msgEl = document.getElementById('streak-msg');
         if (streak >= 3) fireEl.classList.remove('hidden');
-        if (data.last === today) {
+        else fireEl.classList.add('hidden');
+        if (doneToday) {
             msgEl.textContent = 'Heute erledigt 💪';
             document.getElementById('done-badge').classList.remove('hidden');
             document.getElementById('start-btn').textContent = 'Nochmal ansehen →';
         } else if (streak > 0) {
             msgEl.textContent = 'Weiter so – mach heute weiter!';
-        } else if (data.last) {
-            msgEl.textContent = 'Streak unterbrochen – heute neu starten!';
         } else {
             msgEl.textContent = 'Starte heute deinen ersten Streak!';
         }
-    }
-
-    function renderWeek(dates) {
         document.querySelectorAll('.day-circle').forEach(function(el) {
             var d = el.dataset.date;
-            if (dates.indexOf(d) !== -1) {
+            if (doneDates.indexOf(d) !== -1) {
                 el.classList.add('bg-amber-400', 'border-amber-400');
                 el.classList.remove('bg-white');
                 el.innerHTML = '<span class="text-white text-xs font-bold">✓</span>';
@@ -143,40 +131,38 @@
         });
     }
 
-    // Load stored dates for week view
-    function loadDates() {
-        try { return JSON.parse(localStorage.getItem('challenge_dates') || '[]'); }
-        catch(e) { return []; }
-    }
+    // Sofort mit localStorage rendern (kein Flash)
+    var localData = loadLocalData();
+    var localDiff = localData.last ? Math.round((new Date(today) - new Date(localData.last)) / 86400000) : -1;
+    var localStreak = (localDiff === 0 || localDiff === 1) ? localData.count : 0;
+    renderStreak(localStreak, localData.last === today, loadLocalDates());
 
-    var data = loadData();
-    var streak = calcStreak(data);
-    var dates = loadDates();
-    renderStreak(streak, data);
-    renderWeek(dates);
+    // Server als Wahrheitsquelle nachladen
+    fetch('/tagesraetsel/streak')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            renderStreak(data.streak, data.done_today, data.done_dates);
+        })
+        .catch(function() {}); // bleibt bei localStorage-Stand
 
-    // Called when user clicks "Jetzt lösen"
+    // Wird beim Klick auf "Jetzt lösen" aufgerufen
     window.markChallengeStarted = function(todayIso) {
-        var d = loadData();
-        var yesterday = new Date(todayIso);
-        yesterday.setDate(yesterday.getDate() - 1);
-        var yStr = yesterday.toISOString().split('T')[0];
+        // Server-POST (fire-and-forget, Navigation läuft parallel weiter)
+        fetch('/tagesraetsel/complete', {method: 'POST'}).catch(function() {});
 
-        if (d.last === todayIso) return; // already counted
-
-        var newCount;
-        if (d.last === yStr) {
-            newCount = (d.count || 0) + 1; // consecutive
-        } else {
-            newCount = 1; // new or broken streak
-        }
-        saveData({count: newCount, last: todayIso});
-
-        // Update dates array
-        var arr = loadDates();
-        if (arr.indexOf(todayIso) === -1) {
-            arr.unshift(todayIso);
-            localStorage.setItem('challenge_dates', JSON.stringify(arr.slice(0, 365)));
+        // localStorage als Offline-Fallback aktuell halten
+        var d = loadLocalData();
+        if (d.last !== todayIso) {
+            var yesterday = new Date(todayIso);
+            yesterday.setDate(yesterday.getDate() - 1);
+            var yStr = yesterday.toISOString().split('T')[0];
+            var newCount = (d.last === yStr) ? (d.count || 0) + 1 : 1;
+            localStorage.setItem('challenge_streak', JSON.stringify({count: newCount, last: todayIso}));
+            var arr = loadLocalDates();
+            if (arr.indexOf(todayIso) === -1) {
+                arr.unshift(todayIso);
+                localStorage.setItem('challenge_dates', JSON.stringify(arr.slice(0, 365)));
+            }
         }
     };
 })();
