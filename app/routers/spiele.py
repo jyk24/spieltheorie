@@ -60,6 +60,11 @@ from ..game_engine import (
     wc_play_round,
     cournot_final_result,
     cournot_play_round,
+    NIM_DEFAULT_HEAPS,
+    nim_play_turn,
+    nim_final_result,
+    nim_xor_sum,
+    nim_optimal_move,
 )
 from ..services import save_game_session
 
@@ -616,6 +621,15 @@ GAME_META = [
         "schwierigkeit": "Fortgeschritten",
         "runden": 6,
         "konzept": "Cournot-Gleichgewicht, Oligopol, Kollusion vs. Wettbewerb",
+    },
+    {
+        "id": "nim",
+        "name": "Nim",
+        "icon": "🪨",
+        "beschreibung": "Drei Reihen Steine, abwechselnd ziehen, wer den letzten nimmt gewinnt. Gelöstes Spiel: Mit der Nim-Summe (XOR) findest du den optimalen Zug.",
+        "schwierigkeit": "Mittel",
+        "runden": 1,
+        "konzept": "Kombinatorische Spieltheorie, Sprague-Grundy, P/N-Positionen",
     },
 ]
 
@@ -2800,6 +2814,107 @@ def cournot_zug(
             "max_rounds": 6,
             "total_player": total_player,
             "total_ai": total_ai,
+            "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Nim
+# ---------------------------------------------------------------------------
+
+NIM_STRATEGY_POOL = ["random", "balanced", "optimal"]
+NIM_STRATEGY_WEIGHTS = [25, 45, 30]
+
+NIM_STRATEGY_INFO = {
+    "random": {
+        "name": "Anfänger",
+        "icon": "🎲",
+        "verhalten": "Hat zufällige Züge gespielt – ohne Strategie. Eine reine Zufallsstrategie verliert systematisch gegen optimales Spiel, kann aber kurzfristig glücklich sein.",
+    },
+    "balanced": {
+        "name": "Gelegenheitsspieler",
+        "icon": "🤔",
+        "verhalten": "Spielte zu rund 70 % optimal nach Bouton-Strategie und ließ ab und zu Lücken. So verhalten sich Menschen, die Nim verstehen, aber nicht jeden Zug durchrechnen.",
+    },
+    "optimal": {
+        "name": "Bouton-Optimal",
+        "icon": "🧠",
+        "verhalten": "Spielte den exakten optimalen Zug nach der Nim-Summe (XOR). Diese Strategie wurde 1901 von Charles Bouton bewiesen – sie verliert nie, wenn die Startposition eine N-Position ist.",
+    },
+}
+
+
+@router.get("/nim", response_class=HTMLResponse)
+def nim_page(request: Request):
+    hidden_strategy = _random.choices(NIM_STRATEGY_POOL, weights=NIM_STRATEGY_WEIGHTS)[0]
+    heaps = list(NIM_DEFAULT_HEAPS)
+    return templates.TemplateResponse(
+        request,
+        "games/nim.html",
+        {
+            "active_page": "spiele",
+            "hidden_strategy": hidden_strategy,
+            "initial_heaps": heaps,
+            "initial_xor": nim_xor_sum(heaps),
+        },
+    )
+
+
+@router.post("/nim/zug", response_class=HTMLResponse)
+def nim_zug(
+    request: Request,
+    heap_idx: int = Form(...),
+    take: int = Form(...),
+    strategy: str = Form(...),
+    heaps_json: str = Form(...),
+    history_json: str = Form(default="[]"),
+    db: Session = Depends(get_db),
+):
+    heaps = json.loads(heaps_json)
+    history = json.loads(history_json)
+    try:
+        round_result = nim_play_turn(heaps, heap_idx, take, strategy, history)
+    except ValueError as e:
+        return HTMLResponse(
+            f'<div class="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700">{e}</div>',
+            status_code=400,
+        )
+    history.append(round_result)
+    new_heaps = round_result["after_ai"]
+
+    is_final = round_result["is_final"]
+    final = nim_final_result(history, strategy) if is_final else None
+
+    strategy_info = None
+    new_achievements: list = []
+    if is_final and final:
+        _, new_achievements = save_game_session(
+            db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
+            game_type="nim",
+            ai_strategy=strategy,
+            moves=history,
+            result=final["result"],
+            score=1 if final["result"] == "win" else 0,
+            ai_score=1 if final["result"] == "loss" else 0,
+        )
+        strategy_info = NIM_STRATEGY_INFO.get(strategy)
+
+    return templates.TemplateResponse(
+        request,
+        "partials/nim_result.html",
+        {
+            "round_result": round_result,
+            "history": history,
+            "history_json": json.dumps(history),
+            "heaps": new_heaps,
+            "heaps_json": json.dumps(new_heaps),
+            "strategy": strategy,
+            "is_final": is_final,
+            "final": final,
+            "xor_now": nim_xor_sum(new_heaps),
             "strategy_info": strategy_info,
             "new_achievements": new_achievements,
         },

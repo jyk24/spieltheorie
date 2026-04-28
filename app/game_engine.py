@@ -1731,3 +1731,131 @@ def cournot_final_result(history: list[dict]) -> dict:
         "efficiency": efficiency,
         "nash_total": nash_total,
     }
+
+
+# ---------------------------------------------------------------------------
+# Nim (kombinatorische Spieltheorie, Bouton 1901)
+#
+# Spielregeln (Normal-Form):
+#   - Mehrere Reihen mit Steinen. Klassisch: [3, 4, 5].
+#   - Spieler ziehen abwechselnd. Pro Zug: 1+ Stein aus genau EINER Reihe nehmen.
+#   - Wer den letzten Stein nimmt, GEWINNT.
+#
+# Optimale Strategie (Bouton): Halte die Nim-Summe (XOR aller Reihen) auf 0.
+#   - Ist sie != 0 vor deinem Zug, kannst du sie auf 0 senken und gewinnst.
+#   - Ist sie 0, verlierst du bei perfektem Gegenspiel.
+# ---------------------------------------------------------------------------
+
+NIM_DEFAULT_HEAPS = [3, 4, 5]
+
+
+def nim_xor_sum(heaps: list[int]) -> int:
+    s = 0
+    for h in heaps:
+        s ^= h
+    return s
+
+
+def nim_is_terminal(heaps: list[int]) -> bool:
+    return all(h == 0 for h in heaps)
+
+
+def nim_optimal_move(heaps: list[int]) -> tuple[int, int] | None:
+    """Liefert den optimalen Zug (heap_index, take) oder None,
+    wenn die Position bereits eine P-Position (verlierend) ist."""
+    s = nim_xor_sum(heaps)
+    if s == 0:
+        return None
+    for i, h in enumerate(heaps):
+        target = h ^ s
+        if target < h:
+            return (i, h - target)
+    return None
+
+
+def nim_random_move(heaps: list[int]) -> tuple[int, int]:
+    nonempty = [i for i, h in enumerate(heaps) if h > 0]
+    i = random.choice(nonempty)
+    take = random.randint(1, heaps[i])
+    return (i, take)
+
+
+def nim_ai_move(heaps: list[int], strategy: str) -> tuple[int, int]:
+    if nim_is_terminal(heaps):
+        return (0, 0)
+    if strategy == "optimal":
+        opt = nim_optimal_move(heaps)
+        if opt is not None:
+            return opt
+        return nim_random_move(heaps)
+    if strategy == "balanced":
+        if random.random() < 0.7:
+            opt = nim_optimal_move(heaps)
+            if opt is not None:
+                return opt
+        return nim_random_move(heaps)
+    return nim_random_move(heaps)
+
+
+def nim_apply_move(heaps: list[int], heap_idx: int, take: int) -> list[int]:
+    if heap_idx < 0 or heap_idx >= len(heaps):
+        raise ValueError("Ungültige Reihe.")
+    if take < 1 or take > heaps[heap_idx]:
+        raise ValueError("Ungültige Anzahl Steine.")
+    new = list(heaps)
+    new[heap_idx] -= take
+    return new
+
+
+def nim_play_turn(
+    heaps: list[int], heap_idx: int, take: int, strategy: str, history: list[dict]
+) -> dict:
+    """Verarbeitet den Spielerzug und – falls nötig – den KI-Zug.
+    Liefert ein Runden-Record mit `is_final` und `winner` ("player"/"ai"/None)."""
+    after_player = nim_apply_move(heaps, heap_idx, take)
+    player_took_last = nim_is_terminal(after_player)
+
+    ai_heap = None
+    ai_take = 0
+    after_ai = after_player
+    if not player_took_last:
+        ai_heap, ai_take = nim_ai_move(after_player, strategy)
+        after_ai = nim_apply_move(after_player, ai_heap, ai_take)
+
+    ai_took_last = (not player_took_last) and nim_is_terminal(after_ai)
+    is_final = player_took_last or ai_took_last
+    winner = "player" if player_took_last else ("ai" if ai_took_last else None)
+
+    return {
+        "round": len(history) + 1,
+        "before": heaps,
+        "player_heap": heap_idx,
+        "player_take": take,
+        "after_player": after_player,
+        "ai_heap": ai_heap,
+        "ai_take": ai_take,
+        "after_ai": after_ai,
+        "xor_after_player": nim_xor_sum(after_player),
+        "is_final": is_final,
+        "winner": winner,
+    }
+
+
+def nim_final_result(history: list[dict], strategy: str) -> dict:
+    if not history:
+        return {"result": "draw", "winner": None, "rounds": 0,
+                "optimal_player_moves": 0, "optimal_rate": 0, "strategy": strategy}
+    last = history[-1]
+    winner = last.get("winner")
+    optimal_player_moves = sum(1 for r in history if r["xor_after_player"] == 0)
+    total_moves = len(history)
+    optimal_rate = round(optimal_player_moves / total_moves * 100) if total_moves else 0
+    result = "win" if winner == "player" else ("loss" if winner == "ai" else "draw")
+    return {
+        "result": result,
+        "winner": winner,
+        "rounds": total_moves,
+        "optimal_player_moves": optimal_player_moves,
+        "optimal_rate": optimal_rate,
+        "strategy": strategy,
+    }

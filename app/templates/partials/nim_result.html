@@ -1,0 +1,118 @@
+<!-- Datennodes für JS -->
+<span id="heaps-data" class="hidden" data-value="{{ heaps_json }}"></span>
+<span id="history-data" class="hidden" data-value="{{ history_json }}"></span>
+<span id="round-data" class="hidden" data-value="{{ history|length + 1 }}"></span>
+
+<!-- Letzte Runde -->
+<div class="bg-white rounded-xl border border-slate-100 p-5 mb-3">
+    <div class="text-sm text-slate-500 mb-2">Zug {{ round_result.round }}</div>
+    <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
+        <div class="flex-1">
+            <span class="text-xs font-bold text-indigo-600">Du:</span>
+            <span class="text-sm text-slate-700 ml-1">
+                {{ round_result.player_take }} Stein{{ '' if round_result.player_take == 1 else 'e' }}
+                aus Reihe {{ round_result.player_heap + 1 }}
+            </span>
+            <div class="text-xs text-slate-400 mt-1">
+                {{ round_result.before }} → {{ round_result.after_player }}
+                <span class="ml-2">XOR jetzt: <strong class="{% if round_result.xor_after_player == 0 %}text-emerald-600{% else %}text-amber-600{% endif %}">{{ round_result.xor_after_player }}</strong></span>
+            </div>
+        </div>
+        {% if round_result.ai_heap is not none %}
+        <div class="flex-1">
+            <span class="text-xs font-bold text-rose-600">KI:</span>
+            <span class="text-sm text-slate-700 ml-1">
+                {{ round_result.ai_take }} Stein{{ '' if round_result.ai_take == 1 else 'e' }}
+                aus Reihe {{ round_result.ai_heap + 1 }}
+            </span>
+            <div class="text-xs text-slate-400 mt-1">
+                {{ round_result.after_player }} → {{ round_result.after_ai }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% if is_final %}
+<span id="game-over" class="hidden"></span>
+
+<!-- Finalresultat -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <div class="mb-5 p-4 rounded-xl border-2
+        {% if final.result == 'win' %}bg-emerald-50 border-emerald-300
+        {% elif final.result == 'loss' %}bg-red-50 border-red-300
+        {% else %}bg-slate-50 border-slate-300{% endif %}">
+        <h3 class="text-xl font-bold mb-1
+            {% if final.result == 'win' %}text-emerald-800
+            {% elif final.result == 'loss' %}text-red-700
+            {% else %}text-slate-700{% endif %}">
+            {% if final.result == 'win' %}🏆 Gewonnen! Du hast den letzten Stein genommen.
+            {% elif final.result == 'loss' %}❌ Verloren – die KI hat den letzten Stein gesichert.
+            {% else %}Unentschieden{% endif %}
+        </h3>
+        <p class="text-sm {% if final.result == 'win' %}text-emerald-700{% elif final.result == 'loss' %}text-red-600{% else %}text-slate-600{% endif %}">
+            Spiel beendet nach {{ final.rounds }} Zugpaaren.
+        </p>
+    </div>
+
+    <!-- Strategieanalyse -->
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm">
+        <p class="font-semibold text-indigo-800 mb-2">Wie optimal hast du gespielt?</p>
+        <div class="flex items-center gap-4 mb-2">
+            <div class="flex-1 bg-white rounded-full h-3 overflow-hidden">
+                <div class="bg-indigo-500 h-3" style="width: {{ final.optimal_rate }}%"></div>
+            </div>
+            <span class="text-sm font-bold text-indigo-700 whitespace-nowrap">{{ final.optimal_rate }}%</span>
+        </div>
+        <p class="text-xs text-indigo-700">
+            In {{ final.optimal_player_moves }} von {{ final.rounds }} Zügen hast du nach deinem Zug die XOR-Summe auf 0 gebracht – das ist der mathematisch optimale Zug nach Bouton.
+            {% if final.optimal_rate >= 80 %}Sehr stark – du beherrschst die Nim-Strategie!
+            {% elif final.optimal_rate >= 40 %}Gutes Gespür – mit etwas Übung wirst du unschlagbar.
+            {% else %}Übe die XOR-Strategie: Berechne die Nim-Summe und mache sie immer zu 0.
+            {% endif %}
+        </p>
+    </div>
+
+    <!-- Spieltheorie-Lektion -->
+    <div class="bg-slate-50 rounded-xl p-4 mb-4 text-sm text-slate-600">
+        <p class="font-semibold text-slate-700 mb-1">Mathematische Lektion:</p>
+        <p class="mb-2">
+            Nim ist das erste vollständig <strong>gelöste</strong> Spiel: Charles Bouton bewies 1901, dass
+            die Position genau dann verlierend ist, wenn die XOR-Summe (auch <em>Nim-Summe</em>) aller
+            Reihen 0 ist. Diese Idee wurde später von Sprague und Grundy zu einer Theorie für alle
+            Unparteiischen Spiele verallgemeinert (Sprague-Grundy-Theorem).
+        </p>
+        <p>
+            Praktische Konsequenz: Bringe nach jedem deiner Züge die XOR-Summe auf 0 – dann zwingst
+            du den Gegner in eine verlierende Position. Die Startposition <code>[3, 4, 5]</code> hat
+            XOR = 2 (≠ 0), du gewinnst also bei perfektem Spiel.
+        </p>
+    </div>
+
+    <!-- Strategie-Debrief -->
+    {% if strategy_info %}
+    <div class="bg-white border-2 border-indigo-200 rounded-xl p-4 mb-4">
+        <p class="text-xs uppercase tracking-wider text-indigo-500 font-semibold mb-1">Gegner-Strategie aufgedeckt</p>
+        <div class="flex items-start gap-3">
+            <div class="text-3xl">{{ strategy_info.icon }}</div>
+            <div>
+                <p class="font-bold text-slate-800">{{ strategy_info.name }}</p>
+                <p class="text-sm text-slate-600 mt-1">{{ strategy_info.verhalten }}</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="flex gap-2">
+        <a href="/spiele/nim" class="flex-1 text-center bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg font-medium text-sm">
+            Nochmal spielen
+        </a>
+        <a href="/spiele" class="flex-1 text-center bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-lg font-medium text-sm">
+            Alle Spiele
+        </a>
+    </div>
+
+    {% include "partials/achievement_unlock.html" %}
+</div>
+
+{% endif %}

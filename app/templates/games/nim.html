@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% block title %}Nim – VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="Klassisches Nim-Spiel: Drei Reihen Steine, optimale Strategie über Nim-Summe (XOR). Spiele gegen drei KI-Schwierigkeitsgrade."> {% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🪨 Nim</h1>
+        <p class="text-slate-500 mt-1">Drei Reihen mit Steinen. Wer den letzten Stein nimmt, gewinnt.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="italic text-slate-500 mb-3">"Das erste vollständig gelöste Spiel der Geschichte – Charles Bouton, 1901."</p>
+        <div class="space-y-2 text-xs">
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 font-bold mt-0.5">→</span>
+                <span><strong>Regel:</strong> Du nimmst pro Zug 1+ Steine aus <em>genau einer</em> Reihe. Dann ist die KI dran. Wer den letzten Stein nimmt, gewinnt.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 font-bold mt-0.5">→</span>
+                <span><strong>Geheimwaffe:</strong> Die <em>Nim-Summe</em> = XOR aller Reihen. Wenn du sie auf 0 zwingst, hast du den Gegner in eine verlierende Position gebracht.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-amber-500 font-bold mt-0.5">→</span>
+                <span><strong>Tipp:</strong> Die Startposition <code>[3, 4, 5]</code> hat XOR = 2 – also gewinnst du bei perfektem Spiel.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mystery-Start -->
+    <div id="start-form" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+        <input type="hidden" id="strategy-preset" value="{{ hidden_strategy }}">
+        <div class="flex items-start gap-4 mb-5">
+            <div class="text-5xl">🤖</div>
+            <div>
+                <h2 class="font-bold text-slate-800 text-lg">Unbekannter Gegner</h2>
+                <p class="text-slate-500 text-sm mt-1">Spielt die KI zufällig, halb-optimal oder mit perfekter Bouton-Strategie? Die Strategie wird im Debrief aufgedeckt.</p>
+            </div>
+        </div>
+        <button type="button" onclick="startGame()"
+                class="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+            Spiel beginnen
+        </button>
+    </div>
+
+    <!-- Spielfeld -->
+    <div id="play-area" class="hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <span class="text-sm text-slate-500">Zug</span>
+                    <span id="round-display" class="text-xl font-bold text-indigo-600 ml-1">1</span>
+                </div>
+                <div class="text-sm">
+                    <span class="text-slate-400">Nim-Summe (XOR):</span>
+                    <span id="xor-display" class="font-bold text-slate-700 ml-1">{{ initial_xor }}</span>
+                    <span id="xor-hint" class="ml-2 text-xs text-emerald-600 font-semibold">Du kannst gewinnen!</span>
+                </div>
+            </div>
+
+            <!-- Reihen-Anzeige -->
+            <div id="board" class="space-y-3 mb-5"></div>
+
+            <!-- Eingabe -->
+            <form id="move-form" class="bg-slate-50 rounded-lg p-4">
+                <input type="hidden" name="strategy" id="strategy-hidden">
+                <input type="hidden" name="heaps_json" id="heaps-hidden">
+                <input type="hidden" name="history_json" id="history-hidden" value="[]">
+                <div class="flex flex-wrap items-center gap-3">
+                    <span class="text-sm text-slate-600">Aus Reihe</span>
+                    <select name="heap_idx" id="heap-select" class="border border-slate-300 rounded px-2 py-1 text-sm"></select>
+                    <span class="text-sm text-slate-600">nimm</span>
+                    <input name="take" id="take-input" type="number" min="1" value="1"
+                           class="border border-slate-300 rounded px-2 py-1 text-sm w-16">
+                    <span class="text-sm text-slate-600">Stein(e).</span>
+                    <button type="button"
+                            hx-post="/spiele/nim/zug"
+                            hx-target="#result-area"
+                            hx-swap="innerHTML"
+                            hx-include="#move-form"
+                            class="ml-auto bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded font-medium text-sm">
+                        Ziehen
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <button type="button" onclick="showHint()"
+                            class="text-xs text-amber-600 hover:text-amber-700 font-medium">
+                        💡 Optimalen Zug zeigen (Spoiler)
+                    </button>
+                    <span id="hint-text" class="hidden ml-2 text-xs text-amber-700"></span>
+                </div>
+            </form>
+        </div>
+
+        <div id="result-area"></div>
+    </div>
+</div>
+
+<script>
+const INITIAL_HEAPS = {{ initial_heaps|tojson }};
+let currentHeaps = INITIAL_HEAPS.slice();
+
+function xorSum(arr) {
+    return arr.reduce((s, h) => s ^ h, 0);
+}
+
+function renderBoard(heaps) {
+    const colors = ['indigo', 'emerald', 'rose'];
+    const html = heaps.map((h, i) => {
+        const color = colors[i % colors.length];
+        const dots = h > 0
+            ? Array(h).fill(0).map(() => '<span class="inline-block w-5 h-5 rounded-full bg-' + color + '-500"></span>').join('')
+            : '<span class="text-xs text-slate-400 italic">leer</span>';
+        return `
+        <div class="flex items-center gap-3">
+            <span class="text-xs font-bold text-slate-500 w-16">Reihe ${i+1}:</span>
+            <div class="flex gap-1.5 items-center">${dots}</div>
+            <span class="text-xs text-slate-400 ml-auto">${h} Stein${h===1?'':'e'}</span>
+        </div>`;
+    }).join('');
+    document.getElementById('board').innerHTML = html;
+
+    // Update select options
+    const sel = document.getElementById('heap-select');
+    sel.innerHTML = '';
+    heaps.forEach((h, i) => {
+        if (h > 0) {
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = `Reihe ${i+1} (${h})`;
+            sel.appendChild(opt);
+        }
+    });
+    // Update take input max
+    if (sel.value !== '') {
+        document.getElementById('take-input').max = heaps[parseInt(sel.value)];
+    }
+    sel.onchange = () => {
+        document.getElementById('take-input').max = heaps[parseInt(sel.value)];
+        document.getElementById('take-input').value = 1;
+    };
+
+    // XOR display
+    const x = xorSum(heaps);
+    document.getElementById('xor-display').textContent = x;
+    const hint = document.getElementById('xor-hint');
+    if (x === 0) {
+        hint.textContent = 'P-Position – nur Glück hilft.';
+        hint.className = 'ml-2 text-xs text-rose-600 font-semibold';
+    } else {
+        hint.textContent = 'N-Position – du kannst gewinnen.';
+        hint.className = 'ml-2 text-xs text-emerald-600 font-semibold';
+    }
+
+    document.getElementById('heaps-hidden').value = JSON.stringify(heaps);
+    document.getElementById('hint-text').classList.add('hidden');
+}
+
+function showHint() {
+    const heaps = JSON.parse(document.getElementById('heaps-hidden').value);
+    const s = xorSum(heaps);
+    const el = document.getElementById('hint-text');
+    if (s === 0) {
+        el.textContent = 'Diese Position ist eine P-Position – jeder Zug ist suboptimal. Hoffe auf einen Fehler.';
+    } else {
+        for (let i = 0; i < heaps.length; i++) {
+            const target = heaps[i] ^ s;
+            if (target < heaps[i]) {
+                const take = heaps[i] - target;
+                el.textContent = `Optimal: Aus Reihe ${i+1} ${take} Stein${take===1?'':'e'} nehmen (→ neue XOR-Summe = 0).`;
+                break;
+            }
+        }
+    }
+    el.classList.remove('hidden');
+}
+
+function startGame() {
+    document.getElementById('strategy-hidden').value = document.getElementById('strategy-preset').value;
+    document.getElementById('start-form').classList.add('hidden');
+    document.getElementById('play-area').classList.remove('hidden');
+    renderBoard(INITIAL_HEAPS);
+}
+
+document.body.addEventListener('htmx:afterSwap', function() {
+    const h = document.getElementById('heaps-data');
+    const hist = document.getElementById('history-data');
+    const r = document.getElementById('round-data');
+    if (h) {
+        const newHeaps = JSON.parse(h.dataset.value);
+        renderBoard(newHeaps);
+    }
+    if (hist) document.getElementById('history-hidden').value = hist.dataset.value;
+    if (r) document.getElementById('round-display').textContent = r.dataset.value;
+    if (document.getElementById('game-over')) {
+        document.getElementById('move-form').classList.add('opacity-50', 'pointer-events-none');
+    }
+});
+</script>
+
+{% endblock %}

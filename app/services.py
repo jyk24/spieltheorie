@@ -41,11 +41,19 @@ def save_game_session(
 def _update_progress(db: Session, game_type: str, score: int, user_id: int | None = None) -> None:
     prog = db.query(UserProgress).filter_by(game_type=game_type, user_id=user_id).first()
     if not prog:
-        prog = UserProgress(game_type=game_type, user_id=user_id)
+        prog = UserProgress(
+            game_type=game_type,
+            user_id=user_id,
+            games_played=0,
+            total_score=0,
+            best_score=0,
+        )
         db.add(prog)
-    prog.games_played += 1
-    prog.total_score += score
-    if score > prog.best_score:
+    # Defaults greifen erst beim COMMIT – fülle vorher None-Werte selbst auf,
+    # damit auch bei brandneuen Spielarten ohne Seed-Eintrag arithmetisch gerechnet werden kann.
+    prog.games_played = (prog.games_played or 0) + 1
+    prog.total_score = (prog.total_score or 0) + score
+    if score > (prog.best_score or 0):
         prog.best_score = score
     prog.last_played = datetime.utcnow()
     db.commit()
