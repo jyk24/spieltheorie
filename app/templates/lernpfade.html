@@ -12,7 +12,7 @@
         <p class="text-slate-500 mt-1">Geführte Reisen durch Spieltheorie, Mathematik, Logik und Psychologie – von Theorie über Spiele bis Rätsel.</p>
     </div>
 
-    <!-- Spieltheorie-Pfad CTA -->
+    <!-- Spieltheorie-Pfad CTA (immer sichtbar) -->
     <div class="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl p-6 mb-8 text-white flex items-center justify-between gap-4 flex-wrap">
         <div>
             <div class="text-sm font-medium text-indigo-200 mb-1">Interaktive Spiele</div>
@@ -25,133 +25,144 @@
         </a>
     </div>
 
-    <!-- Multi-modale Pfade -->
-    <div class="mb-5 flex items-center gap-4">
-        <div>
-            <h2 class="text-xl font-bold text-slate-800 mb-1">Kuratierte Lernpfade</h2>
-            <p class="text-sm text-slate-500">Mix aus Theorie, Spielen und Rätseln – für strukturiertes Lernen.</p>
-        </div>
-        <div class="flex gap-2 text-xs ml-auto">
-            <span class="flex items-center gap-1 bg-indigo-50 text-indigo-700 px-2 py-1 rounded-full border border-indigo-200">📖 Theorie</span>
-            <span class="flex items-center gap-1 bg-emerald-50 text-emerald-700 px-2 py-1 rounded-full border border-emerald-200">🎮 Spiel</span>
-            <span class="flex items-center gap-1 bg-amber-50 text-amber-700 px-2 py-1 rounded-full border border-amber-200">🧩 Rätsel</span>
-        </div>
+    <!-- Section-Tabs -->
+    <div class="flex gap-2 mb-8 flex-wrap" id="section-tabs">
+        <button class="sec-btn bg-indigo-600 text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-sec="">Alle</button>
+        <button class="sec-btn bg-white border border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-sec="lernpfade">🗺️ Lernpfade</button>
+        <button class="sec-btn bg-white border border-slate-200 text-slate-600 hover:border-amber-300 hover:text-amber-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-sec="raetsel">🧩 Rätsel-Pfade</button>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12">
-    {% for pfad in pfade[:4] %}
-    {% set c = color_map[pfad.color] %}
-    {% set theorie_cnt = pfad.steps | selectattr("typ", "equalto", "theorie") | list | length %}
-    {% set spiel_cnt = pfad.steps | selectattr("typ", "equalto", "spiel") | list | length %}
-    {% set raetsel_cnt = pfad.steps | selectattr("typ", "equalto", "raetsel") | list | length %}
-    <a href="/lernpfade/{{ pfad.id }}"
-       class="group block bg-white rounded-2xl border {{ c.border }} shadow-sm hover:shadow-md transition-all overflow-hidden">
-
-        <!-- Header stripe -->
-        <div class="{{ c.bg }} px-5 py-4 flex items-center gap-3">
-            <span class="text-3xl">{{ pfad.icon }}</span>
-            <div class="flex-1 min-w-0">
-                <h3 class="font-bold text-white text-lg leading-tight">{{ pfad.title }}</h3>
-                <p class="text-white/75 text-xs truncate">{{ pfad.subtitle }}</p>
+    <!-- ── Kuratierte Lernpfade ─────────────────────────────────────────────── -->
+    <section class="mb-12" id="sec-lernpfade">
+        <div class="mb-5 flex items-center gap-4">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800 mb-1">Kuratierte Lernpfade</h2>
+                <p class="text-sm text-slate-500">Mix aus Theorie, Spielen und Rätseln – für strukturiertes Lernen.</p>
             </div>
-            <span class="text-white/60 text-xl group-hover:translate-x-1 transition-transform">→</span>
-        </div>
-
-        <!-- Body -->
-        <div class="p-5">
-            <p class="text-slate-600 text-sm leading-relaxed mb-3">{{ pfad.beschreibung }}</p>
-
-            <!-- Step-type badges -->
-            <div class="flex flex-wrap gap-1.5 mb-3">
-                {% if theorie_cnt %}<span class="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-200">📖 {{ theorie_cnt }} Theorie</span>{% endif %}
-                {% if spiel_cnt %}<span class="text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200">🎮 {{ spiel_cnt }} Spiele</span>{% endif %}
-                {% if raetsel_cnt %}<span class="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full border border-amber-200">🧩 {{ raetsel_cnt }} Rätsel</span>{% endif %}
-            </div>
-
-            <!-- Meta row -->
-            <div class="flex items-center gap-3 text-xs text-slate-400 mb-4">
-                <span>⏱ {{ pfad.dauer }}</span>
-                <span class="text-slate-200">·</span>
-                <span class="{{ c.badge }} px-1.5 py-0.5 rounded-full font-medium">{{ pfad.level }}</span>
-            </div>
-
-            <!-- Was du lernst -->
-            <div class="{{ c.light }} {{ c.border }} border rounded-xl p-3">
-                <p class="text-xs font-semibold {{ c.text }} mb-2">Was du lernst:</p>
-                <ul class="space-y-1">
-                {% for punkt in pfad.was_du_lernst[:3] %}
-                <li class="text-xs text-slate-600 flex items-start gap-1.5">
-                    <span class="{{ c.text }} mt-0.5 shrink-0">✓</span>
-                    <span>{{ punkt }}</span>
-                </li>
-                {% endfor %}
-                {% if pfad.was_du_lernst | length > 3 %}
-                <li class="text-xs {{ c.text }}">+ {{ pfad.was_du_lernst | length - 3 }} weitere…</li>
-                {% endif %}
-                </ul>
+            <div class="flex gap-2 text-xs ml-auto">
+                <span class="flex items-center gap-1 bg-indigo-50 text-indigo-700 px-2 py-1 rounded-full border border-indigo-200">📖 Theorie</span>
+                <span class="flex items-center gap-1 bg-emerald-50 text-emerald-700 px-2 py-1 rounded-full border border-emerald-200">🎮 Spiel</span>
+                <span class="flex items-center gap-1 bg-amber-50 text-amber-700 px-2 py-1 rounded-full border border-amber-200">🧩 Rätsel</span>
             </div>
         </div>
-    </a>
-    {% endfor %}
-    </div>
 
-    <!-- Rätsel-Lernpfade -->
-    <div class="mb-5">
-        <h2 class="text-xl font-bold text-slate-800 mb-1">Rätsel & Paradoxe nach Thema</h2>
-        <p class="text-sm text-slate-500">Jeder Pfad führt dich durch kuratierten Inhalt – vom Einstieg zum Aha-Moment.</p>
-    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {% for pfad in pfade[:4] %}
+        {% set c = color_map[pfad.color] %}
+        {% set theorie_cnt = pfad.steps | selectattr("typ", "equalto", "theorie") | list | length %}
+        {% set spiel_cnt = pfad.steps | selectattr("typ", "equalto", "spiel") | list | length %}
+        {% set raetsel_cnt = pfad.steps | selectattr("typ", "equalto", "raetsel") | list | length %}
+        <a href="/lernpfade/{{ pfad.id }}"
+           class="group block bg-white rounded-2xl border {{ c.border }} shadow-sm hover:shadow-md transition-all overflow-hidden">
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-    {% for pfad in pfade[4:] %}
-    {% set c = color_map[pfad.color] %}
-    <a href="/lernpfade/{{ pfad.id }}"
-       class="group block bg-white rounded-2xl border {{ c.border }} shadow-sm hover:shadow-md transition-all overflow-hidden">
-
-        <!-- Header stripe -->
-        <div class="{{ c.bg }} px-5 py-4 flex items-center gap-3">
-            <span class="text-3xl">{{ pfad.icon }}</span>
-            <div class="flex-1 min-w-0">
-                <h3 class="font-bold text-white text-lg leading-tight">{{ pfad.title }}</h3>
-                <p class="text-white/75 text-xs truncate">{{ pfad.subtitle }}</p>
+            <!-- Header stripe -->
+            <div class="{{ c.bg }} px-5 py-4 flex items-center gap-3">
+                <span class="text-3xl">{{ pfad.icon }}</span>
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-bold text-white text-lg leading-tight">{{ pfad.title }}</h3>
+                    <p class="text-white/75 text-xs truncate">{{ pfad.subtitle }}</p>
+                </div>
+                <span class="text-white/60 text-xl group-hover:translate-x-1 transition-transform">→</span>
             </div>
-            <span class="text-white/60 text-xl group-hover:translate-x-1 transition-transform">→</span>
+
+            <!-- Body -->
+            <div class="p-5">
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">{{ pfad.beschreibung }}</p>
+
+                <!-- Step-type badges -->
+                <div class="flex flex-wrap gap-1.5 mb-3">
+                    {% if theorie_cnt %}<span class="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-200">📖 {{ theorie_cnt }} Theorie</span>{% endif %}
+                    {% if spiel_cnt %}<span class="text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200">🎮 {{ spiel_cnt }} Spiele</span>{% endif %}
+                    {% if raetsel_cnt %}<span class="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full border border-amber-200">🧩 {{ raetsel_cnt }} Rätsel</span>{% endif %}
+                </div>
+
+                <!-- Meta row -->
+                <div class="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                    <span>⏱ {{ pfad.dauer }}</span>
+                    <span class="text-slate-200">·</span>
+                    <span class="{{ c.badge }} px-1.5 py-0.5 rounded-full font-medium">{{ pfad.level }}</span>
+                </div>
+
+                <!-- Was du lernst -->
+                <div class="{{ c.light }} {{ c.border }} border rounded-xl p-3">
+                    <p class="text-xs font-semibold {{ c.text }} mb-2">Was du lernst:</p>
+                    <ul class="space-y-1">
+                    {% for punkt in pfad.was_du_lernst[:3] %}
+                    <li class="text-xs text-slate-600 flex items-start gap-1.5">
+                        <span class="{{ c.text }} mt-0.5 shrink-0">✓</span>
+                        <span>{{ punkt }}</span>
+                    </li>
+                    {% endfor %}
+                    {% if pfad.was_du_lernst | length > 3 %}
+                    <li class="text-xs {{ c.text }}">+ {{ pfad.was_du_lernst | length - 3 }} weitere…</li>
+                    {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+        </div>
+    </section>
+
+    <!-- ── Rätsel-Lernpfade ────────────────────────────────────────────────── -->
+    <section class="mb-10" id="sec-raetsel">
+        <div class="mb-5">
+            <h2 class="text-xl font-bold text-slate-800 mb-1">Rätsel & Paradoxe nach Thema</h2>
+            <p class="text-sm text-slate-500">Jeder Pfad führt dich durch kuratierten Inhalt – vom Einstieg zum Aha-Moment.</p>
         </div>
 
-        <!-- Body -->
-        <div class="p-5">
-            <p class="text-slate-600 text-sm leading-relaxed mb-4">{{ pfad.beschreibung }}</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {% for pfad in pfade[4:] %}
+        {% set c = color_map[pfad.color] %}
+        <a href="/lernpfade/{{ pfad.id }}"
+           class="group block bg-white rounded-2xl border {{ c.border }} shadow-sm hover:shadow-md transition-all overflow-hidden">
 
-            <!-- Meta row -->
-            <div class="flex items-center gap-4 text-xs text-slate-400 mb-4">
-                <span>🧩 {{ pfad.steps | length }} Rätsel</span>
-                <span class="text-slate-200">·</span>
-                <span>⏱ {{ pfad.dauer }}</span>
-                <span class="text-slate-200">·</span>
-                <span>{{ pfad.level }}</span>
+            <!-- Header stripe -->
+            <div class="{{ c.bg }} px-5 py-4 flex items-center gap-3">
+                <span class="text-3xl">{{ pfad.icon }}</span>
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-bold text-white text-lg leading-tight">{{ pfad.title }}</h3>
+                    <p class="text-white/75 text-xs truncate">{{ pfad.subtitle }}</p>
+                </div>
+                <span class="text-white/60 text-xl group-hover:translate-x-1 transition-transform">→</span>
             </div>
 
-            <!-- Was du lernst -->
-            <div class="{{ c.light }} {{ c.border }} border rounded-xl p-3">
-                <p class="text-xs font-semibold {{ c.text }} mb-2">Was du lernst:</p>
-                <ul class="space-y-1">
-                {% for punkt in pfad.was_du_lernst[:3] %}
-                <li class="text-xs text-slate-600 flex items-start gap-1.5">
-                    <span class="{{ c.text }} mt-0.5 shrink-0">✓</span>
-                    <span>{{ punkt }}</span>
-                </li>
-                {% endfor %}
-                {% if pfad.was_du_lernst | length > 3 %}
-                <li class="text-xs {{ c.text }}">+ {{ pfad.was_du_lernst | length - 3 }} weitere…</li>
-                {% endif %}
-                </ul>
+            <!-- Body -->
+            <div class="p-5">
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">{{ pfad.beschreibung }}</p>
+
+                <!-- Meta row -->
+                <div class="flex items-center gap-4 text-xs text-slate-400 mb-4">
+                    <span>🧩 {{ pfad.steps | length }} Rätsel</span>
+                    <span class="text-slate-200">·</span>
+                    <span>⏱ {{ pfad.dauer }}</span>
+                    <span class="text-slate-200">·</span>
+                    <span>{{ pfad.level }}</span>
+                </div>
+
+                <!-- Was du lernst -->
+                <div class="{{ c.light }} {{ c.border }} border rounded-xl p-3">
+                    <p class="text-xs font-semibold {{ c.text }} mb-2">Was du lernst:</p>
+                    <ul class="space-y-1">
+                    {% for punkt in pfad.was_du_lernst[:3] %}
+                    <li class="text-xs text-slate-600 flex items-start gap-1.5">
+                        <span class="{{ c.text }} mt-0.5 shrink-0">✓</span>
+                        <span>{{ punkt }}</span>
+                    </li>
+                    {% endfor %}
+                    {% if pfad.was_du_lernst | length > 3 %}
+                    <li class="text-xs {{ c.text }}">+ {{ pfad.was_du_lernst | length - 3 }} weitere…</li>
+                    {% endif %}
+                    </ul>
+                </div>
             </div>
+        </a>
+        {% endfor %}
         </div>
-    </a>
-    {% endfor %}
-    </div>
+    </section>
 
     <!-- Bottom CTA -->
-    <div class="mt-10 bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center">
+    <div class="mt-4 bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center">
         <p class="font-bold text-slate-800 mb-1">Lieber stöbern statt folgen?</p>
         <p class="text-sm text-slate-500 mb-4">Alle Rätsel nach Kategorie auf einen Blick.</p>
         <a href="/raetsel" class="inline-block bg-indigo-600 text-white font-bold px-6 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors text-sm">
@@ -160,5 +171,38 @@
     </div>
 
 </div>
+
+<script>
+(function() {
+    var btns = document.querySelectorAll('.sec-btn');
+    var secs = {
+        lernpfade: document.getElementById('sec-lernpfade'),
+        raetsel:   document.getElementById('sec-raetsel'),
+    };
+
+    function activateTab(sec) {
+        btns.forEach(function(b) {
+            var isActive = b.dataset.sec === sec;
+            b.classList.toggle('bg-indigo-600', isActive);
+            b.classList.toggle('text-white', isActive);
+            b.classList.toggle('bg-white', !isActive);
+            b.classList.toggle('border', !isActive);
+            b.classList.toggle('border-slate-200', !isActive);
+            b.classList.toggle('text-slate-600', !isActive);
+        });
+        Object.keys(secs).forEach(function(key) {
+            secs[key].classList.toggle('hidden', sec !== '' && sec !== key);
+        });
+        history.replaceState(null, '', sec ? '#' + sec : location.pathname);
+    }
+
+    btns.forEach(function(btn) {
+        btn.addEventListener('click', function() { activateTab(btn.dataset.sec); });
+    });
+
+    var initHash = location.hash.slice(1);
+    if (initHash && secs[initHash]) activateTab(initHash);
+})();
+</script>
 
 {% endblock %}
