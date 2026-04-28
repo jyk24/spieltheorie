@@ -8,7 +8,7 @@
 <div class="max-w-5xl mx-auto">
 
   <!-- Hero -->
-  <div class="mb-10">
+  <div class="mb-8">
     <div class="flex items-start gap-4 mb-3">
       <div class="text-5xl">💬</div>
       <div>
@@ -25,8 +25,18 @@
     </div>
   </div>
 
+  <!-- Tab-Navigation -->
+  <div class="flex gap-2 mb-8 flex-wrap" id="section-tabs">
+    <button class="sec-btn bg-teal-600 text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-sec="">Alle</button>
+    <button class="sec-btn bg-white border border-slate-200 text-slate-600 hover:border-teal-300 hover:text-teal-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-sec="raetsel">🧩 Rätsel</button>
+    <button class="sec-btn bg-white border border-slate-200 text-slate-600 hover:border-violet-300 hover:text-violet-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-sec="frameworks">💡 Frameworks</button>
+    {% if ted_soziales %}
+    <button class="sec-btn bg-white border border-slate-200 text-slate-600 hover:border-red-300 hover:text-red-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-sec="ted">🎤 TED Insights</button>
+    {% endif %}
+  </div>
+
   <!-- ── 1. Rätsel nach Kategorie ────────────────────────────────────────────── -->
-  <section class="mb-12">
+  <section class="mb-12" id="sec-raetsel">
     <div class="flex items-center gap-3 mb-5">
       <span class="bg-teal-100 text-teal-700 w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">🧩</span>
       <div>
@@ -81,7 +91,7 @@
   </section>
 
   <!-- ── 2. Frameworks ──────────────────────────────────────────────────────── -->
-  <section class="mb-8">
+  <section class="mb-12" id="sec-frameworks">
     <div class="flex items-center gap-3 mb-5">
       <span class="bg-violet-100 text-violet-700 w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">💡</span>
       <div>
@@ -104,7 +114,7 @@
 
   <!-- ── 3. TED Insights ──────────────────────────────────────────────────────── -->
   {% if ted_soziales %}
-  <section class="mb-8">
+  <section class="mb-8" id="sec-ted">
     <div class="flex items-center gap-3 mb-5">
       <span class="bg-red-100 text-red-700 w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">🎤</span>
       <div>
@@ -145,7 +155,7 @@
     <div class="flex gap-3 justify-center flex-wrap">
       <a href="/spieltheorie" class="inline-block bg-indigo-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors text-sm">♟️ Spieltheorie</a>
       <a href="/denkraetsel" class="inline-block bg-amber-500 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-amber-600 transition-colors text-sm">🧩 Denkrätsel</a>
-      <a href="/lernpfade" class="inline-block border border-slate-300 text-slate-600 font-medium px-5 py-2.5 rounded-xl hover:bg-slate-100 transition-colors text-sm">🗺️ Lernpfade</a>
+      <a href="/lernpfade" class="inline-block border border-slate-300 text-slate-600 font-medium px-5 py-2.5 rounded-xl hover:bg-slate-100 transition-colors text-sm">🗺️ Lernpfade →</a>
     </div>
   </div>
 
@@ -153,29 +163,48 @@
 
 <script>
 (function() {
-  var STORAGE = 'soziales_acc_v1';
-  var state = {};
-  try { state = JSON.parse(sessionStorage.getItem(STORAGE) || '{}'); } catch(e) {}
-  function save() { try { sessionStorage.setItem(STORAGE, JSON.stringify(state)); } catch(e) {} }
+  // Section-Tabs
+  var secBtns = document.querySelectorAll('.sec-btn');
+  var secs = {
+    raetsel:    document.getElementById('sec-raetsel'),
+    frameworks: document.getElementById('sec-frameworks'),
+    ted:        document.getElementById('sec-ted'),
+  };
 
+  function activateTab(sec) {
+    secBtns.forEach(function(b) {
+      var isActive = b.dataset.sec === sec;
+      b.classList.toggle('bg-teal-600', isActive);
+      b.classList.toggle('text-white', isActive);
+      b.classList.toggle('bg-white', !isActive);
+      b.classList.toggle('border', !isActive);
+      b.classList.toggle('border-slate-200', !isActive);
+      b.classList.toggle('text-slate-600', !isActive);
+    });
+    Object.keys(secs).forEach(function(key) {
+      if (secs[key]) secs[key].classList.toggle('hidden', sec !== '' && sec !== key);
+    });
+    history.replaceState(null, '', sec ? '#' + sec : location.pathname);
+  }
+
+  secBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() { activateTab(btn.dataset.sec); });
+  });
+
+  // Accordion für Rätsel-Unterkategorien
   document.querySelectorAll('.kat-grp-btn').forEach(function(btn) {
     var grp = btn.closest('.kat-grp');
-    var kat = grp.dataset.kat;
     var body = grp.querySelector('.kat-grp-body');
     var chev = btn.querySelector('.kat-chev');
-
-    if (state[kat] === 'collapsed') {
-      body.classList.add('hidden');
-      if (chev) chev.style.transform = 'rotate(180deg)';
-    }
-
     btn.addEventListener('click', function() {
       var hidden = body.classList.toggle('hidden');
       if (chev) chev.style.transform = hidden ? 'rotate(180deg)' : '';
-      state[kat] = hidden ? 'collapsed' : 'expanded';
-      save();
     });
   });
+
+  // Hash beim Laden lesen
+  var initHash = location.hash.slice(1);
+  if (initHash && secs[initHash]) activateTab(initHash);
 })();
 </script>
 

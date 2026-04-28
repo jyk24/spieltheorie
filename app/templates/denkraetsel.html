@@ -5,10 +5,14 @@
 {% block og_description %}Mathematik, Physik, Logik: klassische Denkrätsel und Paradoxe für analytisches Denken – von Einsteiger bis Experte.{% endblock %}
 {% block content %}
 
+{% set kat_colors = {"Mathematik": "violet", "Physik": "sky", "Logik": "amber"} %}
+{% set kat_counts = {} %}
+{% for r in raetsel %}{% set _ = kat_counts.update({r.kategorie: (kat_counts.get(r.kategorie, 0) + 1)}) %}{% endfor %}
+
 <div class="max-w-5xl mx-auto">
 
   <!-- Hero -->
-  <div class="mb-10">
+  <div class="mb-8">
     <div class="flex items-start gap-4 mb-3">
       <div class="text-5xl">🧩</div>
       <div>
@@ -24,8 +28,16 @@
     </div>
   </div>
 
-  <!-- Intro-Box -->
-  <div class="bg-gradient-to-r from-violet-50 to-sky-50 border border-violet-200 rounded-2xl p-6 mb-10">
+  <!-- Kategorie-Filter-Tabs -->
+  <div class="flex gap-2 mb-6 flex-wrap" id="kat-filter">
+    <button class="kat-btn bg-indigo-600 text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-kat="">Alle ({{ raetsel | length }})</button>
+    <button class="kat-btn bg-white border border-slate-200 text-slate-600 hover:border-violet-300 hover:text-violet-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-kat="Mathematik">📐 Mathematik ({{ kat_counts.get("Mathematik", 0) }})</button>
+    <button class="kat-btn bg-white border border-slate-200 text-slate-600 hover:border-sky-300 hover:text-sky-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-kat="Physik">⚡ Physik ({{ kat_counts.get("Physik", 0) }})</button>
+    <button class="kat-btn bg-white border border-slate-200 text-slate-600 hover:border-amber-300 hover:text-amber-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-kat="Logik">🧩 Logik ({{ kat_counts.get("Logik", 0) }})</button>
+  </div>
+
+  <!-- Intro-Box (nur bei "Alle" sichtbar) -->
+  <div class="bg-gradient-to-r from-violet-50 to-sky-50 border border-violet-200 rounded-2xl p-6 mb-8 intro-box">
     <h2 class="font-bold text-slate-800 mb-3">Was hier trainiert wird</h2>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <div class="flex items-start gap-3">
@@ -52,51 +64,29 @@
     </div>
   </div>
 
-  <!-- Kategorien als Akkordeon -->
-  {% set kat_config = [
-    ("Mathematik", "violet", "📐", "Unendlichkeit, Reihen, Paradoxe – Intuition trifft Beweise"),
-    ("Physik",     "sky",    "⚡", "Kräfte, Energie, Bewegung – gegen jede Erwartung"),
-    ("Logik",      "amber",  "🧩", "Schlussfolgern, Kombinatorik, selbstbezügliche Paradoxe"),
-  ] %}
-
-  <div class="space-y-4" id="kat-acc">
-  {% for kat, farbe, kat_icon, beschreibung in kat_config %}
-  {% set kat_raetsel = raetsel | selectattr("kategorie", "equalto", kat) | list %}
-  {% if kat_raetsel %}
-  <div class="kat-grp" data-kat="{{ kat }}">
-    <button class="kat-grp-btn w-full flex items-center gap-3 bg-white border border-slate-200 rounded-2xl px-5 py-4 hover:border-{{ farbe }}-300 transition-all text-left select-none shadow-sm group">
-      <span class="text-2xl shrink-0">{{ kat_icon }}</span>
+  <!-- Karten-Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-10" id="raetsel-grid">
+    {% for r in raetsel %}
+    {% set farbe = kat_colors.get(r.kategorie, "slate") %}
+    <a href="/raetsel/{{ r.id }}" data-kat="{{ r.kategorie }}"
+       class="raetsel-card flex items-start gap-3 bg-white border border-slate-100 rounded-xl p-4 hover:border-{{ farbe }}-200 hover:shadow-md transition-all group">
+      <span class="text-2xl shrink-0 mt-0.5">{{ r.icon }}</span>
       <div class="flex-1 min-w-0">
-        <div class="font-bold text-slate-800 group-hover:text-{{ farbe }}-700 transition-colors">{{ kat }}</div>
-        <div class="text-xs text-slate-400 mt-0.5">{{ beschreibung }}</div>
-      </div>
-      <span class="text-xs bg-{{ farbe }}-100 text-{{ farbe }}-700 px-2 py-0.5 rounded-full font-medium shrink-0">{{ kat_raetsel | length }} Rätsel</span>
-      <svg class="kat-chev w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
-    </button>
-    <div class="kat-grp-body mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-      {% for r in kat_raetsel %}
-      <a href="/raetsel/{{ r.id }}"
-         class="flex items-start gap-3 bg-white border border-slate-100 rounded-xl p-4 hover:border-{{ farbe }}-200 hover:shadow-md transition-all group">
-        <span class="text-2xl shrink-0 mt-0.5">{{ r.icon }}</span>
-        <div class="flex-1 min-w-0">
-          <div class="font-semibold text-slate-800 text-sm group-hover:text-{{ farbe }}-700 transition-colors mb-1">{{ r.name }}</div>
-          <p class="text-xs text-slate-500 leading-relaxed line-clamp-2">{{ r.beschreibung }}</p>
-          <div class="flex items-center gap-2 mt-2 text-xs text-slate-400">
-            <span class="bg-{{ farbe }}-50 text-{{ farbe }}-600 px-1.5 py-0.5 rounded-full">{{ r.schwierigkeit }}</span>
-            <span>·</span>
-            <span>{{ r.dauer }}</span>
-          </div>
+        <div class="text-xs text-{{ farbe }}-600 font-medium mb-0.5">{{ r.kategorie }}</div>
+        <div class="font-semibold text-slate-800 text-sm group-hover:text-{{ farbe }}-700 transition-colors mb-1">{{ r.name }}</div>
+        <p class="text-xs text-slate-500 leading-relaxed line-clamp-2">{{ r.beschreibung }}</p>
+        <div class="flex items-center gap-2 mt-2 text-xs text-slate-400">
+          <span class="bg-{{ farbe }}-50 text-{{ farbe }}-600 px-1.5 py-0.5 rounded-full">{{ r.schwierigkeit }}</span>
+          <span>·</span>
+          <span>{{ r.dauer }}</span>
         </div>
-      </a>
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
-  {% endfor %}
+      </div>
+    </a>
+    {% endfor %}
   </div>
 
   <!-- Bottom CTA -->
-  <div class="mt-10 bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center">
+  <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center">
     <p class="font-bold text-slate-800 mb-1">Alle Kategorien auf einen Blick?</p>
     <p class="text-sm text-slate-500 mb-4">Rätsel, Spieltheorie, Psychologie und mehr – die vollständige Sammlung.</p>
     <div class="flex gap-3 justify-center flex-wrap">
@@ -109,29 +99,33 @@
 
 <script>
 (function() {
-  var STORAGE = 'denkraetsel_acc_v1';
-  var state = {};
-  try { state = JSON.parse(sessionStorage.getItem(STORAGE) || '{}'); } catch(e) {}
-  function save() { try { sessionStorage.setItem(STORAGE, JSON.stringify(state)); } catch(e) {} }
+  var btns = document.querySelectorAll('.kat-btn');
+  var cards = document.querySelectorAll('.raetsel-card');
+  var introBox = document.querySelector('.intro-box');
 
-  document.querySelectorAll('.kat-grp-btn').forEach(function(btn) {
-    var grp = btn.closest('.kat-grp');
-    var kat = grp.dataset.kat;
-    var body = grp.querySelector('.kat-grp-body');
-    var chev = btn.querySelector('.kat-chev');
-
-    if (state[kat] === 'collapsed') {
-      body.classList.add('hidden');
-      if (chev) chev.style.transform = 'rotate(180deg)';
-    }
-
-    btn.addEventListener('click', function() {
-      var hidden = body.classList.toggle('hidden');
-      if (chev) chev.style.transform = hidden ? 'rotate(180deg)' : '';
-      state[kat] = hidden ? 'collapsed' : 'expanded';
-      save();
+  function activateKat(kat) {
+    btns.forEach(function(b) {
+      var isActive = b.dataset.kat === kat;
+      b.classList.toggle('bg-indigo-600', isActive);
+      b.classList.toggle('text-white', isActive);
+      b.classList.toggle('bg-white', !isActive);
+      b.classList.toggle('border', !isActive);
+      b.classList.toggle('border-slate-200', !isActive);
+      b.classList.toggle('text-slate-600', !isActive);
     });
+    cards.forEach(function(card) {
+      card.classList.toggle('hidden', !(!kat || card.dataset.kat === kat));
+    });
+    if (introBox) introBox.classList.toggle('hidden', kat !== '');
+    history.replaceState(null, '', kat ? '#' + kat : location.pathname);
+  }
+
+  btns.forEach(function(btn) {
+    btn.addEventListener('click', function() { activateKat(btn.dataset.kat); });
   });
+
+  var initHash = location.hash.slice(1);
+  if (initHash) activateKat(initHash);
 })();
 </script>
 
