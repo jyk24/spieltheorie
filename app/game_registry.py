@@ -106,6 +106,16 @@ GAMES: list[dict] = [
         "level": 3,
     },
     {
+        "game_type": "knopf",
+        "slug": "knopf",
+        "name": "Der Knopf",
+        "icon": "🔴",
+        "mechanic": "Dominante Strategie / Schwellenwert-Kollektivgut",
+        "literature": "Schelling (1960), Olson (1965), Tim Urban (2026)",
+        "lesson_slug": "dominante-strategien",
+        "level": 3,
+    },
+    {
         "game_type": "beauty_contest",
         "slug": "beauty-contest",
         "name": "Schönheitswettbewerb",

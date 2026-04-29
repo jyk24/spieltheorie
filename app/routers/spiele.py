@@ -53,6 +53,8 @@ from ..game_engine import (
     ea_tick,
     vd_final_result,
     vd_play_round,
+    knopf_final_result,
+    knopf_play_round,
     verhandlung_ai_offer,
     verhandlung_score,
     wc_final_result,
@@ -2333,6 +2335,111 @@ def freiwilligen_dilemma_zug(
             "is_final": is_final,
             "final": final,
             "max_rounds": 8,
+            "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Der Knopf (Red/Blue Button – Tim Urban 2026)
+# ---------------------------------------------------------------------------
+
+KNOPF_STRATEGY_POOL = ["homo_economicus", "gemischt", "kooperativ_fragil", "altruisten", "optimisten"]
+KNOPF_STRATEGY_WEIGHTS = [3, 2, 2, 1, 2]
+
+KNOPF_STRATEGY_INFO = {
+    "homo_economicus": {
+        "icon": "😈",
+        "name": "Homo Economicus",
+        "verhalten": "Alle Bots wählten immer Rot – die dominante Strategie. Rational, aber kollektiv verheerend.",
+        "gegencheck": "Wenn alle Rot wählen, überlebt zwar jeder – aber nur weil niemand riskiert. Ohne Blau-Wähler gibt es keinen kollektiven Gewinn.",
+        "lesson_slug": "dominante-strategien",
+        "lesson_title": "Dominante Strategien",
+    },
+    "gemischt": {
+        "icon": "🎲",
+        "name": "Gemischte Strategie",
+        "verhalten": "Bots wählten zufällig ~50/50 Rot/Blau. Ob die Schwelle erreicht wird, hängt vom Zufall ab.",
+        "gegencheck": "Bei 10 zufälligen Bots liegt die Wahrscheinlichkeit für ≥5 Blau-Bots bei ~62%. Deine Stimme kann entscheidend sein.",
+        "lesson_slug": "gemischte-strategien",
+        "lesson_title": "Gemischte Strategien",
+    },
+    "kooperativ_fragil": {
+        "icon": "🤝",
+        "name": "Fragile Kooperatoren",
+        "verhalten": "Bots starteten Blau, wechselten nach einem Scheitern zur Hälfte zu Rot. Kooperation ist zerbrechlich.",
+        "gegencheck": "Wähle Blau in der ersten Runde, um Vertrauen aufzubauen. Einmal gebrochen, ist es schwer zu reparieren.",
+        "lesson_slug": "wiederholte-spiele-reputation",
+        "lesson_title": "Wiederholte Spiele & Reputation",
+    },
+    "altruisten": {
+        "icon": "💙",
+        "name": "Altruisten",
+        "verhalten": "Alle Bots wählten immer Blau. Die Schwelle war immer erreicht – egal was du wähltest.",
+        "gegencheck": "Als Rot-Wähler in einer Gruppe von Altruisten bist du Free-Rider: sicher überlebt, 3 statt 5 Punkte.",
+        "lesson_slug": "oeffentliche-gueter-kollektivgut",
+        "lesson_title": "Öffentliche Güter & Kollektivgut",
+    },
+    "optimisten": {
+        "icon": "🌈",
+        "name": "Optimisten",
+        "verhalten": "Bots wählten Blau wenn die letzte Runde gut lief, sonst Rot. Kooperationsbereit, aber nicht bedingungslos.",
+        "gegencheck": "Frühe Kooperation schafft positive Dynamik. Wähle in Runde 1 Blau, um den Optimismus zu verstärken.",
+        "lesson_slug": "koordinationsspiele",
+        "lesson_title": "Koordinationsspiele",
+    },
+}
+
+
+@router.get("/knopf", response_class=HTMLResponse)
+def knopf_page(request: Request):
+    hidden_strategy = _random.choices(KNOPF_STRATEGY_POOL, weights=KNOPF_STRATEGY_WEIGHTS)[0]
+    return templates.TemplateResponse(
+        request,
+        "games/knopf.html",
+        {"active_page": "spiele", "hidden_strategy": hidden_strategy, "max_rounds": 6},
+    )
+
+
+@router.post("/knopf/zug", response_class=HTMLResponse)
+def knopf_zug(
+    request: Request,
+    choice: str = Form(...),
+    strategy: str = Form(...),
+    history_json: str = Form(default="[]"),
+    db: Session = Depends(get_db),
+):
+    history = json.loads(history_json)
+    round_result = knopf_play_round(choice, strategy, history)
+    history.append(round_result)
+    is_final = len(history) >= 6
+    final = knopf_final_result(history) if is_final else None
+    strategy_info = None
+    new_achievements: list = []
+    if is_final:
+        _, new_achievements = save_game_session(
+            db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
+            game_type="knopf",
+            ai_strategy=strategy,
+            moves=history,
+            result=final["result"],
+            score=final["player_total"],
+            ai_score=0,
+        )
+        strategy_info = KNOPF_STRATEGY_INFO.get(strategy)
+    return templates.TemplateResponse(
+        request,
+        "partials/knopf_result.html",
+        {
+            "round_result": round_result,
+            "history": history,
+            "history_json": json.dumps(history),
+            "strategy": strategy,
+            "is_final": is_final,
+            "final": final,
+            "max_rounds": 6,
             "strategy_info": strategy_info,
             "new_achievements": new_achievements,
         },

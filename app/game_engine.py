@@ -1731,3 +1731,100 @@ def cournot_final_result(history: list[dict]) -> dict:
         "efficiency": efficiency,
         "nash_total": nash_total,
     }
+
+
+# ---------------------------------------------------------------------------
+# Der Knopf (Red/Blue Button – Threshold Collective Action)
+# ---------------------------------------------------------------------------
+# Viral thought experiment (Tim Urban, April 2026):
+# Everyone privately presses Red or Blue.
+# If ≥6 of 11 (>50%) press Blue → everyone survives.
+# Red pressers always survive. Blue pressers die if threshold not reached.
+
+KNOPF_N_BOTS = 10
+KNOPF_TOTAL = 11
+KNOPF_THRESHOLD = 6   # ≥6 Blue = majority → everyone survives
+KNOPF_SCORE_ROT = 3   # Red presser always survives
+KNOPF_SCORE_BLAU_WIN = 5   # Blue presser when threshold reached
+KNOPF_SCORE_BLAU_LOSE = 0  # Blue presser when threshold not reached
+
+
+def knopf_bots_play(strategy: str, history: list[dict]) -> list[str]:
+    """Returns list of 10 bot decisions: 'R' (Rot) or 'B' (Blau)."""
+    if strategy == "homo_economicus":
+        return ["R"] * KNOPF_N_BOTS
+    elif strategy == "altruisten":
+        return ["B"] * KNOPF_N_BOTS
+    elif strategy == "optimisten":
+        if not history:
+            return ["B"] * KNOPF_N_BOTS
+        last_blau = history[-1]["blau_count"]
+        if last_blau >= KNOPF_THRESHOLD:
+            return ["B"] * KNOPF_N_BOTS
+        return ["R"] * KNOPF_N_BOTS
+    elif strategy == "gemischt":
+        return [random.choice(["R", "B"]) for _ in range(KNOPF_N_BOTS)]
+    elif strategy == "kooperativ_fragil":
+        if not history:
+            return ["B"] * KNOPF_N_BOTS
+        last_survived = history[-1]["everyone_survived"]
+        if last_survived:
+            return ["B"] * KNOPF_N_BOTS
+        # Failed last round → half defect to Red
+        return ["B"] * (KNOPF_N_BOTS // 2) + ["R"] * (KNOPF_N_BOTS - KNOPF_N_BOTS // 2)
+    return [random.choice(["R", "B"]) for _ in range(KNOPF_N_BOTS)]
+
+
+def knopf_play_round(player: str, strategy: str, history: list[dict]) -> dict:
+    """Plays one round. player: 'R' or 'B'."""
+    bots = knopf_bots_play(strategy, history)
+    all_choices = [player] + bots
+    blau_count = sum(1 for c in all_choices if c == "B")
+    everyone_survived = blau_count >= KNOPF_THRESHOLD
+
+    if player == "R":
+        p_score = KNOPF_SCORE_ROT
+    elif everyone_survived:
+        p_score = KNOPF_SCORE_BLAU_WIN
+    else:
+        p_score = KNOPF_SCORE_BLAU_LOSE
+
+    prev_total = history[-1]["player_total"] if history else 0
+    bot_blau = sum(1 for b in bots if b == "B")
+    return {
+        "round": len(history) + 1,
+        "player": player,
+        "bots": bots,
+        "bot_blau": bot_blau,
+        "blau_count": blau_count,
+        "rot_count": KNOPF_TOTAL - blau_count,
+        "everyone_survived": everyone_survived,
+        "player_score": p_score,
+        "player_total": prev_total + p_score,
+    }
+
+
+def knopf_final_result(history: list[dict]) -> dict:
+    p_total = history[-1]["player_total"] if history else 0
+    rot_rounds = sum(1 for r in history if r["player"] == "R")
+    blau_rounds = len(history) - rot_rounds
+    survived_rounds = sum(1 for r in history if r["everyone_survived"])
+    failed_rounds = sum(1 for r in history if not r["everyone_survived"] and r["player"] == "B")
+    max_possible = len(history) * KNOPF_SCORE_BLAU_WIN
+    efficiency = round(p_total / max_possible * 100) if max_possible else 0
+    if efficiency >= 70:
+        result = "win"
+    elif efficiency >= 40:
+        result = "draw"
+    else:
+        result = "loss"
+    return {
+        "result": result,
+        "player_total": p_total,
+        "rot_rounds": rot_rounds,
+        "blau_rounds": blau_rounds,
+        "survived_rounds": survived_rounds,
+        "failed_rounds": failed_rounds,
+        "efficiency": efficiency,
+        "total_rounds": len(history),
+    }

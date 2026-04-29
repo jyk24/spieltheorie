@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Der Knopf – VerhandlungsTrainer{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🔴 Der Knopf</h1>
+        <p class="text-slate-500 mt-1">Schelling (1960), Olson (1965) · Schwellenwert-Kollektivgut – viral als Tim-Urban-Gedankenexperiment (2026).</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Regeln (11 Spieler insgesamt):</p>
+        <div class="grid grid-cols-2 gap-3 mb-4 text-xs">
+            <div class="bg-red-50 border border-red-200 rounded-lg p-3 text-center">
+                <div class="text-3xl mb-1">🔴</div>
+                <div class="font-bold text-red-800">Rot wählen</div>
+                <div class="text-red-600 mt-1 font-semibold">Immer +3 Punkte</div>
+                <div class="text-slate-500 mt-1">Du überlebst – egal was passiert.</div>
+            </div>
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
+                <div class="text-3xl mb-1">🔵</div>
+                <div class="font-bold text-blue-800">Blau wählen</div>
+                <div class="text-blue-600 mt-1 font-semibold">+5 oder 0 Punkte</div>
+                <div class="text-slate-500 mt-1">+5 wenn ≥6 von 11 Blau wählen. Sonst 0.</div>
+            </div>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs mb-3">
+            <p class="font-semibold text-amber-800 mb-1">Das Dilemma:</p>
+            <p class="text-amber-700">Rot ist eine <strong>dominante Strategie</strong> – du überlebst immer. Aber wenn alle so denken, profitiert niemand von kollektiver Kooperation. Das Nash-Gleichgewicht (alle Rot) ist für die Gruppe schlechter als kollektives Blau.</p>
+        </div>
+
+        <div class="bg-violet-50 border border-violet-200 rounded-lg p-3 text-xs">
+            <p class="font-semibold text-violet-800 mb-1">Auszahlungsmatrix:</p>
+            <div class="grid grid-cols-3 gap-1 text-center font-mono text-xs">
+                <div class="bg-violet-100 rounded p-1 font-bold text-violet-700">Wahl</div>
+                <div class="bg-violet-100 rounded p-1 font-bold text-violet-700">≥6 Blau</div>
+                <div class="bg-violet-100 rounded p-1 font-bold text-violet-700">&lt;6 Blau</div>
+                <div class="bg-red-50 rounded p-1 text-red-700 font-bold">🔴 Rot</div>
+                <div class="bg-red-50 rounded p-1 text-red-700">+3</div>
+                <div class="bg-red-50 rounded p-1 text-red-700">+3</div>
+                <div class="bg-blue-50 rounded p-1 text-blue-700 font-bold">🔵 Blau</div>
+                <div class="bg-blue-50 rounded p-1 text-blue-700">+5</div>
+                <div class="bg-blue-50 rounded p-1 text-red-600 font-bold">0</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="spiel-area">
+        <form id="game-form">
+            <input type="hidden" name="strategy" value="{{ hidden_strategy }}">
+            <input type="hidden" name="history_json" value="[]">
+
+            <div class="flex justify-between items-center mb-5">
+                <span class="text-sm text-slate-500">Runde <span id="round-num">1</span> / {{ max_rounds }}</span>
+                <span class="text-sm text-slate-600">Punkte: <strong id="player-score">0</strong></span>
+            </div>
+
+            <p class="font-semibold text-slate-800 mb-2 text-center">Welchen Knopf drückst du?</p>
+            <p class="text-xs text-slate-400 text-center mb-5">10 andere Spieler entscheiden gleichzeitig. Du siehst ihr Ergebnis danach.</p>
+
+            <div class="grid grid-cols-2 gap-4">
+                <button type="button"
+                        hx-post="/spiele/knopf/zug"
+                        hx-target="#spiel-area"
+                        hx-swap="innerHTML"
+                        hx-include="#game-form"
+                        hx-vals='{"choice": "R"}'
+                        class="group p-6 rounded-xl border-2 border-red-200 bg-red-50 hover:border-red-400 hover:bg-red-100 transition-all text-center active:scale-95">
+                    <div class="text-5xl mb-2 transition-transform group-hover:scale-110">🔴</div>
+                    <div class="font-bold text-red-800 text-lg">Rot</div>
+                    <div class="text-xs text-red-600 mt-1">Sicher +3 Punkte</div>
+                    <div class="text-xs text-red-400 mt-0.5">Du überlebst immer</div>
+                </button>
+                <button type="button"
+                        hx-post="/spiele/knopf/zug"
+                        hx-target="#spiel-area"
+                        hx-swap="innerHTML"
+                        hx-include="#game-form"
+                        hx-vals='{"choice": "B"}'
+                        class="group p-6 rounded-xl border-2 border-blue-200 bg-blue-50 hover:border-blue-400 hover:bg-blue-100 transition-all text-center active:scale-95">
+                    <div class="text-5xl mb-2 transition-transform group-hover:scale-110">🔵</div>
+                    <div class="font-bold text-blue-800 text-lg">Blau</div>
+                    <div class="text-xs text-blue-600 mt-1">+5 oder 0 Punkte</div>
+                    <div class="text-xs text-blue-400 mt-0.5">Braucht ≥6 Blau-Stimmen</div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.body.addEventListener("htmx:afterSwap", function (e) {
+    if (e.detail.target.id === "spiel-area") {
+        const rn = document.getElementById("round-num");
+        const ps = document.getElementById("player-score");
+        const roundData = e.detail.target.querySelector("[data-round]");
+        if (rn && roundData) rn.textContent = roundData.dataset.round;
+        if (ps && roundData) ps.textContent = roundData.dataset.total;
+    }
+});
+</script>
+{% endblock %}
