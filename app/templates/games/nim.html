@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+{% block title %}Nim – Spieltheorie · VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="Nim – das mathematisch perfekt gelöste Spiel. Spiele gegen eine optimale KI mit Nim-Sum-Strategie und lerne den Sprague-Grundy-Satz.">{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🪙 Nim</h1>
+        <p class="text-slate-500 mt-1">Bouton (1901), Sprague (1935), Grundy (1939) · Das erste vollständig mathematisch gelöste kombinatorische Spiel.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5 text-sm text-slate-700">
+        <p class="font-semibold mb-2">Die Regeln:</p>
+        <ul class="list-disc list-inside space-y-1 mb-3">
+            <li>Drei Reihen mit Steinen liegen vor dir.</li>
+            <li>Pro Zug nimmst du <strong>beliebig viele Steine aus genau einer Reihe</strong> (mindestens einen).</li>
+            <li>Wer den <strong>letzten Stein</strong> nimmt, gewinnt.</li>
+            <li>Du beginnst – die KI antwortet automatisch.</li>
+        </ul>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs">
+            <p class="font-semibold text-amber-800 mb-1">Hinweis zur KI:</p>
+            <p class="text-amber-700">Sie spielt <strong>perfekt</strong>: sobald sie einen Sieg erzwingen kann, wird sie ihn nicht mehr abgeben. Aus mancher Startstellung kannst du dennoch gewinnen – wenn du den Trick kennst. Gelingt es dir, ihn zu finden?</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="board-card">
+        <div class="flex justify-between items-center mb-5">
+            <span class="text-sm text-slate-500">Zug <span id="turn-num">1</span></span>
+            <span class="text-sm">
+                <button id="reset-btn" class="text-slate-400 hover:text-indigo-600 underline">Neue Runde</button>
+            </span>
+        </div>
+
+        <div id="status-line" class="text-center text-base font-semibold text-indigo-700 mb-4">Du bist am Zug.</div>
+
+        <div id="board" class="space-y-3 mb-5"></div>
+
+        <div class="flex flex-col sm:flex-row gap-2">
+            <button id="confirm-btn" disabled
+                class="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-xl transition-colors">
+                Zug bestätigen (<span id="take-count">0</span> Stein(e))
+            </button>
+            <button id="cancel-btn" disabled
+                class="bg-slate-100 hover:bg-slate-200 disabled:opacity-50 text-slate-700 font-semibold py-3 px-4 rounded-xl transition-colors">
+                Auswahl löschen
+            </button>
+        </div>
+
+        <p class="text-xs text-slate-400 text-center mt-4">Tipp: Klicke auf einen Stein, um ihn (und alle rechts davon) zu nehmen. Klicke noch einmal, um die Auswahl zu verkleinern.</p>
+    </div>
+
+    <!-- Game-Over Panel -->
+    <div id="result-card" class="hidden mt-5 bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+        <div id="result-banner" class="text-center mb-4">
+            <div id="result-emoji" class="text-5xl mb-2"></div>
+            <h2 id="result-title" class="text-2xl font-extrabold"></h2>
+            <p id="result-sub" class="text-sm text-slate-500 mt-1"></p>
+        </div>
+
+        <div class="bg-violet-50 border border-violet-200 rounded-lg p-4 text-sm">
+            <p class="font-bold text-violet-800 mb-2">🧮 Die Mathematik hinter Nim – die Nim-Summe</p>
+            <p class="text-violet-700 mb-2">
+                Die Nim-Summe ist die <strong>XOR-Verknüpfung der Reihengrößen in Binärdarstellung</strong>:
+            </p>
+            <pre class="bg-white p-2 rounded text-xs text-slate-700 overflow-x-auto" id="result-math"></pre>
+            <p class="text-violet-700 mt-3">
+                <strong>Bouton-Theorem (1901):</strong> Eine Position ist genau dann ein <em>Verlust für den Anziehenden</em>,
+                wenn die Nim-Summe <strong>0</strong> ist. Aus einer Nim-Summe ≠ 0 kann man immer einen Zug finden,
+                der sie auf 0 setzt – das ist der erzwingende Gewinn-Zug.
+            </p>
+            <p class="text-violet-700 mt-2">
+                Beispiel-Startstellung 3·4·5: Nim-Summe = 011 ⊕ 100 ⊕ 101 = 010 (= 2). Sie ist ungleich 0,
+                also <strong>verlierst der Anziehende nicht</strong> – wenn er den richtigen Zug findet.
+                Der Trick: Reduziere die <strong>4er-Reihe auf 1</strong> (denn 011 ⊕ 001 ⊕ 101 = 111 ⊕ 001 = 0). Probier&apos;s!
+            </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 mt-4 text-xs">
+            <a href="/raetsel/josephus" class="bg-slate-50 hover:bg-slate-100 rounded-lg px-3 py-2 text-slate-700 border border-slate-200">
+                <span class="font-semibold">Verwandt:</span> Josephus-Problem →
+            </a>
+            <a href="/spiele/centipede" class="bg-slate-50 hover:bg-slate-100 rounded-lg px-3 py-2 text-slate-700 border border-slate-200">
+                <span class="font-semibold">Sequentielle KI:</span> Centipede →
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+  // ── State ──────────────────────────────────────────────────────────────────
+  var INITIAL = [3, 4, 5];
+  var piles = INITIAL.slice();
+  var selRow = -1;       // currently selected row (-1 = none)
+  var selCount = 0;      // stones marked
+  var turn = 1;
+  var gameOver = false;
+  var lastAiMove = null; // {row, count}
+
+  var $ = function(id) { return document.getElementById(id); };
+  var board = $('board');
+  var status = $('status-line');
+  var confirmBtn = $('confirm-btn');
+  var cancelBtn = $('cancel-btn');
+  var takeCount = $('take-count');
+  var turnNum = $('turn-num');
+  var resultCard = $('result-card');
+
+  // ── Render ─────────────────────────────────────────────────────────────────
+  function render() {
+    var html = '';
+    piles.forEach(function(n, ri) {
+      html += '<div class="flex items-center gap-3" data-row="' + ri + '">' +
+        '<span class="w-12 text-xs font-bold text-slate-500 shrink-0">Reihe ' + (ri + 1) + '</span>' +
+        '<div class="flex flex-wrap gap-1.5 nim-row" data-row="' + ri + '">';
+      for (var i = 0; i < n; i++) {
+        var marked = (ri === selRow && i >= n - selCount);
+        var aiHit = (lastAiMove && lastAiMove.row === ri && i >= n - 0); // visual placeholder
+        html += '<button type="button" data-row="' + ri + '" data-idx="' + i + '"' +
+          ' class="nim-stone w-8 h-8 rounded-full border-2 transition-all ' +
+          (marked ? 'bg-rose-500 border-rose-700 scale-110 shadow-md' : 'bg-amber-300 border-amber-600 hover:bg-amber-400') + '"' +
+          '></button>';
+      }
+      html += '</div></div>';
+    });
+    if (lastAiMove) {
+      html += '<div class="text-xs text-slate-500 italic pl-14 -mt-1">KI nahm ' + lastAiMove.count +
+              ' Stein(e) aus Reihe ' + (lastAiMove.row + 1) + '.</div>';
+    }
+    board.innerHTML = html;
+    turnNum.textContent = turn;
+    takeCount.textContent = selCount;
+    confirmBtn.disabled = (selCount === 0 || gameOver);
+    cancelBtn.disabled = (selCount === 0 || gameOver);
+
+    // attach click handlers
+    board.querySelectorAll('.nim-stone').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        if (gameOver) return;
+        var ri = parseInt(btn.dataset.row, 10);
+        var idx = parseInt(btn.dataset.idx, 10);
+        // Number of stones to take = piles[ri] - idx (clicked + everything to its right)
+        var n = piles[ri] - idx;
+        if (selRow === ri && selCount === n) {
+          // clicking the same boundary again clears
+          selRow = -1; selCount = 0;
+        } else {
+          selRow = ri;
+          selCount = n;
+        }
+        render();
+      });
+    });
+  }
+
+  // ── Nim-Sum AI ─────────────────────────────────────────────────────────────
+  function nimSum(arr) { return arr.reduce(function(a, b) { return a ^ b; }, 0); }
+
+  function bestMove(state) {
+    var s = nimSum(state);
+    if (s === 0) {
+      // Losing position: take 1 from largest pile (delay)
+      var maxV = -1, maxI = -1;
+      state.forEach(function(v, i) { if (v > maxV) { maxV = v; maxI = i; } });
+      return { row: maxI, count: 1 };
+    }
+    for (var i = 0; i < state.length; i++) {
+      var target = state[i] ^ s;
+      if (target < state[i]) {
+        return { row: i, count: state[i] - target };
+      }
+    }
+    // Should never reach here
+    return null;
+  }
+
+  // ── Move handling ──────────────────────────────────────────────────────────
+  function applyPlayerMove() {
+    if (selCount === 0 || selRow < 0) return;
+    piles[selRow] -= selCount;
+    selRow = -1; selCount = 0;
+    lastAiMove = null;
+    render();
+    if (allZero()) {
+      endGame('player');
+      return;
+    }
+    // AI move
+    status.textContent = 'KI denkt nach …';
+    setTimeout(aiMove, 700);
+  }
+
+  function aiMove() {
+    var mv = bestMove(piles);
+    if (mv) {
+      piles[mv.row] -= mv.count;
+      lastAiMove = mv;
+    }
+    turn += 1;
+    if (allZero()) {
+      render();
+      endGame('ai');
+      return;
+    }
+    status.textContent = 'Du bist am Zug.';
+    render();
+  }
+
+  function allZero() { return piles.every(function(v) { return v === 0; }); }
+
+  function endGame(winner) {
+    gameOver = true;
+    status.textContent = winner === 'player' ? 'Du hast gewonnen!' : 'KI hat gewonnen.';
+    confirmBtn.disabled = true;
+    cancelBtn.disabled = true;
+    resultCard.classList.remove('hidden');
+    $('result-emoji').textContent = winner === 'player' ? '🏆' : '🤖';
+    $('result-title').textContent = winner === 'player' ? 'Sieg!' : 'KI siegt';
+    $('result-sub').textContent = winner === 'player'
+      ? 'Du hast den letzten Stein genommen – die optimale KI bezwungen.'
+      : 'Die KI hat den letzten Stein genommen.';
+    // Show binary breakdown of the INITIAL position
+    var lines = ['  Reihe 1 (' + INITIAL[0] + ') = ' + INITIAL[0].toString(2).padStart(3, '0'),
+                 '  Reihe 2 (' + INITIAL[1] + ') = ' + INITIAL[1].toString(2).padStart(3, '0'),
+                 '  Reihe 3 (' + INITIAL[2] + ') = ' + INITIAL[2].toString(2).padStart(3, '0'),
+                 '  ─────────────',
+                 '  Nim-Summe   = ' + nimSum(INITIAL).toString(2).padStart(3, '0') +
+                                       ' (= ' + nimSum(INITIAL) + ')'];
+    $('result-math').textContent = lines.join('\n');
+    resultCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function reset() {
+    piles = INITIAL.slice();
+    selRow = -1; selCount = 0;
+    turn = 1; gameOver = false; lastAiMove = null;
+    resultCard.classList.add('hidden');
+    status.textContent = 'Du bist am Zug.';
+    render();
+  }
+
+  confirmBtn.addEventListener('click', applyPlayerMove);
+  cancelBtn.addEventListener('click', function() { selRow = -1; selCount = 0; render(); });
+  $('reset-btn').addEventListener('click', reset);
+
+  render();
+})();
+</script>
+{% endblock %}

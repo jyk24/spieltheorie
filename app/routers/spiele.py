@@ -619,6 +619,15 @@ GAME_META = [
         "runden": 6,
         "konzept": "Cournot-Gleichgewicht, Oligopol, Kollusion vs. Wettbewerb",
     },
+    {
+        "id": "nim",
+        "name": "Nim",
+        "icon": "🪙",
+        "beschreibung": "Drei Reihen Steine, perfekt-spielende KI. Sieg gegen sie ist nur möglich, wenn du die Nim-Summe verstehst – das mathematische Herz kombinatorischer Spiele.",
+        "schwierigkeit": "Mittel",
+        "runden": 1,
+        "konzept": "Nim-Summe (XOR), Bouton-Theorem, Sprague-Grundy",
+    },
 ]
 
 
@@ -2910,4 +2919,17 @@ def cournot_zug(
             "strategy_info": strategy_info,
             "new_achievements": new_achievements,
         },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Nim - reines Client-Side-Spiel mit Nim-Summen-KI
+# ---------------------------------------------------------------------------
+
+@router.get("/nim", response_class=HTMLResponse)
+def nim_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "games/nim.html",
+        {"active_page": "spiele"},
     )
