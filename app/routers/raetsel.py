@@ -549,6 +549,7 @@ RAETSEL_META = [
     {"id":"moebius-band","name":"Das Möbius-Band","icon":"♾️","beschreibung":"Nimm einen Papierstreifen, dreh ein Ende um 180° und klebe die Enden zusammen. Was entsteht – und was passiert, wenn du die Mitte durchschneidest?","typ":"Topologie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Mathematik"},
     {"id":"ziegenproblem-2","name":"Ziegenproblem 2.0","icon":"🚪","beschreibung":"Das Monty-Hall-Problem mit n Türen: Bei 100 Türen öffnet der Moderator 98. Lohnt sich der Wechsel noch mehr? Die Mathematik überrascht erneut.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Mathematik"},
     {"id":"polyeder-check","name":"Polyeder & Euler-Formel","icon":"💠","beschreibung":"Ecken minus Kanten plus Flächen = 2. Diese Formel gilt für jeden konvexen Polyeder. Euler entdeckte sie 1750 – und sie ist bis heute grundlegend.","typ":"Geometrie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Mathematik"},
+    {"id":"banach-tarski","name":"Das Banach-Tarski-Paradoxon","icon":"🧩","beschreibung":"Eine Kugel wird in endlich viele Stücke zerlegt – und nur durch Drehen und Verschieben entstehen daraus zwei Kugeln gleicher Größe. Mathematisch beweisbar, physikalisch unmöglich.","typ":"Mengenlehre","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Mathematik"},
     # ── Physik (neu) ──────────────────────────────────────────────────────────
     {"id":"schroedinger-katze","name":"Schrödingers Katze","icon":"🐱","beschreibung":"Eine Katze, eine radioaktive Substanz, ein Giftbehälter – und die seltsamste Frage der Physik: Ist die Katze tot oder lebendig, bevor du nachschaust?","typ":"Quantenmechanik","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Physik"},
     {"id":"maxwells-daemon","name":"Maxwells Dämon","icon":"😈","beschreibung":"Ein winziges Wesen sortiert schnelle und langsame Moleküle – und scheint damit den zweiten Hauptsatz der Thermodynamik zu verletzen. Wie ist das möglich?","typ":"Thermodynamik","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Physik"},
@@ -2856,6 +2857,23 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Würfel: 8−12+6 = 2. Tetraeder: 4−6+4 = 2. Ikosaeder: 12−30+20 = 2. Euler (1750): Für jeden konvexen Polyeder gilt E − K + F = 2. Die Zahl 2 ist die Euler-Charakteristik der Sphäre.</p>",
         "kontext": "<p>Die Formel versagt bei Polyedern mit Löchern (Torus: E−K+F = 0). Euler-Charakteristik ist ein topologisches Invariant — sie ändert sich nicht beim Biegen, nur beim Schneiden oder Kleben.</p>",
         "erkenntnis": "Hinter der Vielfalt der Formen steckt eine einzige Zahl. Invarianten sind das Werkzeug, mit dem Mathematik Chaos in Ordnung verwandelt.",
+    },
+    "banach-tarski": {
+        "id": "banach-tarski", "name": "Das Banach-Tarski-Paradoxon", "icon": "🧩",
+        "farbe": "pink", "kategorie": "Mathematik",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": "Banach und Tarski bewiesen 1924: Eine Vollkugel im dreidimensionalen Raum lässt sich in endlich viele disjunkte Teilmengen zerlegen, die sich – nur durch Drehungen und Verschiebungen, ohne Dehnen oder Verzerren – zu <strong>zwei</strong> Vollkugeln zusammensetzen lassen, jede gleich groß wie das Original.",
+        "frage": "Wie viele Teilmengen genügen mindestens – und welche zentrale Voraussetzung macht den Beweis möglich?",
+        "optionen": [
+            {"text": "2 Teile, ohne weitere Annahme – pure Geometrie", "hinweis": "Zerschneide eine Kugel mit einem Schnitt"},
+            {"text": "5 Teile, mithilfe des Auswahlaxioms", "hinweis": "Robinsons Verschärfung 1947"},
+            {"text": "Unendlich viele Teile – sonst geht es nie", "hinweis": "Banach-Tarski betont „endlich“"},
+            {"text": "Es ist gar nicht möglich – nur ein Denkfehler", "hinweis": "Aber das Theorem ist bewiesen"},
+        ],
+        "loesung_text": "5 Teile genügen – aber nur unter Verwendung des Auswahlaxioms",
+        "erklaerung": "<p>Banach & Tarski zeigten 1924 die Zerlegung mit endlich vielen Stücken. Robinson bewies 1947, dass <strong>5</strong> die minimale Anzahl ist (4 reichen nicht). Die Stücke sind allerdings <em>nicht messbar</em> – sie haben weder Volumen noch Oberfläche im klassischen Sinne. Der Beweis stützt sich entscheidend auf das <strong>Auswahlaxiom</strong> (AC): die Annahme, dass man aus jeder Familie nichtleerer Mengen ein Element auswählen kann, selbst aus überabzählbar vielen.</p>",
+        "kontext": "<p>Das Paradoxon zeigt einen tiefen Riss zwischen Mathematik und physikalischer Realität: Atome sind diskret, eine Kugel im strengen Sinn ist ein <em>überabzählbares Kontinuum</em>. Ohne dieses Kontinuum kein Banach-Tarski. Manche Mathematiker (Konstruktivisten) verwerfen das Auswahlaxiom genau deshalb. In der Praxis wird AC trotzdem fast überall verwendet – ohne es bricht ein Großteil der Analysis und Topologie zusammen.</p>",
+        "erkenntnis": "Was beweisbar ist, muss nicht vorstellbar sein. Mathematik beschreibt nicht die physische Welt, sondern eine logische – und manchmal fallen beide auseinander. Wer „aber das geht doch nicht“ denkt, hat das Theorem verstanden.",
     },
     # ── Physik ───────────────────────────────────────────────────────────
     "schroedinger-katze": {

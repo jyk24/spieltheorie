@@ -7,6 +7,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from ..database import get_db
+from ..game_registry import TYPE_TO_SLUG
 from ..models import Lesson
 from ..services import mark_lesson_viewed
 
@@ -55,6 +56,10 @@ def lektion_detail(slug: str, request: Request, db: Session = Depends(get_db)):
     prev_slug = all_slugs[idx - 1] if idx > 0 else None
     next_slug = all_slugs[idx + 1] if idx < len(all_slugs) - 1 else None
 
+    related_game_slug = None
+    if lesson.related_game:
+        related_game_slug = TYPE_TO_SLUG.get(lesson.related_game, lesson.related_game)
+
     return templates.TemplateResponse(
         request,
         "lektion_detail.html",
@@ -65,5 +70,6 @@ def lektion_detail(slug: str, request: Request, db: Session = Depends(get_db)):
             "sources": sources,
             "prev_slug": prev_slug,
             "next_slug": next_slug,
+            "related_game_slug": related_game_slug,
         },
     )
