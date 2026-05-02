@@ -612,6 +612,13 @@ RAETSEL_META = [
     {"id":"barnum-effekt","name":"Der Barnum-Effekt","icon":"🎪","beschreibung":"\"Sie haben unausgeschöpfte Potenziale und manchmal zweifeln Sie an sich.\" Warum glauben so viele, dass diese Aussage genau auf sie zutrifft?","typ":"Kognitionspsychologie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"flow-analyse","name":"Flow – der optimale Zustand","icon":"🌊","beschreibung":"Zwischen Langeweile und Überforderung liegt ein schmaler Kanal: Flow. Csikszentmihalyi (1990) beschreibt, wann Menschen völlig aufgehen in einer Tätigkeit.","typ":"Motivationspsychologie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"milgram-gehorsam","name":"Das Milgram-Experiment","icon":"⚡","beschreibung":"65% der Versuchspersonen verabreichten tödliche Elektroschocks – weil eine Autoritätsperson es verlangte. Was sagt das über moralischen Mut?","typ":"Sozialpsychologie","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Psychologie"},
+    # ── Wahrscheinlichkeit / Entscheidung (neu) ──────────────────────────────
+    {"id":"pascal-wette","name":"Pascals Wette","icon":"♾️","beschreibung":"Pascal (1670): Glauben oder nicht glauben – wie entscheidet man rational, wenn der Erwartungswert unendlich ist? Die Geburtsstunde der Entscheidungstheorie.","typ":"Entscheidungs-Paradox","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Wahrscheinlichkeit"},
+    # ── Logik (neu) ───────────────────────────────────────────────────────────
+    {"id":"raben-paradox","name":"Hempels Raben-Paradox","icon":"🐦‍⬛","beschreibung":"\"Alle Raben sind schwarz.\" Bestätigt ein weißer Schuh diese Aussage? Logisch ja – intuitiv nein. Hempel zeigt, wie selbst rationale Bestätigung paradox wird.","typ":"Wissenschaftslogik","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Logik"},
+    {"id":"sorites","name":"Das Haufen-Paradox (Sorites)","icon":"🌾","beschreibung":"Ein Sandkorn ist kein Haufen. Zwei auch nicht. Wenn n keiner ist, dann ist n+1 auch keiner. Per Induktion sind 1 Million Körner kein Haufen. Wo liegt der Fehler?","typ":"Vagheits-Paradox","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Logik"},
+    # ── Mathematik (neu) ─────────────────────────────────────────────────────
+    {"id":"banach-tarski","name":"Banach-Tarski-Paradoxon","icon":"🟠","beschreibung":"Eine Kugel zerteilen, neu zusammensetzen – und plötzlich hast du zwei identische Kugeln. Mathematisch beweisbar, physikalisch unmöglich. Was steckt dahinter?","typ":"Mathematik-Paradox","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Mathematik"},
 ]
 
 
@@ -3799,6 +3806,77 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>65 % der Teilnehmer verabreichten 450-Volt-Schocks — obwohl der 'Schüler' schrie und aufhörte zu reagieren. Die Erklärung: Gehorsam gegenüber legitimen Autoritäten, graduelles Commitment (jeder Schritt war nur klein größer), Verantwortungsdiffusion ('Ich folge nur Anweisungen'), physische Distanz zum Opfer.</p>",
         "kontext": "<p>Das Experiment wurde im Kontext des Eichmann-Prozesses (1960) geplant. Milgrams Frage: Ist Gehorsam im Nationalsozialismus ein deutsches Phänomen? Antwort: Nein — es ist ein menschliches. Ethisch hoch umstritten: Viele Teilnehmer litten unter den Erkenntnissen über sich selbst. Heute nicht mehr genehmigungsfähig.</p>",
         "erkenntnis": "Böses entsteht oft nicht aus Bösartigkeit, sondern aus Gehorsam. Die Absicht, das Richtige zu tun, schützt nicht vor dem Falschen, wenn Autoritäten Kontext definieren. Das ist die erschütternde Lektion.",
+    },
+    # ── Wahrscheinlichkeit (neu) ─────────────────────────────────────────
+    "pascal-wette": {
+        "id": "pascal-wette", "name": "Pascals Wette", "icon": "♾️",
+        "farbe": "indigo", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Blaise Pascal (Pensées, 1670) baut die folgende Auszahlungsmatrix: Glaubst du an Gott und es gibt ihn → unendlicher Gewinn (Seligkeit). Glaubst du und es gibt ihn nicht → kleiner Verlust (verzichtetes Vergnügen). Glaubst du nicht und es gibt ihn → unendlicher Verlust (Verdammnis). Glaubst du nicht und es gibt ihn nicht → kleiner Gewinn. Die Wahrscheinlichkeit für Gott sei <em>p &gt; 0</em>, beliebig klein.",
+        "frage": "Was folgt aus dem Erwartungsnutzen-Kalkül – und wo ist die berühmteste Schwachstelle des Arguments?",
+        "optionen": [
+            {"text": "Glauben dominiert: jeder noch so kleine p · ∞ schlägt jeden endlichen Verlust", "hinweis": "Pascals eigene Schlussfolgerung"},
+            {"text": "Nicht-Glauben dominiert, weil die Existenz unbeweisbar ist", "hinweis": "Vermischt Erkenntnis und Entscheidung"},
+            {"text": "Beide Optionen sind gleichwertig (0 · ∞ ist undefiniert)", "hinweis": "Das stimmt nur, wenn p exakt 0 ist"},
+            {"text": "Das Argument scheitert am 'Many-Gods'-Einwand: für welchen Gott wettest du?", "hinweis": "Unendliche Auszahlungen treten in mehreren Religionen auf"},
+        ],
+        "loesung_text": "Pascals Schluss ist formal korrekt – aber der 'Many-Gods'-Einwand zerstört die Eindeutigkeit",
+        "erklaerung": "<p>E(glauben) = p · ∞ − (1−p) · ε = ∞ für jedes p &gt; 0. E(nicht glauben) = −p · ∞ + (1−p) · ε = −∞. Pascal folgert: Wette auf Glauben dominiert dominant. Mathematisch tadellos.</p><p>Der entscheidende Einwand (Diderot, später Mackie): Es gibt nicht eine, sondern viele inkompatible Religionen, die alle ähnliche unendliche Strafen androhen. Wettest du auf den christlichen Gott, riskierst du den Zorn des muslimischen, hinduistischen, mormonischen … Sobald zwei sich ausschließende Optionen mit Erwartungswert ∞ existieren, kollabiert das Argument.</p>",
+        "kontext": "<p>Pascals Wette war der erste explizite Einsatz von Erwartungsnutzen in einer philosophischen Argumentation – 50 Jahre vor Bernoullis St.-Petersburg-Paradoxon. Sie hat moderne Ableger: 'Pascal's Mugging' (Bostrom) wendet dasselbe Schema auf KI-Risiken an, mit ähnlich kontroversem Ausgang.</p>",
+        "erkenntnis": "Erwartungsnutzen mit unendlichen Auszahlungen ist gefährlich. Wer p · ∞ zur Entscheidungsregel macht, kann von jedem hypothetischen Szenario erpresst werden – egal wie unwahrscheinlich.",
+    },
+    # ── Logik (neu) ──────────────────────────────────────────────────────
+    "raben-paradox": {
+        "id": "raben-paradox", "name": "Hempels Raben-Paradox", "icon": "🐦‍⬛",
+        "farbe": "violet", "kategorie": "Logik",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Hypothese H: <em>Alle Raben sind schwarz</em>. Klar: Jeder beobachtete schwarze Rabe bestätigt H ein bisschen. Logisch äquivalent ist die Kontraposition K: <em>Alles, was nicht schwarz ist, ist kein Rabe</em>. Wenn ein Beleg eine Hypothese stützt, sollte er auch jede logisch äquivalente stützen.",
+        "frage": "Bestätigt ein <strong>weißer Schuh</strong> die Hypothese, dass alle Raben schwarz sind?",
+        "optionen": [
+            {"text": "Nein, ein Schuh hat nichts mit Raben zu tun", "hinweis": "Intuitive Antwort – aber inkonsistent mit Logik"},
+            {"text": "Ja, formal-logisch sogar zwingend", "hinweis": "Hempels überraschende Schlussfolgerung"},
+            {"text": "Nur, wenn der Schuh eines Ornithologen ist", "hinweis": "Falsche Spur"},
+            {"text": "Nur, wenn auch ein schwarzer Rabe beobachtet wurde", "hinweis": "Kombinatorische Variante – aber nicht Hempels Punkt"},
+        ],
+        "loesung_text": "Ja – formal bestätigt jeder Nicht-Rabe-Nicht-Schwarz die Hypothese (mikroskopisch wenig)",
+        "erklaerung": "<p>K ist die Kontraposition von H: Wenn x kein Schwarzes ist, dann ist x kein Rabe. Ein weißer Schuh ist ein Beispiel für 'nicht schwarz' und ist tatsächlich 'kein Rabe' – also ein bestätigender Fall für K, und damit für H. Bayesianisch lässt sich das auflösen: Der Bestätigungsgrad eines weißen Schuhs ist verschwindend klein, weil die Klasse der Nicht-Raben riesig ist (~10²² Objekte) gegenüber ~10⁸ Raben.</p>",
+        "kontext": "<p>Carl Hempel formulierte das Paradox 1945. Es wurde zum zentralen Test für Bestätigungstheorien (Carnap, Goodman, Hempel selbst). Die bayesianische Auflösung (Hosiasson-Lindenbaum 1940; Earman 1992) zeigt: Logisch korrekt – nur die <em>Stärke</em> der Bestätigung ist sehr unterschiedlich.</p>",
+        "erkenntnis": "Logische Äquivalenz erzwingt Bestätigungs-Symmetrie. Was unsere Intuition als 'irrelevant' empfindet, ist es nicht – es ist nur extrem schwach relevant. Der Unterschied liegt nicht im Ja/Nein, sondern im Gewicht.",
+    },
+    "sorites": {
+        "id": "sorites", "name": "Das Haufen-Paradox (Sorites)", "icon": "🌾",
+        "farbe": "amber", "kategorie": "Logik",
+        "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup": "Prämisse 1: 1 Sandkorn ist kein Haufen. Prämisse 2: Wenn n Körner kein Haufen sind, dann sind n+1 Körner auch kein Haufen (ein Korn macht aus 'kein Haufen' keinen Haufen). Per vollständiger Induktion: 1 Million Körner sind kein Haufen.",
+        "frage": "Wo liegt der Fehler in dieser scheinbar wasserdichten Argumentation?",
+        "optionen": [
+            {"text": "Prämisse 1 ist falsch – 1 Korn ist sehr wohl ein Haufen", "hinweis": "Kontraintuitiv und sprachwidrig"},
+            {"text": "Die Induktion ist nicht erlaubt bei Vagheits-Begriffen", "hinweis": "Begriffe wie 'Haufen' haben unscharfe Grenzen"},
+            {"text": "Es gibt eine exakte Schwellenzahl (z. B. 10 000), wir kennen sie nur nicht", "hinweis": "Die epistemische Theorie (Williamson)"},
+            {"text": "Klassische Logik versagt: 'kein Haufen' ist kein scharf-zweiwertiger Begriff", "hinweis": "Die graduelle / Fuzzy-Logik-Antwort"},
+        ],
+        "loesung_text": "Es gibt mehrere konkurrierende Lösungen – am verbreitetsten: Vagheits-Begriffe brechen die scharfe Induktion",
+        "erklaerung": "<p>Drei moderne Lösungswege: <strong>(1) Fuzzy-Logik:</strong> 'Haufen' ist ein gradueller Begriff mit Wahrheitswerten zwischen 0 und 1. Prämisse 2 ist nur <em>fast</em> wahr – die kleinen Verluste summieren sich. <strong>(2) Supervaluationismus:</strong> Es gibt mehrere zulässige scharfe Grenzen; eine Aussage gilt nur, wenn sie unter allen wahr wäre. <strong>(3) Epistemizismus (Williamson):</strong> Es gibt eine exakte Schwelle, sie ist uns nur erkenntnistheoretisch unzugänglich.</p>",
+        "kontext": "<p>Das Paradox ist 2300 Jahre alt (Eubulides von Milet, 4. Jh. v. Chr.). Es ist mehr als Wortspielerei: Wann ist ein Embryo ein Mensch? Wann ist eine Person reich? Wann beginnt ein Klimawandel? Vage Begriffe sind in Recht, Politik und Ethik allgegenwärtig – und Sorites zeigt, dass sie nicht durch beliebig kleine Schritte überbrückbar sind.</p>",
+        "erkenntnis": "Sprache operiert mit unscharfen Kategorien – Logik mit scharfen. Wo beide aufeinandertreffen, entstehen Paradoxien. Klare Definitionen sind keine Pedanterie, sondern Schutz vor scheinbar zwingenden, aber falschen Schlussfolgerungen.",
+    },
+    # ── Mathematik (neu) ─────────────────────────────────────────────────
+    "banach-tarski": {
+        "id": "banach-tarski", "name": "Banach-Tarski-Paradoxon", "icon": "🟠",
+        "farbe": "rose", "kategorie": "Mathematik",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": "Stefan Banach und Alfred Tarski bewiesen 1924: Eine massive Kugel im ℝ³ lässt sich in endlich viele (5 reichen!) disjunkte Teilmengen zerlegen, die rein durch Drehung und Verschiebung – ohne jede Streckung – zu zwei vollständigen Kugeln <em>derselben</em> Größe wieder zusammengesetzt werden können.",
+        "frage": "Wie kann das mathematisch wahr sein, ohne den Erhaltungssatz für Volumen zu verletzen?",
+        "optionen": [
+            {"text": "Es ist falsch – das Theorem ist mathematisch widerlegt", "hinweis": "Der Beweis ist seit 100 Jahren akzeptiert"},
+            {"text": "Die Teilstücke sind nicht messbar – ihnen lässt sich kein Volumen zuweisen", "hinweis": "Der Schlüssel liegt im Maßbegriff"},
+            {"text": "Es funktioniert nur in höheren Dimensionen, nicht im ℝ³", "hinweis": "Es funktioniert ab Dimension 3, nicht in ℝ¹ oder ℝ²"},
+            {"text": "Die Kugel verliert Masse beim Verschieben", "hinweis": "Es geht um geometrische Mengen, nicht um Materie"},
+        ],
+        "loesung_text": "Die Teilstücke sind nicht Lebesgue-messbar – sie haben kein wohldefiniertes Volumen",
+        "erklaerung": "<p>Der Beweis benutzt das Auswahlaxiom (AC), um Mengen zu konstruieren, die so 'zerstückelt' sind, dass kein konsistentes Volumenmaß auf ℝ³ ihnen einen Wert zuordnen kann. Das Volumen ist nur additiv für <em>messbare</em> Teilmengen. Banach-Tarski-Stücke entziehen sich der Messbarkeit; daher gibt es keinen Widerspruch zum Volumenerhalt.</p><p>In ℝ¹ und ℝ² existiert ein 'gutartiges' Maß, das sich auf <em>alle</em> Teilmengen erweitern lässt (Banach-Maß) – dort funktioniert das Paradox nicht. Erst ab Dimension 3 wird die Drehgruppe SO(3) reich genug (nicht-amenabel), um die Konstruktion zu erlauben.</p>",
+        "kontext": "<p>Das Paradox spielte eine zentrale Rolle in der Akzeptanz des Auswahlaxioms: Manche Mathematiker (insb. Lebesgue, Borel) lehnten AC nach Banach-Tarski lange ab. Heute gilt: AC ist Standard, weil es enorm viel ermöglicht – Banach-Tarski ist der Preis. Physikalisch unmöglich (Atome haben Volumen), mathematisch lupenrein.</p>",
+        "erkenntnis": "Mathematik ist nicht an physikalische Intuition gebunden. Mengen können Eigenschaften haben, die jeder Anschauung widersprechen – und die Konsistenz des Systems hängt davon ab, welche Axiome man akzeptiert.",
     },
 }
 
