@@ -204,6 +204,7 @@ LERNPFADE = [
             {"typ": "raetsel", "id": "harmonische-reihe", "titel": "Die Harmonische Reihe",        "icon": "🌊", "dauer": "4 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
             {"typ": "raetsel", "id": "collatz-vermutung", "titel": "Collatz-Vermutung",            "icon": "🔄", "dauer": "5 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
             {"typ": "raetsel", "id": "gabriels-trompete", "titel": "Gabriels Trompete",            "icon": "🎺", "dauer": "5 min", "schwierigkeit": "Fortgeschritten","beschreibung": ""},
+            {"typ": "raetsel", "id": "parrondo",          "titel": "Parrondo-Paradoxon",           "icon": "🪙", "dauer": "5 min", "schwierigkeit": "Fortgeschritten","beschreibung": ""},
             {"typ": "raetsel", "id": "ramanujan-summe",   "titel": "1+2+3+… = −1/12",             "icon": "🔢", "dauer": "5 min", "schwierigkeit": "Experte",        "beschreibung": ""},
         ],
     },

@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% block title %}Parrondo-Paradoxon – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🪙 Parrondo-Paradoxon</h1>
+        <p class="text-slate-500 mt-1">Zwei Verlierer-Spiele werden zusammen zum Gewinner.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Behauptung:</p>
+        <div class="text-center py-3 bg-white rounded-lg border border-slate-100 mb-3">
+            <div class="text-lg font-mono">Spiel&nbsp;A&nbsp;(Verlust) &nbsp;+&nbsp; Spiel&nbsp;B&nbsp;(Verlust) &nbsp;=&nbsp; <span class="text-emerald-600 font-bold">Gewinn</span></div>
+        </div>
+        <p>Juan&nbsp;Parrondo entdeckte 1996 ein verblüffendes Ergebnis: zwei Glücksspiele mit jeweils negativem Erwartungswert können – wenn man zwischen ihnen abwechselt – einen positiven Erwartungswert haben. Das widerspricht der Intuition: Verlust + Verlust sollte doch erst recht Verlust sein.</p>
+    </div>
+
+    <!-- Spielregeln -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5">
+        <p class="font-semibold text-slate-800 mb-3">Die zwei Spiele:</p>
+
+        <div class="space-y-3">
+            <div class="bg-rose-50 border border-rose-100 rounded-xl p-4">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="px-2 py-0.5 rounded-md bg-rose-200 text-rose-800 text-xs font-bold">Spiel A</span>
+                    <span class="text-sm text-rose-700">Eine leicht unfaire Münze</span>
+                </div>
+                <div class="text-xs text-rose-700 font-mono bg-white rounded p-2 border border-rose-100">
+                    P(Gewinn +1€) = ½ − ε &nbsp;·&nbsp; P(Verlust −1€) = ½ + ε
+                </div>
+                <p class="text-xs text-rose-600 mt-2">Erwartungswert pro Runde: <strong>−2ε</strong> → langfristig Verlust.</p>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-100 rounded-xl p-4">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="px-2 py-0.5 rounded-md bg-amber-200 text-amber-800 text-xs font-bold">Spiel B</span>
+                    <span class="text-sm text-amber-700">Hängt vom aktuellen Kapital ab</span>
+                </div>
+                <div class="text-xs text-amber-700 font-mono bg-white rounded p-2 border border-amber-100 space-y-1">
+                    <div>Kapital&nbsp;%&nbsp;3&nbsp;==&nbsp;0: P(Gewinn) = 1/10 − ε &nbsp;<span class="text-amber-500">(„Pech-Münze")</span></div>
+                    <div>sonst: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;P(Gewinn) = 3/4 − ε &nbsp;<span class="text-amber-500">(„Glücks-Münze")</span></div>
+                </div>
+                <p class="text-xs text-amber-600 mt-2">Auch hier: Erwartungswert &lt; 0 für ε &gt; 0 (schon bewiesen).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simulator -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5">
+        <p class="font-semibold text-slate-800 mb-1">Live-Simulation:</p>
+        <p class="text-sm text-slate-500 mb-4">Lass alle vier Strategien parallel 300 Runden laufen.</p>
+
+        <div class="mb-4">
+            <label class="text-sm font-medium text-slate-700">
+                Bias ε: <span id="eps-val" class="text-indigo-700 font-bold">0.005</span>
+            </label>
+            <input type="range" min="0" max="50" value="5" step="1" id="eps-slider"
+                   class="w-full accent-indigo-600" oninput="updateEpsLabel()">
+            <div class="flex justify-between text-xs text-slate-400 mt-0.5">
+                <span>0 (fair)</span><span>0.05</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">Größeres ε ⇒ Spiele sind „unfairer" gegen den Spieler.</p>
+        </div>
+
+        <div class="flex gap-2">
+            <button onclick="runSimulation()" id="run-btn"
+                    class="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-medium hover:bg-indigo-700 transition-colors text-sm">
+                ▶ Simulation starten (300 Runden)
+            </button>
+            <button onclick="resetSimulation()"
+                    class="px-4 bg-slate-200 text-slate-700 py-3 rounded-xl font-medium hover:bg-slate-300 transition-colors text-sm">
+                Reset
+            </button>
+        </div>
+    </div>
+
+    <!-- Chart + Ergebnis -->
+    <div id="results" class="hidden space-y-4 mb-5">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-3">Kapitalverlauf:</p>
+            <svg id="chart" viewBox="0 0 600 280" class="w-full bg-slate-50 rounded-lg border border-slate-100"></svg>
+
+            <div class="grid grid-cols-2 gap-2 mt-4 text-xs">
+                <div class="flex items-center gap-2"><span class="inline-block w-4 h-1 bg-rose-500 rounded"></span><span>Nur Spiel A</span></div>
+                <div class="flex items-center gap-2"><span class="inline-block w-4 h-1 bg-amber-500 rounded"></span><span>Nur Spiel B</span></div>
+                <div class="flex items-center gap-2"><span class="inline-block w-4 h-1 bg-emerald-500 rounded"></span><span>Alternierend ABAB…</span></div>
+                <div class="flex items-center gap-2"><span class="inline-block w-4 h-1 bg-indigo-500 rounded"></span><span>Zufallsmischung 50/50</span></div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5">
+            <p class="font-semibold text-slate-800 mb-3">Endkapital nach 300 Runden:</p>
+            <div class="grid grid-cols-2 gap-3 text-sm" id="final-grid"></div>
+        </div>
+    </div>
+
+    <!-- Erklärung -->
+    <div class="space-y-3 text-sm text-slate-700">
+        <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4">
+            <p class="font-semibold text-emerald-800 mb-2">Warum funktioniert das?</p>
+            <p class="text-emerald-700 mb-2">Spiel B nutzt die <em>Pech-Münze</em> immer dann, wenn das Kapital ein Vielfaches von 3 ist. Bei dauerhaftem Spiel B verbringst du verhältnismäßig viel Zeit im Pech-Zustand und verlierst.</p>
+            <p class="text-emerald-700">Schaltet man Spiel A dazwischen, „mischt" man die Kapitalverteilung. Der Pech-Zustand wird seltener besucht. Die Glücks-Münze von Spiel B kommt häufiger zum Einsatz – und kippt die Bilanz.</p>
+        </div>
+
+        <div class="bg-violet-50 border border-violet-100 rounded-xl p-4">
+            <p class="font-semibold text-violet-800 mb-2">Brownsche Mühle als Inspiration</p>
+            <p class="text-violet-700">Parrondo entwickelte das Paradoxon nicht aus reinem Glücksspielinteresse, sondern um die <em>Brownsche Ratsche</em> zu erklären: Feynman hatte gezeigt, dass eine Maschine aus reinem thermischem Rauschen keine nutzbare Arbeit gewinnen kann. Parrondo zeigte: Schaltet man asymmetrische Potentiale geschickt um, kann ein Teilchen durchaus „bergauf" wandern – ohne den 2. Hauptsatz zu verletzen.</p>
+        </div>
+
+        <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4">
+            <p class="font-semibold text-indigo-800 mb-2">Wo das Paradoxon wirklich auftaucht</p>
+            <ul class="text-indigo-700 list-disc list-inside space-y-1">
+                <li><strong>Biologie:</strong> Mischpopulationen mit eigentlich unterlegenen Strategien können dominieren.</li>
+                <li><strong>Finanzmärkte:</strong> Portfolio-Rebalancing zwischen zwei „schlechten" Anlagen kann Rendite erzeugen (Volatility&nbsp;Pumping, Shannon&nbsp;1960).</li>
+                <li><strong>Genetik:</strong> Zwei nachteilige Mutationen können kombiniert vorteilhaft sein.</li>
+                <li><strong>Quantencomputing:</strong> Quantenanaloga wurden 2002 demonstriert.</li>
+            </ul>
+        </div>
+
+        <div class="bg-slate-100 border border-slate-200 rounded-xl p-4 text-xs text-slate-600">
+            <p class="font-semibold text-slate-700 mb-1">Achtung: kein Trick gegen Casinos</p>
+            <p>Das Paradoxon braucht eine <em>Korrelation zwischen Spielzuständen</em> (Spiel B kennt dein Kapital). In einem normalen Casino sind Runden unabhängig – dort hilft Wechseln nicht. Roulette bleibt mathematisch hoffnungslos.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateEpsLabel() {
+    const v = parseInt(document.getElementById('eps-slider').value) / 1000;
+    document.getElementById('eps-val').textContent = v.toFixed(3);
+}
+
+function playA(capital, eps) {
+    return Math.random() < (0.5 - eps) ? capital + 1 : capital - 1;
+}
+
+function playB(capital, eps) {
+    const winP = (((capital % 3) + 3) % 3 === 0) ? (1/10 - eps) : (3/4 - eps);
+    return Math.random() < winP ? capital + 1 : capital - 1;
+}
+
+function simulate(strategy, rounds, eps) {
+    const path = [0];
+    let cap = 0;
+    for (let i = 0; i < rounds; i++) {
+        let useA;
+        if (strategy === 'A') useA = true;
+        else if (strategy === 'B') useA = false;
+        else if (strategy === 'ABAB') useA = (i % 2 === 0);
+        else useA = Math.random() < 0.5;
+        cap = useA ? playA(cap, eps) : playB(cap, eps);
+        path.push(cap);
+    }
+    return path;
+}
+
+function runSimulation() {
+    const eps = parseInt(document.getElementById('eps-slider').value) / 1000;
+    const rounds = 300;
+
+    const paths = {
+        A:    simulate('A',    rounds, eps),
+        B:    simulate('B',    rounds, eps),
+        ABAB: simulate('ABAB', rounds, eps),
+        RAND: simulate('RAND', rounds, eps),
+    };
+
+    drawChart(paths, rounds);
+    showFinals(paths);
+    document.getElementById('results').classList.remove('hidden');
+}
+
+function resetSimulation() {
+    document.getElementById('results').classList.add('hidden');
+    document.getElementById('chart').innerHTML = '';
+}
+
+function drawChart(paths, rounds) {
+    const W = 600, H = 280, padL = 40, padR = 10, padT = 15, padB = 25;
+    const innerW = W - padL - padR;
+    const innerH = H - padT - padB;
+
+    let yMin = 0, yMax = 0;
+    Object.values(paths).forEach(p => p.forEach(v => { if (v < yMin) yMin = v; if (v > yMax) yMax = v; }));
+    if (yMax - yMin < 4) { yMax = yMin + 4; }
+    yMin = Math.floor(yMin) - 1;
+    yMax = Math.ceil(yMax) + 1;
+
+    const xScale = i => padL + (i / rounds) * innerW;
+    const yScale = v => padT + (1 - (v - yMin) / (yMax - yMin)) * innerH;
+
+    const colors = { A: '#f43f5e', B: '#f59e0b', ABAB: '#10b981', RAND: '#6366f1' };
+
+    let svg = '';
+    // Grid + 0-Achse
+    const yZero = yScale(0);
+    svg += `<line x1="${padL}" y1="${yZero}" x2="${W - padR}" y2="${yZero}" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3,3"/>`;
+    // Y-Ticks
+    for (let i = 0; i <= 4; i++) {
+        const v = yMin + (yMax - yMin) * i / 4;
+        const y = yScale(v);
+        svg += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="#e2e8f0" stroke-width="1"/>`;
+        svg += `<text x="${padL - 5}" y="${y + 4}" text-anchor="end" font-size="10" fill="#64748b">${Math.round(v)}</text>`;
+    }
+    // X-Achse Beschriftung
+    for (let i = 0; i <= 6; i++) {
+        const r = (i / 6) * rounds;
+        const x = xScale(r);
+        svg += `<text x="${x}" y="${H - 8}" text-anchor="middle" font-size="10" fill="#64748b">${Math.round(r)}</text>`;
+    }
+    svg += `<text x="${W/2}" y="${H - 1}" text-anchor="middle" font-size="10" fill="#94a3b8">Runden</text>`;
+
+    // Linien
+    for (const [key, path] of Object.entries(paths)) {
+        let d = '';
+        path.forEach((v, i) => {
+            d += (i === 0 ? 'M' : 'L') + xScale(i).toFixed(1) + ',' + yScale(v).toFixed(1) + ' ';
+        });
+        svg += `<path d="${d}" fill="none" stroke="${colors[key]}" stroke-width="1.8"/>`;
+    }
+
+    document.getElementById('chart').innerHTML = svg;
+}
+
+function showFinals(paths) {
+    const labels = {
+        A:    {name: 'Nur Spiel A',          color: 'rose'},
+        B:    {name: 'Nur Spiel B',          color: 'amber'},
+        ABAB: {name: 'Alternierend ABAB…',   color: 'emerald'},
+        RAND: {name: 'Zufallsmischung',      color: 'indigo'},
+    };
+    const colorMap = {
+        rose:    'bg-rose-50 border-rose-200 text-rose-800',
+        amber:   'bg-amber-50 border-amber-200 text-amber-800',
+        emerald: 'bg-emerald-50 border-emerald-200 text-emerald-800',
+        indigo:  'bg-indigo-50 border-indigo-200 text-indigo-800',
+    };
+    let html = '';
+    for (const [key, p] of Object.entries(paths)) {
+        const final = p[p.length - 1];
+        const sign = final > 0 ? '+' : '';
+        const arrow = final > 0 ? '📈' : (final < 0 ? '📉' : '➖');
+        html += `<div class="rounded-xl border p-3 ${colorMap[labels[key].color]}">
+            <div class="text-xs font-semibold mb-1">${labels[key].name}</div>
+            <div class="text-2xl font-black">${arrow} ${sign}${final}€</div>
+        </div>`;
+    }
+    document.getElementById('final-grid').innerHTML = html;
+}
+
+updateEpsLabel();
+</script>
+
+{% endblock %}

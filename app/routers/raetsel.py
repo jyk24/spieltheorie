@@ -234,6 +234,16 @@ RAETSEL_META = [
         "dauer": "4 min",
         "kategorie": "Mathematik",
     },
+    {
+        "id": "parrondo",
+        "name": "Parrondo-Paradoxon",
+        "icon": "🪙",
+        "beschreibung": "Zwei Glücksspiele, beide auf lange Sicht verlierend. Wechselt man zwischen ihnen – plötzlich gewinnt man. Parrondo (1996) entdeckte, wie Verlust + Verlust = Gewinn werden kann.",
+        "typ": "Mathematik-Paradox",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "5 min",
+        "kategorie": "Mathematik",
+    },
     # ── Logik & Rätsel ─────────────────────────────────────────────────────────
     {
         "id": "piraten",
@@ -1870,6 +1880,17 @@ def josephus_result(request: Request, position: int = Form(...)):
         request,
         "partials/josephus_result.html",
         {"position": position, "survivor": survivor, "order": order, "n": n, "is_correct": position == survivor},
+    )
+
+
+# ---------------------------------------------------------------------------
+# Parrondo-Paradoxon
+# ---------------------------------------------------------------------------
+
+@router.get("/parrondo", response_class=HTMLResponse)
+def parrondo_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/parrondo.html", {"active_page": "raetsel"}
     )
 
 
