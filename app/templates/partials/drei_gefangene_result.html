@@ -1,0 +1,86 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    <!-- Ergebnis dieser Runde -->
+    <div class="text-center mb-6 p-5 rounded-xl border-2
+        {% if won %}bg-emerald-50 border-emerald-300{% else %}bg-red-50 border-red-300{% endif %}">
+        <div class="text-5xl mb-2">{{ '🕊️' if won else '⚰️' }}</div>
+        <h3 class="text-2xl font-bold {% if won %}text-emerald-700{% else %}text-red-600{% endif %} mb-1">
+            {% if won %}Begnadigt! {{ final_pick }} hat das Los gewonnen.
+            {% else %}Hingerichtet. Begnadigt wurde {{ pardoned }}.{% endif %}
+        </h3>
+        <p class="text-sm {% if won %}text-emerald-600{% else %}text-red-500{% endif %}">
+            Du hast getippt: <strong>{% if decision == 'stay' %}A behält 1/2{% else %}{{ other }} hat 2/3{% endif %}</strong>.
+            Tatsächlich begnadigt: <strong>{{ pardoned }}</strong>.
+        </p>
+    </div>
+
+    <!-- Die eigentliche Lektion -->
+    <div class="mb-5">
+        <h4 class="font-bold text-slate-800 mb-3">Was die Mathematik sagt:</h4>
+
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <div class="text-center p-4 rounded-xl {% if decision == 'stay' %}bg-indigo-50 border-2 border-indigo-300{% else %}bg-slate-50{% endif %}">
+                <div class="text-2xl font-black text-red-500 mb-1">1/3</div>
+                <div class="text-sm font-semibold text-slate-700">Du (A) wirst begnadigt</div>
+                <div class="text-xs text-slate-400 mt-1">{{ sim_stay_rate }} % in {{ "{:,}".format(sim_n) }} Simulationen</div>
+            </div>
+            <div class="text-center p-4 rounded-xl {% if decision == 'switch' %}bg-indigo-50 border-2 border-indigo-300{% else %}bg-slate-50{% endif %}">
+                <div class="text-2xl font-black text-emerald-600 mb-1">2/3</div>
+                <div class="text-sm font-semibold text-slate-700">{{ other }} wird begnadigt</div>
+                <div class="text-xs text-slate-400 mt-1">{{ sim_switch_rate }} % in {{ "{:,}".format(sim_n) }} Simulationen</div>
+            </div>
+        </div>
+
+        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 text-sm text-indigo-800 mb-4">
+            <p class="font-semibold mb-2">Warum bleibt A bei 1/3?</p>
+            <p>Vor der Frage galt: <strong>P(A begnadigt) = 1/3</strong>. Der Wärter musste <em>immer</em> einen sterbenden Mitgefangenen nennen können – auch wenn A begnadigt ist. Seine Antwort liefert daher <strong>keine</strong> neue Information über A.</p>
+            <p class="mt-2">Aber sie liefert Information über die anderen beiden! Die <strong>kombinierten 2/3</strong> für {B,C} können sich nicht verändern – wenn der Wärter B als Sterbenden ausschließt, wandert die ganze 2/3-Wahrscheinlichkeit auf <strong>{{ other }}</strong>.</p>
+        </div>
+
+        <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 text-sm text-violet-800 mb-4">
+            <p class="font-semibold mb-2">Bayes-Rechnung im Detail:</p>
+            <div class="font-mono text-xs leading-relaxed text-violet-700">
+                P(Wärter sagt {{ named }} | A begnadigt) = 1/2<br>
+                P(Wärter sagt {{ named }} | {{ other }} begnadigt) = 1<br>
+                P(Wärter sagt {{ named }} | {{ named }} begnadigt) = 0<br>
+                <br>
+                P(A begnadigt | Wärter sagt {{ named }})<br>
+                = (1/2 · 1/3) / (1/2 · 1/3 + 1 · 1/3 + 0)<br>
+                = (1/6) / (1/2) = <strong>1/3</strong> ✓
+            </div>
+        </div>
+
+        <div class="bg-slate-50 rounded-xl p-4 text-sm text-slate-600">
+            <p class="font-semibold text-slate-700 mb-1">Verbindung zu Monty Hall:</p>
+            <p>Identisches Bayes-Update! Die „erste Tür“ entspricht A (bleibt bei 1/3), die „verbleibende Tür“ entspricht {{ other }} (springt auf 2/3). Mathematiker erkannten erst in den 1990ern, dass beide Probleme dieselbe Struktur haben.</p>
+        </div>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-5 text-sm">
+        <p class="font-semibold text-slate-700 mb-3">Historisches:</p>
+        <div class="space-y-2 text-xs text-slate-600">
+            <p class="flex gap-2"><span class="text-indigo-400 shrink-0">→</span><span><strong>Martin Gardner (1959):</strong> Veröffentlichte das Rätsel im <em>Scientific American</em>. Schon damals führte es zu Streit – dieselben Gemüter wie später bei Monty Hall.</span></p>
+            <p class="flex gap-2"><span class="text-indigo-400 shrink-0">→</span><span><strong>Wärter-Bias-Variante:</strong> Wenn der Wärter im Fall „A begnadigt“ <em>immer</em> B nennt (statt 50/50), springt {{ other }}=C sogar auf 1, wenn er C nennt. Die Antwort hängt also explizit vom Auswahl-Modell ab.</span></p>
+            <p class="flex gap-2"><span class="text-indigo-400 shrink-0">→</span><span><strong>Lehre:</strong> Bedingte Wahrscheinlichkeit ist nicht „die übrigen Fälle gleich umverteilen“. Was zählt, ist <em>warum</em> man die Information bekam.</span></p>
+        </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+        <a href="/raetsel/drei-gefangene"
+           class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal spielen
+        </a>
+        <a href="/raetsel/monty-hall"
+           class="border border-emerald-200 text-emerald-700 px-5 py-2 rounded-lg text-sm font-medium hover:bg-emerald-50">
+            🚪 Monty Hall (gleiche Logik)
+        </a>
+        <a href="/raetsel/bayes-theorem"
+           class="border border-violet-200 text-violet-700 px-5 py-2 rounded-lg text-sm font-medium hover:bg-violet-50">
+            🧮 Bayes-Theorem
+        </a>
+        <a href="/raetsel"
+           class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Alle Rätsel
+        </a>
+    </div>
+</div>

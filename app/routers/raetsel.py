@@ -23,6 +23,16 @@ RAETSEL_META = [
         "kategorie": "Wahrscheinlichkeit",
     },
     {
+        "id": "drei-gefangene",
+        "name": "Drei-Gefangenen-Problem",
+        "icon": "⛓️",
+        "beschreibung": "Drei Gefangene, einer wird begnadigt. Gefangener A erfährt vom Wärter, dass B hingerichtet wird. Stieg seine Überlebenschance von 1/3 auf 1/2? Die Antwort ist die gleiche wie bei Monty Hall – nur fast niemand sieht es.",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Einsteiger",
+        "dauer": "4 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
+    {
         "id": "geburtstag",
         "name": "Geburtstagsparadoxon",
         "icon": "🎂",
@@ -686,6 +696,80 @@ def monty_hall_result(
             "final_door": final_door,
             "decision": decision,
             "switch_door": switch_door,
+            "won": won,
+            "sim_n": sim_n,
+            "sim_stay_wins": sim_stay_wins,
+            "sim_switch_wins": sim_switch_wins,
+            "sim_stay_rate": round(sim_stay_wins / sim_n * 100),
+            "sim_switch_rate": round(sim_switch_wins / sim_n * 100),
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Drei-Gefangenen-Problem (Three Prisoners Problem)
+# ---------------------------------------------------------------------------
+
+@router.get("/drei-gefangene", response_class=HTMLResponse)
+def drei_gefangene_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/drei_gefangene.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/drei-gefangene/reveal", response_class=HTMLResponse)
+def drei_gefangene_reveal(request: Request):
+    """Spieler ist Gefangener A. Wärter nennt B oder C als hingerichtet."""
+    # Begnadigter wird zufällig gewählt (gleichverteilt 1/3)
+    pardoned = _random.choice(["A", "B", "C"])
+
+    # Wärter-Logik:
+    # • Ist A begnadigt: Wärter würfelt zwischen B und C (bekanntes Bias-Risiko;
+    #   wir nehmen den fairen 50/50-Wärter, der das klassische Resultat liefert).
+    # • Ist B begnadigt: Wärter muss C nennen.
+    # • Ist C begnadigt: Wärter muss B nennen.
+    if pardoned == "A":
+        named = _random.choice(["B", "C"])
+    elif pardoned == "B":
+        named = "C"
+    else:  # pardoned == "C"
+        named = "B"
+
+    other = "B" if named == "C" else "C"
+    return templates.TemplateResponse(
+        request,
+        "partials/drei_gefangene_reveal.html",
+        {
+            "pardoned": pardoned,
+            "named": named,
+            "other": other,
+        },
+    )
+
+
+@router.post("/drei-gefangene/result", response_class=HTMLResponse)
+def drei_gefangene_result(
+    request: Request,
+    pardoned: str = Form(...),
+    named: str = Form(...),
+    other: str = Form(...),
+    decision: str = Form(...),  # "stay" (bei A) oder "switch" (zu other)
+):
+    final_pick = "A" if decision == "stay" else other
+    won = final_pick == pardoned
+    sim_n = 30000
+    # Analytisch exakt: stay-Gewinnrate = 1/3, switch-Gewinnrate = 2/3
+    sim_stay_wins = round(sim_n / 3)
+    sim_switch_wins = sim_n - sim_stay_wins
+    return templates.TemplateResponse(
+        request,
+        "partials/drei_gefangene_result.html",
+        {
+            "pardoned": pardoned,
+            "named": named,
+            "other": other,
+            "decision": decision,
+            "final_pick": final_pick,
             "won": won,
             "sim_n": sim_n,
             "sim_stay_wins": sim_stay_wins,

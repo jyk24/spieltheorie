@@ -1,0 +1,58 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    <p class="text-center font-semibold text-slate-700 mb-5">Schritt 2: Der Wärter spricht</p>
+
+    <div class="grid grid-cols-3 gap-3 mb-6">
+        <div class="rounded-xl py-5 border-2 border-indigo-400 bg-indigo-50 flex flex-col items-center gap-1">
+            <span class="text-3xl">🧑</span>
+            <span class="font-bold text-indigo-700">A</span>
+            <span class="text-xs text-indigo-500">Du</span>
+        </div>
+        {% for who in ["B", "C"] %}
+        <div class="rounded-xl py-5 border-2 flex flex-col items-center gap-1
+            {% if who == named %}border-red-300 bg-red-50 opacity-70
+            {% else %}border-emerald-300 bg-emerald-50{% endif %}">
+            {% if who == named %}
+            <span class="text-3xl">⚰️</span>
+            <span class="font-bold text-red-700">{{ who }}</span>
+            <span class="text-xs text-red-500 font-medium">Stirbt</span>
+            {% else %}
+            <span class="text-3xl">🧑</span>
+            <span class="font-bold text-emerald-700">{{ who }}</span>
+            <span class="text-xs text-emerald-600 font-medium">Schicksal offen</span>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800 mb-6">
+        <p class="mb-2">Der Wärter sagt: <strong>„{{ named }} wird hingerichtet.“</strong></p>
+        <p>Übrig bleiben in deiner Sicht <strong>du (A)</strong> und <strong>{{ other }}</strong>. Bleibst du bei dir – oder „wechselst“ du gedanklich auf {{ other }}?</p>
+    </div>
+
+    <p class="text-xs text-slate-400 text-center mb-3">Die meisten antworten reflexartig „1/2 für jeden“. Setze deinen Tipp ab und sieh, was die Mathematik sagt.</p>
+
+    <div class="grid grid-cols-2 gap-4">
+        <form hx-post="/raetsel/drei-gefangene/result" hx-target="#game-area" hx-swap="innerHTML">
+            <input type="hidden" name="pardoned" value="{{ pardoned }}">
+            <input type="hidden" name="named" value="{{ named }}">
+            <input type="hidden" name="other" value="{{ other }}">
+            <input type="hidden" name="decision" value="stay">
+            <button type="submit"
+                    class="w-full bg-slate-600 hover:bg-slate-700 text-white py-4 rounded-xl font-bold transition-colors">
+                🔒 Ich (A) habe bessere Chancen
+                <div class="text-xs font-normal mt-1 opacity-80">„Mein Risiko ist jetzt 1/2.“</div>
+            </button>
+        </form>
+        <form hx-post="/raetsel/drei-gefangene/result" hx-target="#game-area" hx-swap="innerHTML">
+            <input type="hidden" name="pardoned" value="{{ pardoned }}">
+            <input type="hidden" name="named" value="{{ named }}">
+            <input type="hidden" name="other" value="{{ other }}">
+            <input type="hidden" name="decision" value="switch">
+            <button type="submit"
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-xl font-bold transition-colors">
+                🔀 {{ other }} hat bessere Chancen
+                <div class="text-xs font-normal mt-1 opacity-80">„{{ other }}s Chance ist jetzt 2/3.“</div>
+            </button>
+        </form>
+    </div>
+</div>

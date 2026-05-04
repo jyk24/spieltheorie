@@ -467,6 +467,15 @@ GAME_META = [
         "konzept": "Trittbrettfahrer, Kollektivgut, soziale Normen",
     },
     {
+        "id": "knopf",
+        "name": "Der Knopf",
+        "icon": "🔴",
+        "beschreibung": "Rot ist sicher (+3), Blau lohnt sich nur, wenn ≥6 von 11 mitziehen. Tim Urbans virales Schwellenwert-Dilemma.",
+        "schwierigkeit": "Fortgeschritten",
+        "runden": 6,
+        "konzept": "Dominante Strategie, Schwellenwert-Kollektivgut, Koordination",
+    },
+    {
         "id": "beauty-contest",
         "name": "Schönheitswettbewerb",
         "icon": "🎯",
