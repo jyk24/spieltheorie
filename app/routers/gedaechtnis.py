@@ -67,6 +67,11 @@ def verbal(request: Request):
     return templates.TemplateResponse(request, "gedaechtnis_verbal.html", {"active_page": "gedaechtnis"})
 
 
+@router.get("/kopfrechnen", response_class=HTMLResponse)
+def kopfrechnen(request: Request):
+    return templates.TemplateResponse(request, "gedaechtnis_kopfrechnen.html", {"active_page": "gedaechtnis"})
+
+
 @router.get("/bestenliste", response_class=HTMLResponse)
 def bestenliste(request: Request):
     return templates.TemplateResponse(request, "gedaechtnis_bestenliste.html", {"active_page": "gedaechtnis"})
@@ -89,6 +94,7 @@ GAME_META_GEDAECHTNIS = {
     "chimp":        {"name": "Schimpansen-Test",       "unit": "Level",   "icon": "🐒"},
     "verbal":       {"name": "Verbales Gedaechtnis",   "unit": "Punkte",  "icon": "💬"},
     "major-quiz":   {"name": "Major-System Quiz",      "unit": "Punkte",  "icon": "🔢"},
+    "kopfrechnen":  {"name": "Kopfrechnen",             "unit": "Punkte",  "icon": "🧮"},
 }
 
 # ── Major-System Daten ────────────────────────────────────────────────────────

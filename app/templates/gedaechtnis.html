@@ -304,12 +304,13 @@
       ("karten",       "🎴","Kartendeck",         "Merke die Reihenfolge von Spielkarten — trainiere Major-System und PAO.",                       "Sequenz",    "10 min", "border-rose-200",   "bg-rose-50",    "text-rose-700"),
       ("wortfolge",    "📝","Wortfolge",          "Wörter erscheinen einzeln — verknüpfe sie zur Geschichte und rekonstruiere die Reihenfolge.",   "Linking",    "5 min",  "border-teal-200",   "bg-teal-50",    "text-teal-700"),
       ("major-quiz",   "🎯","Major-System Quiz",  "Zahl → Wort oder Wort → Zahl — teste dein Major-System-Wissen in drei Schwierigkeiten.",       "Zahlen",     "5 min",  "border-violet-200", "bg-violet-50",  "text-violet-700"),
+      ("kopfrechnen",  "🧮","Kopfrechnen",        "60 Sekunden Mathe-Sprint: Addieren, Subtrahieren, Multiplizieren — wie viele schaffst du?",     "Mathe",      "1 min",  "border-fuchsia-200","bg-fuchsia-50", "text-fuchsia-700"),
     ] %}
 
     {% for id, icon, name, beschreibung, typ, dauer, border, bg, text in spiele %}
     <a href="/gedaechtnis/{{ id }}"
        class="bg-white rounded-xl border {{ border }} p-5 shadow-sm hover:shadow-md transition-all group relative">
-      {% if id in ["reaktionszeit", "chimp", "verbal"] %}
+      {% if id in ["reaktionszeit", "chimp", "verbal", "kopfrechnen"] %}
       <span class="absolute top-3 right-3 text-xs bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full font-medium">NEU</span>
       {% endif %}
       <div class="flex items-start justify-between mb-3">

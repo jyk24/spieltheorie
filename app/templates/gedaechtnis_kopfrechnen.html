@@ -1,0 +1,455 @@
+{% extends "base.html" %}
+{% block title %}Kopfrechnen-Trainer – 60-Sekunden-Mathe-Sprint – VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="Trainiere dein Kopfrechnen: 60 Sekunden Mathe-Sprint mit Addition, Subtraktion und Multiplikation. Drei Schwierigkeitsstufen, Bestenliste und persönliche Bestleistung.">{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+
+  <a href="/gedaechtnis" class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 mb-6 transition-colors">
+    ← Zurück zum Gedächtnistraining
+  </a>
+
+  <div class="mb-6 flex items-start gap-4">
+    <div class="text-5xl">🧮</div>
+    <div>
+      <h1 class="text-2xl font-extrabold text-slate-800">Kopfrechnen-Trainer</h1>
+      <p class="text-slate-500 text-sm mt-1">60 Sekunden Mathe-Sprint. Wie viele Aufgaben schaffst du? Falsche Antworten kosten 3 Sekunden.</p>
+    </div>
+  </div>
+
+  <!-- Schwierigkeitsstufen-Auswahl -->
+  <div id="setup-area" class="bg-white border border-slate-200 rounded-2xl p-6 mb-6">
+    <div class="text-center mb-5">
+      <div class="text-sm font-semibold text-slate-700 mb-1">Wähle eine Schwierigkeit</div>
+      <div class="text-xs text-slate-400">Tipp: Mit Tastatur ist es schneller — direkt Zahlen tippen, Enter zum Bestätigen.</div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+      <button onclick="startGame('easy')"
+              class="border-2 border-emerald-200 bg-emerald-50 hover:bg-emerald-100 rounded-xl p-4 text-left transition-colors group">
+        <div class="text-2xl mb-1">🟢</div>
+        <div class="font-bold text-emerald-800">Einfach</div>
+        <div class="text-xs text-emerald-700 mt-1">Addition / Subtraktion bis 20</div>
+      </button>
+      <button onclick="startGame('medium')"
+              class="border-2 border-amber-200 bg-amber-50 hover:bg-amber-100 rounded-xl p-4 text-left transition-colors group">
+        <div class="text-2xl mb-1">🟡</div>
+        <div class="font-bold text-amber-800">Mittel</div>
+        <div class="text-xs text-amber-700 mt-1">2-stellige Add/Sub + Einmaleins</div>
+      </button>
+      <button onclick="startGame('hard')"
+              class="border-2 border-rose-200 bg-rose-50 hover:bg-rose-100 rounded-xl p-4 text-left transition-colors group">
+        <div class="text-2xl mb-1">🔴</div>
+        <div class="font-bold text-rose-800">Schwer</div>
+        <div class="text-xs text-rose-700 mt-1">2×1- &amp; 2×2-stellige Mult., Quadrate</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Spiel-Bereich -->
+  <div id="game-area" class="hidden bg-white border border-slate-200 rounded-2xl p-6 mb-6">
+    <!-- Timer + Score -->
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-slate-400">Punkte</span>
+        <span class="text-2xl font-extrabold text-indigo-700" id="score-display">0</span>
+        <span id="streak-badge" class="hidden ml-2 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold"></span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-slate-400">Zeit</span>
+        <span class="text-2xl font-extrabold tabular-nums" id="time-display">60</span>
+        <span class="text-xs text-slate-400">s</span>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="h-2 bg-slate-100 rounded-full overflow-hidden mb-6">
+      <div id="time-bar" class="h-full bg-indigo-500 transition-all duration-200" style="width:100%"></div>
+    </div>
+
+    <!-- Aufgabe -->
+    <div class="text-center mb-6">
+      <div class="text-5xl sm:text-6xl font-extrabold text-slate-800 tabular-nums mb-1" id="question-display">– + –</div>
+      <div class="text-sm text-slate-400">= ?</div>
+    </div>
+
+    <!-- Eingabe -->
+    <form id="answer-form" class="flex gap-2 justify-center" onsubmit="return submitAnswer(event)">
+      <input type="text"
+             id="answer-input"
+             inputmode="numeric"
+             autocomplete="off"
+             pattern="-?[0-9]*"
+             class="w-40 sm:w-52 px-4 py-3 border-2 border-slate-200 rounded-xl text-center text-2xl font-bold tabular-nums focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300"
+             placeholder="?">
+      <button type="submit"
+              class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-xl transition-colors">
+        ✓
+      </button>
+    </form>
+    <div id="feedback" class="text-center text-sm font-medium mt-3 h-5"></div>
+  </div>
+
+  <!-- Ergebnis -->
+  <div id="result-area" class="hidden bg-white border border-slate-200 rounded-2xl p-6 mb-6">
+    <div class="text-center mb-5">
+      <div class="text-5xl mb-2">🏁</div>
+      <div class="text-xs text-slate-400 uppercase tracking-wide mb-1" id="result-difficulty"></div>
+      <div class="text-5xl font-extrabold text-slate-800 mb-1" id="result-score">0</div>
+      <div class="text-sm text-slate-500">richtige Antworten in 60 Sekunden</div>
+      <div class="text-sm font-medium mt-3" id="result-rating"></div>
+      <div class="text-xs text-slate-400 mt-1" id="result-best"></div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-2 mb-5 text-center">
+      <div class="bg-slate-50 rounded-xl p-3">
+        <div class="text-xs text-slate-400">Korrekt</div>
+        <div class="text-lg font-extrabold text-emerald-700" id="stat-correct">0</div>
+      </div>
+      <div class="bg-slate-50 rounded-xl p-3">
+        <div class="text-xs text-slate-400">Fehler</div>
+        <div class="text-lg font-extrabold text-rose-700" id="stat-wrong">0</div>
+      </div>
+      <div class="bg-slate-50 rounded-xl p-3">
+        <div class="text-xs text-slate-400">Längste Serie</div>
+        <div class="text-lg font-extrabold text-amber-700" id="stat-streak">0</div>
+      </div>
+    </div>
+
+    <div class="w-full max-w-xs mx-auto mb-4">
+      <div class="flex gap-2">
+        <input id="player-name" type="text" placeholder="Dein Name (optional)"
+               maxlength="30"
+               class="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300">
+        <button onclick="submitScore()" id="submit-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition-colors whitespace-nowrap">
+          Eintragen
+        </button>
+      </div>
+      <div id="rank-badge" class="hidden mt-2 text-center text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg py-2"></div>
+    </div>
+
+    <div class="flex gap-3 justify-center">
+      <button onclick="resetToSetup()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition-colors">
+        Nochmal
+      </button>
+      <a href="/gedaechtnis/bestenliste" class="border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium px-6 py-2.5 rounded-xl text-sm transition-colors">
+        Bestenliste
+      </a>
+    </div>
+  </div>
+
+  <!-- Persönliche Bestwerte -->
+  <div class="grid grid-cols-3 gap-3 mb-8">
+    <div class="bg-white border border-slate-200 rounded-xl p-4 text-center">
+      <div class="text-xs text-slate-400 mb-1">🟢 Einfach</div>
+      <div class="text-xl font-extrabold text-slate-800" id="best-easy">–</div>
+    </div>
+    <div class="bg-white border border-slate-200 rounded-xl p-4 text-center">
+      <div class="text-xs text-slate-400 mb-1">🟡 Mittel</div>
+      <div class="text-xl font-extrabold text-slate-800" id="best-medium">–</div>
+    </div>
+    <div class="bg-white border border-slate-200 rounded-xl p-4 text-center">
+      <div class="text-xs text-slate-400 mb-1">🔴 Schwer</div>
+      <div class="text-xl font-extrabold text-slate-800" id="best-hard">–</div>
+    </div>
+  </div>
+
+  <!-- Globale Bestenliste -->
+  <div class="bg-white border border-slate-200 rounded-2xl p-5 mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-bold text-slate-800">🏆 Globale Top 10</h2>
+      <button onclick="loadGlobal()" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Aktualisieren</button>
+    </div>
+    <div id="global-list">
+      <div class="text-sm text-slate-400 text-center py-4">Lade Bestenliste…</div>
+    </div>
+  </div>
+
+  <!-- Info -->
+  <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-sm text-slate-600">
+    <h3 class="font-bold text-slate-800 mb-2">💡 Warum Kopfrechnen?</h3>
+    <p class="mb-2">Mentales Rechnen aktiviert den <strong>intraparietalen Sulcus</strong> – die Hirnregion für Zahlen-Repräsentation – sowie das Arbeitsgedächtnis. Regelmäßiges Training verbessert nachweislich die Zahlenflexibilität und verkürzt Reaktionszeiten bei numerischen Aufgaben (Dehaene, 2011).</p>
+    <ul class="list-disc list-inside space-y-1 text-xs text-slate-500">
+      <li><strong>Komplemente</strong> bei Addition: 8 + 7 = 8 + 2 + 5 = 15</li>
+      <li><strong>Differenzen</strong>: 73 − 28 = 73 − 30 + 2 = 45</li>
+      <li><strong>Doppeln</strong> &amp; halbieren: 16 × 25 = 8 × 50 = 4 × 100 = 400</li>
+      <li><strong>Quadrate nahe 50</strong>: 47² = (50−3)² = 2500 − 300 + 9 = 2209</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  var KEY_BEST = 'kr_best';
+  var DURATION = 60;
+
+  var state = 'setup';
+  var difficulty = null;
+  var current = null;
+  var score = 0;
+  var correct = 0;
+  var wrong = 0;
+  var streak = 0;
+  var maxStreak = 0;
+  var timeLeft = DURATION;
+  var tickHandle = null;
+
+  function show(area) {
+    document.getElementById('setup-area').classList.toggle('hidden', area !== 'setup');
+    document.getElementById('game-area').classList.toggle('hidden', area !== 'game');
+    document.getElementById('result-area').classList.toggle('hidden', area !== 'result');
+  }
+
+  function rand(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function makeQuestion(diff) {
+    var a, b, op, ans;
+    if (diff === 'easy') {
+      op = ['+','-','+','-'][rand(0,3)];
+      a = rand(2, 20); b = rand(2, 20);
+      if (op === '-' && a < b) { var t = a; a = b; b = t; }
+    } else if (diff === 'medium') {
+      var r = rand(0, 9);
+      if (r < 4)      { op = '+'; a = rand(15, 99); b = rand(15, 99); }
+      else if (r < 7) { op = '-'; a = rand(20, 99); b = rand(10, a); }
+      else            { op = '×'; a = rand(2, 12); b = rand(2, 12); }
+    } else { // hard
+      var s = rand(0, 9);
+      if (s < 3)      { op = '×'; a = rand(11, 25); b = rand(2, 9); }
+      else if (s < 6) { op = '×'; a = rand(11, 19); b = rand(11, 19); }
+      else if (s < 8) { op = '²'; a = rand(11, 35); b = a; }
+      else            { op = '+'; a = rand(100, 999); b = rand(100, 999); }
+    }
+    if (op === '+') ans = a + b;
+    else if (op === '-') ans = a - b;
+    else if (op === '×') ans = a * b;
+    else if (op === '²') ans = a * a;
+    return { a: a, b: b, op: op, ans: ans };
+  }
+
+  function renderQuestion(q) {
+    var s;
+    if (q.op === '²') s = q.a + '²';
+    else s = q.a + ' ' + q.op + ' ' + q.b;
+    document.getElementById('question-display').textContent = s;
+  }
+
+  function nextQuestion() {
+    current = makeQuestion(difficulty);
+    renderQuestion(current);
+    var inp = document.getElementById('answer-input');
+    inp.value = '';
+    inp.focus();
+  }
+
+  function tick() {
+    timeLeft -= 0.1;
+    if (timeLeft <= 0) {
+      timeLeft = 0;
+      finish();
+    }
+    document.getElementById('time-display').textContent = Math.ceil(timeLeft);
+    document.getElementById('time-bar').style.width = (timeLeft / DURATION * 100) + '%';
+    if (timeLeft < 10) {
+      document.getElementById('time-display').classList.add('text-red-600');
+    }
+  }
+
+  function flashFeedback(ok) {
+    var fb = document.getElementById('feedback');
+    if (ok) {
+      fb.textContent = '✓ Richtig!';
+      fb.className = 'text-center text-sm font-medium mt-3 h-5 text-emerald-600';
+    } else {
+      fb.textContent = '✗ Falsch (−3 s) · ' + describe(current);
+      fb.className = 'text-center text-sm font-medium mt-3 h-5 text-rose-600';
+    }
+    setTimeout(function() {
+      if (state === 'playing') {
+        fb.textContent = '';
+      }
+    }, 1100);
+  }
+
+  function describe(q) {
+    if (q.op === '²') return q.a + '² = ' + q.ans;
+    return q.a + ' ' + q.op + ' ' + q.b + ' = ' + q.ans;
+  }
+
+  window.startGame = function(diff) {
+    difficulty = diff;
+    score = 0; correct = 0; wrong = 0; streak = 0; maxStreak = 0;
+    timeLeft = DURATION;
+    state = 'playing';
+    document.getElementById('score-display').textContent = '0';
+    document.getElementById('time-display').textContent = DURATION;
+    document.getElementById('time-display').classList.remove('text-red-600');
+    document.getElementById('time-bar').style.width = '100%';
+    document.getElementById('streak-badge').classList.add('hidden');
+    document.getElementById('feedback').textContent = '';
+    show('game');
+    nextQuestion();
+    clearInterval(tickHandle);
+    tickHandle = setInterval(tick, 100);
+  };
+
+  window.submitAnswer = function(e) {
+    e.preventDefault();
+    if (state !== 'playing' || !current) return false;
+    var raw = document.getElementById('answer-input').value.trim();
+    if (raw === '' || raw === '-') return false;
+    var val = parseInt(raw, 10);
+    if (isNaN(val)) return false;
+    if (val === current.ans) {
+      score += 1;
+      correct += 1;
+      streak += 1;
+      if (streak > maxStreak) maxStreak = streak;
+      document.getElementById('score-display').textContent = score;
+      var sb = document.getElementById('streak-badge');
+      if (streak >= 3) {
+        sb.textContent = '🔥 ' + streak + ' Serie';
+        sb.classList.remove('hidden');
+      }
+      flashFeedback(true);
+      nextQuestion();
+    } else {
+      wrong += 1;
+      streak = 0;
+      document.getElementById('streak-badge').classList.add('hidden');
+      timeLeft = Math.max(0, timeLeft - 3);
+      flashFeedback(false);
+      var inp = document.getElementById('answer-input');
+      inp.value = '';
+      inp.focus();
+    }
+    return false;
+  };
+
+  function finish() {
+    clearInterval(tickHandle);
+    state = 'done';
+    document.getElementById('result-difficulty').textContent =
+      difficulty === 'easy' ? 'Einfach' : difficulty === 'medium' ? 'Mittel' : 'Schwer';
+    document.getElementById('result-score').textContent = score;
+    document.getElementById('stat-correct').textContent = correct;
+    document.getElementById('stat-wrong').textContent = wrong;
+    document.getElementById('stat-streak').textContent = maxStreak;
+
+    var bests = loadBests();
+    var prev = bests[difficulty] || 0;
+    var isNew = score > prev;
+    if (isNew) {
+      bests[difficulty] = score;
+      localStorage.setItem(KEY_BEST, JSON.stringify(bests));
+    }
+    document.getElementById('result-best').textContent = isNew
+      ? '🎉 Neue persönliche Bestleistung!'
+      : 'Bestleistung: ' + (prev || score) + ' Punkte';
+
+    var rEl = document.getElementById('result-rating');
+    var r = rate(difficulty, score);
+    rEl.textContent = r.text;
+    rEl.className = 'text-sm font-medium mt-3 ' + r.color;
+
+    document.getElementById('rank-badge').classList.add('hidden');
+    document.getElementById('submit-btn').disabled = false;
+    document.getElementById('submit-btn').textContent = 'Eintragen';
+    show('result');
+    updateBests();
+  }
+
+  function rate(diff, s) {
+    var thresholds = {
+      easy:   [10, 18, 28, 40],
+      medium: [6, 12, 20, 30],
+      hard:   [4,  8, 14, 22],
+    };
+    var t = thresholds[diff] || thresholds.medium;
+    if (s >= t[3]) return { text: '🚀 Außergewöhnlich!',  color: 'text-emerald-600' };
+    if (s >= t[2]) return { text: '⚡ Sehr gut!',          color: 'text-emerald-500' };
+    if (s >= t[1]) return { text: '✅ Solide',              color: 'text-blue-500' };
+    if (s >= t[0]) return { text: '🙂 Geht so',             color: 'text-amber-500' };
+    return            { text: '💪 Übung macht den Meister', color: 'text-slate-500' };
+  }
+
+  window.resetToSetup = function() {
+    state = 'setup';
+    show('setup');
+  };
+
+  function loadBests() {
+    try { return JSON.parse(localStorage.getItem(KEY_BEST) || '{}') || {}; }
+    catch (e) { return {}; }
+  }
+
+  function updateBests() {
+    var b = loadBests();
+    document.getElementById('best-easy').textContent   = b.easy   ? b.easy   + ' P' : '–';
+    document.getElementById('best-medium').textContent = b.medium ? b.medium + ' P' : '–';
+    document.getElementById('best-hard').textContent   = b.hard   ? b.hard   + ' P' : '–';
+  }
+
+  window.submitScore = function() {
+    var name = (document.getElementById('player-name').value || 'Anonym').trim() || 'Anonym';
+    var btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = '...';
+    fetch('/gedaechtnis/score', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ game_type: 'kopfrechnen', score: score, player_name: name + ' (' + difficulty + ')' })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var badge = document.getElementById('rank-badge');
+      badge.textContent = 'Platz ' + d.rank + ' von ' + d.total + ' – eingetragen!';
+      badge.classList.remove('hidden');
+      btn.textContent = '✓';
+      loadGlobal();
+    })
+    .catch(function() {
+      btn.disabled = false;
+      btn.textContent = 'Eintragen';
+    });
+  };
+
+  window.loadGlobal = function() {
+    var el = document.getElementById('global-list');
+    el.innerHTML = '<div class="text-sm text-slate-400 text-center py-4">Lade…</div>';
+    fetch('/gedaechtnis/scores/kopfrechnen')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (!d.scores || d.scores.length === 0) {
+        el.innerHTML = '<div class="text-sm text-slate-400 text-center py-4">Noch keine Einträge. Sei der Erste!</div>';
+        return;
+      }
+      var html = '<div class="space-y-1">';
+      d.scores.forEach(function(s) {
+        var medal = s.rank === 1 ? '🥇' : s.rank === 2 ? '🥈' : s.rank === 3 ? '🥉' : s.rank + '.';
+        html += '<div class="flex items-center justify-between py-2 px-3 rounded-lg ' +
+          (s.rank <= 3 ? 'bg-amber-50' : 'hover:bg-slate-50') + '">' +
+          '<span class="text-sm font-medium text-slate-700">' + medal + ' ' + escHtml(s.player) + '</span>' +
+          '<span class="text-sm font-bold text-indigo-700">' + s.score + ' P</span>' +
+          '</div>';
+      });
+      html += '</div>';
+      el.innerHTML = html;
+    })
+    .catch(function() { el.innerHTML = '<div class="text-sm text-red-400 text-center py-4">Fehler beim Laden.</div>'; });
+  };
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // Init
+  show('setup');
+  updateBests();
+  loadGlobal();
+})();
+</script>
+
+{% endblock %}

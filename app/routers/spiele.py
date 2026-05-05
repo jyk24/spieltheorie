@@ -467,6 +467,15 @@ GAME_META = [
         "konzept": "Trittbrettfahrer, Kollektivgut, soziale Normen",
     },
     {
+        "id": "knopf",
+        "name": "Der Knopf",
+        "icon": "🔴",
+        "beschreibung": "Rot ist sicher (+3), Blau lohnt sich nur ab 6 von 11 Stimmen (+5). Tim Urbans virales Gedankenexperiment als Spieltheorie-Klassiker.",
+        "schwierigkeit": "Fortgeschritten",
+        "runden": 8,
+        "konzept": "Dominante Strategie, Schwellenwert-Kollektivgut, Schelling",
+    },
+    {
         "id": "beauty-contest",
         "name": "Schönheitswettbewerb",
         "icon": "🎯",
