@@ -100,6 +100,7 @@ _SITEMAP_URLS = [
     "/gedaechtnis/technik/elaborative-enkodierung", "/gedaechtnis/technik/zeigarnik",
     "/gedaechtnis/reaktionszeit", "/gedaechtnis/chimp", "/gedaechtnis/verbal",
     "/gedaechtnis/bestenliste",
+    "/raetsel/banach-tarski", "/raetsel/lindy-effekt", "/raetsel/goodharts-gesetz",
 ]
 
 

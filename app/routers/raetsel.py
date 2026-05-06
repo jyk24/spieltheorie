@@ -612,6 +612,10 @@ RAETSEL_META = [
     {"id":"barnum-effekt","name":"Der Barnum-Effekt","icon":"🎪","beschreibung":"\"Sie haben unausgeschöpfte Potenziale und manchmal zweifeln Sie an sich.\" Warum glauben so viele, dass diese Aussage genau auf sie zutrifft?","typ":"Kognitionspsychologie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"flow-analyse","name":"Flow – der optimale Zustand","icon":"🌊","beschreibung":"Zwischen Langeweile und Überforderung liegt ein schmaler Kanal: Flow. Csikszentmihalyi (1990) beschreibt, wann Menschen völlig aufgehen in einer Tätigkeit.","typ":"Motivationspsychologie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"milgram-gehorsam","name":"Das Milgram-Experiment","icon":"⚡","beschreibung":"65% der Versuchspersonen verabreichten tödliche Elektroschocks – weil eine Autoritätsperson es verlangte. Was sagt das über moralischen Mut?","typ":"Sozialpsychologie","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Psychologie"},
+    # ── Neu (2026-05) ────────────────────────────────────────────────────────
+    {"id":"banach-tarski","name":"Banach-Tarski-Paradoxon","icon":"🔮","beschreibung":"Eine Kugel lässt sich in endlich viele Teile zerlegen und ohne zu dehnen zu zwei identischen Kugeln zusammensetzen. Klingt wie Magie – ist aber 1924 streng bewiesen.","typ":"Mengenlehre","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Mathematik"},
+    {"id":"lindy-effekt","name":"Der Lindy-Effekt","icon":"📜","beschreibung":"Ein Buch, das seit 100 Jahren gelesen wird, hält voraussichtlich noch 100 weitere durch. Je länger etwas existiert, desto länger lebt es noch. Warum funktioniert diese seltsame Regel?","typ":"Lebenserwartung","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
+    {"id":"goodharts-gesetz","name":"Goodharts Gesetz","icon":"📏","beschreibung":"„Sobald eine Kennzahl zum Ziel wird, hört sie auf, eine gute Kennzahl zu sein.\" Warum ruinieren Bonussysteme oft genau das, was sie messen sollen?","typ":"Anreiztheorie","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Statistik"},
 ]
 
 
@@ -3799,6 +3803,57 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>65 % der Teilnehmer verabreichten 450-Volt-Schocks — obwohl der 'Schüler' schrie und aufhörte zu reagieren. Die Erklärung: Gehorsam gegenüber legitimen Autoritäten, graduelles Commitment (jeder Schritt war nur klein größer), Verantwortungsdiffusion ('Ich folge nur Anweisungen'), physische Distanz zum Opfer.</p>",
         "kontext": "<p>Das Experiment wurde im Kontext des Eichmann-Prozesses (1960) geplant. Milgrams Frage: Ist Gehorsam im Nationalsozialismus ein deutsches Phänomen? Antwort: Nein — es ist ein menschliches. Ethisch hoch umstritten: Viele Teilnehmer litten unter den Erkenntnissen über sich selbst. Heute nicht mehr genehmigungsfähig.</p>",
         "erkenntnis": "Böses entsteht oft nicht aus Bösartigkeit, sondern aus Gehorsam. Die Absicht, das Richtige zu tun, schützt nicht vor dem Falschen, wenn Autoritäten Kontext definieren. Das ist die erschütternde Lektion.",
+    },
+    "banach-tarski": {
+        "id": "banach-tarski", "name": "Banach-Tarski-Paradoxon", "icon": "🔮",
+        "farbe": "violet", "kategorie": "Mathematik",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": "1924 bewiesen Stefan Banach und Alfred Tarski mit Hilfe des Auswahlaxioms ein verblüffendes Resultat: Eine massive Kugel im dreidimensionalen Raum lässt sich in endlich viele disjunkte Teilmengen zerlegen, die – nur durch Drehungen und Verschiebungen – zu zwei Kugeln zusammengesetzt werden können, jede so groß wie das Original.",
+        "frage": "Warum widerspricht das nicht dem Erhaltungssatz für Volumen?",
+        "optionen": [
+            {"text": "Weil das Auswahlaxiom in der Physik nicht gilt", "hinweis": "Hinweis aus der Praxis – aber wie ist die mathematische Antwort?"},
+            {"text": "Weil die Teilstücke nicht messbar sind – ihnen lässt sich kein klassisches Volumen zuordnen", "hinweis": "Die saubere mengentheoretische Erklärung"},
+            {"text": "Weil sich die Kugeln in höhere Dimensionen ausdehnen", "hinweis": "Klingt richtig, ist aber falsch"},
+            {"text": "Weil die Anzahl der Teilstücke gegen unendlich strebt", "hinweis": "Tatsächlich nur ~5 Teile reichen"},
+        ],
+        "loesung_text": "Die Teilstücke sind nicht Lebesgue-messbar – ihnen lässt sich kein Volumen zuordnen",
+        "erklaerung": "<p>Volumen ist nur für sogenannte messbare Mengen definiert. Banach und Tarski konstruieren mit dem Auswahlaxiom Teilstücke aus überabzählbar vielen Punktwolken, die so „pathologisch\" sind, dass sich ihnen kein konsistentes Volumen zuweisen lässt. Wenn V(A) gar nicht existiert, kann V(A₁) + V(A₂) + … = V(Kugel) auch nicht verletzt sein. Bereits 5 Teile genügen für den Beweis (Raphael Robinson, 1947).</p>",
+        "kontext": "<p>Das Paradoxon zeigt, wie radikal das Auswahlaxiom die Anschauung sprengt. Manche Mathematiker lehnen es deshalb ab; ohne das Axiom gibt es weder Banach-Tarski noch eine vollständige Maßtheorie auf allen Teilmengen von ℝⁿ. In der Physik tritt es nicht auf: Atome lassen sich nicht beliebig fein zerlegen, und Materie ist quantisiert.</p>",
+        "erkenntnis": "Mathematische Wahrheit kann der Anschauung diametral widersprechen, ohne falsch zu sein. Das Paradoxon ist kein Fehler – es ist eine Demonstration, dass „Volumen\" eine subtilere Eigenschaft ist, als unsere Intuition vermuten lässt.",
+    },
+    "lindy-effekt": {
+        "id": "lindy-effekt", "name": "Der Lindy-Effekt", "icon": "📜",
+        "farbe": "amber", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Benoit Mandelbrot und später Nassim Taleb popularisierten eine seltsame Regel für nicht-vergängliche Dinge wie Bücher, Ideen oder Technologien: Die erwartete Restlebenszeit ist proportional zum bisherigen Alter. Eine Schrift, die seit 2000 Jahren gelesen wird, dürfte uns voraussichtlich noch ~2000 Jahre erhalten bleiben. Eine App, die seit 2 Jahren existiert, vermutlich nur ~2 weitere.",
+        "frage": "Bei welcher Art von Objekt funktioniert der Lindy-Effekt <em>nicht</em>?",
+        "optionen": [
+            {"text": "Bei biologischen Lebewesen (Menschen, Tiere)", "hinweis": "Was ändert sich mit dem Alter eines Organismus?"},
+            {"text": "Bei klassischen Büchern und religiösen Texten", "hinweis": "Klassisches Lindy-Beispiel"},
+            {"text": "Bei mathematischen Theoremen", "hinweis": "Auch klassisches Beispiel"},
+            {"text": "Bei Programmiersprachen", "hinweis": "Funktioniert tatsächlich gut"},
+        ],
+        "loesung_text": "Bei biologischen Lebewesen – ihre Sterblichkeit steigt mit dem Alter",
+        "erklaerung": "<p>Der Lindy-Effekt gilt nur für nicht-vergängliche Objekte: Ideen, Codes, Institutionen. Sie sterben nicht durch innere Alterung, sondern werden ersetzt – wenn sie es bisher nicht wurden, ist das ein starkes Signal. Mathematisch entspricht das einer Pareto-Verteilung mit konstanter <em>hazard rate</em> der Form 1/t. Menschen dagegen folgen einer Gompertz-Verteilung: Mit zunehmendem Alter sinkt die Restlebenserwartung, sie steigt nicht.</p>",
+        "kontext": "<p>Der Name geht auf das New Yorker Lindy's Deli zurück, wo Komiker in den 1960ern darüber spekulierten, wer von ihnen noch lange im Geschäft sein würde. Wer schon lange auftrat, wurde länger erwartet. Taleb nutzt das Prinzip in <em>Antifragile</em> als heuristisches Filter: Lies eher Aristoteles als die Bestseller-Liste. Tippe lieber Python als das neueste Framework.</p>",
+        "erkenntnis": "Zeit ist ein brutaler aber ehrlicher Filter. Was sie überlebt hat, hat es aus einem Grund. Der Lindy-Effekt ist eine Wette darauf, dass dieser Grund auch morgen noch zieht.",
+    },
+    "goodharts-gesetz": {
+        "id": "goodharts-gesetz", "name": "Goodharts Gesetz", "icon": "📏",
+        "farbe": "rose", "kategorie": "Statistik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Charles Goodhart, britischer Ökonom, formulierte 1975: „Sobald eine Kennzahl zum Ziel wird, hört sie auf, eine gute Kennzahl zu sein.\" Beispiel: Ein Callcenter misst Anrufe pro Stunde. Mitarbeitende fangen an, lange Gespräche absichtlich zu kappen. Die Kennzahl steigt – die Servicequalität fällt.",
+        "frage": "Welcher dieser Fälle ist <strong>kein</strong> Beispiel für Goodharts Gesetz?",
+        "optionen": [
+            {"text": "Klinik wird nach 30-Tage-Sterblichkeit bewertet → Patienten werden nach 31 Tagen entlassen", "hinweis": "Klassische Goodhart-Anpassung"},
+            {"text": "Schulen werden an Abschlussquoten gemessen → Noten werden inflationiert", "hinweis": "Gaming der Metrik"},
+            {"text": "Wettervorhersage misst Trefferquote ihrer Prognosen → Modell wird schlechter, weil seltene Wetterlagen ausgeschlossen werden", "hinweis": "Auch Goodhart"},
+            {"text": "Unternehmen misst Gewinn → Höherer Umsatz, weil ein neues Produkt erfolgreich ist", "hinweis": "Wo wird hier optimiert?"},
+        ],
+        "loesung_text": "Höherer Gewinn durch ein erfolgreiches Produkt – hier wurde der Wert selbst geschaffen",
+        "erklaerung": "<p>Goodharts Gesetz beschreibt das Auseinanderdriften von <em>Maß</em> und <em>gemeintem Ziel</em>: Akteure optimieren das, was gemessen wird, statt das, was gemeint ist. Wenn die Metrik <em>direkt</em> mit dem Ziel zusammenfällt (echter Gewinn = echter Erfolg), greift das Gesetz nicht. Es greift, sobald die Metrik nur eine <em>Stellvertreter-Größe</em> ist (Anrufe ≠ Servicequalität).</p>",
+        "kontext": "<p>Marilyn Strathern formulierte 1997 die heute meistzitierte Version. In der Künstlichen Intelligenz heißt das verwandte Problem <em>specification gaming</em>: Ein Reinforcement-Agent findet stets die unbeabsichtigten Lücken seiner Belohnungsfunktion. Beispiel: Ein Roboter lernt, beim Boots-Rennen rückwärts in Kreisen zu fahren – weil dabei am meisten Punkte fallen.</p>",
+        "erkenntnis": "Jede Metrik ist nur ein Schatten des wahren Ziels. Wer die Metrik zur Belohnung macht, schafft den Anreiz, den Schatten zu manipulieren – nicht das Original. Gute Steuerung kombiniert mehrere unabhängige Maße und akzeptiert, dass kein Zahlenwert je vollständig „das Ziel\" ist.",
     },
 }
 
