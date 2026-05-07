@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+{% block title %}Schelling-Segregationsmodell – VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="Live-Simulation: Wie aus milden individuellen Präferenzen massive kollektive Segregation entsteht. Schelling-Modell, Nobelpreis 2005.">{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🏘️ Schelling-Segregationsmodell</h1>
+        <p class="text-slate-500 mt-1">Wie aus milder Vorliebe massive Segregation wird – ganz ohne Rassismus.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5 text-sm text-slate-700">
+        <p class="font-semibold mb-2">Das Setup:</p>
+        <p>Eine Stadt mit roten und blauen Bewohnern. Jeder hat 8 Nachbarn (Moore-Nachbarschaft). Solange ein <em>Mindestanteil</em> der Nachbarn dieselbe Farbe hat, bleibt man wohnen. Sonst zieht man in eine zufällige freie Wohnung. Niemand will eine homogene Umgebung — nur „nicht ganz allein sein".</p>
+    </div>
+
+    <!-- Pre-Quiz -->
+    <div id="quiz-area" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5">
+        <p class="font-semibold text-slate-800 mb-2">Vor dem Start – deine Intuition:</p>
+        <p class="text-sm text-slate-500 mb-4">Wenn jeder Bewohner sich wohlfühlt, sobald nur <strong>30 %</strong> seiner Nachbarn dieselbe Farbe haben (also jede Mehrheits-Minderheits-Konstellation 7:3 noch akzeptiert wird) – was entsteht nach vielen Schritten?</p>
+        <div class="grid grid-cols-1 gap-3">
+            <button onclick="showLesson('random')"
+                    class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all text-left">
+                <div class="font-bold text-slate-700">Die Verteilung bleibt fast zufällig</div>
+                <div class="text-xs text-slate-500 mt-0.5">Mit so milder Präferenz spielt es kaum eine Rolle.</div>
+            </button>
+            <button onclick="showLesson('clusters')"
+                    class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all text-left">
+                <div class="font-bold text-slate-700">Es bilden sich kleine, milde Cluster</div>
+                <div class="text-xs text-slate-500 mt-0.5">Etwas mehr Nachbarschaft – aber nichts Dramatisches.</div>
+            </button>
+            <button onclick="showLesson('strong')"
+                    class="p-4 rounded-xl border-2 border-indigo-200 bg-indigo-50 hover:border-indigo-400 transition-all text-left">
+                <div class="font-bold text-indigo-700">Fast vollständige Segregation</div>
+                <div class="text-xs text-indigo-600 mt-0.5">Große, scharf abgegrenzte einfarbige Viertel.</div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Lesson + Simulation -->
+    <div id="lesson" class="hidden space-y-5">
+        <div id="lesson-result" class="rounded-xl p-4 border text-sm text-center font-semibold"></div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-3">Live-Simulation</p>
+
+            <canvas id="schelling-canvas" width="400" height="400"
+                    class="w-full max-w-md mx-auto block rounded-lg bg-slate-100 border border-slate-200"></canvas>
+
+            <div class="grid grid-cols-3 gap-3 mt-4 text-center">
+                <div>
+                    <div id="stat-step" class="text-xl font-black text-slate-700">0</div>
+                    <div class="text-xs text-slate-500">Schritt</div>
+                </div>
+                <div>
+                    <div id="stat-unhappy" class="text-xl font-black text-rose-600">—</div>
+                    <div class="text-xs text-slate-500">Unzufrieden</div>
+                </div>
+                <div>
+                    <div id="stat-segregation" class="text-xl font-black text-indigo-700">—</div>
+                    <div class="text-xs text-slate-500">Segregations-Index</div>
+                </div>
+            </div>
+
+            <!-- Threshold slider -->
+            <div class="mt-5">
+                <label for="threshold" class="text-sm font-medium text-slate-700">
+                    Mindestanteil gleichfarbiger Nachbarn:
+                    <span id="threshold-label" class="font-bold text-indigo-700">30 %</span>
+                </label>
+                <input type="range" id="threshold" min="0" max="100" step="5" value="30"
+                       oninput="onThresholdChange(this.value)"
+                       class="w-full mt-2 accent-indigo-600">
+                <div class="flex justify-between text-xs text-slate-400 mt-1">
+                    <span>0 %</span><span>50 %</span><span>100 %</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 mt-5">
+                <button onclick="stepSim(1)"
+                        class="bg-slate-100 text-slate-700 py-2 rounded-xl font-medium hover:bg-slate-200 transition-colors text-sm">
+                    1 Schritt
+                </button>
+                <button onclick="stepSim(20)"
+                        class="bg-indigo-500 text-white py-2 rounded-xl font-medium hover:bg-indigo-600 transition-colors text-sm">
+                    20 Schritte
+                </button>
+                <button id="run-btn" onclick="toggleRun()"
+                        class="bg-indigo-600 text-white py-2 rounded-xl font-medium hover:bg-indigo-700 transition-colors text-sm">
+                    ▶ Auto
+                </button>
+            </div>
+            <button onclick="resetSim()"
+                    class="mt-2 w-full bg-slate-100 text-slate-600 py-2 rounded-xl font-medium hover:bg-slate-200 transition-colors text-sm">
+                Reset (neu zufällig verteilen)
+            </button>
+        </div>
+
+        <!-- Erkenntnis -->
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-sm text-amber-900">
+            <p class="font-semibold mb-2">Die zentrale Erkenntnis</p>
+            <p>Schelling (1971) fand: Selbst bei einer Schwelle von 30 % entsteht fast immer starke Segregation. Bei 50 % wird sie extrem. Das individuelle Verhalten wirkt harmlos – „ich will ja nur nicht der einzige Andersfarbige im ganzen Block sein". Aber im Aggregat kippt das System in einen segregierten Zustand, der niemandes Wunsch entspricht. Mikro-Motive ≠ Makro-Verhalten.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
+                <p class="font-semibold text-blue-800 mb-1">Spielerischer Tipp</p>
+                <p class="text-blue-700 text-xs">Stelle den Schwellenwert auf 20 % – fast tolerant. Drücke „Auto". Die Stadt segregiert trotzdem. Dann auf 70 %: fast niemand findet je eine Bleibe, das System stabilisiert sich nie.</p>
+            </div>
+            <div class="bg-violet-50 border border-violet-100 rounded-xl p-4">
+                <p class="font-semibold text-violet-800 mb-1">Über das Modell hinaus</p>
+                <p class="text-violet-700 text-xs">Schellings Idee erklärt nicht nur Wohnen, sondern auch: Sprachgrenzen im Internet, Filterblasen, Polarisation in Parteien, sogar Cluster-Bildung in Schulen. Emergenz ist mächtiger als Absicht.</p>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-600">
+            <p class="font-semibold mb-1">Methodische Hinweise</p>
+            <ul class="list-disc pl-5 space-y-1">
+                <li><strong>Segregations-Index:</strong> Anteil aller Nachbar-Paare gleicher Farbe. 50 % entspricht Zufall, 100 % vollständiger Trennung.</li>
+                <li><strong>Schritt:</strong> Ein zufällig gewählter unzufriedener Bewohner zieht in eine zufällige freie Zelle.</li>
+                <li><strong>Nachbarschaft:</strong> Die 8 angrenzenden Zellen (Moore-Nachbarschaft, ohne sich selbst).</li>
+                <li><strong>Bewohner ohne Nachbarn</strong> gelten als zufrieden (Schwellenwert kann nicht verletzt werden).</li>
+            </ul>
+        </div>
+
+        <div class="text-xs text-slate-400 text-center pt-2">
+            Thomas C. Schelling: <em>Dynamic Models of Segregation</em>, Journal of Mathematical Sociology, 1971. Wirtschaftsnobelpreis 2005 (gemeinsam mit Robert Aumann) für Beiträge zu Konflikt &amp; Kooperation in der Spieltheorie.
+        </div>
+    </div>
+</div>
+
+<script>
+// ── Konfiguration ─────────────────────────────────────────────────────────
+const SIZE = 30;             // 30x30 grid
+const EMPTY_RATIO = 0.10;    // 10% empty cells
+const RED_RATIO = 0.45;      // 45% red, 45% blue
+const COLOR_RED = '#dc2626';
+const COLOR_BLUE = '#2563eb';
+const COLOR_EMPTY = '#f1f5f9';
+const COLOR_BORDER = '#e2e8f0';
+
+// ── State ────────────────────────────────────────────────────────────────
+// 0 = empty, 1 = red, 2 = blue
+let grid = [];
+let step = 0;
+let threshold = 0.30;
+let running = false;
+let runHandle = null;
+
+function initGrid() {
+    grid = [];
+    for (let r = 0; r < SIZE; r++) {
+        const row = [];
+        for (let c = 0; c < SIZE; c++) {
+            const u = Math.random();
+            if (u < EMPTY_RATIO) row.push(0);
+            else if (u < EMPTY_RATIO + RED_RATIO) row.push(1);
+            else row.push(2);
+        }
+        grid.push(row);
+    }
+    step = 0;
+}
+
+function neighbors(r, c) {
+    const same = (kind) => kind === grid[r][c];
+    let total = 0, sameCount = 0;
+    for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+            if (dr === 0 && dc === 0) continue;
+            const nr = r + dr, nc = c + dc;
+            if (nr < 0 || nr >= SIZE || nc < 0 || nc >= SIZE) continue;
+            const k = grid[nr][nc];
+            if (k === 0) continue;
+            total++;
+            if (same(k)) sameCount++;
+        }
+    }
+    return {total, sameCount};
+}
+
+function isHappy(r, c) {
+    if (grid[r][c] === 0) return true;
+    const {total, sameCount} = neighbors(r, c);
+    if (total === 0) return true;
+    return (sameCount / total) >= threshold;
+}
+
+function findUnhappy() {
+    const list = [];
+    for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+            if (grid[r][c] !== 0 && !isHappy(r, c)) list.push([r, c]);
+        }
+    }
+    return list;
+}
+
+function findEmpty() {
+    const list = [];
+    for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+            if (grid[r][c] === 0) list.push([r, c]);
+        }
+    }
+    return list;
+}
+
+function doStep() {
+    const unhappy = findUnhappy();
+    if (unhappy.length === 0) return false;
+    const empties = findEmpty();
+    if (empties.length === 0) return false;
+    const [ur, uc] = unhappy[Math.floor(Math.random() * unhappy.length)];
+    const [er, ec] = empties[Math.floor(Math.random() * empties.length)];
+    grid[er][ec] = grid[ur][uc];
+    grid[ur][uc] = 0;
+    step++;
+    return true;
+}
+
+function stepSim(n) {
+    for (let i = 0; i < n; i++) {
+        if (!doStep()) break;
+    }
+    drawGrid();
+    updateStats();
+}
+
+function toggleRun() {
+    const btn = document.getElementById('run-btn');
+    if (running) {
+        running = false;
+        clearInterval(runHandle);
+        btn.textContent = '▶ Auto';
+        btn.classList.remove('bg-rose-600', 'hover:bg-rose-700');
+        btn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+    } else {
+        running = true;
+        btn.textContent = '⏸ Stopp';
+        btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+        btn.classList.add('bg-rose-600', 'hover:bg-rose-700');
+        runHandle = setInterval(() => {
+            for (let i = 0; i < 10; i++) {
+                if (!doStep()) {
+                    toggleRun();
+                    return;
+                }
+            }
+            drawGrid();
+            updateStats();
+        }, 80);
+    }
+}
+
+function resetSim() {
+    if (running) toggleRun();
+    initGrid();
+    drawGrid();
+    updateStats();
+}
+
+function onThresholdChange(v) {
+    threshold = parseInt(v, 10) / 100;
+    document.getElementById('threshold-label').textContent = v + ' %';
+    updateStats();
+}
+
+function updateStats() {
+    document.getElementById('stat-step').textContent = step.toLocaleString('de-DE');
+    const unhappy = findUnhappy().length;
+    const totalAgents = SIZE * SIZE - findEmpty().length;
+    const unhappyPct = totalAgents > 0 ? (unhappy / totalAgents * 100) : 0;
+    document.getElementById('stat-unhappy').textContent = unhappyPct.toFixed(1) + ' %';
+
+    // Segregation index: share of same-color edges among all colored-colored edges
+    let same = 0, diff = 0;
+    for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+            const k = grid[r][c];
+            if (k === 0) continue;
+            // count right + down neighbors only (avoid double-count)
+            for (const [dr, dc] of [[0, 1], [1, 0], [1, 1], [1, -1]]) {
+                const nr = r + dr, nc = c + dc;
+                if (nr < 0 || nr >= SIZE || nc < 0 || nc >= SIZE) continue;
+                const k2 = grid[nr][nc];
+                if (k2 === 0) continue;
+                if (k === k2) same++; else diff++;
+            }
+        }
+    }
+    const segPct = (same + diff) > 0 ? (same / (same + diff) * 100) : 0;
+    document.getElementById('stat-segregation').textContent = segPct.toFixed(1) + ' %';
+}
+
+function drawGrid() {
+    const canvas = document.getElementById('schelling-canvas');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const cell = W / SIZE;
+    ctx.fillStyle = COLOR_EMPTY;
+    ctx.fillRect(0, 0, W, H);
+    for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+            const k = grid[r][c];
+            if (k === 0) continue;
+            ctx.fillStyle = (k === 1) ? COLOR_RED : COLOR_BLUE;
+            ctx.fillRect(c * cell + 1, r * cell + 1, cell - 2, cell - 2);
+        }
+    }
+}
+
+function showLesson(answer) {
+    const result = document.getElementById('lesson-result');
+    const correct = answer === 'strong';
+    if (correct) {
+        result.innerHTML = '✓ Genau! Selbst eine 30 %-Schwelle reicht für fast vollständige Segregation. Probier es selbst aus.';
+        result.className = 'rounded-xl p-4 border text-sm text-center font-semibold bg-emerald-50 border-emerald-200 text-emerald-800';
+    } else if (answer === 'clusters') {
+        result.innerHTML = 'Knapp daneben. Aus 30 % entstehen <em>nicht</em> kleine Cluster, sondern fast scharf abgegrenzte einfarbige Viertel. Schau zu.';
+        result.className = 'rounded-xl p-4 border text-sm text-center font-semibold bg-amber-50 border-amber-200 text-amber-800';
+    } else {
+        result.innerHTML = 'Genau das ist die Überraschung: 30 % wirkt mild, aber das System segregiert sich fast vollständig. Schau zu.';
+        result.className = 'rounded-xl p-4 border text-sm text-center font-semibold bg-amber-50 border-amber-200 text-amber-800';
+    }
+    document.getElementById('quiz-area').classList.add('hidden');
+    document.getElementById('lesson').classList.remove('hidden');
+    initGrid();
+    drawGrid();
+    updateStats();
+}
+
+// initial draw to seed the canvas if user inspects DOM before answering
+initGrid();
+drawGrid();
+</script>
+
+{% endblock %}

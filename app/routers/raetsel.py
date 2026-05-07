@@ -416,6 +416,16 @@ RAETSEL_META = [
         "dauer": "4 min",
         "kategorie": "Spieltheorie",
     },
+    {
+        "id": "schelling-segregation",
+        "name": "Schelling-Segregationsmodell",
+        "icon": "🏘️",
+        "beschreibung": "Was passiert, wenn jede Person nur 30 % gleichfarbige Nachbarn wünscht? Schelling (1971, Nobel 2005) zeigte: aus milden individuellen Präferenzen entsteht kollektive, fast vollständige Segregation – ganz ohne einen einzigen Rassisten.",
+        "typ": "Emergenz-Simulation",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Spieltheorie",
+    },
     # ── Kognition & Psychologie ────────────────────────────────────────────────
     {
         "id": "konfirmationsfehler",
@@ -2695,6 +2705,17 @@ def batna_page(request: Request):
 def trugschluesse_page(request: Request):
     return templates.TemplateResponse(
         request, "raetsel/trugschluesse.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Schelling-Segregationsmodell
+# ---------------------------------------------------------------------------
+
+@router.get("/schelling-segregation", response_class=HTMLResponse)
+def schelling_segregation_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/schelling_segregation.html", {"active_page": "raetsel"}
     )
 
 
