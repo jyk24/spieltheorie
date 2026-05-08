@@ -467,6 +467,15 @@ GAME_META = [
         "konzept": "Trittbrettfahrer, Kollektivgut, soziale Normen",
     },
     {
+        "id": "knopf",
+        "name": "Der Knopf",
+        "icon": "🔴",
+        "beschreibung": "Rot oder Blau? Das virale Schwellen-Dilemma von Tim Urban (2026): Individuell rational vs. kollektiv optimal.",
+        "schwierigkeit": "Einsteiger",
+        "runden": 6,
+        "konzept": "Schwellenwert-Kollektivgut, dominante Strategie, Koordinationsversagen",
+    },
+    {
         "id": "beauty-contest",
         "name": "Schönheitswettbewerb",
         "icon": "🎯",

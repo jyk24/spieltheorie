@@ -82,6 +82,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Wahrscheinlichkeit",
     },
+    {
+        "id": "junge-maedchen",
+        "name": "Das Junge-oder-Mädchen-Paradox",
+        "icon": "👧",
+        "beschreibung": "Eine Familie hat zwei Kinder. Mindestens eines ist ein Junge. Wie wahrscheinlich ist es, dass das andere auch ein Junge ist? Die Antwort ist nicht ½ – und sie ändert sich, wenn du den Wochentag erfährst.",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
     # ── Statistik & Kognition ──────────────────────────────────────────────────
     {
         "id": "simpson",
@@ -3217,6 +3227,23 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>8 Stunden × 3600 Sekunden × 30 Tage ≈ 864.000 ≈ 10⁶. Bei 10⁶ Ereignissen pro Monat und 'Wunder'-Wahrscheinlichkeit 1/10⁶ erwartet man im Schnitt <em>ein Wunder pro Monat</em>. Das Staunen über Koinzidenzen ist also fehlplatziert — wir sollten mehr überrascht sein, wenn keine auftreten.</p>",
         "kontext": "<p>Littlewood erklärt damit Erscheinungen wie 'Ich habe gerade an jemanden gedacht und er ruft an' oder 'Ich sah dasselbe Auto dreimal heute'. Diese Ereignisse erscheinen bedeutsam — sind aber statistisch erwartbar.</p>",
         "erkenntnis": "Was selten erscheint, passiert sicher — wenn man nur genug Gelegenheiten betrachtet. Wunder sind nicht Beweis für Übernatürliches, sondern für die Stärke großer Zahlen.",
+    },
+    "junge-maedchen": {
+        "id": "junge-maedchen", "name": "Das Junge-oder-Mädchen-Paradox", "icon": "👧",
+        "farbe": "rose", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Ein Nachbar erzählt dir: <em>„Ich habe zwei Kinder. Mindestens eines ist ein Junge.“</em> Junge oder Mädchen sind a-priori gleich wahrscheinlich, und die Geschlechter der Kinder sind unabhängig voneinander.",
+        "frage": "Wie wahrscheinlich ist es, dass <strong>beide</strong> Kinder Jungen sind?",
+        "optionen": [
+            {"text": "1/2 — der zweite ist ja unabhängig", "hinweis": "Wäre richtig, wenn man genau ein bestimmtes Kind betrachtet."},
+            {"text": "1/3 — Bayes mit drei verbleibenden Fällen", "hinweis": "Welche Geschwister-Kombinationen bleiben möglich?"},
+            {"text": "1/4 — wie zwei unabhängige Münzwürfe", "hinweis": "Das ist die A-priori-Wahrscheinlichkeit ohne jede Info."},
+            {"text": "Nicht eindeutig — fehlt etwas?", "hinweis": "Die Frage hat eine Antwort — wenn die Auswahlregel klar ist."},
+        ],
+        "loesung_text": "1/3 (bei der Standard-Lesart)",
+        "erklaerung": "<p>Vor jeder Information gibt es vier gleich wahrscheinliche Fälle für (Älteres, Jüngeres): JJ, JM, MJ, MM — jeweils 1/4. Die Aussage <em>„mindestens ein Junge“</em> schließt nur MM aus. Es bleiben drei gleich wahrscheinliche Fälle: JJ, JM, MJ. In <strong>einem</strong> davon sind beide Jungen → P = 1/3.</p><p>Subtilität: Diese 1/3 gilt nur, wenn die Information <em>„mindestens ein Junge“</em> wirklich ohne Bias entstanden ist. Hätte die Regel gelautet <em>„nenne das Geschlecht des älteren Kindes“</em>, wäre die Antwort 1/2 — das andere Kind ist dann unabhängig.</p>",
+        "kontext": "<p>Der wirklich verblüffende Twist (Gary Foshee, 2010): <em>„Ich habe zwei Kinder. Eines ist ein Junge, geboren an einem Dienstag.“</em> Die zusätzliche Wochentag-Information schiebt die Antwort auf <strong>13/27 ≈ 0,481</strong> — fast, aber nicht ganz, ½. Begründung: Von 14×14=196 möglichen Kombinationen aus (Geschlecht, Wochentag) für zwei Kinder enthalten 27 mindestens einen „Dienstag-Jungen“; in 13 davon sind beide Jungen.</p><p>Das Paradox zeigt: Wahrscheinlichkeiten hängen nicht nur von Fakten ab, sondern davon, <em>wie</em> man sie erfahren hat (Auswahlmechanismus). Diese Idee steckt auch hinter Monty Hall, dem Dornröschen-Problem und Survivorship Bias.</p>",
+        "erkenntnis": "Bedingte Wahrscheinlichkeit ist heimtückisch: Wer „dasselbe Faktum“ über verschiedene Mechanismen erhält, erhält verschiedene Wahrscheinlichkeiten. Bevor du Bayes anwendest, frage: Wie wurde diese Aussage selektiert?",
     },
     # ── Kommunikation ─────────────────────────────────────────────────────
     "johari-fenster": {

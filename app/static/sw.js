@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'vtrainer-v1';
+const CACHE_VERSION = 'vtrainer-v2';
 const STATIC_CACHE = CACHE_VERSION + '-static';
 const PAGE_CACHE = CACHE_VERSION + '-pages';
 
@@ -8,6 +8,7 @@ const STATIC_ASSETS = [
   '/static/manifest.json',
   '/static/icons/icon-192.svg',
   '/static/icons/icon-512.svg',
+  '/static/icons/maskable-512.svg',
 ];
 
 const OFFLINE_PAGE = '/';

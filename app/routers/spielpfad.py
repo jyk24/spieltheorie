@@ -44,6 +44,7 @@ _LERNPFAD_RAW = [
         "color": "amber",
         "games": [
             {"id": "public-goods", "subtitle": "Das Trittbrettfahrerproblem",         "runden": 8},
+            {"id": "knopf",        "subtitle": "Schwelle, dominante Strategie & Tim Urban", "runden": 6},
             {"id": "diktator",     "subtitle": "Macht ohne Konsequenz",               "runden": 8},
             {"id": "auktion",      "subtitle": "Die überraschend einfache Lösung",    "runden": 5},
         ],
