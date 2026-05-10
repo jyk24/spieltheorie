@@ -115,7 +115,7 @@ LERNPFADE = [
         "steps": [
             {"typ": "raetsel", "titel": "Informationskaskade",         "icon": "🫧", "dauer": "5 min", "schwierigkeit": "Mittel",          "id": "informationskaskade",     "beschreibung": "Warum rationale Individuen kollektiv irren"},
             {"typ": "spiel",   "titel": "Öffentliche-Güter-Spiel",     "icon": "🎮", "dauer": "5 min", "schwierigkeit": "Einstieg",         "url": "/spiele/public-goods",   "beschreibung": "Trittbrettfahrer vs. Kooperation im Gruppenspiel"},
-            {"typ": "raetsel", "titel": "Stag Hunt – Hirschjagd",      "icon": "🦌", "dauer": "5 min", "schwierigkeit": "Mittel",          "id": "hirschjagd",              "beschreibung": "Koordinationsdilemma: Sicherheit vs. hoher Lohn"},
+            {"typ": "spiel",   "titel": "Stag Hunt – Hirschjagd",      "icon": "🦌", "dauer": "5 min", "schwierigkeit": "Mittel",          "url": "/spiele/stag-hunt",      "beschreibung": "Koordinationsdilemma: Sicherheit vs. hoher Lohn"},
             {"typ": "theorie", "titel": "Evolutionäre Spieltheorie",   "icon": "📖", "dauer": "8 min", "schwierigkeit": "Fortgeschritten",  "url": "/grundlagen",            "beschreibung": "ESS, Replikator-Dynamik und evolutionäre Stabilität"},
             {"typ": "spiel",   "titel": "Iterated Prisoner's Dilemma", "icon": "🎮", "dauer": "5 min", "schwierigkeit": "Mittel",          "url": "/spiele/gefangenendilemma", "beschreibung": "Tit-for-Tat und die Macht der Wiederholung"},
             {"typ": "raetsel", "titel": "Braess-Paradoxon",            "icon": "🛣️","dauer": "5 min", "schwierigkeit": "Fortgeschritten",  "id": "braess",                  "beschreibung": "Eine neue Straße macht alle langsamer – warum?"},
