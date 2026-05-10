@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block title %}Verhaltensökonomie – Entscheiden & Denken – VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="Verhaltensökonomie interaktiv: Kognitive Verzerrungen, Wahrscheinlichkeitsfehler, Statistik-Paradoxe und Psychologie. Von Prospect Theory bis Nudging.">{% endblock %}
+{% block og_title %}Verhaltensökonomie – Entscheiden & Denken{% endblock %}
+{% block og_description %}Kognition, Statistik, Psychologie: Wie Entscheidungen wirklich funktionieren – von Sunk Cost bis Nudging, von Bayes bis Goodhart.{% endblock %}
+{% block content %}
+
+{% set kat_colors = {
+  "Kognition":       "rose",
+  "Statistik":       "sky",
+  "Wahrscheinlichkeit": "violet",
+  "Psychologie":     "emerald"
+} %}
+{% set thema_colors = {
+  "amber":   ("bg-amber-50",   "border-amber-200",   "text-amber-800",   "text-amber-600"),
+  "rose":    ("bg-rose-50",    "border-rose-200",    "text-rose-800",    "text-rose-600"),
+  "indigo":  ("bg-indigo-50",  "border-indigo-200",  "text-indigo-800",  "text-indigo-600"),
+  "teal":    ("bg-teal-50",    "border-teal-200",    "text-teal-800",    "text-teal-600"),
+  "violet":  ("bg-violet-50",  "border-violet-200",  "text-violet-800",  "text-violet-600"),
+  "sky":     ("bg-sky-50",     "border-sky-200",     "text-sky-800",     "text-sky-600"),
+} %}
+
+{% set kat_counts = {} %}
+{% for r in raetsel %}{% set _ = kat_counts.update({r.kategorie: (kat_counts.get(r.kategorie, 0) + 1)}) %}{% endfor %}
+
+<div class="max-w-5xl mx-auto">
+
+  <!-- Hero -->
+  <div class="mb-8">
+    <div class="flex items-start gap-4 mb-3">
+      <div class="text-5xl">🧭</div>
+      <div>
+        <h1 class="text-3xl font-extrabold text-slate-800">Verhaltensökonomie</h1>
+        <p class="text-slate-500 mt-1 max-w-2xl">Wie Entscheidungen wirklich funktionieren – und warum Menschen systematisch von rationalen Modellen abweichen. Kognition, Statistik, Wahrscheinlichkeit, Psychologie.</p>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-2 mt-4">
+      <span class="text-xs bg-rose-100 text-rose-700 px-3 py-1 rounded-full font-medium">🧠 Kognition</span>
+      <span class="text-xs bg-sky-100 text-sky-700 px-3 py-1 rounded-full font-medium">📊 Statistik</span>
+      <span class="text-xs bg-violet-100 text-violet-700 px-3 py-1 rounded-full font-medium">🎲 Wahrscheinlichkeit</span>
+      <span class="text-xs bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium">💡 Psychologie</span>
+      <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">{{ raetsel | length }} Rätsel gesamt</span>
+    </div>
+  </div>
+
+  <!-- Kategorie-Filter-Tabs -->
+  <div class="flex gap-2 mb-6 flex-wrap" id="kat-filter">
+    <button class="kat-btn bg-indigo-600 text-white px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-kat="">Alle ({{ raetsel | length }})</button>
+    <button class="kat-btn bg-white border border-slate-200 text-slate-600 hover:border-rose-300 hover:text-rose-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-kat="Kognition">🧠 Kognition ({{ kat_counts.get("Kognition", 0) }})</button>
+    <button class="kat-btn bg-white border border-slate-200 text-slate-600 hover:border-sky-300 hover:text-sky-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-kat="Statistik">📊 Statistik ({{ kat_counts.get("Statistik", 0) }})</button>
+    <button class="kat-btn bg-white border border-slate-200 text-slate-600 hover:border-violet-300 hover:text-violet-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-kat="Wahrscheinlichkeit">🎲 Wahrscheinlichkeit ({{ kat_counts.get("Wahrscheinlichkeit", 0) }})</button>
+    <button class="kat-btn bg-white border border-slate-200 text-slate-600 hover:border-emerald-300 hover:text-emerald-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors" data-kat="Psychologie">💡 Psychologie ({{ kat_counts.get("Psychologie", 0) }})</button>
+  </div>
+
+  <!-- Intro / Was hier trainiert wird -->
+  <div class="bg-gradient-to-r from-rose-50 to-violet-50 border border-rose-200 rounded-2xl p-6 mb-8 intro-box">
+    <h2 class="font-bold text-slate-800 mb-3">Was hier trainiert wird</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="flex items-start gap-3">
+        <span class="text-2xl shrink-0">🧠</span>
+        <div>
+          <div class="font-semibold text-slate-800 text-sm mb-1">Kognitive Biases</div>
+          <p class="text-xs text-slate-500 leading-relaxed">Sunk Cost, Ankereffekt, Bestätigungsfehler – systematische Denkfehler erkennen und überwinden.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="text-2xl shrink-0">📊</span>
+        <div>
+          <div class="font-semibold text-slate-800 text-sm mb-1">Statistische Intuition</div>
+          <p class="text-xs text-slate-500 leading-relaxed">Survivorship Bias, Simpson-Paradox, Goodharts Gesetz – wenn Zahlen in die Irre führen.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="text-2xl shrink-0">🎲</span>
+        <div>
+          <div class="font-semibold text-slate-800 text-sm mb-1">Wahrscheinlichkeitsdenken</div>
+          <p class="text-xs text-slate-500 leading-relaxed">Bayes-Theorem, Spielerfehlschluss, Monty Hall – Zufall und Risiko richtig einschätzen.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="text-2xl shrink-0">💡</span>
+        <div>
+          <div class="font-semibold text-slate-800 text-sm mb-1">Verhaltenspsychologie</div>
+          <p class="text-xs text-slate-500 leading-relaxed">Verlustaversion, Nudging, hyperbolisches Diskontieren – Entscheidungstheorie trifft Psychologie.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Themen-Schnelleinstieg -->
+  <div class="mb-8">
+    <h2 class="text-lg font-bold text-slate-800 mb-4">Kernthemen</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      {% for t in themen %}
+      {% set tc = thema_colors.get(t.farbe, thema_colors["indigo"]) %}
+      <a href="{{ t.url }}"
+         class="{{ tc[0] }} {{ tc[1] }} border rounded-xl p-4 hover:shadow-md transition-all group flex items-start gap-3">
+        <span class="text-2xl shrink-0">{{ t.icon }}</span>
+        <div>
+          <div class="font-semibold {{ tc[2] }} text-sm mb-1 group-hover:underline">{{ t.titel }}</div>
+          <p class="text-xs {{ tc[3] }} leading-relaxed">{{ t.beschreibung }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Rätsel-Grid -->
+  <div class="mb-4">
+    <h2 class="text-lg font-bold text-slate-800 mb-4" id="raetsel-heading">Alle Rätsel</h2>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-10" id="raetsel-grid">
+    {% for r in raetsel %}
+    {% set farbe = kat_colors.get(r.kategorie, "slate") %}
+    <a href="/raetsel/{{ r.id }}" data-kat="{{ r.kategorie }}"
+       class="raetsel-card flex items-start gap-3 bg-white border border-slate-100 rounded-xl p-4 hover:border-{{ farbe }}-200 hover:shadow-md transition-all group">
+      <span class="text-2xl shrink-0 mt-0.5">{{ r.icon }}</span>
+      <div class="flex-1 min-w-0">
+        <div class="text-xs text-{{ farbe }}-600 font-medium mb-0.5">{{ r.kategorie }}</div>
+        <div class="font-semibold text-slate-800 text-sm group-hover:text-{{ farbe }}-700 transition-colors mb-1">{{ r.name }}</div>
+        <p class="text-xs text-slate-500 leading-relaxed line-clamp-2">{{ r.beschreibung }}</p>
+        <div class="flex items-center gap-2 mt-2 text-xs text-slate-400">
+          <span class="bg-{{ farbe }}-50 text-{{ farbe }}-600 px-1.5 py-0.5 rounded-full">{{ r.schwierigkeit }}</span>
+          <span>·</span>
+          <span>⏱ {{ r.dauer }}</span>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- Cross-Link: Verwandte Hubs -->
+  <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 mb-6">
+    <h2 class="font-bold text-slate-700 mb-3 text-sm">Verwandte Bereiche</h2>
+    <div class="flex flex-wrap gap-3">
+      <a href="/spieltheorie" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-indigo-300 px-4 py-2 rounded-xl text-sm font-medium text-slate-700 hover:text-indigo-700 transition-all">
+        ♟️ Spieltheorie
+      </a>
+      <a href="/denkraetsel" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-violet-300 px-4 py-2 rounded-xl text-sm font-medium text-slate-700 hover:text-violet-700 transition-all">
+        🧩 Denkrätsel
+      </a>
+      <a href="/soziales" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-emerald-300 px-4 py-2 rounded-xl text-sm font-medium text-slate-700 hover:text-emerald-700 transition-all">
+        💬 Soziale Kompetenz
+      </a>
+      <a href="/raetsel" class="flex items-center gap-2 bg-white border border-slate-200 hover:border-sky-300 px-4 py-2 rounded-xl text-sm font-medium text-slate-700 hover:text-sky-700 transition-all">
+        🗂️ Alle Rätsel
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const btns = document.querySelectorAll('.kat-btn');
+const cards = document.querySelectorAll('.raetsel-card');
+const heading = document.getElementById('raetsel-heading');
+
+btns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const kat = btn.dataset.kat;
+
+    btns.forEach(b => {
+      b.className = b.className
+        .replace('bg-indigo-600 text-white', '')
+        .trim();
+      if (!b.className.includes('bg-white')) b.className = 'bg-white border border-slate-200 text-slate-600 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ' + b.className.split('px-')[1]?.split(' ').slice(1).join(' ');
+    });
+    btn.classList.remove('bg-white', 'border', 'border-slate-200', 'text-slate-600');
+    btn.classList.add('bg-indigo-600', 'text-white');
+
+    let visible = 0;
+    cards.forEach(card => {
+      const show = !kat || card.dataset.kat === kat;
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    heading.textContent = kat ? `${kat} (${visible})` : `Alle Rätsel (${visible})`;
+  });
+});
+</script>
+
+{% endblock %}

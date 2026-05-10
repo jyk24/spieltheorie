@@ -15,6 +15,7 @@ from .routers import (
     dashboard, lektionen, spiele, fortschritt, raetsel, grundlagen,
     spielpfad, konzepte, lernpfade, skills, redesign, gedaechtnis,
     spieltheorie_hub, denkraetsel, soziales, glossar, ted, tagesraetsel,
+    verhaltensoko,
 )
 
 # ── AUTH-AKTIVIERUNG: diese Zeile einkommentieren ─────────────────────────────
@@ -83,12 +84,13 @@ app.include_router(soziales.router)
 app.include_router(glossar.router)
 app.include_router(ted.router)
 app.include_router(tagesraetsel.router)
+app.include_router(verhaltensoko.router)
 
 
 BASE_URL = "https://imaginative-fulfillment-production.up.railway.app"
 
 _SITEMAP_URLS = [
-    "/", "/lernpfade", "/spieltheorie", "/denkraetsel", "/soziales", "/ted", "/ted/quiz", "/tagesraetsel",
+    "/", "/lernpfade", "/spieltheorie", "/denkraetsel", "/soziales", "/verhaltensoko", "/ted", "/ted/quiz", "/tagesraetsel",
     "/grundlagen", "/konzepte", "/spiele", "/raetsel",
     "/skills", "/gedaechtnis", "/fortschritt", "/glossar",
     "/gedaechtnis/theorie", "/gedaechtnis/wortfolge", "/gedaechtnis/zahlen",
