@@ -76,23 +76,61 @@
       <div class="text-sm text-emerald-700 leading-relaxed space-y-2">{{ p.erklaerung|safe }}</div>
     </div>
 
-    <!-- Kontext / Hintergrund -->
-    {% if p.kontext %}
-    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 text-sm text-slate-700 leading-relaxed space-y-2">
-      {{ p.kontext|safe }}
-    </div>
-    {% endif %}
-
     <!-- Key Insight -->
     <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
       <p class="font-semibold text-amber-800 mb-1 text-sm">💡 Erkenntnis</p>
       <p class="text-sm text-amber-700">{{ p.erkenntnis }}</p>
     </div>
 
-    <a href="/raetsel/{{ p.id }}"
-       class="block w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors text-sm">
-      ↺ Nochmal spielen
-    </a>
+    <!-- Kontext / Tiefer eintauchen -->
+    {% if p.kontext %}
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+      <button onclick="toggleKontext()"
+              class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-slate-50 transition-colors">
+        <span class="font-semibold text-slate-700 text-sm">📚 Tiefer eintauchen</span>
+        <span id="kontext-arrow" class="text-slate-400 text-sm transition-transform">▼</span>
+      </button>
+      <div id="kontext-body" class="hidden px-5 pb-5 text-sm text-slate-700 leading-relaxed space-y-2 border-t border-slate-100 pt-4">
+        {{ p.kontext|safe }}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Navigation -->
+    <div class="flex gap-3">
+      <a href="/raetsel"
+         class="flex-1 text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors text-sm">
+        ← Alle Rätsel
+      </a>
+      {% if next_puzzle %}
+      <a href="/raetsel/{{ next_puzzle.id }}"
+         class="flex-1 text-center bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium transition-colors text-sm">
+        {{ next_puzzle.icon }} {{ next_puzzle.name }} →
+      </a>
+      {% endif %}
+    </div>
+
+    <!-- Ähnliche Rätsel -->
+    {% if related_puzzles %}
+    <div class="mt-2">
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Ähnliche Rätsel</p>
+      <div class="space-y-2">
+        {% for r in related_puzzles %}
+        <a href="/raetsel/{{ r.id }}"
+           class="flex items-start gap-3 p-3 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 hover:shadow-sm transition-all">
+          <span class="text-xl">{{ r.icon }}</span>
+          <div>
+            <p class="font-semibold text-slate-800 text-sm">{{ r.name }}</p>
+            {% if r.beschreibung %}
+            <p class="text-xs text-slate-500 mt-0.5 line-clamp-2">{{ r.beschreibung }}</p>
+            {% endif %}
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
   </div>
 
 </div>
@@ -102,6 +140,13 @@ function reveal(i) {
   document.getElementById('question-area').classList.add('hidden');
   document.getElementById('solution').classList.remove('hidden');
   document.getElementById('solution').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function toggleKontext() {
+  const body = document.getElementById('kontext-body');
+  const arrow = document.getElementById('kontext-arrow');
+  const open = !body.classList.contains('hidden');
+  body.classList.toggle('hidden', open);
+  arrow.style.transform = open ? '' : 'rotate(180deg)';
 }
 </script>
 

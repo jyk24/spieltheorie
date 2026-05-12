@@ -2589,9 +2589,8 @@ def bertrand_paradoxon_page(request: Request):
 
 @router.get("/konfirmationsfehler", response_class=HTMLResponse)
 def konfirmationsfehler_page(request: Request):
-    return templates.TemplateResponse(
-        request, "raetsel/konfirmationsfehler.html", {"active_page": "raetsel"}
-    )
+    ctx = {"active_page": "raetsel", **_nav_context("konfirmationsfehler")}
+    return templates.TemplateResponse(request, "raetsel/konfirmationsfehler.html", ctx)
 
 
 # ---------------------------------------------------------------------------
@@ -2600,9 +2599,8 @@ def konfirmationsfehler_page(request: Request):
 
 @router.get("/verfuegbarkeitsheuristik", response_class=HTMLResponse)
 def verfuegbarkeitsheuristik_page(request: Request):
-    return templates.TemplateResponse(
-        request, "raetsel/verfuegbarkeitsheuristik.html", {"active_page": "raetsel"}
-    )
+    ctx = {"active_page": "raetsel", **_nav_context("verfuegbarkeitsheuristik")}
+    return templates.TemplateResponse(request, "raetsel/verfuegbarkeitsheuristik.html", ctx)
 
 
 # ---------------------------------------------------------------------------
@@ -2611,9 +2609,8 @@ def verfuegbarkeitsheuristik_page(request: Request):
 
 @router.get("/kalibrierungstest", response_class=HTMLResponse)
 def kalibrierungstest_page(request: Request):
-    return templates.TemplateResponse(
-        request, "raetsel/kalibrierungstest.html", {"active_page": "raetsel"}
-    )
+    ctx = {"active_page": "raetsel", **_nav_context("kalibrierungstest")}
+    return templates.TemplateResponse(request, "raetsel/kalibrierungstest.html", ctx)
 
 
 # ---------------------------------------------------------------------------
@@ -4051,12 +4048,35 @@ GENERIC_PUZZLES: dict = {
 }
 
 
+def _nav_context(current_id: str) -> dict:
+    """Return next_puzzle and related_puzzles (same category, excl. current)."""
+    ids = [m["id"] for m in RAETSEL_META]
+    try:
+        idx = ids.index(current_id)
+        next_meta = RAETSEL_META[(idx + 1) % len(RAETSEL_META)]
+        next_puzzle = {"id": next_meta["id"], "name": next_meta["name"], "icon": next_meta["icon"]}
+    except ValueError:
+        next_puzzle = None
+
+    current_meta = next((m for m in RAETSEL_META if m["id"] == current_id), None)
+    if current_meta:
+        kat = current_meta["kategorie"]
+        related = [
+            {"id": m["id"], "name": m["name"], "icon": m["icon"], "beschreibung": m.get("beschreibung", "")}
+            for m in RAETSEL_META
+            if m["kategorie"] == kat and m["id"] != current_id
+        ][:3]
+    else:
+        related = []
+
+    return {"next_puzzle": next_puzzle, "related_puzzles": related}
+
+
 @router.get("/{puzzle_id}", response_class=HTMLResponse)
 def generic_raetsel_page(request: Request, puzzle_id: str):
     p = GENERIC_PUZZLES.get(puzzle_id)
     if p is None:
         raise HTTPException(status_code=404, detail="Rätsel nicht gefunden")
-    return templates.TemplateResponse(
-        request, "raetsel/generic.html", {"p": p, "active_page": "raetsel"}
-    )
+    ctx = {"p": p, "active_page": "raetsel", **_nav_context(puzzle_id)}
+    return templates.TemplateResponse(request, "raetsel/generic.html", ctx)
 
