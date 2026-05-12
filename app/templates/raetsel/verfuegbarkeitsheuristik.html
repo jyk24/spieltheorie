@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+{% block title %}Die Verfügbarkeitsheuristik – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">📺 Die Verfügbarkeitsheuristik</h1>
+        <p class="text-slate-500 mt-1">Was tötet mehr? – 7 überraschende Vergleiche</p>
+        <div class="flex items-center gap-3 mt-2 flex-wrap">
+            <span class="text-xs px-2 py-0.5 rounded-full bg-rose-100 text-rose-600 font-medium">Kognition</span>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">Einsteiger</span>
+            <span class="text-xs text-slate-400">⏱ 5 min</span>
+        </div>
+    </div>
+
+    <div class="bg-rose-50 border border-rose-200 rounded-xl p-5 mb-6">
+        <p class="font-semibold text-rose-800 mb-1">Die Verfügbarkeitsheuristik (Kahneman & Tversky, 1973)</p>
+        <p class="text-sm text-rose-700">Wir schätzen die Häufigkeit eines Ereignisses danach, wie leicht wir uns Beispiele vorstellen können. Dramatische, mediale Ereignisse erscheinen häufiger – stille, alltägliche Risiken unterschätzen wir systematisch.</p>
+    </div>
+
+    <div id="quiz-area"></div>
+
+    <div id="results" class="hidden space-y-4"></div>
+</div>
+
+<script>
+const vergleiche = [
+    {
+        a: "Haiangriffe", b: "Kuhattacken",
+        desc: "Was tötet weltweit mehr Menschen pro Jahr?",
+        a_zahl: "ca. 10 Todesfälle/Jahr", b_zahl: "ca. 20–100 Todesfälle/Jahr",
+        winner: "b",
+        icon_a: "🦈", icon_b: "🐄",
+        note: "Haie töten weltweit ~10 Menschen pro Jahr. Kühe töten allein in den USA ~20 durch Tritte und Stöße – weltweit noch mehr. Haie sind medial allgegenwärtig (Jaws, Discovery Channel), Kühe wirken harmlos.",
+        bias: "Haiangriffe werden dramatisch berichtet und bleiben im Gedächtnis. Kuhattacken sind banal und verschwinden in Unfallstatistiken."
+    },
+    {
+        a: "Flugzeugabstürze", b: "Blitzschlag",
+        desc: "Was tötet weltweit mehr Menschen pro Jahr?",
+        a_zahl: "ca. 500 Todesfälle/Jahr", b_zahl: "ca. 2.000 Todesfälle/Jahr",
+        winner: "b",
+        icon_a: "✈️", icon_b: "⚡",
+        note: "Blitzschlag tötet weltweit ~2.000 Menschen pro Jahr, Flugzeugabstürze ~500. Dennoch fürchten viele Menschen das Fliegen mehr als einen Sturm draußen zu stehen.",
+        bias: "Flugzeugabstürze sind einzelne katastrophale Ereignisse, die tagelang Schlagzeilen machen. Blitztote erscheinen isoliert und verstreut."
+    },
+    {
+        a: "Terroranschläge", b: "Treppenstürze",
+        desc: "Was tötet mehr Menschen pro Jahr in Deutschland?",
+        a_zahl: "2–10 Todesfälle/Jahr (Ausnahme: 2016)", b_zahl: "ca. 10.000 Todesfälle/Jahr",
+        winner: "b",
+        icon_a: "💥", icon_b: "🪜",
+        note: "Treppenstürze und andere Haushaltsunfälle töten in Deutschland rund 10.000 Menschen pro Jahr. Terroranschläge fordern durchschnittlich 2–10 Todesopfer. Die mediale Aufmerksamkeit ist komplett umgekehrt.",
+        bias: "Terroranschläge sind emotional aufgeladen, politisch bedeutsam und werden wochen- oder monatelang diskutiert. Treppenstürze erscheinen banal und unvermeidlich."
+    },
+    {
+        a: "Verkehrsunfälle", b: "Suizide",
+        desc: "Was tötet mehr Menschen pro Jahr in Deutschland?",
+        a_zahl: "ca. 2.600 Todesfälle/Jahr", b_zahl: "ca. 10.000 Todesfälle/Jahr",
+        winner: "b",
+        icon_a: "🚗", icon_b: "🌑",
+        note: "Suizide töten in Deutschland ~10.000 Menschen pro Jahr – fast viermal mehr als Verkehrsunfälle (~2.600). Trotzdem ist der öffentliche Diskurs völlig asymmetrisch.",
+        bias: "Verkehrsunfälle werden täglich gemeldet. Suizid ist gesellschaftlich stark tabusiert – und daher kognitiv 'unsichtbar'. Das verzerrt Präventionspriorität und Forschungsgelder."
+    },
+    {
+        a: "Bienen- und Wespenstiche", b: "Haiangriffe",
+        desc: "Was tötet weltweit mehr Menschen pro Jahr?",
+        a_zahl: "mehrere hundert bis über 1.000 Todesfälle (allergischer Schock)", b_zahl: "ca. 10 Todesfälle",
+        winner: "a",
+        icon_a: "🐝", icon_b: "🦈",
+        note: "Bienen- und Wespenstiche töten durch anaphylaktischen Schock weltweit hunderte bis über tausend Menschen jährlich – bei weitem mehr als Haie (~10/Jahr). In Deutschland sterben jährlich ~20 Menschen durch Bienen-/Wespenallergien.",
+        bias: "Haiangriffe sind filmreife Ereignisse. Bienenstiche klingen harmlos. Dabei ist 'allergisch auf Bienen' eine echte Lebensgefahr, 'Haiangriff' eine statistische Rarität."
+    },
+    {
+        a: "Ertrinken in Flüssen/Seen", b: "Ertrinken im Meer",
+        desc: "Wo ertrinken mehr Menschen in Deutschland pro Jahr?",
+        a_zahl: "ca. 350–400 Todesfälle/Jahr (DLRG)", b_zahl: "ca. 20–25 Todesfälle/Jahr",
+        winner: "a",
+        icon_a: "🏞️", icon_b: "🌊",
+        note: "Laut DLRG passieren die meisten Ertrinkungsunfälle in Flüssen, Seen und Kanälen – nicht im Meer. Das Meer wirkt gefährlicher (Wellen, Strömungen, Tiefen), ist aber durch Rettungswachen besser abgesichert.",
+        bias: "Stürme und Meeresgefahren klingen dramatischer als der stille Dorfweiher. Tatsächlich sind Binngewässer ohne Aufsicht die häufigere Todesfalle."
+    },
+    {
+        a: "Rauchen", b: "Alkohol",
+        desc: "Was tötet mehr Menschen pro Jahr in Deutschland?",
+        a_zahl: "ca. 127.000 Todesfälle/Jahr", b_zahl: "ca. 74.000 Todesfälle/Jahr",
+        winner: "a",
+        icon_a: "🚬", icon_b: "🍺",
+        note: "Rauchen tötet in Deutschland ~127.000 Menschen jährlich, Alkohol direkt und indirekt ~74.000. Beide sind massiv unterschätzt – besonders im Vergleich zur gesellschaftlichen Aufmerksamkeit für 'härtere' Drogen.",
+        bias: "Sozial akzeptierte Verhaltensweisen werden kognitiv weniger als 'Gefahr' klassifiziert. Die Verfügbarkeit von Schockbeispielen (Drogendealer, Überdosis) lenkt von den stillen Massenrisiken ab."
+    },
+];
+
+let current = 0;
+let score = 0;
+let answers = [];
+
+function dots(idx) {
+    return vergleiche.map((_, i) =>
+        `<div class="w-2 h-2 rounded-full ${i < idx ? 'bg-emerald-500' : (i === idx ? 'bg-indigo-400' : 'bg-slate-200')}"></div>`
+    ).join('');
+}
+
+function showQuestion(idx) {
+    const v = vergleiche[idx];
+    document.getElementById('quiz-area').innerHTML = `
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <div class="flex justify-between items-center mb-5">
+                <span class="text-sm text-slate-500">Vergleich ${idx + 1} / ${vergleiche.length}</span>
+                <div class="flex gap-1">${dots(idx)}</div>
+            </div>
+            <p class="text-center font-bold text-slate-800 mb-6 text-base leading-snug">${v.desc}</p>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="answer('a')"
+                    class="bg-blue-50 border-2 border-blue-200 rounded-xl p-5 text-center hover:border-blue-400 hover:bg-blue-100 transition-all cursor-pointer">
+                    <div class="text-4xl mb-2">${v.icon_a}</div>
+                    <div class="font-bold text-blue-800">${v.a}</div>
+                </button>
+                <button onclick="answer('b')"
+                    class="bg-violet-50 border-2 border-violet-200 rounded-xl p-5 text-center hover:border-violet-400 hover:bg-violet-100 transition-all cursor-pointer">
+                    <div class="text-4xl mb-2">${v.icon_b}</div>
+                    <div class="font-bold text-violet-800">${v.b}</div>
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function answer(choice) {
+    const v = vergleiche[current];
+    const correct = choice === v.winner;
+    if (correct) score++;
+    answers.push({ choice, correct });
+
+    const win = v.winner === 'a'
+        ? { icon: v.icon_a, name: v.a, zahl: v.a_zahl }
+        : { icon: v.icon_b, name: v.b, zahl: v.b_zahl };
+    const lose = v.winner === 'a'
+        ? { icon: v.icon_b, name: v.b, zahl: v.b_zahl }
+        : { icon: v.icon_a, name: v.a, zahl: v.a_zahl };
+
+    document.getElementById('quiz-area').innerHTML = `
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 space-y-4">
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-slate-500">Vergleich ${current + 1} / ${vergleiche.length}</span>
+                <div class="flex gap-1">${dots(current)}</div>
+            </div>
+            <div class="${correct ? 'bg-emerald-50 border border-emerald-200' : 'bg-rose-50 border border-rose-200'} rounded-xl p-3 text-center">
+                <p class="font-bold ${correct ? 'text-emerald-700' : 'text-rose-700'} text-lg">${correct ? '✓ Richtig!' : '✗ Daneben!'}</p>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center">
+                    <div class="text-3xl mb-1">${win.icon}</div>
+                    <div class="font-bold text-emerald-800 text-sm">${win.name}</div>
+                    <div class="text-xs text-emerald-600 mt-1 font-semibold">${win.zahl}</div>
+                    <div class="text-xs bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full mt-2 inline-block">gefährlicher</div>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
+                    <div class="text-3xl mb-1">${lose.icon}</div>
+                    <div class="font-bold text-slate-500 text-sm">${lose.name}</div>
+                    <div class="text-xs text-slate-400 mt-1">${lose.zahl}</div>
+                </div>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <p class="text-sm text-amber-800 mb-2">${v.note}</p>
+                <p class="text-xs text-amber-600 italic">💭 ${v.bias}</p>
+            </div>
+            <button onclick="next()"
+                class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
+                ${current < vergleiche.length - 1 ? 'Nächster Vergleich →' : 'Zum Ergebnis →'}
+            </button>
+        </div>
+    `;
+}
+
+function next() {
+    current++;
+    if (current < vergleiche.length) {
+        showQuestion(current);
+    } else {
+        showResults();
+    }
+}
+
+function showResults() {
+    document.getElementById('quiz-area').classList.add('hidden');
+    const el = document.getElementById('results');
+    el.classList.remove('hidden');
+
+    const pct = Math.round(score / vergleiche.length * 100);
+    const msg = score <= 2 ? 'Die Heuristik hat dich voll erwischt – das ist normal!'
+        : score <= 4 ? 'Einige Überraschungen dabei – wie bei den meisten.'
+        : score <= 6 ? 'Solide! Du hast ein gutes Gespür für stille Risiken.'
+        : 'Ausgezeichnet – du bist schwer von Medienbildern zu täuschen!';
+
+    el.innerHTML = `
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <div class="text-center mb-5">
+                <div class="text-5xl font-black text-indigo-600 mb-2">${score} / ${vergleiche.length}</div>
+                <div class="text-slate-600 text-sm">${msg}</div>
+            </div>
+            <div class="space-y-2 mb-2">
+                ${vergleiche.map((v, i) => {
+                    const a = answers[i];
+                    const winner = v.winner === 'a' ? v.a : v.b;
+                    return `<div class="flex items-center gap-3 p-2.5 ${a.correct ? 'bg-emerald-50' : 'bg-rose-50'} rounded-lg text-xs">
+                        <span class="font-bold ${a.correct ? 'text-emerald-600' : 'text-rose-600'}">${a.correct ? '✓' : '✗'}</span>
+                        <span class="flex-1 text-slate-600">${v.desc}</span>
+                        <span class="font-semibold ${a.correct ? 'text-emerald-700' : 'text-rose-700'} whitespace-nowrap">${winner}</span>
+                    </div>`;
+                }).join('')}
+            </div>
+        </div>
+
+        <div class="bg-rose-50 border border-rose-200 rounded-xl p-5">
+            <p class="font-bold text-rose-800 mb-2">Warum liegen wir systematisch falsch?</p>
+            <p class="text-sm text-rose-700 mb-2">Kahneman & Tversky (1973) entdeckten: Wir schätzen die Wahrscheinlichkeit eines Ereignisses danach, wie leicht wir uns Beispiele merken können. Was dramatisch ist, medienwirksam oder emotional aufgeladen wird, erscheint häufiger – auch wenn das Gegenteil stimmt.</p>
+            <p class="text-sm text-rose-700">Ergebnis: Flugangst statt Sicherheitsgurt, Terrorpanik statt Treppenpflege, Sharkenangst im Atlantik – während Bienen eine echte Gefahr sind.</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 text-sm text-slate-700">
+            <p class="font-semibold text-slate-800 mb-2">Praktische Konsequenzen</p>
+            <ul class="space-y-1.5 text-slate-600 list-disc ml-4">
+                <li>Versicherungspreise steigen nach Naturkatastrophen, obwohl das statistische Risiko nicht gestiegen ist.</li>
+                <li>Investoren kaufen Aktien aus Branchen, über die gerade berichtet wird – nicht solche mit bestem Risiko-Rendite-Verhältnis.</li>
+                <li>Politiker priorisieren Themen nach Medienlage, nicht nach gesellschaftlichem Schaden.</li>
+                <li>Ärzte überschätzen seltene, dramatische Krankheiten und unterschätzen stille Massenerkrankungen.</li>
+            </ul>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+            <p class="font-semibold text-amber-800 mb-1 text-sm">💡 Erkenntnis</p>
+            <p class="text-sm text-amber-700">Was leicht erinnerbar ist, ist nicht zwingend häufig. Gute Risikoeinschätzung erfordert Basisraten und Statistiken – nicht Intuition. Wer das weiß, sollte bei starken Gefühlsreaktionen auf Risiken automatisch fragen: <em>Was sagen die Daten?</em></p>
+        </div>
+
+        <a href="/raetsel/verfuegbarkeitsheuristik"
+           class="block w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors">
+            ↺ Nochmal spielen
+        </a>
+    `;
+
+    el.scrollIntoView({ behavior: 'smooth' });
+}
+
+showQuestion(0);
+</script>
+
+{% endblock %}

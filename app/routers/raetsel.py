@@ -623,6 +623,12 @@ RAETSEL_META = [
     {"id":"goodharts-gesetz","name":"Goodharts Gesetz","icon":"📏","beschreibung":"\"Wenn ein Maß zum Ziel wird, hört es auf, ein gutes Maß zu sein.\" Schulen optimieren auf PISA – und verfehlen Bildung. Wann kippen Metriken?","typ":"Wissenschaftsmethodik","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Statistik"},
     {"id":"nudging","name":"Nudging","icon":"👉","beschreibung":"Obst auf Augenhöhe: +25% Verkauf. Keine Verbote, keine Preisänderungen. Thaler & Sunstein (2008): Entscheidungsarchitektur formt Verhalten – ohne Zwang.","typ":"Verhaltensökonomie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"zentraler-grenzwertsatz","name":"Zentraler Grenzwertsatz","icon":"🔔","beschreibung":"Würfle einmal: flache Verteilung. Würfle 30 Mal und nimm den Durchschnitt: Glockenkurve. Warum konvergiert der Mittelwert jeder Verteilung zur Normalverteilung?","typ":"Statistik-Theorem","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Mathematik"},
+    # ── Biases & Heuristiken ─────────────────────────────────────────────────
+    {"id":"verfuegbarkeitsheuristik","name":"Die Verfügbarkeitsheuristik","icon":"📺","beschreibung":"Haie oder Kühe? Terroranschläge oder Treppenstürze? 7 überraschende Vergleiche – und ein Blick darauf, warum dramatische Ereignisse gefährlicher wirken als stille, alltägliche Risiken. Kahneman & Tversky (1973).","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"5 min","kategorie":"Kognition"},
+    {"id":"kalibrierungstest","name":"Kalibrierungstest","icon":"📏","beschreibung":"Beantworte 8 Fragen – und gib jedes Mal an, wie sicher du dir bist. Am Ende siehst du, ob deine Konfidenz deiner Trefferquote entspricht. Die meisten Menschen sind systematisch zu sicher.","typ":"Selbsteinschätzungs-Experiment","schwierigkeit":"Mittel","dauer":"6 min","kategorie":"Kognition"},
+    {"id":"linda-problem","name":"Das Linda-Problem","icon":"👩","beschreibung":"Linda ist 31, intelligent, und hat als Studentin für soziale Gerechtigkeit demonstriert. Was ist wahrscheinlicher: Sie ist Bankangestellte – oder Bankangestellte und Feministin? 85% aller Versuchspersonen liegen falsch.","typ":"Verhaltens-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
+    {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
+    {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
 ]
 
 
@@ -2589,6 +2595,28 @@ def konfirmationsfehler_page(request: Request):
 
 
 # ---------------------------------------------------------------------------
+# Verfügbarkeitsheuristik
+# ---------------------------------------------------------------------------
+
+@router.get("/verfuegbarkeitsheuristik", response_class=HTMLResponse)
+def verfuegbarkeitsheuristik_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/verfuegbarkeitsheuristik.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Kalibrierungstest
+# ---------------------------------------------------------------------------
+
+@router.get("/kalibrierungstest", response_class=HTMLResponse)
+def kalibrierungstest_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/kalibrierungstest.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
 # Dunning-Kruger-Effekt
 # ---------------------------------------------------------------------------
 
@@ -3972,6 +4000,53 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>65 % der Teilnehmer verabreichten 450-Volt-Schocks — obwohl der 'Schüler' schrie und aufhörte zu reagieren. Die Erklärung: Gehorsam gegenüber legitimen Autoritäten, graduelles Commitment (jeder Schritt war nur klein größer), Verantwortungsdiffusion ('Ich folge nur Anweisungen'), physische Distanz zum Opfer.</p>",
         "kontext": "<p>Das Experiment wurde im Kontext des Eichmann-Prozesses (1960) geplant. Milgrams Frage: Ist Gehorsam im Nationalsozialismus ein deutsches Phänomen? Antwort: Nein — es ist ein menschliches. Ethisch hoch umstritten: Viele Teilnehmer litten unter den Erkenntnissen über sich selbst. Heute nicht mehr genehmigungsfähig.</p>",
         "erkenntnis": "Böses entsteht oft nicht aus Bösartigkeit, sondern aus Gehorsam. Die Absicht, das Richtige zu tun, schützt nicht vor dem Falschen, wenn Autoritäten Kontext definieren. Das ist die erschütternde Lektion.",
+    },
+    # ─────────────────────────────────────────────────────────────────────────
+    "linda-problem": {
+        "id": "linda-problem", "name": "Das Linda-Problem", "icon": "👩",
+        "farbe": "rose", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup": "Linda ist 31 Jahre alt, ledig, direkt und sehr intelligent. Als Studentin setzte sie sich stark für Diskriminierungsfragen und soziale Gerechtigkeit ein und nahm an Anti-Atomkraft-Demonstrationen teil.<br><br>Amos Tversky & Daniel Kahneman (1983) legten dieses Szenario über 200 Versuchspersonen vor – von Studenten bis zu Statistik-Experten. Es veränderte die Entscheidungstheorie fundamental.",
+        "frage": "Was ist wahrscheinlicher?",
+        "optionen": [
+            {"text": "A) Linda ist Bankangestellte.", "hinweis": "Ein einzelnes Ereignis – keine Zusatzbedingung"},
+            {"text": "B) Linda ist Bankangestellte UND aktiv in der Feministischen Bewegung.", "hinweis": "Zwei Bedingungen müssen gleichzeitig erfüllt sein"},
+        ],
+        "loesung_text": "A ist wahrscheinlicher – das ist mathematisch zwingend.",
+        "erklaerung": "<p>Die <strong>Konjunktionsregel</strong>: P(A und B) ≤ P(A). Die Wahrscheinlichkeit zweier gleichzeitiger Ereignisse kann nie größer sein als die eines einzelnen.</p><p>Dennoch wählten <strong>85–90 % aller Versuchspersonen</strong> Antwort B – weil Lindas Beschreibung viel besser zur Feministin-Bankangestellten passt. Das Gehirn ersetzt die Wahrscheinlichkeitsfrage durch eine Ähnlichkeitsfrage: <em>Wie repräsentativ ist diese Person für den Typ?</em></p>",
+        "kontext": "<p>Tversky & Kahneman nannten dieses Muster den <strong>Konjunktionsfehler</strong>, die zugrundeliegende Abkürzung die <strong>Repräsentativitätsheuristik</strong>: Wir urteilen nach Ähnlichkeit, nicht nach Wahrscheinlichkeit. Das erklärt, warum Stereotypen hartnäckig sind – und warum lebhafte Beschreibungen die Wahrscheinlichkeitseinschätzung aufblähen.</p><p>Selbst Statistik-Professoren fielen in Studien auf diesen Fehler herein, wenn die Beschreibung bildhaft genug formuliert war.</p>",
+        "erkenntnis": "Eine detaillierte, stimmige Geschichte wirkt wahrscheinlicher als eine vage – obwohl das Gegenteil gilt. Je mehr Bedingungen, desto unwahrscheinlicher. Das Gehirn liebt Narrative und hasst Kombinatorik.",
+    },
+    "planungsfehlschluss": {
+        "id": "planungsfehlschluss", "name": "Der Planungsfehlschluss", "icon": "📅",
+        "farbe": "amber", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup": "Eine Gruppe von Psychologie-Studenten sollte schätzen, wann sie ihre Abschlussarbeit fertigstellen würden. Sie wurden gebeten, drei Szenarien anzugeben: optimistischer Fall (alles läuft gut), wahrscheinlichster Fall und pessimistischster Fall (alles läuft schief).",
+        "frage": "Was beobachteten Buehler, Griffin & Ross (1994)?",
+        "optionen": [
+            {"text": "Nur die optimistischen Schätzungen lagen daneben – der 'worst case' traf meist zu", "hinweis": "Auch der pessimistischste Fall war noch zu optimistisch"},
+            {"text": "Fast alle unterschätzten massiv – selbst der 'worst case' war im Schnitt noch zu optimistisch", "hinweis": "Der Planungsfehlschluss betrifft alle Szenarien gleichzeitig"},
+            {"text": "Erfahrene Studenten schätzten deutlich genauer als unerfahrene", "hinweis": "Vergangene Erfahrung schützt kaum vor dem Fehlschluss"},
+            {"text": "Wer öffentlich schätzte, lag systematisch näher an der Wahrheit", "hinweis": "Soziale Erwartungen helfen nicht gegen diesen Bias"},
+        ],
+        "loesung_text": "Fast alle unterschätzten drastisch – selbst der 'worst case' war zu optimistisch.",
+        "erklaerung": "<p>Im Schnitt dauerte die Abschlussarbeit <strong>55 Tage länger als der wahrscheinlichste Fall</strong> und sogar <strong>22 Tage länger als der selbst genannte pessimistischste Fall</strong>. Kahneman & Tversky nannten das den <strong>Planungsfehlschluss</strong> (1979).</p><p>Ursache: Die <strong>Inside View</strong> – wir planen anhand des spezifischen Projekts und ignorieren dabei die Basisrate ähnlicher vergangener Projekte. Die Lösung: die <strong>Outside View</strong> – frage, wie lange ähnliche Projekte in der Vergangenheit tatsächlich gedauert haben.</p>",
+        "kontext": "<p>Beispiele: Berliner Flughafen BER (Eröffnung 2020, geplant 2011). IT-Projekte: 70 % überschreiten Budget um mehr als 50 % (McKinsey-Studie). Flyvbjerg (2003) analysierte 258 Infrastrukturprojekte: im Schnitt 45 % Kostenüberschreitung, bei Bahnprojekten fast 200 %.</p><p>Kahneman empfiehlt den <strong>Reference Class Forecast</strong>: Schau auf ähnliche Projekte, nicht auf das aktuelle. Das fühlt sich demotivierend an – ist aber präziser.</p>",
+        "erkenntnis": "Wir planen für das beste aller möglichen Projekte, nicht für das wahrscheinlichste. Lösung: Vergangene, ähnliche Projekte als Basis nehmen – nicht das eigene Optimismus-Modell.",
+    },
+    "attributionsfehler": {
+        "id": "attributionsfehler", "name": "Fundamentaler Attributionsfehler", "icon": "🎭",
+        "farbe": "violet", "kategorie": "Psychologie", "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup": "Lee Ross (1977): Versuchspersonen wurden zufällig zugewiesen, einen Pro- oder Contra-Castro-Aufsatz zu schreiben. Sie hatten keine Wahl. Anschließend lasen andere Versuchspersonen diese Aufsätze – und wurden ausdrücklich darüber informiert, dass die Themenstellung zufällig war.",
+        "frage": "Was bewerteten die Leser?",
+        "optionen": [
+            {"text": "Sie erkannten die Zufälligkeit und bewerteten die Autoren neutral", "hinweis": "Das wäre rational – ist aber nicht passiert"},
+            {"text": "Obwohl sie von der Zuweisung wussten, schlossen fast alle auf die wahre Überzeugung des Autors", "hinweis": "Der fundamentale Attributionsfehler in Reinform"},
+            {"text": "Sie lehnten eine Bewertung ab, weil das Experiment unfair war", "hinweis": "Sie machten bereitwillig mit"},
+            {"text": "Sie bewerteten nur den Schreibstil, nicht den Inhalt", "hinweis": "Sie bewerteten klar die inhaltliche Überzeugung"},
+        ],
+        "loesung_text": "Fast alle schlossen auf die wahre Überzeugung – obwohl die Zufälligkeit bekannt war.",
+        "erklaerung": "<p>Der <strong>Fundamentale Attributionsfehler</strong> (FAE, Ross 1977): Wir überschätzen den Einfluss von Persönlichkeitseigenschaften und unterschätzen den Einfluss der Situation auf das Verhalten anderer.</p><p>Das Verhalten (Castro-Aufsatz) wurde der Disposition zugeschrieben (<em>er ist pro-Castro</em>) – obwohl die Situation (zufällige Zuweisung) das Verhalten vollständig erklärte.</p>",
+        "kontext": "<p>Der FAE ist kulturell variabel: Westliche (individualistische) Kulturen zeigen ihn stärker als östliche (kollektivistische). Im Alltag: Wer uns auf der Autobahn schneidet, ist ein Idiot – nicht jemand mit einem Notfall.</p><p>In Verhandlungen: Wenn die Gegenseite hart verhandelt, schließen wir auf Gier oder Feindseligkeit – statt auf externen Druck, Vorgaben des Vorstands oder Zeitdruck. Das verzerrt unsere Strategie erheblich.</p>",
+        "erkenntnis": "Wir sind natürliche Biographen, keine Situationsanalysten. Wenn jemand sich 'falsch' verhält, zuerst fragen: Welche situativen Kräfte könnten dieses Verhalten erklären? Das gibt ein realistischeres Bild – und bessere Verhandlungsstrategien.",
     },
 }
 
