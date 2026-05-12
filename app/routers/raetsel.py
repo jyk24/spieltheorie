@@ -82,6 +82,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Wahrscheinlichkeit",
     },
+    {
+        "id": "bertrand-box",
+        "name": "Bertrands Box-Paradoxon",
+        "icon": "📦",
+        "beschreibung": "Drei Boxen, je zwei Münzen: GG, GS, SS. Du wählst eine Box zufällig, ziehst eine Münze – es ist Gold. Wie groß ist die Wahrscheinlichkeit, dass die zweite Münze in derselben Box auch Gold ist? Die intuitive Antwort ½ ist falsch.",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
     # ── Statistik & Kognition ──────────────────────────────────────────────────
     {
         "id": "simpson",
@@ -2706,6 +2716,17 @@ def batna_page(request: Request):
 def trugschluesse_page(request: Request):
     return templates.TemplateResponse(
         request, "raetsel/trugschluesse.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Bertrand-Box-Paradoxon
+# ---------------------------------------------------------------------------
+
+@router.get("/bertrand-box", response_class=HTMLResponse)
+def bertrand_box_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/bertrand_box.html", {"active_page": "raetsel"}
     )
 
 

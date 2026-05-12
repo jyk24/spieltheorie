@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block title %}Bertrands Box-Paradoxon – Spieltheorie & Wahrscheinlichkeit{% endblock %}
+{% block meta_description %}<meta name="description" content="Drei Boxen, sechs Münzen, eine Frage – und eine Antwort, die fast jeder falsch errät. Das Bertrand-Box-Paradoxon (1889) mit interaktiver Monte-Carlo-Simulation.">{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">📦 Bertrands Box-Paradoxon</h1>
+        <p class="text-slate-500 mt-1">1889 von Joseph Bertrand formuliert – die intuitive Antwort ½ ist falsch.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Situation:</p>
+        <p>Drei verschlossene Boxen stehen vor dir. Jede enthält genau <strong>zwei Münzen</strong>:</p>
+        <div class="grid grid-cols-3 gap-3 mt-3">
+            <div class="bg-amber-50 border border-amber-300 rounded-lg p-3 text-center">
+                <div class="text-2xl mb-1">📦</div>
+                <div class="font-semibold text-amber-700 text-xs uppercase tracking-wide">Box 1</div>
+                <div class="text-lg mt-1">🟡 🟡</div>
+                <div class="text-xs text-slate-500 mt-1">Gold &amp; Gold</div>
+            </div>
+            <div class="bg-slate-100 border border-slate-300 rounded-lg p-3 text-center">
+                <div class="text-2xl mb-1">📦</div>
+                <div class="font-semibold text-slate-700 text-xs uppercase tracking-wide">Box 2</div>
+                <div class="text-lg mt-1">🟡 ⚪</div>
+                <div class="text-xs text-slate-500 mt-1">Gold &amp; Silber</div>
+            </div>
+            <div class="bg-zinc-100 border border-zinc-300 rounded-lg p-3 text-center">
+                <div class="text-2xl mb-1">📦</div>
+                <div class="font-semibold text-zinc-700 text-xs uppercase tracking-wide">Box 3</div>
+                <div class="text-lg mt-1">⚪ ⚪</div>
+                <div class="text-xs text-slate-500 mt-1">Silber &amp; Silber</div>
+            </div>
+        </div>
+        <ol class="list-decimal ml-5 mt-4 space-y-1">
+            <li>Du wählst <strong>zufällig</strong> eine der drei Boxen.</li>
+            <li>Du ziehst <strong>blind</strong> eine Münze aus dieser Box.</li>
+            <li>Die gezogene Münze ist <strong>Gold</strong> 🟡.</li>
+        </ol>
+        <div class="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-3 text-amber-800">
+            <strong>Frage:</strong> Wie wahrscheinlich ist es, dass die <em>zweite</em> Münze in derselben Box <strong>ebenfalls Gold</strong> ist?
+        </div>
+    </div>
+
+    <!-- Quiz -->
+    <div id="quiz-area" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5">
+        <p class="font-semibold text-slate-800 mb-4">Deine Antwort: P(zweite Münze = Gold | erste Münze = Gold) = ?</p>
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="reveal('1/3')" class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all">
+                <div class="text-2xl font-bold text-slate-700">⅓</div>
+                <div class="text-xs text-slate-500 mt-1">≈ 33 %</div>
+            </button>
+            <button onclick="reveal('1/2')" class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all">
+                <div class="text-2xl font-bold text-slate-700">½</div>
+                <div class="text-xs text-slate-500 mt-1">= 50 %</div>
+            </button>
+            <button onclick="reveal('2/3')" class="p-4 rounded-xl border-2 border-indigo-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all">
+                <div class="text-2xl font-bold text-indigo-700">⅔</div>
+                <div class="text-xs text-indigo-500 mt-1">≈ 67 %</div>
+            </button>
+            <button onclick="reveal('3/4')" class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all">
+                <div class="text-2xl font-bold text-slate-700">¾</div>
+                <div class="text-xs text-slate-500 mt-1">= 75 %</div>
+            </button>
+        </div>
+    </div>
+
+    <div id="erklaerung" class="hidden space-y-5">
+
+        <div id="quiz-result" class="rounded-xl p-4 border text-sm font-semibold text-center"></div>
+
+        <!-- Visualisierung: alle 6 Münzenpositionen -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-3">Zähle die Goldmünzen, nicht die Boxen</p>
+            <p class="text-sm text-slate-600 mb-4">Insgesamt gibt es <strong>3 Goldmünzen</strong> (Münze A, B, C). Jede ist gleich wahrscheinlich, wenn du eine Goldmünze siehst. Aber nur 2 davon haben eine <em>zweite</em> Goldmünze als Partner.</p>
+
+            <div class="grid grid-cols-3 gap-3 text-center text-sm">
+                <div class="bg-amber-50 border-2 border-amber-300 rounded-xl p-3">
+                    <div class="text-xs font-bold text-amber-700 mb-1">Box 1 (GG)</div>
+                    <div class="text-2xl mb-1">🟡 🟡</div>
+                    <div class="text-xs text-amber-700 leading-tight">
+                        Ziehst du A → Partner B ist Gold ✓<br>
+                        Ziehst du B → Partner A ist Gold ✓
+                    </div>
+                </div>
+                <div class="bg-slate-50 border-2 border-slate-300 rounded-xl p-3">
+                    <div class="text-xs font-bold text-slate-700 mb-1">Box 2 (GS)</div>
+                    <div class="text-2xl mb-1">🟡 ⚪</div>
+                    <div class="text-xs text-slate-700 leading-tight">
+                        Ziehst du Gold C → Partner ist Silber ✗
+                    </div>
+                </div>
+                <div class="bg-zinc-50 border-2 border-zinc-300 rounded-xl p-3">
+                    <div class="text-xs font-bold text-zinc-600 mb-1">Box 3 (SS)</div>
+                    <div class="text-2xl mb-1">⚪ ⚪</div>
+                    <div class="text-xs text-zinc-500 leading-tight">
+                        Keine Goldmünze – entfällt, da Bedingung „Gold gezogen" nicht erfüllt.
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 text-center mt-5">
+                <p class="text-sm text-indigo-700 mb-1">Von 3 Wegen „Gold zu ziehen" führen 2 zu einer zweiten Goldmünze:</p>
+                <div class="text-3xl font-black text-indigo-800 mb-1">2 / 3 ≈ <span class="text-amber-600">67 %</span></div>
+                <p class="text-xs text-indigo-600">Die intuitive Antwort ½ entsteht, weil man nach Boxen statt nach Münzen zählt.</p>
+            </div>
+        </div>
+
+        <!-- Bayes-Rechnung -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-3">Formal mit Bayes</p>
+            <div class="text-xs text-slate-600 space-y-2 font-mono bg-slate-50 rounded-lg p-3 border border-slate-200">
+                <p>P(GG | Gold gezogen) = P(Gold | GG) · P(GG) / P(Gold)</p>
+                <p>= 1 · (1/3) / (1/2)</p>
+                <p>= <strong class="text-indigo-700">2/3</strong></p>
+            </div>
+            <p class="text-xs text-slate-500 mt-2">P(Gold) = ½, weil insgesamt 3 von 6 Münzen Gold sind. P(Gold | GG) = 1, weil beide Münzen in Box 1 Gold sind.</p>
+        </div>
+
+        <!-- Monte-Carlo Simulation -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-3">Selber simulieren: Monte Carlo</p>
+            <p class="text-sm text-slate-600 mb-4">Lass den Computer das Experiment tausendfach wiederholen und vergleiche die Frequenz mit dem theoretischen Wert ⅔.</p>
+
+            <div class="flex gap-2 mb-4 flex-wrap">
+                <button onclick="simulate(100)" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">100 Runden</button>
+                <button onclick="simulate(1000)" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">1 000 Runden</button>
+                <button onclick="simulate(10000)" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">10 000 Runden</button>
+                <button onclick="resetSim()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-semibold transition-colors">Zurücksetzen</button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 text-center">
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                    <div class="text-xs text-slate-500">Gold gezogen</div>
+                    <div id="sim-total" class="text-2xl font-bold text-slate-800">0</div>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
+                    <div class="text-xs text-amber-700">Davon: 2. Münze auch Gold</div>
+                    <div id="sim-success" class="text-2xl font-bold text-amber-800">0</div>
+                </div>
+            </div>
+
+            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 text-center mt-4">
+                <div class="text-xs text-indigo-700 mb-1">Beobachtete Wahrscheinlichkeit</div>
+                <div id="sim-rate" class="text-4xl font-black text-indigo-700">–</div>
+                <div class="text-xs text-indigo-600 mt-1">Theorie: 66,7 %</div>
+            </div>
+        </div>
+
+        <div class="bg-slate-100 border border-slate-200 rounded-xl p-4 text-xs text-slate-600">
+            <p class="font-semibold text-slate-700 mb-2">Bertrand 1889 – der Punkt:</p>
+            <p>Bertrand zeigte: Sobald du eine <em>Bedingung</em> (Information über das Ergebnis) hast, musst du nach den Wegen zählen, die diese Bedingung erzeugen – nicht nach den anfänglich gleich wahrscheinlichen Boxen. Dasselbe Prinzip steckt im <a href="/raetsel/monty-hall" class="text-indigo-600 underline">Monty-Hall-Problem</a>, im <a href="/raetsel/falsch-positiv" class="text-indigo-600 underline">Falsch-Positiv-Paradoxon</a> und in jeder Bayes-Aktualisierung.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+let simTotal = 0;
+let simSuccess = 0;
+
+function reveal(choice) {
+    const correct = choice === '2/3';
+    const result = document.getElementById('quiz-result');
+    result.innerHTML = correct
+        ? '✓ Richtig! Die Wahrscheinlichkeit ist <strong>⅔</strong> – nicht ½.'
+        : `Überraschend: Die richtige Antwort ist <strong>⅔ ≈ 67 %</strong>. Die intuitive Wahl ½ verwechselt Boxen mit Münzen.`;
+    result.className = `rounded-xl p-4 border text-sm font-semibold text-center ${correct
+        ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+        : 'bg-amber-50 border-amber-200 text-amber-800'}`;
+    document.getElementById('quiz-area').classList.add('hidden');
+    document.getElementById('erklaerung').classList.remove('hidden');
+}
+
+// 3 Boxen mit je 2 Münzen: 0 = Silber, 1 = Gold
+const BOXES = [[1, 1], [1, 0], [0, 0]];
+
+function simulate(n) {
+    for (let i = 0; i < n; i++) {
+        const box = BOXES[Math.floor(Math.random() * 3)];
+        const firstIdx = Math.floor(Math.random() * 2);
+        const first = box[firstIdx];
+        if (first !== 1) continue; // Bedingung: Gold gezogen
+        simTotal += 1;
+        const second = box[1 - firstIdx];
+        if (second === 1) simSuccess += 1;
+    }
+    render();
+}
+
+function render() {
+    document.getElementById('sim-total').textContent = simTotal.toLocaleString('de-DE');
+    document.getElementById('sim-success').textContent = simSuccess.toLocaleString('de-DE');
+    const rate = simTotal > 0 ? (simSuccess / simTotal * 100).toFixed(1) + ' %' : '–';
+    document.getElementById('sim-rate').textContent = rate;
+}
+
+function resetSim() {
+    simTotal = 0;
+    simSuccess = 0;
+    render();
+}
+</script>
+
+{% endblock %}
