@@ -629,6 +629,7 @@ RAETSEL_META = [
     {"id":"linda-problem","name":"Das Linda-Problem","icon":"👩","beschreibung":"Linda ist 31, intelligent, und hat als Studentin für soziale Gerechtigkeit demonstriert. Was ist wahrscheinlicher: Sie ist Bankangestellte – oder Bankangestellte und Feministin? 85% aller Versuchspersonen liegen falsch.","typ":"Verhaltens-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
+    {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
 ]
 
 
@@ -4045,11 +4046,30 @@ GENERIC_PUZZLES: dict = {
         "kontext": "<p>Der FAE ist kulturell variabel: Westliche (individualistische) Kulturen zeigen ihn stärker als östliche (kollektivistische). Im Alltag: Wer uns auf der Autobahn schneidet, ist ein Idiot – nicht jemand mit einem Notfall.</p><p>In Verhandlungen: Wenn die Gegenseite hart verhandelt, schließen wir auf Gier oder Feindseligkeit – statt auf externen Druck, Vorgaben des Vorstands oder Zeitdruck. Das verzerrt unsere Strategie erheblich.</p>",
         "erkenntnis": "Wir sind natürliche Biographen, keine Situationsanalysten. Wenn jemand sich 'falsch' verhält, zuerst fragen: Welche situativen Kräfte könnten dieses Verhalten erklären? Das gibt ein realistischeres Bild – und bessere Verhandlungsstrategien.",
     },
+    "schlaeger-ball": {
+        "id": "schlaeger-ball", "name": "Schläger und Ball", "icon": "⚾",
+        "farbe": "sky", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "1 min",
+        "setup_label": "Das Problem:",
+        "setup": "Ein Baseballschläger und ein Ball kosten zusammen <strong>1,10 €</strong>.<br><br>Der Schläger kostet <strong>1,00 € mehr</strong> als der Ball.",
+        "frage": "Wie viel kostet der Ball?",
+        "optionen": [
+            {"text": "10 Cent", "hinweis": "0,10 €"},
+            {"text": "5 Cent", "hinweis": "0,05 €"},
+            {"text": "55 Cent", "hinweis": "0,55 €"},
+            {"text": "1 Euro", "hinweis": "1,00 €"},
+        ],
+        "loesung_text": "Der Ball kostet 5 Cent.",
+        "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
+        "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
+        "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
 }
 
 
 def _nav_context(current_id: str) -> dict:
-    """Return next_puzzle and related_puzzles (same category, excl. current)."""
+    """Return next_puzzle, related_puzzles (same category), and ted_links."""
+    from app.routers.ted import TED_TALKS  # lazy to avoid load-order issues
+
     ids = [m["id"] for m in RAETSEL_META]
     try:
         idx = ids.index(current_id)
@@ -4069,7 +4089,13 @@ def _nav_context(current_id: str) -> dict:
     else:
         related = []
 
-    return {"next_puzzle": next_puzzle, "related_puzzles": related}
+    ted_links = [
+        {"sprecher": t["sprecher"], "titel_de": t["titel_de"], "ted_url": t["ted_url"], "jahr": t["jahr"]}
+        for t in TED_TALKS
+        if current_id in t.get("verwandte_raetsel", [])
+    ]
+
+    return {"next_puzzle": next_puzzle, "related_puzzles": related, "ted_links": ted_links}
 
 
 @router.get("/{puzzle_id}", response_class=HTMLResponse)

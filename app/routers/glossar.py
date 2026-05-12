@@ -801,6 +801,182 @@ GLOSSAR = [
         "kategorie": "Verhandlung",
         "link": "/raetsel/batna",
     },
+    {
+        "id": "nudging",
+        "titel": "Nudge / Nudging",
+        "definition": (
+            "Gezielte Veraenderung der Entscheidungsarchitektur, die ein bestimmtes Verhalten wahrscheinlicher macht, "
+            "ohne Verbote oder finanzielle Anreize. Richard Thaler & Cass Sunstein (2008): "
+            "Obst auf Augenhoehe in der Kantine steigert den Obstkonsum um 25%, ohne Chipstuten zu verbieten. "
+            "Opt-out-Systeme fuer Organspende erhoehen die Spendenrate von ~12% auf ~99%. "
+            "Grundprinzip: Der Default entscheidet - wer den Rahmen setzt, praegt das Ergebnis."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/lektionen/nudging-entscheidungsarchitektur",
+    },
+    {
+        "id": "system-1-2",
+        "titel": "System 1 und System 2",
+        "definition": (
+            "Daniel Kahneman ('Thinking, Fast and Slow', 2011) unterscheidet zwei Denkmodi: "
+            "System 1 arbeitet schnell, automatisch, intuitiv und emotional - ohne Aufwand. "
+            "System 2 arbeitet langsam, bewusst, analytisch und regelgeleitet - mit Aufwand. "
+            "Die meisten Alltagsentscheidungen laufen ueber System 1. Kognitive Verzerrungen entstehen, "
+            "wenn System 1 Urteile faellt, die System 2 haeufig unreflektiert uebernimmt."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/schlaeger-ball",
+    },
+    {
+        "id": "libertaerer-paternalismus",
+        "titel": "Libertaerer Paternalismus",
+        "definition": (
+            "Politisches Konzept von Thaler & Sunstein (2008): Menschen behalten volle Wahlfreiheit, "
+            "werden durch smarte Defaults aber in eine bestimmte Richtung 'geschubst'. "
+            "Beispiel: Betriebliche Altersvorsorge mit Opt-out statt Opt-in erhoeht die Sparquote dramatisch. "
+            "Kritik: Wer entscheidet, welcher Default 'gut' ist? Paternalismusgefahr, wenn Ziele unklar sind."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/lektionen/nudging-entscheidungsarchitektur",
+    },
+    {
+        "id": "repraesentativitaetsheuristik",
+        "titel": "Repraesentativitaetsheuristik",
+        "definition": (
+            "Kognitive Abkuerzung (Kahneman & Tversky, 1974): Wir beurteilen die Wahrscheinlichkeit einer Kategorie "
+            "danach, wie repraesentativ ein Fall fuer diese Kategorie wirkt - nicht nach Basisraten. "
+            "Beispiel: Linda klingt typisch fuer eine feministische Aktivistin, daher wirkt 'Feministin und Bankangestellte' "
+            "plausibler als 'Bankangestellte' - obwohl Konjunktionen immer seltener sind als ihre Teile."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/linda-problem",
+    },
+    {
+        "id": "konjunktionsfehler",
+        "titel": "Konjunktionsfehler",
+        "definition": (
+            "Logischer Fehler: Die Konjunktion zweier Ereignisse (A und B) wird als wahrscheinlicher bewertet "
+            "als eines der Einzelereignisse (A allein). Mathematisch unmoeglich - P(A und B) <= P(A) immer. "
+            "Entsteht durch die Repraesentativitaetsheuristik. Klassisch demonstriert im Linda-Problem "
+            "(Tversky & Kahneman, 1983): 85-90% aller Befragten begehen diesen Fehler."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/linda-problem",
+    },
+    {
+        "id": "status-quo-bias",
+        "titel": "Status-quo-Bias",
+        "definition": (
+            "Tendenz, den bestehenden Zustand beizubehalten, auch wenn eine Veraenderung objektiv besser waere. "
+            "Ursachen: Verlustaversion (Verluste wiegen staerker als Gewinne), Traegheit und Entscheidungsaufwand. "
+            "Praktisch: Opt-out-Systeme nutzen den Status-quo-Bias bewusst - wer nichts tut, stimmt zu. "
+            "Samuelson & Zeckhauser (1988) dokumentierten ihn in Portfolioentscheidungen und Rentenplaenen."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/lektionen/nudging-entscheidungsarchitektur",
+    },
+    {
+        "id": "overconfidence",
+        "titel": "Overconfidence / Ueberkonfidenz",
+        "definition": (
+            "Systematische Ueberschaetzung der eigenen Faehigkeiten, der Genauigkeit von Prognosen oder der "
+            "Sicherheit des eigenen Wissens. Drei Formen: (1) Ueberschaetzung des absoluten Niveaus (ich bin besser als ich bin), "
+            "(2) Ueberplatzierung (ich bin besser als andere), (3) Ueberpraezision (meine Schaetzungen sind praeziser als sie sind). "
+            "Der Kalibrierungstest zeigt: Wenn jemand 90% sicher ist, liegt er deutlich seltener richtig als 9 von 10 Mal."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/kalibrierungstest",
+    },
+    {
+        "id": "kalibrierung",
+        "titel": "Kalibrierung (kognitive)",
+        "definition": (
+            "Mass dafuer, wie gut die subjektive Konfidenz mit der tatsaechlichen Trefferquote uebereinstimmt. "
+            "Gut kalibriert: Wer bei 70% Sicherheit liegt, hat tatsaechlich in 70% der Faelle recht. "
+            "Ueberkalibriertheit (Overconfidence) ist die Regel: Experten in vielen Bereichen sind schlechter "
+            "kalibriert als Meteorologen, die taeglich Feedback zu ihren Prognosen bekommen."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/kalibrierungstest",
+    },
+    {
+        "id": "fundamentaler-attributionsfehler",
+        "titel": "Fundamentaler Attributionsfehler (FAE)",
+        "definition": (
+            "Tendenz, das Verhalten anderer Personen deren stabilen Eigenschaften (Disposition) zuzuschreiben "
+            "und den Einfluss der Situation zu unterschaetzen. Wer uns schneidet auf der Autobahn: sofort 'Idiot', "
+            "nicht 'Notfall'. Lee Ross (1977): Studenten schlossen auf wahre Castro-Meinungen von Autoren, "
+            "obwohl diese die Aufsatz-Position per Los zugeteilt bekommen hatten. Kulturell variabel: "
+            "kollektivistische Kulturen zeigen ihn schwaecher."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/attributionsfehler",
+    },
+    {
+        "id": "crt",
+        "titel": "Cognitive Reflection Test (CRT)",
+        "definition": (
+            "Drei-Fragen-Test von Shane Frederick (2005) zur Messung kognitiver Reflexionsfaehigkeit: "
+            "misst, ob jemand impulsive System-1-Antworten hinterfragt oder uebernimmt. "
+            "Bekannteste Frage: Ein Schlaeger und ein Ball kosten 1,10 EUR, der Schlaeger 1,00 EUR mehr. "
+            "Wie viel kostet der Ball? (korrekt: 5 Cent). CRT-Scores korrelieren mit Wahrscheinlichkeitsurteilen, "
+            "Zeitpraeferenzen und Ergebnissen in Wirtschaftsspielen."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/schlaeger-ball",
+    },
+    {
+        "id": "planungsfehlschluss",
+        "titel": "Planungsfehlschluss",
+        "definition": (
+            "Systematisch zu optimistische Schaetzungen von Zeit, Kosten und Risiken eigener Projekte. "
+            "Kahneman & Tversky (1979): Menschen fokussieren auf den besten Fall (Inside View) "
+            "statt auf historische Daten aehnlicher Projekte (Outside View). "
+            "Buehler et al. (1994): Studenten brauchten im Schnitt doppelt so lange wie geschaetzt, "
+            "sogar ihre 'pessimistischste' Schaetzung war zu optimistisch. "
+            "Gegenmittel: Reference Class Forecasting - externe Vergleichsdaten heranziehen."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/planungsfehlschluss",
+    },
+    {
+        "id": "verhaltensokonomie",
+        "titel": "Verhaltensokonomie (Behavioral Economics)",
+        "definition": (
+            "Verbindung von Wirtschaftstheorie und Psychologie: untersucht, wie echte Menschen tatsaechlich "
+            "entscheiden - nicht wie rationale Nutzenmaximierer es tun wuerden. "
+            "Schluessel-Beitraege: Herbert Simon (Bounded Rationality, 1955), Kahneman & Tversky (Prospect Theory, 1979, "
+            "Nobelpreis 2002), Thaler & Sunstein (Nudge, 2008, Nobelpreis 2017). "
+            "Anwendungen: staatliche Sparprogramme, Organspende-Systeme, Rentenplaene, Marketing."
+        ),
+        "kategorie": "Entscheidung",
+        "link": "/verhaltensoko",
+    },
+    {
+        "id": "default-effekt",
+        "titel": "Default-Effekt",
+        "definition": (
+            "Die voreingestellte Option wird ueberproportional haeufig beibehalten - auch wenn eine Alternative "
+            "besser waere. Ursachen: Status-quo-Bias, Entscheidungsaufwand und implizite Empfehlung des Defaults. "
+            "Starkste Evidenz: Organspende-Opt-out (Oesterreich 99%, Opt-in Deutschland ~12%). "
+            "Auch in Software-Einstellungen, Rentenplaenen und E-Mail-Newsletter-Abos beobachtet."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/lektionen/nudging-entscheidungsarchitektur",
+    },
+    {
+        "id": "verfuegbarkeitsheuristik",
+        "titel": "Verfuegbarkeitsheuristik",
+        "definition": (
+            "Kognitive Abkuerzung (Kahneman & Tversky, 1973): Wir schaetzen die Haeufigkeit oder "
+            "Wahrscheinlichkeit eines Ereignisses danach, wie leicht wir uns Beispiele vorstellen koennen. "
+            "Was medial praesent, dramatisch oder emotional aufgeladen ist, wirkt haeufiger. "
+            "Folge: Haifischattacken werden ueberschaetzt, Sturzrisiken zu Hause unterschaetzt. "
+            "Investoren kaufen Aktien aus Sektoren, ueber die gerade berichtet wird."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/verfuegbarkeitsheuristik",
+    },
 ]
 
 GLOSSAR.sort(key=lambda x: x["titel"].lower())
