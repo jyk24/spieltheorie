@@ -630,6 +630,11 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neue Klassiker ───────────────────────────────────────────────────────
+    {"id":"penney","name":"Penneys Spiel","icon":"🪙","beschreibung":"Du wählst eine 3er-Folge aus Kopf/Zahl. Dein Gegner wählt danach. Eine Münze wird so lange geworfen, bis eine der beiden Folgen erscheint. Klingt fair – ist es aber nicht. Walter Penney (1969).","typ":"Nichttransitives Spiel","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
+    {"id":"schoenheitswettbewerb","name":"Keynesscher Schönheitswettbewerb","icon":"🏆","beschreibung":"Alle Spieler nennen eine Zahl von 0 bis 100. Wer am nächsten an 2/3 des Durchschnitts liegt, gewinnt. Welche Zahl wählst du? Keynes (1936), Nagel (1995): Der Test für rekursives Denken.","typ":"Level-k-Denken","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Spieltheorie"},
+    {"id":"dollar-auktion","name":"Die Dollar-Auktion","icon":"💵","beschreibung":"Ein 100-€-Schein wird versteigert. Höchstes Gebot gewinnt – aber auch der Zweite muss sein letztes Gebot zahlen. Wie weit gehst du? Martin Shubik (1971): Eskalation als rationale Falle.","typ":"Eskalations-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Spieltheorie"},
+    {"id":"endowment","name":"Der Besitztumseffekt","icon":"☕","beschreibung":"Cornell-Studenten bekamen zufällig eine Tasse – oder nicht. Verkäufer verlangten im Schnitt 7 $, Käufer zahlten nur 3 $. Selber Becher, doppelter Preis. Kahneman, Knetsch & Thaler (1990).","typ":"Verhaltensökonomie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
 ]
 
 
@@ -4062,6 +4067,75 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    # ── Neue Klassiker ────────────────────────────────────────────────────
+    "penney": {
+        "id": "penney", "name": "Penneys Spiel", "icon": "🪙",
+        "farbe": "violet", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Du und ein Gegner spielen folgendes Spiel: Du wählst zuerst eine 3er-Folge aus Kopf (K) und Zahl (Z) — etwa <strong>KKZ</strong>. Dein Gegner wählt danach eine eigene 3er-Folge. Anschließend wird eine faire Münze so lange geworfen, bis eine der beiden Folgen zum ersten Mal hintereinander erscheint. Wessen Folge zuerst kommt, der gewinnt.",
+        "frage": "Du wählst <strong>KKZ</strong>. Welche Folge sollte dein Gegner wählen, um die <em>größte</em> Gewinnwahrscheinlichkeit zu haben?",
+        "optionen": [
+            {"text": "ZZK – das genaue Spiegelbild", "hinweis": "Klingt fair und intuitiv"},
+            {"text": "ZKK – beginnt mit dem Gegenteil deiner ersten Münze", "hinweis": "Ein 'parasitäres' Muster"},
+            {"text": "KZK – tauscht die mittlere Münze", "hinweis": "Wirkt willkürlich"},
+            {"text": "Es ist egal — alle Folgen sind gleich wahrscheinlich (je 1/8)", "hinweis": "Stimmt das wirklich?"},
+        ],
+        "loesung_text": "ZKK – mit Gewinnwahrscheinlichkeit ca. 2/3",
+        "erklaerung": "<p>Penneys Trick: Nimm das Gegenteil der <em>ersten</em> Münze deines Gegners und stelle sie an den Anfang; die letzte Münze entfällt. Aus <strong>KKZ</strong> wird so <strong>ZKK</strong>.</p><p>Warum funktioniert das? Damit deine Folge <strong>KKZ</strong> jemals erscheint, muss vorher zwangsläufig ein K kommen — und dem geht meist ein Z voraus. In genau diesem Moment hat aber dein Gegner mit <strong>ZKK</strong> schon gewonnen. Die Folge ZKK 'fängt' KKZ also fast immer ab.</p><p>Konkret beträgt die Wahrscheinlichkeit, dass ZKK vor KKZ erscheint, exakt <strong>2/3</strong>.</p>",
+        "kontext": "<p><strong>Walter Penney, 1969.</strong> Das Spiel ist <em>nichttransitiv</em>: Wie bei Stein-Schere-Papier gibt es keine 'beste' Folge. Jede 3er-Folge wird von einer anderen mit Mehrheits-Wahrscheinlichkeit geschlagen.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>KKK wird geschlagen von ZKK (Wahrscheinlichkeit 7/8)</li><li>KKZ wird geschlagen von ZKK (2/3)</li><li>KZK wird geschlagen von KKZ (2/3)</li><li>KZZ wird geschlagen von KKZ (2/3)</li></ul><p>Das Spiel ist ein bekanntes Beispiel dafür, dass Intuitionen über 'Fairness' bei sequentiellen Mustern systematisch versagen. Wer zweiter wählen darf, hat immer einen Vorteil — wenn er die richtige Antwort kennt.</p>",
+        "erkenntnis": "'Gleich wahrscheinlich' und 'gleich oft zuerst' sind nicht dasselbe. Bei wartezeit-basierten Vergleichen entstehen verblüffende Asymmetrien — ein Lehrstück darüber, dass Wahrscheinlichkeit ohne den Begriff 'Zeit' unvollständig ist.",
+    },
+    "schoenheitswettbewerb": {
+        "id": "schoenheitswettbewerb", "name": "Keynesscher Schönheitswettbewerb", "icon": "🏆",
+        "farbe": "indigo", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Alle Spieler nennen <em>gleichzeitig</em> und unabhängig eine ganze Zahl von 0 bis 100. Anschließend wird der Durchschnitt aller Zahlen berechnet. Gewinner ist, wer am nächsten an <strong>2/3 des Durchschnitts</strong> liegt. Alle Spieler sind perfekt rational und wissen, dass alle anderen es auch sind.",
+        "frage": "Welche Zahl ist die einzige Nash-Gleichgewichts-Lösung?",
+        "optionen": [
+            {"text": "50 – der Mittelwert, falls alle zufällig wählen", "hinweis": "Stufe 0 des Denkens"},
+            {"text": "33 – 2/3 von 50", "hinweis": "Stufe 1: einen Schritt voraus denken"},
+            {"text": "22 – 2/3 von 33", "hinweis": "Stufe 2: zwei Schritte voraus denken"},
+            {"text": "0 – das eindeutige Nash-Gleichgewicht", "hinweis": "Der Grenzwert bei unendlicher Iteration"},
+        ],
+        "loesung_text": "0 – das einzige Nash-Gleichgewicht",
+        "erklaerung": "<p>Egal welche Zahl die anderen nennen: 2/3 des Durchschnitts ist immer ≤ 2/3 · 100 = 66,67. Also wäre es nie sinnvoll, mehr als 67 zu wählen. Wenn aber alle das wissen, wählt niemand mehr als 67 — der Durchschnitt liegt höchstens bei 67, und 2/3 davon ≤ 45. Iteriert man dieses Argument unendlich oft, schrumpft die rationale Antwort auf <strong>0</strong>.</p><p>Empirisch wählen reale Versuchspersonen aber meist zwischen 20 und 35 – das berühmte Ergebnis von Rosemarie Nagel (1995). Die meisten Menschen denken zwei bis drei Stufen tief, nicht unendlich.</p>",
+        "kontext": "<p><strong>John Maynard Keynes, 1936</strong> (Allgemeine Theorie, Kapitel 12): Investieren an der Börse sei wie ein Zeitungs-Schönheitswettbewerb, bei dem man nicht das schönste Gesicht wählen müsse, sondern dasjenige, von dem man glaubt, dass die <em>anderen</em> es wählen würden — und die ihrerseits dasselbe denken.</p><p><strong>Rosemarie Nagel, 1995</strong>: Sie operationalisierte das Konzept in einem Laborexperiment. Das Konzept der <em>Level-k-Denkstufen</em> wurde so zur Standardmessung für strategische Tiefe:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Level 0: zufällige Zahl, etwa 50</li><li>Level 1: 2/3 · 50 = 33</li><li>Level 2: 2/3 · 33 ≈ 22</li><li>Level 3: 2/3 · 22 ≈ 15</li><li>Level ∞ (Nash): 0</li></ul><p>Die Financial Times führte das Spiel 1997 mit ihren Lesern durch — der Gewinn-Tipp lag bei 13. Selbst Experten überspringen das volle Iterationsspiel.</p>",
+        "erkenntnis": "Perfekt rationale Lösung und tatsächlich gewinnende Lösung sind verschiedene Dinge. Im echten Leben gewinnt nicht, wer am tiefsten denkt — sondern wer am genauesten einschätzt, wie tief die anderen denken.",
+    },
+    "dollar-auktion": {
+        "id": "dollar-auktion", "name": "Die Dollar-Auktion", "icon": "💵",
+        "farbe": "amber", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Ein echter <strong>100-€-Schein</strong> wird versteigert. Mindestgebot 1 €, Erhöhungsschritte 1 €. Der Höchstbietende erhält den Schein. <strong>Sonderregel</strong>: Auch der <em>zweithöchste</em> Bieter muss sein letztes Gebot zahlen – ohne etwas zu bekommen.",
+        "frage": "Was geschieht in realen Auktionen bei rationalen Bietern?",
+        "optionen": [
+            {"text": "Die Auktion endet meist bei 50 €", "hinweis": "Wäre das wirklich rational?"},
+            {"text": "Niemand bietet, das Gleichgewicht ist 0 €", "hinweis": "Klingt vernünftig – passiert es?"},
+            {"text": "Gebote überschreiten regelmäßig 100 € – manchmal sogar 200 €", "hinweis": "Empirisch belegt"},
+            {"text": "Der erste Bieter gewinnt mit 1 €, alle anderen sind rational", "hinweis": "Theoretisch denkbar"},
+        ],
+        "loesung_text": "Gebote überschreiten regelmäßig 100 € – Martin Shubik (1971) dokumentierte Endpreise bis weit über 200 €",
+        "erklaerung": "<p>Sobald zwei Personen geboten haben, gerät jede in eine Falle: Wer aussteigt, zahlt sein letztes Gebot <em>komplett</em>, ohne Gegenleistung. Eskaliert man dagegen um einen weiteren Euro, könnte man zumindest noch den Schein gewinnen. So entsteht eine Kaskade rationaler Einzelentscheidungen mit kollektiv irrationalem Ergebnis.</p><p>Beispiel: Bei Geboten 99 € (Spieler A) und 100 € (Spieler B): Würde A aussteigen, verliert er 99 €. Bietet er 101 €, verliert er im schlimmsten Fall nur 1 € — und gewinnt eventuell den Schein. Also bietet er. Das gleiche Kalkül gilt jetzt für B mit 102, und so weiter.</p>",
+        "kontext": "<p><strong>Martin Shubik, 1971</strong>: 'The Dollar Auction Game: A Paradox in Noncooperative Behavior and Escalation' (Journal of Conflict Resolution).</p><p>Das Spiel ist ein Paradebeispiel für <em>Eskalation des Engagements</em> (Escalation of Commitment) und eng verwandt mit dem <strong>Sunk-Cost-Fehlschluss</strong>: Bereits investierte Mittel beeinflussen Entscheidungen, obwohl sie aus rationaler Sicht irrelevant sein sollten.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Anwendungen: Bietergefechte bei Auktionshäusern, Rüstungswettläufe, gescheiterte Großprojekte (Berliner Flughafen)</li><li>Vietnam, Irak, Afghanistan – jedes Mal mehr Truppen, weil der Rückzug 'die bisherigen Opfer entwertet hätte'</li><li>Strategie zum Aussteigen: nur am Anfang gar nicht bieten – sobald man drin ist, gibt es keinen 'sauberen' Ausweg</li></ul><p>Spieltheoretisch ist das einzige rationale Erstgebot 1 €, sofern man weiß, dass niemand sonst bieten wird. In der Praxis findet sich aber fast immer ein zweiter Bieter – und dann beginnt der Aufzug nach oben.</p>",
+        "erkenntnis": "Eine Folge rationaler Schritte kann insgesamt katastrophal sein. Wer eine eskalierende Situation erkennt, muss früh aussteigen — nicht klüger weiterbieten.",
+    },
+    "endowment": {
+        "id": "endowment", "name": "Der Besitztumseffekt", "icon": "☕",
+        "farbe": "rose", "kategorie": "Psychologie",
+        "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup": "Cornell-Studenten erhielten zufällig eine Kaffeetasse (Wert: ca. 6 $) – die andere Hälfte ging leer aus. Anschließend durfte gehandelt werden. Klassische Wirtschaftstheorie sagt: Etwa die Hälfte der Tassen wechselt den Besitzer (denn die Zuweisung war zufällig).",
+        "frage": "Was passierte tatsächlich?",
+        "optionen": [
+            {"text": "Genau ~50 % der Tassen wechselten den Besitzer", "hinweis": "Die klassische Vorhersage"},
+            {"text": "Fast keine Tassen wechselten – die Verkaufspreise lagen ungefähr doppelt so hoch wie die Kaufpreise", "hinweis": "Asymmetrische Wertschätzung"},
+            {"text": "Alle Tassen wechselten – Tausch ist immer Pareto-verbessernd", "hinweis": "Würde das stimmen?"},
+            {"text": "Tassen wurden im Schnitt deutlich günstiger verkauft als gekauft", "hinweis": "Umgekehrtes Muster"},
+        ],
+        "loesung_text": "Fast keine Tassen wechselten den Besitzer: Verkäufer verlangten im Median ~7 $, Käufer zahlten höchstens ~3 $",
+        "erklaerung": "<p>Sobald die Tasse jemandem 'gehört', ist sie ihm psychologisch mehr wert – ohne dass sich an ihr objektiv etwas geändert hätte. Das ist der <strong>Besitztumseffekt</strong> (Endowment Effect). Er widerspricht direkt der ökonomischen Annahme, dass Zahlungsbereitschaft (Willingness to Pay) und Verkaufsbereitschaft (Willingness to Accept) für dasselbe Gut übereinstimmen.</p><p>Die Verkäufer empfanden den Verkauf als <em>Verlust</em>, die Käufer den Kauf als <em>Gewinn</em>. Da Verluste etwa doppelt so schwer wiegen wie gleich große Gewinne (Verlustaversion), entsteht die Lücke.</p>",
+        "kontext": "<p><strong>Kahneman, Knetsch & Thaler, 1990</strong>: 'Experimental Tests of the Endowment Effect and the Coase Theorem' (Journal of Political Economy).</p><p>Die theoretische Grundlage ist die <strong>Prospect Theory</strong> (Kahneman & Tversky 1979): Menschen bewerten Ergebnisse relativ zu einem Referenzpunkt, und Verluste schmerzen stärker als gleich große Gewinne erfreuen.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Anwendung Marketing: 'Probieren Sie es 30 Tage – Geld-zurück-Garantie' – wenig Rücksendungen, weil Eigentum gebildet wurde</li><li>Anwendung Verhandlung: Was du schon 'hast' (Stelle, Vertrag, Recht) gibst du nur ungern auf</li><li>Coase-Theorem: Die effiziente Allokation hänge nicht von der Erstzuteilung ab – durch den Endowment-Effekt wird dieses Theorem in der Realität gebrochen</li></ul><p>Richard Thaler erhielt 2017 den Wirtschaftsnobelpreis – auch für diese Linie der Forschung.</p>",
+        "erkenntnis": "Was du besitzt, ist dir mehr wert – auch wenn du es vor 5 Minuten noch nicht hattest. Wer das weiß, kann sowohl bei Konsumentscheidungen als auch in Verhandlungen souveräner agieren.",
     },
 }
 
