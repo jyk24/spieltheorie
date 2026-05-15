@@ -630,6 +630,11 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neue Mathematik & Logik (2026) ────────────────────────────────────────
+    {"id":"schubfachprinzip","name":"Das Schubfachprinzip","icon":"🗄️","beschreibung":"In Berlin leben über 3,5 Millionen Menschen. Ein menschliches Haar­zähl­limit liegt bei ca. 150.000. Was folgt zwingend daraus? Dirichlets Prinzip liefert eine garantierte Antwort – ganz ohne Wahrscheinlichkeit.","typ":"Mathematik-Prinzip","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Mathematik"},
+    {"id":"buffons-nadel","name":"Buffons Nadel","icon":"📏","beschreibung":"Wirf eine Nadel auf einen Boden mit parallelen Linien. Die Wahrscheinlichkeit, dass die Nadel eine Linie kreuzt, ergibt direkt π. Buffon (1733) zeigte: Mathematik wartet überall – sogar im Zufall.","typ":"Geometrische Wahrscheinlichkeit","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Mathematik"},
+    {"id":"cantors-diagonale","name":"Cantors Diagonalargument","icon":"♾️","beschreibung":"Lassen sich die reellen Zahlen zwischen 0 und 1 in einer Liste anordnen? Georg Cantor (1891) bewies in einem zweizeiligen Argument: Nein. Es gibt verschieden 'große' Unendlichkeiten.","typ":"Unendlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Mathematik"},
+    {"id":"halteproblem","name":"Das Halteproblem","icon":"⏹️","beschreibung":"Gibt es ein Programm, das für beliebige Programme entscheidet, ob sie irgendwann anhalten? Alan Turing (1936) bewies: nein – fundamental nicht. Eines der schönsten Selbstbezugs-Argumente der Mathematik.","typ":"Berechenbarkeit","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Logik"},
 ]
 
 
@@ -4062,6 +4067,75 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    # ── Neue Mathematik & Logik (2026) ────────────────────────────────────────
+    "schubfachprinzip": {
+        "id": "schubfachprinzip", "name": "Das Schubfachprinzip", "icon": "🗄️",
+        "farbe": "violet", "kategorie": "Mathematik",
+        "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup": "Verteilst du <strong>n + 1 Objekte</strong> auf <strong>n Schubladen</strong>, dann muss mindestens eine Schublade zwei Objekte enthalten. Klingt trivial — ist aber eines der mächtigsten Werkzeuge der diskreten Mathematik. Dirichlet formulierte es 1834. In Berlin leben mehr als 3,5 Millionen Menschen. Ein Mensch hat höchstens etwa 150 000 Kopfhaare.",
+        "frage": "Was kannst du daraus mit <em>vollständiger Sicherheit</em> über die Berliner Bevölkerung schließen?",
+        "optionen": [
+            {"text": "Es gibt mindestens zwei Berliner mit exakt gleicher Haaranzahl", "hinweis": "Schubladen = mögliche Haarzahlen, Objekte = Menschen"},
+            {"text": "Es ist sehr wahrscheinlich, dass zwei Berliner gleich viele Haare haben", "hinweis": "Das wäre ein probabilistisches Argument — geht es genauer?"},
+            {"text": "Mindestens zwei Berliner sind Glatzköpfe", "hinweis": "Das könnte stimmen, folgt aber nicht aus dem Prinzip"},
+            {"text": "Mindestens einer hat genau die durchschnittliche Haaranzahl", "hinweis": "Mittelwerte werden oft von niemandem getroffen"},
+        ],
+        "loesung_text": "Mindestens zwei Berliner haben exakt gleich viele Haare — garantiert.",
+        "erklaerung": "<p>Schubladen: die ca. 150 001 möglichen Haaranzahlen (0, 1, 2, …, 150 000). Objekte: 3 500 000 Berliner. Da es mehr Berliner als mögliche Haarzahlen gibt, müssen mindestens zwei in derselben \"Schublade\" landen — also dieselbe exakte Haaranzahl haben.</p><p>Tatsächlich: Im Schnitt 23 Berliner pro Haarzahl. Aber das Schubfachprinzip gibt schon die <em>logische Garantie</em>, dass mindestens 2 Menschen die gleiche Anzahl haben — ohne jede Wahrscheinlichkeitsrechnung.</p>",
+        "kontext": "<p><strong>Weitere Anwendungen:</strong></p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>In jeder Gruppe von 13 Menschen haben mindestens zwei im selben Monat Geburtstag.</li><li>Bei 5 Punkten in einem Einheitsquadrat liegen zwei im Abstand ≤ √2/2.</li><li>Beim Schachspiel: in jeder Reihe von 9 Zügen muss eine Figur mindestens zweimal dasselbe Feld besucht haben — wenn nur 8 Felder erreichbar sind.</li><li>Der Beweis, dass jede rationale Zahl periodisch ist, nutzt das Schubfachprinzip auf Restklassen.</li></ul><p><strong>Verallgemeinert:</strong> Bei k·n + 1 Objekten und n Schubladen enthält mindestens eine k+1 Objekte. Damit lassen sich erstaunlich starke Aussagen beweisen — von Graphentheorie bis Zahlentheorie.</p>",
+        "erkenntnis": "Manche mathematischen Tatsachen sind <em>deterministisch garantiert</em> — nicht nur \"sehr wahrscheinlich\". Das Schubfachprinzip ist der einfachste Vertreter eines mächtigen Argumentationsmusters: aus Größenvergleichen folgen exakte Schlussfolgerungen.",
+    },
+    "buffons-nadel": {
+        "id": "buffons-nadel", "name": "Buffons Nadel", "icon": "📏",
+        "farbe": "teal", "kategorie": "Mathematik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Ein Boden ist mit parallelen Linien im Abstand <strong>d</strong> markiert. Du wirfst zufällig eine Nadel der Länge <strong>L = d</strong> auf den Boden. Manche Nadeln kreuzen eine Linie, andere nicht. Buffon (1733) fragte: Wie groß ist die Wahrscheinlichkeit einer Kreuzung?",
+        "frage": "Welcher Wert erscheint überraschend in der Antwort?",
+        "optionen": [
+            {"text": "Die Wahrscheinlichkeit ist 1/2 — der natürliche Symmetriewert", "hinweis": "Klingt plausibel, ist aber falsch"},
+            {"text": "Die Wahrscheinlichkeit ist 2/π ≈ 0,6366 — die Kreiszahl taucht auf", "hinweis": "Wie kommt π in dieses geometrische Problem?"},
+            {"text": "Die Wahrscheinlichkeit ist 1/e ≈ 0,3679 — die Eulersche Zahl", "hinweis": "e kommt von kontinuierlichem Wachstum, nicht von Rotation"},
+            {"text": "Die Wahrscheinlichkeit hängt nur von L und d ab, nicht von einer Konstante", "hinweis": "Aber zur Bestimmung des Wertes braucht es eine Integration"},
+        ],
+        "loesung_text": "Die Wahrscheinlichkeit einer Kreuzung ist genau 2/π.",
+        "erklaerung": "<p>Sei θ der Winkel zwischen Nadel und Linien (gleichverteilt auf [0, π/2]) und x der Abstand des Nadelmittelpunkts zur nächsten Linie (gleichverteilt auf [0, d/2]). Eine Kreuzung tritt auf, wenn x ≤ (L/2)·sin θ. Mit L = d ergibt das Doppelintegral:</p><p class=\"font-mono text-xs bg-slate-50 p-2 rounded\">P = (2/π) · ∫₀^(π/2) sin θ dθ = (2/π) · 1 = 2/π</p><p>Daraus folgt eine wunderschöne Konsequenz: Wirfst du n Nadeln und beobachtest k Kreuzungen, dann nähert sich 2n/k dem Wert π. Mit 1 000 Würfen kommst du im Schnitt auf ±0,07 Genauigkeit.</p>",
+        "kontext": "<p><strong>Geschichte:</strong> Buffon stellte das Problem 1733 — über 100 Jahre vor der Geburt der modernen Statistik. Es ist eines der ersten Beispiele für <em>geometrische Wahrscheinlichkeit</em>.</p><p>1901 simulierte Mario Lazzarini das Experiment mit 3 408 Würfen — und veröffentlichte ein π ≈ 3,1415929. Verdächtig genau für so wenige Würfe: Lazzarini stoppte vermutlich genau, als das gewünschte Ergebnis erschien. <strong>Cherry-Picking</strong> in der Statistik avant la lettre.</p><p>Die Methode ist der Urahn der <strong>Monte-Carlo-Verfahren</strong>: π, Integrale, Risiken — durch zufällige Stichproben statt analytische Lösung. Heute Grundwerkzeug der Physik, Finanzmathematik und KI-Forschung.</p>",
+        "erkenntnis": "π ist nicht nur die Kreiszahl, sondern erscheint überall, wo Rotation oder kontinuierliche Symmetrie eine Rolle spielt. Zufällige Experimente können deterministische Konstanten enthüllen — das Fundament aller Monte-Carlo-Methoden.",
+    },
+    "cantors-diagonale": {
+        "id": "cantors-diagonale", "name": "Cantors Diagonalargument", "icon": "♾️",
+        "farbe": "indigo", "kategorie": "Mathematik",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Die natürlichen Zahlen sind unendlich. Die reellen Zahlen sind auch unendlich. Sind beide Unendlichkeiten <em>gleich groß</em> — können wir die reellen Zahlen also durchnummerieren? Georg Cantor stellte 1891 ein zweizeiliges Argument vor, das diese Frage für immer entschied.",
+        "frage": "Cantors Strategie: Nimm an, jemand listet alle reellen Zahlen zwischen 0 und 1 vollständig auf. Wie konstruiert Cantor eine Zahl, die garantiert nicht in der Liste steht?",
+        "optionen": [
+            {"text": "Er nimmt die größte Zahl der Liste und addiert 1", "hinweis": "Es gibt keine größte Zahl in (0,1)"},
+            {"text": "Er nimmt die n-te Nachkommastelle der n-ten Zahl und ändert sie", "hinweis": "Das Diagonalargument im Kern"},
+            {"text": "Er multipliziert alle Zahlen miteinander", "hinweis": "Unendliche Produkte funktionieren nicht so einfach"},
+            {"text": "Er nimmt einfach eine zufällige Zahl, die noch nicht da steht", "hinweis": "Aber wie weiß man, dass sie nicht doch da steht?"},
+        ],
+        "loesung_text": "Diagonalisierung: ändere systematisch die n-te Nachkommastelle der n-ten Zahl.",
+        "erklaerung": "<p>Angenommen, jemand listet alle reellen Zahlen in (0,1):</p><p class=\"font-mono text-xs bg-slate-50 p-2 rounded\">x₁ = 0.<u>3</u>14159…<br>x₂ = 0.2<u>7</u>1828…<br>x₃ = 0.16<u>1</u>803…<br>x₄ = 0.141<u>4</u>21…<br>…</p><p>Cantor konstruiert eine neue Zahl <strong>y</strong>, deren n-te Nachkommastelle <em>anders</em> ist als die n-te Stelle von xₙ. Etwa: y = 0,4 2 2 5 …</p><p>Diese Zahl <strong>kann nicht in der Liste sein</strong>: Sie unterscheidet sich von x₁ in der ersten Stelle, von x₂ in der zweiten, von xₙ in der n-ten. Egal wie weit man liest. Widerspruch zur Annahme einer vollständigen Liste. <strong>Die reellen Zahlen sind überabzählbar.</strong></p>",
+        "kontext": "<p><strong>Verschiedene Unendlichkeiten:</strong> Cantor bewies, dass es <em>mehrere Stufen</em> der Unendlichkeit gibt. ℕ, ℤ, ℚ sind alle gleich groß (abzählbar, ℵ₀). ℝ ist strikt größer (ℵ₁ bzw. 2^ℵ₀).</p><p>Die <strong>Kontinuumshypothese</strong> fragt, ob es eine Unendlichkeit dazwischen gibt. Gödel (1940) und Cohen (1963) zeigten: Diese Frage ist <em>unabhängig</em> von den Standardaxiomen der Mengenlehre — man kann sie weder beweisen noch widerlegen.</p><p>Diagonalisierung ist seither <strong>das Standardwerkzeug</strong> für \"Unmöglichkeits-Beweise\": Russells Paradox, Gödels Unvollständigkeit, Turings Halteproblem — alle nutzen denselben Selbstbezugs-Trick.</p>",
+        "erkenntnis": "Unendlichkeit ist nicht nur \"groß\" — sie hat Struktur. Manche Mengen sind <em>so</em> unendlich, dass sie keinerlei Auflistung erlauben. Aus zwei Zeilen Argumentation folgt eine philosophische Bombe.",
+    },
+    "halteproblem": {
+        "id": "halteproblem", "name": "Das Halteproblem", "icon": "⏹️",
+        "farbe": "rose", "kategorie": "Logik",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": "Manche Programme halten an (z. B. <code>print(\"hi\")</code>). Manche laufen ewig (<code>while True: pass</code>). Manche sind unklar. Die natürliche Frage: <strong>Gibt es ein Programm H</strong>, das für jedes Programm P und jede Eingabe x korrekt entscheidet, ob P(x) jemals anhält? Alan Turing (1936) bewies in einer dreizeiligen Idee: Nein.",
+        "frage": "Wie konstruiert Turing den Widerspruch, der die Existenz eines solchen Programms H widerlegt?",
+        "optionen": [
+            {"text": "Er zeigt: H bräuchte unendlichen Speicher — das ist physikalisch unmöglich", "hinweis": "Der Beweis ist rein logisch, unabhängig von Hardware"},
+            {"text": "Er konstruiert ein Programm D, das genau das Gegenteil von H's Vorhersage tut, wenn man es auf sich selbst anwendet", "hinweis": "Selbstbezugs-Diagonalisierung — Cantors Trick"},
+            {"text": "Er zeigt, dass es zu viele Programme gibt, um sie alle zu prüfen", "hinweis": "Es geht nicht um Zeit, sondern um logische Unmöglichkeit"},
+            {"text": "Er beweist es per Induktion über die Programmlänge", "hinweis": "Der Beweis ist nicht induktiv"},
+        ],
+        "loesung_text": "Selbstbezug: ein Programm, das tut, was H verbietet — und dann auf sich selbst angewandt wird.",
+        "erklaerung": "<p>Angenommen H(P, x) existiert: gibt \"hält\" oder \"hält nie\" zurück. Konstruiere ein neues Programm D(P):</p><p class=\"font-mono text-xs bg-slate-50 p-2 rounded\">D(P):<br>&nbsp;&nbsp;wenn H(P, P) = \"hält\":<br>&nbsp;&nbsp;&nbsp;&nbsp;laufe ewig<br>&nbsp;&nbsp;sonst:<br>&nbsp;&nbsp;&nbsp;&nbsp;halte an</p><p>Jetzt der Schlag: Was macht <strong>D(D)</strong>?</p><ul class=\"list-disc ml-4 mt-1 space-y-1 text-sm\"><li>Würde D(D) anhalten → H(D,D) muss \"hält\" sagen → D(D) läuft ewig. Widerspruch.</li><li>Würde D(D) ewig laufen → H(D,D) muss \"hält nie\" sagen → D(D) hält an. Widerspruch.</li></ul><p>Beides unmöglich. Also kann H gar nicht existieren. <strong>Das Halteproblem ist unentscheidbar.</strong></p>",
+        "kontext": "<p><strong>Konsequenzen:</strong> Es gibt <em>keinen perfekten Debugger</em>, der für jedes Programm verifiziert, ob es terminiert. Auch keine perfekte Antiviren-Software (Rice-Theorem verallgemeinert das Resultat). Auch kein perfekter Compiler-Optimierer.</p><p>Turings Beweis erschien 1936 — vor dem ersten echten Computer. Er nutzte die abstrakte \"Turing-Maschine\". Im selben Jahr bewies <strong>Alonzo Church</strong> dieselbe Aussage über den Lambda-Kalkül. Beide Modelle erwiesen sich als <em>äquivalent</em> — die <strong>Church-Turing-These</strong>: Algorithmus = Turing-berechenbar.</p><p>Das Halteproblem ist eines von vielen unentscheidbaren Problemen: Hilberts 10. Problem (diophantische Gleichungen), Word-Problem für Gruppen, Korrektheit von Hoare-Logik. <strong>Unentscheidbarkeit</strong> ist die Norm, nicht die Ausnahme.</p>",
+        "erkenntnis": "Selbstbezug erzeugt unauflösbare Paradoxe. Dieselbe Struktur — \"Was passiert, wenn ich es auf mich selbst anwende?\" — liegt Russells Paradox, Gödels Unvollständigkeit und dem Halteproblem zugrunde. Manche Grenzen sind logisch, nicht technisch.",
     },
 }
 
