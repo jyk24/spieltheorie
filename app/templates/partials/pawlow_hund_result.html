@@ -1,0 +1,18 @@
+{% if antwort == "konditionierter_reiz" %}
+<div class="bg-green-50 border border-green-200 rounded-xl p-4">
+  <p class="font-semibold text-green-800">✓ Richtig!</p>
+  <p class="text-sm text-green-700 mt-1">
+    Der Geruch der Sonnencrème ist ein <strong>konditionierter Reiz</strong> – er löst die Urlaubserinnerung
+    nicht von Natur aus aus, sondern nur weil er oft mit echten Urlaubserlebnissen kombiniert wurde.
+  </p>
+</div>
+{% else %}
+<div class="bg-red-50 border border-red-200 rounded-xl p-4">
+  <p class="font-semibold text-red-800">✗ Nicht ganz.</p>
+  <p class="text-sm text-red-700 mt-1">
+    Die richtige Antwort: <strong>Konditionierter Reiz</strong>. Der Geruch der Sonnencrème hat keine
+    natürliche Verbindung zum Urlaub – die Verknüpfung wurde durch wiederholte Erfahrungen erlernt.
+    Das ist klassische Konditionierung.
+  </p>
+</div>
+{% endif %}

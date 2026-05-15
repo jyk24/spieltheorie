@@ -1290,6 +1290,294 @@ TED_TALKS = [
             },
         ],
     },
+    {
+        "id": "angela-duckworth",
+        "sprecher": "Angela Duckworth",
+        "titel_de": "Biss – die Kraft der Leidenschaft und Ausdauer",
+        "titel_original": "Grit: The Power of Passion and Perseverance",
+        "jahr": 2013,
+        "icon": "💪",
+        "kategorie": "Kognition",
+        "kurzfassung": (
+            "Psychologin Angela Duckworth hat jahrelang untersucht, was Erfolg vorhersagt – und "
+            "festgestellt: Es ist nicht Talent oder Intelligenz, sondern 'Grit' – Leidenschaft und "
+            "Durchhaltevermoegen ueber lange Zeitraeume. Der Marshmallow-Test zeigt, dass "
+            "Belohnungsaufschub fruehzeitig trainierbar ist – und Langzeiterfolg besser vorhersagt als IQ."
+        ),
+        "kernkonzept": "Grit – Leidenschaft und Ausdauer als Erfolgsfaktor",
+        "schluessel_erkenntnis": "Talent multipliziert mit Anstrengung ergibt Faehigkeit – Faehigkeit multipliziert mit Anstrengung ergibt Erfolg. Anstrengung zaehlt doppelt.",
+        "anwendung": "In Teams und Fuehrung: Nicht nach Talenten suchen, sondern nach Ausdauer und Leidenschaft. Grit ist trainierbar – durch Growth Mindset, Sinn und Uebung.",
+        "ted_url": "https://www.ted.com/talks/angela_lee_duckworth_grit_the_power_of_passion_and_perseverance",
+        "verwandte_raetsel": ["marshmallow-test", "planungsfehlschluss", "dunning-kruger"],
+        "quiz": [
+            {
+                "frage": "Was definiert Duckworth als 'Grit'?",
+                "optionen": [
+                    {"text": "Hohe Intelligenz kombiniert mit schnellen Lernstrategien", "korrekt": False},
+                    {"text": "Leidenschaft und Ausdauer fuer sehr langfristige Ziele", "korrekt": True},
+                    {"text": "Die Faehigkeit, unter Druck gut zu performen", "korrekt": False},
+                    {"text": "Emotionale Stabilitaet und Stressresistenz", "korrekt": False},
+                ],
+                "erklaerung": "Grit = Passion + Perseverance. Nicht kurzfristige Belastbarkeit, sondern jahrelange Ausdauer bei einer einzigen grossen Leidenschaft – das ist Duckworths Definition.",
+            },
+            {
+                "frage": "Was fand Duckworth in ihrer Studie mit West-Point-Kadetten heraus?",
+                "optionen": [
+                    {"text": "Athletische Faehigkeiten sagten Erfolg am besten voraus", "korrekt": False},
+                    {"text": "Grit sagte besser voraus, wer das erste Sommer-Training abschloss, als der 'Whole Candidate Score'", "korrekt": True},
+                    {"text": "Intelligenz war der wichtigste Praediktor", "korrekt": False},
+                    {"text": "Soziale Kompetenz korrelierte am staerksten mit Erfolg", "korrekt": False},
+                ],
+                "erklaerung": "West Points 'Whole Candidate Score' (Noten, Sport, Fuehrung) sagte das Abbrechen des harten Sommerprogramms schlechter voraus als Duckworths einfacher Grit-Fragebogen.",
+            },
+            {
+                "frage": "Duckworths Formel: Talent × Anstrengung = Faehigkeit. Was multipliziert mit Anstrengung ergibt Erfolg?",
+                "optionen": [
+                    {"text": "Talent", "korrekt": False},
+                    {"text": "Faehigkeit", "korrekt": True},
+                    {"text": "Motivation", "korrekt": False},
+                    {"text": "Intelligenz", "korrekt": False},
+                ],
+                "erklaerung": "Duckworths Formel: Talent × Anstrengung = Faehigkeit. Faehigkeit × Anstrengung = Erfolg. Anstrengung erscheint zweimal – sie ist doppelt so wichtig wie Talent.",
+            },
+            {
+                "frage": "Was schlaegt Duckworth als wichtigste Theorie vor, um Grit zu foerdern?",
+                "optionen": [
+                    {"text": "Harte Strafe fuer Aufgeben", "korrekt": False},
+                    {"text": "Carol Dwecks Growth Mindset – der Glaube, dass das Gehirn wachsen kann", "korrekt": True},
+                    {"text": "Finanzielle Belohnungen fuer Ausdauer", "korrekt": False},
+                    {"text": "Reduzierung von Herausforderungen, um Frustration zu vermeiden", "korrekt": False},
+                ],
+                "erklaerung": "Duckworth: Das beste bekannte Werkzeug fuer Grit-Entwicklung ist Dwecks Growth Mindset. Wer glaubt, das Gehirn kann wachsen, gibt bei Rueckschlaegen seltener auf.",
+            },
+            {
+                "frage": "Was zeigt die Forschung mit Nationalfinalistendes Buchstabierwettbewerbs ueber Grit?",
+                "optionen": [
+                    {"text": "Sie uebten seltener als weniger erfolgreiche Teilnehmer", "korrekt": False},
+                    {"text": "Grittier-Teilnehmer uebten mehr deliberate practice und schnitten besser ab", "korrekt": True},
+                    {"text": "Talent war der entscheidende Faktor", "korrekt": False},
+                    {"text": "Elterliche Unterstuetzung war wichtiger als eigene Ausdauer", "korrekt": False},
+                ],
+                "erklaerung": "Duckworth's Studie: Grit-Wert sagte die Endrundenteilnahme voraus – weil grittiere Kinder mehr deliberate practice betrieben (harte, zielgerichtete Uebung, nicht nur Spass).",
+            },
+        ],
+    },
+    {
+        "id": "philip-zimbardo",
+        "sprecher": "Philip Zimbardo",
+        "titel_de": "Die Psychologie des Boesen",
+        "titel_original": "The Psychology of Evil",
+        "jahr": 2008,
+        "icon": "😈",
+        "kategorie": "Kognition",
+        "kurzfassung": (
+            "Sozialpsychologe Philip Zimbardo (Stanford-Gefaengnisexperiment) zeigt, dass Boesartigkeit "
+            "keine Charaktereigenschaft ist, sondern durch Situationen erzeugt wird. Das Milgram-Experiment "
+            "und Abu Ghraib belegen: Normale Menschen tun unter dem richtigen Druck unvorstellbare Dinge. "
+            "'Der Luzifer-Effekt' beschreibt, wie Systeme und Situationen Verhalten dominieren."
+        ),
+        "kernkonzept": "Der Luzifer-Effekt – Situationen erzeugen Boesartigkeit",
+        "schluessel_erkenntnis": "Nicht schlechte Menschen tun boese Dinge – schlechte Situationen bringen normale Menschen dazu. Das System traegt Verantwortung.",
+        "anwendung": "In Fuehrung und Teams: Systemdesign ist Verhaltensdesign. Schlechte Ergebnisse nicht auf Individuen, sondern auf Situationen und Strukturen zurueckfuehren.",
+        "ted_url": "https://www.ted.com/talks/philip_zimbardo_on_the_psychology_of_evil",
+        "verwandte_raetsel": ["milgram-gehorsam", "bystander-effekt", "attributionsfehler"],
+        "quiz": [
+            {
+                "frage": "Was ist der 'Luzifer-Effekt' nach Zimbardo?",
+                "optionen": [
+                    {"text": "Der Prozess, durch den boese Menschen andere korrumpieren", "korrekt": False},
+                    {"text": "Die Transformation normaler, guter Menschen zu Taetern unter dem Einfluss von Situationen", "korrekt": True},
+                    {"text": "Die Neigung von Autoritaeten, Macht zu missbrauchen", "korrekt": False},
+                    {"text": "Der Effekt, dass Boeses ansteckend ist wie ein Virus", "korrekt": False},
+                ],
+                "erklaerung": "Zimbardos Kernthese (aus dem gleichnamigen Buch): Wie kann ein Engel zu Luzifer werden? Nicht durch inneres Boeses, sondern durch situative Kraefte, die wir unterschaetzen.",
+            },
+            {
+                "frage": "Was zeigte das Stanford-Gefaengnisexperiment (1971)?",
+                "optionen": [
+                    {"text": "Echte Kriminelle verhalten sich immer anders als normale Menschen", "korrekt": False},
+                    {"text": "Normale Studenten wurden in der Rolle des Waerters innerhalb von Tagen sadistisch", "korrekt": True},
+                    {"text": "Gefaengnisumgebungen haben keinen Einfluss auf das Verhalten", "korrekt": False},
+                    {"text": "Autoritaeten behalten stets ihre Moral", "korrekt": False},
+                ],
+                "erklaerung": "Das Experiment musste nach 6 Tagen statt 2 Wochen abgebrochen werden: 'Waerter'-Studenten demuetigten 'Gefangenen'-Studenten systematisch. Die Situation dominierte den Charakter.",
+            },
+            {
+                "frage": "Wie unterscheidet Zimbardo den 'dispositionalen' vom 'situativen' Ansatz?",
+                "optionen": [
+                    {"text": "Dispositional: Verhalten kommt von aussen; situativ: von innen", "korrekt": False},
+                    {"text": "Dispositional: Boeses kommt vom schlechten Charakter; situativ: Boeses entsteht durch Umstände", "korrekt": True},
+                    {"text": "Beide Ansaetze erklaeren Verhalten gleich gut", "korrekt": False},
+                    {"text": "Dispositional ist wissenschaftlich, situativ ist philosophisch", "korrekt": False},
+                ],
+                "erklaerung": "Wir neigen zum dispositionalen Fehler (Fundamentaler Attributionsfehler): Wir sehen Charakter statt Situation. Zimbardo zeigt: Die Situation ist maechtig – wir unterschaetzen sie systematisch.",
+            },
+            {
+                "frage": "Welchen Bezug zieht Zimbardo zum Abu-Ghraib-Skandal?",
+                "optionen": [
+                    {"text": "Er verteidigt die beteiligten Soldaten und gibt dem System die gesamte Schuld", "korrekt": False},
+                    {"text": "Er zeigt, dass die gleichen Situationskraefte wie im Stanford-Experiment erklaeren, warum normale Soldaten Folter begingen", "korrekt": True},
+                    {"text": "Er argumentiert, dass die Soldaten persoehnlich psychisch gestoert waren", "korrekt": False},
+                    {"text": "Er sieht politische Befehle als alleinige Ursache", "korrekt": False},
+                ],
+                "erklaerung": "Zimbardo hat einen der Abu-Ghraib-Soldaten als Expertenzeuge verteidigt – nicht um ihn freizusprechen, sondern um das System als Mitursache anzuerkennen.",
+            },
+            {
+                "frage": "Was schlaegt Zimbardo als Gegenmittel vor?",
+                "optionen": [
+                    {"text": "Strengere Strafen fuer Fehlverhalten", "korrekt": False},
+                    {"text": "Heldenbereitschaft foerdern – den Mut zur Zivilcourage im kritischen Moment", "korrekt": True},
+                    {"text": "Autoritaetsstrukturen grundsaetzlich abschaffen", "korrekt": False},
+                    {"text": "Bessere psychologische Auswahl von Fuehrungspersonen", "korrekt": False},
+                ],
+                "erklaerung": "Zimbardo: 'Heroism is the antidote to evil.' Er gruendete das Heroic Imagination Project – weil der entscheidende Moment nicht Charakter, sondern die Bereitschaft ist, im kritischen Moment zu handeln.",
+            },
+        ],
+    },
+    {
+        "id": "elizabeth-loftus",
+        "sprecher": "Elizabeth Loftus",
+        "titel_de": "Wie zuverlaessig ist dein Gedaechtnis?",
+        "titel_original": "How Reliable Is Your Memory?",
+        "jahr": 2013,
+        "icon": "🧠",
+        "kategorie": "Kognition",
+        "kurzfassung": (
+            "Gedaechtnisforscherin Elizabeth Loftus hat bewiesen: Erinnerungen sind keine Aufzeichnungen, "
+            "sondern rekonstruktive Prozesse. Sie kann durch einfache Suggestionen falsche Erinnerungen "
+            "implantieren – an Ereignisse, die nie stattgefunden haben. Ihre Forschung hat das Justizsystem "
+            "revolutioniert und zeigt, wie anfaellig menschliche Zeugenaussagen sind."
+        ),
+        "kernkonzept": "Falsche Erinnerungen und Gedaechtnis-Suggestibilitaet",
+        "schluessel_erkenntnis": "Erinnerungen sind keine Videos – sie werden bei jedem Abruf neu konstruiert und koennen durch externe Suggestion veraendert werden.",
+        "anwendung": "In Verhandlungen und Verhoeren: Wie Fragen gestellt werden, beeinflusst die Erinnerungen des Befragten. Suggestive Formulierungen koennen falsche 'Fakten' erzeugen.",
+        "ted_url": "https://www.ted.com/talks/elizabeth_loftus_how_reliable_is_your_memory",
+        "verwandte_raetsel": ["priming", "anker-experiment", "konfirmationsfehler"],
+        "quiz": [
+            {
+                "frage": "Was zeigte Loftus' klassisches 'Auto-Crash'-Experiment?",
+                "optionen": [
+                    {"text": "Augenzeugen erinnern Unfaelle sehr praezise", "korrekt": False},
+                    {"text": "Das Verb in der Frage ('smashed' vs. 'contacted') beeinflusste die Geschwindigkeitsschaetzung und ob Glasscherben erinnert wurden", "korrekt": True},
+                    {"text": "Emotionale Ereignisse werden genauer gespeichert", "korrekt": False},
+                    {"text": "Wiederholtes Befragen verbessert die Erinnerungsgenauigkeit", "korrekt": False},
+                ],
+                "erklaerung": "Loftus (1974): 'About how fast were the cars going when they smashed into each other?' ergab hoehere Schaetzungen als 'hit'. Und: Mehr Teilnehmer 'erinnerten' Scherben, obwohl es keine gab.",
+            },
+            {
+                "frage": "Was ist eine 'false memory' (falsche Erinnerung) nach Loftus?",
+                "optionen": [
+                    {"text": "Eine Erinnerung an reale Ereignisse mit einzelnen falschen Details", "korrekt": False},
+                    {"text": "Eine Erinnerung an ein Ereignis, das nie stattgefunden hat – vollstaendig implantiert durch Suggestion", "korrekt": True},
+                    {"text": "Eine verblasste Erinnerung, die rekonstruiert wird", "korrekt": False},
+                    {"text": "Eine Erinnerung, die durch Trauma veraendert wurde", "korrekt": False},
+                ],
+                "erklaerung": "Loftus implantierte in Experimenten vollstaendig falsche Kindheitserinnerungen (z.B. als Kind in einem Einkaufszentrum verloren gegangen) – Teilnehmer 'erinnerten' sie lebhaft und detailliert.",
+            },
+            {
+                "frage": "Welche juristischen Konsequenzen hat Loftus' Forschung?",
+                "optionen": [
+                    {"text": "Augenzeugenaussagen wurden als wichtigstes Beweismittel bestaetigt", "korrekt": False},
+                    {"text": "Zahlreiche Verurteilungen wurden aufgrund manipulierter Zeugenaussagen revidiert", "korrekt": True},
+                    {"text": "Videobeweise wurden fuer zuverlaessiger erklaert als Zeugenaussagen", "korrekt": False},
+                    {"text": "Loftus' Forschung hatte keinen Einfluss auf das Justizsystem", "korrekt": False},
+                ],
+                "erklaerung": "Loftus hat in Hunderten von Faellen als Expertenzeuge ausgesagt. Die Innocence Project-DNA-Daten zeigen: In ~70% der Falschverurteilungen waren Augenzeugenaussagen das Hauptbeweismittel.",
+            },
+            {
+                "frage": "Was zeigt Loftus' 'Lost in the Mall'-Experiment?",
+                "optionen": [
+                    {"text": "Kinder sind besser darin, echte von falschen Erinnerungen zu unterscheiden", "korrekt": False},
+                    {"text": "Durch Suggestion koennen Versuchspersonen sich lebhaft an Ereignisse erinnern, die nicht stattfanden", "korrekt": True},
+                    {"text": "Falsche Erinnerungen verblassen schneller als echte", "korrekt": False},
+                    {"text": "Nur traumatische Erinnerungen sind anfaellig fuer Manipulation", "korrekt": False},
+                ],
+                "erklaerung": "Versuchspersonen bekamen von Verwandten 'bestaetigt', sie seien als Kind in einem Mall verloren gegangen. Viele 'erinnerten' sich detailliert. Die Suggestion reichte – keine reale Erfahrung noetig.",
+            },
+            {
+                "frage": "Was folgt aus Loftus' Forschung fuer Verhoere und Befragungen?",
+                "optionen": [
+                    {"text": "Wiederholtes Befragen macht Aussagen zuverlaessiger", "korrekt": False},
+                    {"text": "Suggestive oder fuehrende Fragen koennen falsche Erinnerungen erzeugen, die Befragte fuer real halten", "korrekt": True},
+                    {"text": "Emotionale Intensitaet macht Aussagen zuverlaessiger", "korrekt": False},
+                    {"text": "Konfrontative Verhoere foerdern praezisere Erinnerungen", "korrekt": False},
+                ],
+                "erklaerung": "Loftus' Kernbotschaft fuer die Praxis: Wie man fragt, formt die Erinnerung. 'Haben Sie die Schramme gesehen?' implantiert eine Schramme. Neutrale, offene Fragen sind zwingend.",
+            },
+        ],
+    },
+    {
+        "id": "tim-urban",
+        "sprecher": "Tim Urban",
+        "titel_de": "Einblick in den Geist eines Prokrastinators",
+        "titel_original": "Inside the Mind of a Master Procrastinator",
+        "jahr": 2016,
+        "icon": "⏳",
+        "kategorie": "Kognition",
+        "kurzfassung": (
+            "Blogger Tim Urban beschreibt mit Humor die Psychologie des Aufschiebs: Der 'Instant Gratification "
+            "Monkey' uebernimmt das Steuer und verdraengt den rationalen Entscheider. Prokrastination ist kein "
+            "Zeitproblem – es ist ein Emotionsproblem. Die wichtigste Unterscheidung: Prokrastination mit "
+            "Deadline (schmerzhaft aber funktionierend) und ohne Deadline (die heimliche Lebensfalle)."
+        ),
+        "kernkonzept": "Instant Gratification Monkey vs. rationaler Entscheider",
+        "schluessel_erkenntnis": "Prokrastination ohne Deadline ist die gefaehrlichste Form – weil sie nie dramatisch eskaliert, aber leise Jahre frisst.",
+        "anwendung": "In Projekten und Zielen: Kuenstliche Deadlines und oeffentliche Verpflichtungen (Commitment Devices) kaempfen gegen den Instant Gratification Monkey.",
+        "ted_url": "https://www.ted.com/talks/tim_urban_inside_the_mind_of_a_master_procrastinator",
+        "verwandte_raetsel": ["hyperbolisches-diskontieren", "sunk-cost", "marshmallow-test"],
+        "quiz": [
+            {
+                "frage": "Was ist der 'Instant Gratification Monkey' in Urbans Metapher?",
+                "optionen": [
+                    {"text": "Die rationale, langfristig denkende Seite des Gehirns", "korrekt": False},
+                    {"text": "Der Teil des Geistes, der nur Spass, Komfort und sofortige Belohnung will – ohne Ruecksicht auf langfristige Ziele", "korrekt": True},
+                    {"text": "Ein psychologischer Fachbegriff fuer ADHS", "korrekt": False},
+                    {"text": "Das Unterbewusstsein nach Freud", "korrekt": False},
+                ],
+                "erklaerung": "Der Monkey lebt im Hier und Jetzt, kennt kein Gestern und kein Morgen. Er uebernimmt das Steuer vom rationalen Entscheider, wenn Arbeit unangenehm oder langweilig ist.",
+            },
+            {
+                "frage": "Wann verliert der Instant Gratification Monkey seine Macht?",
+                "optionen": [
+                    {"text": "Wenn man ihn durch Disziplin bezwingt", "korrekt": False},
+                    {"text": "Wenn die 'Panic Monster' auftaucht – die Angst vor einer unmittelbaren Deadline", "korrekt": True},
+                    {"text": "Wenn man den Aufgaben genuegend Zeit gibt", "korrekt": False},
+                    {"text": "Wenn die Aufgabe Spass macht", "korrekt": False},
+                ],
+                "erklaerung": "Der Panic Monster ist der einzige, der den Monkey erschreckt – naehe Deadlines, oeffentliche Blamage, existenzielle Konsequenzen. Ohne ihn herrscht der Monkey.",
+            },
+            {
+                "frage": "Warum ist Prokrastination OHNE Deadline laut Urban besonders gefaehrlich?",
+                "optionen": [
+                    {"text": "Weil sie sofortige Konsequenzen hat", "korrekt": False},
+                    {"text": "Weil ohne Deadline kein Panic Monster kommt – man schiebt jahrelang auf, ohne je in die Krise zu geraten", "korrekt": True},
+                    {"text": "Weil sie schwerer zu erkennen ist als deadline-basierte Prokrastination", "korrekt": False},
+                    {"text": "Weil sie zu Burnout fuehrt", "korrekt": False},
+                ],
+                "erklaerung": "Prokrastination mit Deadline eskaliert irgendwann zur Krise – schmerzhaft, aber funktionierend. Ohne Deadline prokrastiniert man Jahrzehnte bei wichtigen Lebenszielen – leise, unsichtbar, fatal.",
+            },
+            {
+                "frage": "Was ist ein 'Commitment Device' als Gegenmittel?",
+                "optionen": [
+                    {"text": "Eine Motivationsapp fuer mehr Disziplin", "korrekt": False},
+                    {"text": "Ein vorab gesetzter Mechanismus, der zukuenftige Entscheidungsfreiheit einschraenkt, um Prokrastination zu verhindern", "korrekt": True},
+                    {"text": "Ein Belohnungssystem fuer abgeschlossene Aufgaben", "korrekt": False},
+                    {"text": "Die Verpflichtung, Aufgaben in kleinen Schritten zu erledigen", "korrekt": False},
+                ],
+                "erklaerung": "Beispiele: Stipendium-Vertrag mit Konsequenzen, oeffentliche Ankuendigung eines Ziels, Wettgeld fuer Nichterfuellung. Man bindet das zukuenftige Selbst, bevor der Monkey das Steuer uebernimmt.",
+            },
+            {
+                "frage": "Wie verbindet Urbans Konzept sich mit 'Hyperbolischem Diskontieren'?",
+                "optionen": [
+                    {"text": "Beide beschreiben irrationale Geldentscheidungen", "korrekt": False},
+                    {"text": "Der Instant Gratification Monkey verkoerpert die uebermaessige Praeferenz fuer sofortige Belohnung ueber zukuenftige Gewinne", "korrekt": True},
+                    {"text": "Hyperbolisches Diskontieren gilt nur fuer Geldentscheidungen, nicht fuer Zeit", "korrekt": False},
+                    {"text": "Es gibt keinen direkten Zusammenhang", "korrekt": False},
+                ],
+                "erklaerung": "Hyperbolisches Diskontieren: Wir uebergewichten das Heute exponentiell gegenueber der Zukunft. Der Monkey ist die emotionale Seite davon – sofort Spass statt spaeter Erfolg.",
+            },
+        ],
+    },
 ]
 
 TALKS_BY_ID = {t["id"]: t for t in TED_TALKS}
