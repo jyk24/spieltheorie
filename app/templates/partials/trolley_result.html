@@ -1,0 +1,114 @@
+<div class="space-y-5">
+
+  <!-- Profil-Karte -->
+  <div class="bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-200 rounded-2xl p-5">
+    <p class="text-xs font-semibold uppercase tracking-widest text-indigo-500 mb-1">Dein Antwortprofil</p>
+    <h3 class="text-xl font-bold text-slate-800 mb-2">{{ profil|capitalize }}</h3>
+    <p class="text-sm text-slate-700 leading-relaxed">{{ profil_text }}</p>
+    <div class="flex gap-3 mt-4">
+      <div class="flex-1 bg-white rounded-xl p-3 text-center">
+        <p class="text-2xl font-bold text-emerald-600">{{ utilitarian_count }}/4</p>
+        <p class="text-xs text-slate-500 mt-1">Eingegriffen<br>(utilitaristisch)</p>
+      </div>
+      <div class="flex-1 bg-white rounded-xl p-3 text-center">
+        <p class="text-2xl font-bold text-rose-600">{{ deontological_count }}/4</p>
+        <p class="text-xs text-slate-500 mt-1">Nicht eingegriffen<br>(deontologisch)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Szenario-für-Szenario -->
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+    <h3 class="font-bold text-slate-800 mb-4">Deine Antworten im Detail</h3>
+    <div class="space-y-4">
+      {% for r in rows %}
+      {% set s = r.scenario %}
+      <div class="border-l-4 pl-4 {% if r.matches_majority %}border-emerald-400{% else %}border-violet-400{% endif %}">
+        <div class="flex items-baseline gap-2 mb-1">
+          <span class="text-lg">{{ s.icon }}</span>
+          <p class="font-semibold text-slate-800 text-sm">{{ s.titel }}</p>
+        </div>
+        <p class="text-xs text-slate-500 mb-2">
+          Deine Antwort:
+          {% if r.is_yes %}
+            <span class="font-semibold text-emerald-700">Ja – eingegriffen</span>
+          {% elif r.is_no %}
+            <span class="font-semibold text-rose-700">Nein – nicht eingegriffen</span>
+          {% else %}
+            <span class="text-slate-400">keine Antwort</span>
+          {% endif %}
+        </p>
+        <p class="text-xs text-slate-600 mb-2">
+          <strong>{{ s.majority_pct }} %</strong> der Befragten antworten
+          {% if s.majority == 'yes' %}
+            <span class="text-emerald-700 font-semibold">"Ja"</span>.
+          {% elif s.majority == 'no' %}
+            <span class="text-rose-700 font-semibold">"Nein"</span>.
+          {% else %}
+            etwa 50/50 – die Antworten spalten sich.
+          {% endif %}
+        </p>
+        <p class="text-xs text-slate-600 leading-relaxed">{{ s.principle|safe }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Die philosophische Pointe -->
+  <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+    <p class="font-semibold text-amber-800 mb-2 text-sm">💡 Die Pointe</p>
+    <p class="text-sm text-amber-900 leading-relaxed mb-3">
+      Mathematisch sind alle vier Szenarien identisch: <strong>1 Tod statt 5</strong>. Trotzdem antworten
+      die meisten Menschen unterschiedlich – und zwar weltweit erstaunlich ähnlich (Hauser et al., 2007:
+      30 000 Befragte aus 120 Ländern).
+    </p>
+    <p class="text-sm text-amber-900 leading-relaxed">
+      Joshua Greene (Harvard) zeigte 2001 in fMRT-Studien: Szenario 1 (Weiche) aktiviert
+      <em>kognitive Areale</em> – Menschen kalkulieren. Szenario 2 (Brücke) aktiviert
+      <em>emotionale Areale</em> – das körperliche Stoßen löst eine Schutzreaktion aus,
+      die Mathematik überlagert.
+    </p>
+  </div>
+
+  <!-- Tiefer eintauchen -->
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+    <p class="font-semibold text-slate-700 text-sm mb-3">📚 Drei Denkschulen</p>
+    <div class="space-y-3 text-sm text-slate-700 leading-relaxed">
+      <div>
+        <p class="font-semibold text-slate-800">Utilitarismus (Bentham, Mill)</p>
+        <p>"Größtes Glück der größten Zahl." Eingreifen ist immer geboten – die Bilanz entscheidet.</p>
+      </div>
+      <div>
+        <p class="font-semibold text-slate-800">Deontologie (Kant)</p>
+        <p>Menschen dürfen nie nur als Mittel benutzt werden. Aktives Töten verletzt diese Würde –
+           auch wenn es 5 rettet.</p>
+      </div>
+      <div>
+        <p class="font-semibold text-slate-800">Doktrin der Doppelwirkung (Aquinas)</p>
+        <p>Ein vorhergesehener, aber unbeabsichtigter schädlicher Nebeneffekt einer guten Handlung ist
+           erlaubt – ein beabsichtigtes Mittel zum Zweck nicht. Erklärt, warum Weiche ≠ Brücke.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Moderne Relevanz -->
+  <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+    <p class="font-semibold text-slate-700 text-sm mb-3">🚗 Warum das heute zählt</p>
+    <p class="text-sm text-slate-600 leading-relaxed mb-2">
+      Das Trolley-Problem ist keine reine Gedankenakrobatik. Autonome Fahrzeuge müssen <em>im Code</em>
+      entscheiden: Im Notfall den Fahrer schützen – oder fünf Fußgänger? Das MIT-"Moral Machine"-Experiment
+      sammelte 40 Millionen Antworten aus 233 Ländern und fand systematische kulturelle Unterschiede.
+    </p>
+    <p class="text-sm text-slate-600 leading-relaxed">
+      Auch in der Medizin (Triage), im Krieg (Drohnenkrieg) und in der KI-Sicherheit kehrt die Frage zurück:
+      <strong>Darf man jemanden aktiv opfern, um mehr zu retten?</strong>
+    </p>
+  </div>
+
+  <!-- Reset -->
+  <button onclick="document.getElementById('trolley-result').innerHTML=''; window.scrollTo({top:0,behavior:'smooth'});"
+          class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors text-sm">
+    ↻ Erneut beantworten
+  </button>
+
+</div>

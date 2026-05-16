@@ -613,6 +613,7 @@ RAETSEL_META = [
     {"id":"flow-analyse","name":"Flow – der optimale Zustand","icon":"🌊","beschreibung":"Zwischen Langeweile und Überforderung liegt ein schmaler Kanal: Flow. Csikszentmihalyi (1990) beschreibt, wann Menschen völlig aufgehen in einer Tätigkeit.","typ":"Motivationspsychologie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"milgram-gehorsam","name":"Das Milgram-Experiment","icon":"⚡","beschreibung":"65% der Versuchspersonen verabreichten tödliche Elektroschocks – weil eine Autoritätsperson es verlangte. Was sagt das über moralischen Mut?","typ":"Sozialpsychologie","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Psychologie"},
     {"id":"pawlow-hund","name":"Pawlows Hund","icon":"🐕","beschreibung":"Pavlov entdeckte zufällig: Ein Hund speichelt nicht nur beim Fressen – sondern schon beim Klang der Glocke. Wie lernt das Gehirn Verknüpfungen, die eigentlich nicht existieren?","typ":"Verhaltenspsychologie","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Psychologie"},
+    {"id":"trolley","name":"Das Trolley-Problem","icon":"🚃","beschreibung":"Eine außer Kontrolle geratene Straßenbahn rast auf 5 Menschen zu. Du kannst eingreifen – aber jedes Eingreifen kostet ein anderes Leben. Vier Varianten, vier Antworten. Foot (1967), Thomson (1985).","typ":"Moralpsychologie","schwierigkeit":"Mittel","dauer":"6 min","kategorie":"Psychologie"},
     # ── Verhaltensökonomie & Entscheidung (neu) ──────────────────────────────
     {"id":"sunk-cost","name":"Der Sunk-Cost-Fehlschluss","icon":"🎟️","beschreibung":"Du sitzt im Theater, das Stück ist furchtbar. Du hast 80€ bezahlt. Bleibst du – oder gehst du? Der häufigste Denkfehler bei Investitionsentscheidungen.","typ":"Entscheidungsfehler","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"verlustaversion","name":"Verlustaversion","icon":"⚖️","beschreibung":"Verliere 50€ oder gewinne 50€ – welches Ereignis fühlt sich intensiver an? Kahneman & Tversky (1979): Verluste wiegen psychologisch doppelt so schwer wie gleich große Gewinne.","typ":"Prospect Theory","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
@@ -4113,6 +4114,116 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         request,
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
+    )
+
+
+@router.get("/trolley", response_class=HTMLResponse)
+def trolley_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/trolley.html", {"active_page": "raetsel", **_nav_context("trolley")}
+    )
+
+
+# Mehrheits-Antworten aus Hauser et al. (2007), Greene et al. (2001/2009).
+TROLLEY_SCENARIOS = [
+    {
+        "id": "weiche",
+        "titel": "1. Die Weiche",
+        "icon": "🛤️",
+        "frage": "Legst du die Weiche um?",
+        "yes_label": "Ja – Weiche umlegen (1 Tod statt 5)",
+        "no_label": "Nein – nicht eingreifen",
+        "majority": "yes",
+        "majority_pct": 89,
+        "principle": "Doctrine of Double Effect: Der Tod der einen Person ist <em>vorhergesehener Nebeneffekt</em>, nicht Mittel zum Zweck.",
+    },
+    {
+        "id": "bruecke",
+        "titel": "2. Der Mann auf der Brücke",
+        "icon": "🌉",
+        "frage": "Stößt du den Mann von der Brücke?",
+        "yes_label": "Ja – stoßen (1 Tod statt 5)",
+        "no_label": "Nein – nicht stoßen",
+        "majority": "no",
+        "majority_pct": 88,
+        "principle": "Hier ist der Tod <em>Mittel zum Zweck</em>: Ohne den Aufprall stoppt die Bahn nicht. Personale Gewalt aktiviert moralische Schranken.",
+    },
+    {
+        "id": "schleife",
+        "titel": "3. Das Schleifengleis",
+        "icon": "🔁",
+        "frage": "Legst du die Weiche zur Schleife um?",
+        "yes_label": "Ja – auf Schleife umlenken",
+        "no_label": "Nein – nicht umlenken",
+        "majority": "split",
+        "majority_pct": 50,
+        "principle": "Wie bei der Brücke ist der Tod Mittel zum Zweck – aber ohne körperliche Berührung. Die Antworten spalten sich fast 50/50.",
+    },
+    {
+        "id": "transplant",
+        "titel": "4. Der Transplantations-Chirurg",
+        "icon": "🏥",
+        "frage": "Opferst du den gesunden Patienten?",
+        "yes_label": "Ja – 1 Leben für 5",
+        "no_label": "Nein – nicht töten",
+        "majority": "no",
+        "majority_pct": 97,
+        "principle": "Mathematisch identisch zur Weiche (1 Tod statt 5). Doch hier kollidiert das Eingreifen mit Vertrauen, Berufsethos und der Würde des unbeteiligten Patienten.",
+    },
+]
+
+
+@router.post("/trolley/result", response_class=HTMLResponse)
+def trolley_result(
+    request: Request,
+    weiche: str = Form("none"),
+    bruecke: str = Form("none"),
+    schleife: str = Form("none"),
+    transplant: str = Form("none"),
+):
+    antworten = {"weiche": weiche, "bruecke": bruecke, "schleife": schleife, "transplant": transplant}
+    rows = []
+    utilitarian_count = 0
+    deontological_count = 0
+    for s in TROLLEY_SCENARIOS:
+        a = antworten.get(s["id"], "none")
+        is_yes = a == "yes"
+        if is_yes:
+            utilitarian_count += 1
+        elif a == "no":
+            deontological_count += 1
+        rows.append({
+            "scenario": s,
+            "antwort": a,
+            "is_yes": is_yes,
+            "is_no": a == "no",
+            "matches_majority": (a == s["majority"]) or (s["majority"] == "split" and a in ("yes", "no")),
+        })
+    # Profil: konsistenter Utilitarist (4 ja), konsistenter Deontologe (4 nein),
+    # oder typisches gemischtes Muster.
+    if utilitarian_count == 4:
+        profil = "konsistenter Utilitarist"
+        profil_text = "Du folgst der Logik der Zahlen: Wenn die Bilanz stimmt, ist Eingreifen geboten – unabhängig davon, ob der Tod Mittel oder Nebeneffekt ist. Diese Position ist mathematisch klar, aber sehr selten: Weniger als 5 % der Befragten antworten so konsequent."
+    elif deontological_count == 4:
+        profil = "konsistenter Deontologe"
+        profil_text = "Für dich gilt: Aktiv ein Leben zu opfern ist nie zulässig, auch nicht zur Rettung mehrerer. Diese Position folgt Kants Kategorischem Imperativ – aber sie bedeutet auch, im Szenario 1 fünf Menschen sterben zu lassen, obwohl du sie retten könntest."
+    elif rows[0]["is_yes"] and not rows[1]["is_yes"] and not rows[3]["is_yes"]:
+        profil = "typisches moralisches Profil"
+        profil_text = "Du folgst dem mit Abstand häufigsten Muster: Weiche ja, Brücke und OP nein. Das ist kein Widerspruch, sondern Ausdruck einer tief verankerten moralischen Intuition – der Doktrin der Doppelwirkung."
+    else:
+        profil = "individuelles Muster"
+        profil_text = "Deine Antworten folgen keinem der zwei klassischen Schemata. Das ist erlaubt: Die Trolley-Forschung zeigt, dass viele Menschen je nach Detail unterschiedlich entscheiden – und genau das ist ihr Erkenntnisgewinn."
+
+    return templates.TemplateResponse(
+        request,
+        "partials/trolley_result.html",
+        {
+            "rows": rows,
+            "utilitarian_count": utilitarian_count,
+            "deontological_count": deontological_count,
+            "profil": profil,
+            "profil_text": profil_text,
+        },
     )
 
 
