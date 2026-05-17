@@ -485,7 +485,7 @@
     "category": "Kooperation",
     "difficulty": "mittel",
     "order_index": 23,
-    "related_game": "stag_hunt",
+    "related_game": "stag-hunt",
     "sources": [
       {
         "autor": "Thomas Schelling",
@@ -506,7 +506,7 @@
     "category": "Fortgeschritten",
     "difficulty": "schwer",
     "order_index": 24,
-    "related_game": "beauty_contest",
+    "related_game": "beauty-contest",
     "sources": [
       {
         "autor": "Rosemarie Nagel",

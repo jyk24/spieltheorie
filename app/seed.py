@@ -12,14 +12,19 @@ GAME_TYPES = ["gefangenendilemma", "ultimatum", "vertrauen", "verhandlung", "chi
 
 
 def seed_lessons(db: Session) -> None:
-    """Lektionen aus lektionen.json laden – fehlende Einträge werden ergänzt."""
+    """Lektionen aus lektionen.json laden – fehlende Einträge ergänzen, related_game aktualisieren."""
     with open(DATA_DIR / "lektionen.json", encoding="utf-8") as f:
         lessons = json.load(f)
 
-    existing_slugs = {slug for (slug,) in db.query(Lesson.slug).all()}
-    added = 0
+    existing = {l.slug: l for l in db.query(Lesson).all()}
+    changed = False
     for item in lessons:
-        if item["slug"] in existing_slugs:
+        if item["slug"] in existing:
+            l = existing[item["slug"]]
+            desired = item.get("related_game")
+            if l.related_game != desired:
+                l.related_game = desired
+                changed = True
             continue
         lesson = Lesson(
             slug=item["slug"],
@@ -32,9 +37,9 @@ def seed_lessons(db: Session) -> None:
             order_index=item["order_index"],
         )
         db.add(lesson)
-        added += 1
+        changed = True
 
-    if added:
+    if changed:
         db.commit()
 
 

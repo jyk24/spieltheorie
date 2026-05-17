@@ -562,6 +562,8 @@ RAETSEL_META = [
     # ── Spieltheorie (neu) ───────────────────────────────────────────────────
     {"id":"matching-pennies","name":"Matching Pennies","icon":"🪙","beschreibung":"Zwei Spieler legen gleichzeitig eine Münze auf den Tisch. Einer gewinnt bei gleichen Seiten, der andere bei verschiedenen. Gibt es eine optimale Strategie?","typ":"Nullsummenspiel","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Spieltheorie"},
     {"id":"cake-cutting","name":"Cake Cutting","icon":"🎂","beschreibung":"Wie teilt man einen Kuchen zwischen zwei Personen fair auf, ohne eine Instanz als Schiedsrichter? Die Lösung ist so einfach wie elegant.","typ":"Fairness-Algorithmus","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Spieltheorie"},
+    {"id":"blaue-augen-insel","name":"Die Insel der Blauäugigen","icon":"👁️","beschreibung":"100 Inselbewohner mit blauen Augen, eine Regel, ein einziger Besucher, der etwas Bekanntes sagt – und genau 100 Tage später passiert das Unfassbare. Ein Klassiker über Common Knowledge.","typ":"Common Knowledge","schwierigkeit":"Fortgeschritten","dauer":"6 min","kategorie":"Spieltheorie"},
+    {"id":"zwei-kinder","name":"Das Zwei-Kinder-Paradoxon","icon":"👶","beschreibung":"\"Ich habe zwei Kinder, eins davon ist ein Junge.\" Wie groß ist die Wahrscheinlichkeit, dass das andere auch ein Junge ist? Die intuitive Antwort ist falsch – und der Grund verändert dein Verständnis von Wahrscheinlichkeit.","typ":"Bedingte Wahrscheinlichkeit","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Wahrscheinlichkeit"},
     # ── Statistik (neu) ──────────────────────────────────────────────────────
     {"id":"berkson","name":"Das Berkson-Paradoxon","icon":"🏥","beschreibung":"Im Krankenhaus scheinen Raucher seltener Lungenkrebs zu haben. Ein scheinbarer Widerspruch – erklärt durch verzerrte Stichproben.","typ":"Statistik-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Statistik"},
     {"id":"p-hacking","name":"P-Hacking","icon":"🎰","beschreibung":"Ein Forscher testet 20 Hypothesen und findet eine mit p < 0,05. Ist das ein echter Befund? Die gefährlichste Methode der modernen Wissenschaft.","typ":"Wissenschaftsmethodik","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Statistik"},
@@ -3083,6 +3085,80 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Der Schneider (Alice) wird genau in der Mitte schneiden — denn er weiß, dass Bob das größere Stück nimmt. Beide erhalten mindestens 50 % in ihrer eigenen Bewertung. Das Verfahren ist <em>proportional</em> (jeder ≥ 1/n) und <em>envy-free</em> (keiner beneidet den anderen) — ohne jegliche Kommunikation über Präferenzen.</p>",
         "kontext": "<p>Für n &gt; 2 Personen ist envy-free Teilung algorithmisch komplex. Das Selfridge-Conway-Verfahren (1960/1993) löst es für 3 Personen endlich; für n Personen wurde erst 2016 ein endlicher Algorithmus gefunden (Aziz & Mackenzie).</p>",
         "erkenntnis": "Faire Verfahren brauchen keine Informationen über Präferenzen — sie müssen nur die richtigen Anreize setzen. Das 'Du schneidest, ich wähle'-Prinzip nutzt egoistisches Verhalten als Design-Element.",
+    },
+    "blaue-augen-insel": {
+        "id": "blaue-augen-insel", "name": "Die Insel der Blauäugigen", "icon": "👁️",
+        "farbe": "sky", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Fortgeschritten", "dauer": "6 min",
+        "setup": (
+            "Auf einer Insel leben 100 Menschen mit blauen Augen und 100 mit braunen Augen. "
+            "Sie sehen sich täglich, dürfen aber niemals über Augenfarben sprechen und es gibt keine Spiegel. "
+            "Eine alte Regel besagt: <em>Wer in einer Nacht herausfindet, dass er blaue Augen hat, muss am nächsten Morgen die Insel verlassen.</em> "
+            "Alle Inselbewohner sind perfekte Logiker. "
+            "Eines Tages besucht ein vertrauenswürdiger Fremder die Insel und sagt vor allen versammelt einen einzigen Satz: "
+            "<strong>„Mindestens einer von euch hat blaue Augen.“</strong>"
+        ),
+        "frage": "Was passiert auf der Insel — und wann?",
+        "optionen": [
+            {"text": "Gar nichts — der Fremde sagt nur etwas, das alle ohnehin sehen können", "hinweis": "Aber was, wenn die Aussage trotzdem etwas verändert?"},
+            {"text": "Am nächsten Morgen verlassen alle 100 Blauäugigen die Insel", "hinweis": "Reicht ein einziger Tag wirklich?"},
+            {"text": "Genau am 100. Morgen verlassen alle 100 Blauäugigen die Insel gleichzeitig", "hinweis": "Iterierte Logik über 100 Tage"},
+            {"text": "Niemand verlässt jemals die Insel — Logik allein reicht nicht", "hinweis": "Doch der Fremde hat etwas Entscheidendes verändert"},
+        ],
+        "loesung_text": "Am 100. Morgen verlassen alle 100 Blauäugigen die Insel — gemeinsam.",
+        "erklaerung": (
+            "<p><strong>Der Schlüssel ist Common Knowledge.</strong> Zwar wusste jeder schon vorher, dass es Blauäugige gibt — aber niemand wusste, dass <em>alle anderen das auch wissen</em>, und dass <em>alle wissen, dass alle es wissen</em>, usw. bis ins Unendliche. Der Fremde macht aus geteiltem Wissen <em>gemeinsames</em> Wissen.</p>"
+            "<p><strong>Induktion:</strong></p>"
+            "<ul class='list-disc pl-5 space-y-1'>"
+            "<li><strong>n = 1:</strong> Gäbe es nur 1 Blauäugigen, sähe er keinen anderen. Aus dem Satz „mindestens einer“ schließt er sofort: <em>Ich bin es.</em> Er verlässt die Insel am 1. Morgen.</li>"
+            "<li><strong>n = 2:</strong> Jeder Blauäugige sieht 1 anderen Blauäugigen und denkt: „Wenn ich braun habe, verlässt er die Insel morgen.“ Er bleibt — also weiß jeder am 2. Morgen: <em>Ich habe auch blaue Augen.</em> Beide gehen am Tag 2.</li>"
+            "<li><strong>n = 100:</strong> Per Induktion: Wenn nach 99 Tagen niemand gegangen ist, weiß jeder Blauäugige: <em>Es müssen 100 sein — und ich bin der 100.</em> Alle gehen am Tag 100 gemeinsam.</li>"
+            "</ul>"
+            "<p>Die Brauäugigen können nie mit Sicherheit schließen, dass <em>sie</em> blau sind — sie sehen 100 Blauäugige, könnten aber selbst 99 oder 100 sehen, je nach eigener Farbe.</p>"
+        ),
+        "kontext": (
+            "<p><strong>Common Knowledge in der Spieltheorie:</strong> Robert Aumann (Nobelpreis 2005) zeigte, dass viele Gleichgewichte zerfallen, sobald man Common Knowledge auflöst. Der Begriff stammt aus David Lewis' <em>Convention</em> (1969).</p>"
+            "<p><strong>Praxis:</strong> Dasselbe Muster steckt in Bankenpaniken (jeder weiß, dass die Bank wackelt — aber der Run beginnt erst, wenn jeder weiß, dass alle es wissen), in Revolutionen (vgl. Kuran 1989, „Sparks and Prairie Fires“) und im Marktdesign (Auktionsregeln müssen Common Knowledge sein).</p>"
+            "<p><strong>Quelle:</strong> Eine ältere Variante stammt aus den 1950ern (Littlewood, Gamow). Terence Tao machte die 100-Tage-Version 2008 in einem Blogpost populär.</p>"
+        ),
+        "erkenntnis": "Was alle wissen ist nicht dasselbe wie was alle wissen, dass alle wissen. Common Knowledge erzeugt eine Lawine aus Inferenzen — und kann ein scheinbar redundantes Statement zur Bombe machen.",
+    },
+    "zwei-kinder": {
+        "id": "zwei-kinder", "name": "Das Zwei-Kinder-Paradoxon", "icon": "👶",
+        "farbe": "pink", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": (
+            "Eine Bekannte sagt dir: „Ich habe zwei Kinder. <strong>Mindestens eins</strong> von beiden ist ein Junge.“ "
+            "Du weißt: Mädchen und Jungen sind ungefähr gleich häufig, jede Geburt ist unabhängig vom anderen Kind. "
+            "Du sollst raten, ob das andere Kind ebenfalls ein Junge ist."
+        ),
+        "frage": "Wie wahrscheinlich ist es, dass beide Kinder Jungen sind?",
+        "optionen": [
+            {"text": "1/2 — das andere Kind ist unabhängig", "hinweis": "Klingt überzeugend — ist aber falsch"},
+            {"text": "1/3", "hinweis": "Bedingte Wahrscheinlichkeit"},
+            {"text": "2/3", "hinweis": "Andere Richtung"},
+            {"text": "1/4", "hinweis": "Wäre die Wahrscheinlichkeit ohne Vorabinformation"},
+        ],
+        "loesung_text": "1/3 — entgegen jeder Intuition.",
+        "erklaerung": (
+            "<p>Der gleichwahrscheinliche Ergebnisraum für zwei Kinder (geordnet nach Geburt) ist:</p>"
+            "<table class='text-sm my-2'><thead><tr><th class='pr-4'>Älteres</th><th class='pr-4'>Jüngeres</th><th>Wahrscheinlichkeit</th></tr></thead>"
+            "<tbody>"
+            "<tr><td>Junge</td><td>Junge</td><td>1/4</td></tr>"
+            "<tr><td>Junge</td><td>Mädchen</td><td>1/4</td></tr>"
+            "<tr><td>Mädchen</td><td>Junge</td><td>1/4</td></tr>"
+            "<tr><td>Mädchen</td><td>Mädchen</td><td>1/4</td></tr>"
+            "</tbody></table>"
+            "<p>Die Information „mindestens ein Junge“ schließt nur die Kombination (Mädchen, Mädchen) aus — es bleiben <strong>drei</strong> gleichwahrscheinliche Fälle, und nur in <strong>einem</strong> davon sind beide Jungen.</p>"
+            "<p>Antwort: <strong>P(beide Jungen | mindestens ein Junge) = (1/4) / (3/4) = 1/3.</strong></p>"
+        ),
+        "kontext": (
+            "<p><strong>Aber Vorsicht — die Antwort hängt davon ab, <em>wie</em> du die Information bekommst.</strong></p>"
+            "<p>Triffst du auf der Straße zufällig <em>eines</em> ihrer Kinder und es ist ein Junge, beträgt die Wahrscheinlichkeit für „beide Jungen“ tatsächlich 1/2 — denn jetzt ist der zufällig sichtbare Junge der Selektionsmechanismus, nicht die bloße Existenz mindestens eines Jungen.</p>"
+            "<p><strong>Die berühmte Tuesday-Boy-Variante</strong> (Gary Foshee, 2010): „Ich habe zwei Kinder, eines davon ist ein Junge, geboren an einem Dienstag.“ — Die Wahrscheinlichkeit für „beide Jungen“ steigt dadurch auf <strong>13/27 ≈ 0,48</strong>. Je spezifischer die Information, desto näher rückt sie an 1/2 heran.</p>"
+            "<p>Das Rätsel wurde 1959 von Martin Gardner im <em>Scientific American</em> bekannt — und sorgte unter Mathematikern jahrelang für Streit, weil die Formulierung mehrdeutig ist.</p>"
+        ),
+        "erkenntnis": "Wahrscheinlichkeit ist nicht nur Mathematik, sondern auch eine Frage des Beobachtungsprozesses. Wer die Selektion ignoriert, rechnet falsch — auch wenn alle Zahlen stimmen.",
     },
     # ── Statistik ─────────────────────────────────────────────────────────
     "berkson": {
