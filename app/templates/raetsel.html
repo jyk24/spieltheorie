@@ -68,6 +68,7 @@
             ("Kommunikation",      "💬"),
             ("Rhetorik",           "🎙️"),
             ("Verhandlung",        "🤝"),
+            ("Philosophie",        "💭"),
         ] %}
         {% for kat_name, kat_icon in kategorien_meta %}
         {% set count = raetsel | selectattr('kategorie', 'equalto', kat_name) | list | length %}
@@ -100,6 +101,7 @@
         ("Kommunikation",      "💬", "bg-teal-100", "text-teal-700", "border-teal-200", "hover:border-teal-300"),
         ("Rhetorik",           "🎙️", "bg-orange-100", "text-orange-700", "border-orange-200", "hover:border-orange-300"),
         ("Verhandlung",        "🤝", "bg-cyan-100", "text-cyan-700", "border-cyan-200", "hover:border-cyan-300"),
+        ("Philosophie",        "💭", "bg-purple-100", "text-purple-700", "border-purple-200", "hover:border-purple-300"),
     ] %}
 
     {% for kat_name, kat_icon, kat_bg, kat_text, kat_border, kat_hover in kategorien %}
