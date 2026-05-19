@@ -613,6 +613,7 @@ RAETSEL_META = [
     {"id":"flow-analyse","name":"Flow – der optimale Zustand","icon":"🌊","beschreibung":"Zwischen Langeweile und Überforderung liegt ein schmaler Kanal: Flow. Csikszentmihalyi (1990) beschreibt, wann Menschen völlig aufgehen in einer Tätigkeit.","typ":"Motivationspsychologie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"milgram-gehorsam","name":"Das Milgram-Experiment","icon":"⚡","beschreibung":"65% der Versuchspersonen verabreichten tödliche Elektroschocks – weil eine Autoritätsperson es verlangte. Was sagt das über moralischen Mut?","typ":"Sozialpsychologie","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Psychologie"},
     {"id":"pawlow-hund","name":"Pawlows Hund","icon":"🐕","beschreibung":"Pavlov entdeckte zufällig: Ein Hund speichelt nicht nur beim Fressen – sondern schon beim Klang der Glocke. Wie lernt das Gehirn Verknüpfungen, die eigentlich nicht existieren?","typ":"Verhaltenspsychologie","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Psychologie"},
+    {"id":"trolley-dilemma","name":"Das Trolley-Dilemma","icon":"🚋","beschreibung":"Eine außer Kontrolle geratene Straßenbahn rast auf fünf Gleisarbeiter zu. Du kannst die Weiche umstellen – aber dann stirbt ein Arbeiter auf dem Nebengleis. Würdest du es tun? Vier Varianten – und deine Antworten verraten dir, welcher ethischen Schule du folgst.","typ":"Moralphilosophie","schwierigkeit":"Mittel","dauer":"7 min","kategorie":"Psychologie"},
     # ── Verhaltensökonomie & Entscheidung (neu) ──────────────────────────────
     {"id":"sunk-cost","name":"Der Sunk-Cost-Fehlschluss","icon":"🎟️","beschreibung":"Du sitzt im Theater, das Stück ist furchtbar. Du hast 80€ bezahlt. Bleibst du – oder gehst du? Der häufigste Denkfehler bei Investitionsentscheidungen.","typ":"Entscheidungsfehler","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"verlustaversion","name":"Verlustaversion","icon":"⚖️","beschreibung":"Verliere 50€ oder gewinne 50€ – welches Ereignis fühlt sich intensiver an? Kahneman & Tversky (1979): Verluste wiegen psychologisch doppelt so schwer wie gleich große Gewinne.","typ":"Prospect Theory","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
@@ -4113,6 +4114,77 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         request,
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
+    )
+
+
+# ── Trolley-Dilemma ──────────────────────────────────────────────────────────
+TROLLEY_VARIANTS = {
+    "weiche": {
+        "name": "Die Weiche",
+        "umfrage": 89,  # ~89% würden umstellen (Bourget & Chalmers 2014, Greene 2001)
+        "akzeptanz_label": "umstellen",
+        "ablehnung_label": "nicht umstellen",
+        "ethik_pro": "Utilitarismus (Bentham, Mill): Die Handlung mit dem besten Gesamtergebnis – 5 Leben statt 1 – ist moralisch geboten.",
+        "ethik_contra": "Deontologie (Kant): Auch wenn 4 Menschen mehr sterben, ist das aktive Eingreifen kein Töten – die Bahn hätte ohnehin gerollt. Wer nicht umstellt, lässt geschehen.",
+        "kontext": "Die meisten Menschen entscheiden hier intuitiv utilitaristisch. Joshua Greenes fMRT-Studien (2001) zeigen: Bei diesem 'unpersönlichen' Fall arbeitet vor allem der präfrontale Cortex (kühles Rechnen).",
+    },
+    "bruecke": {
+        "name": "Der Mann auf der Brücke",
+        "umfrage": 31,  # nur ~31% würden den Dicken schubsen
+        "akzeptanz_label": "schubsen",
+        "ablehnung_label": "nicht schubsen",
+        "ethik_pro": "Konsequentialistisch ist es identisch: 1 Tod gegen 5. Wer im Weichenfall umstellt, müsste hier konsequent schubsen.",
+        "ethik_contra": "Doktrin der Doppelwirkung (Aquinas, Foot 1967): Jemanden als Mittel zu benutzen ist moralisch anders als einen Tod als Nebenfolge in Kauf zu nehmen. Hier wird der Mensch zum Werkzeug.",
+        "kontext": "Hier feuert das emotionale Limbische System – besonders die Amygdala. 'Mit eigenen Händen schubsen' aktiviert eine evolutionär alte Hemmschwelle gegen direkte Gewalt.",
+    },
+    "schleife": {
+        "name": "Die Schleife",
+        "umfrage": 56,  # zwischen den anderen beiden
+        "akzeptanz_label": "umstellen",
+        "ablehnung_label": "nicht umstellen",
+        "ethik_pro": "Wie beim Weichenfall: Du stellst nur die Weiche um. Du schubst niemanden direkt.",
+        "ethik_contra": "Doch der Körper des einzelnen Arbeiters ist hier das Mittel, das die Bahn stoppt – ohne ihn würde sie weiter zu den 5 rollen. Funktional schubst du ihn.",
+        "kontext": "Judith Jarvis Thomson (1976) entwarf diese Variante, um zu zeigen: Es geht nicht um 'schubsen vs. Hebel ziehen', sondern um Benutzen-als-Mittel. Antworten sind hier am volatilsten.",
+    },
+    "arzt": {
+        "name": "Der Transplantations-Arzt",
+        "umfrage": 4,  # fast niemand stimmt zu
+        "akzeptanz_label": "operieren",
+        "ablehnung_label": "nicht operieren",
+        "ethik_pro": "Wieder: 1 gegen 5. Wer rein utilitaristisch denkt, muss konsequent zustimmen.",
+        "ethik_contra": "Vertrauensbasis der Medizin würde kollabieren – Regelutilitarismus (Mill): Eine Regel 'Ärzte dürfen töten' senkt das Gesamtwohl drastisch. Außerdem: Mensch als reines Mittel (Kants kategorischer Imperativ).",
+        "kontext": "Über 95% lehnen ab – obwohl die kühle Rechnung identisch ist. Das zeigt: Unsere Intuition ist nicht bloß zahlenbasiert. Sie schützt Strukturen, Vertrauen, Würde.",
+    },
+}
+
+
+@router.get("/trolley-dilemma", response_class=HTMLResponse)
+def trolley_dilemma_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "raetsel/trolley_dilemma.html",
+        {"active_page": "raetsel", "varianten": TROLLEY_VARIANTS},
+    )
+
+
+@router.post("/trolley-dilemma/antwort", response_class=HTMLResponse)
+def trolley_dilemma_antwort(
+    request: Request,
+    variante: str = Form(...),
+    antwort: str = Form(...),
+):
+    daten = TROLLEY_VARIANTS.get(variante)
+    if daten is None:
+        raise HTTPException(status_code=404, detail="Variante nicht gefunden")
+    stimmt_zu = antwort == "ja"
+    return templates.TemplateResponse(
+        request,
+        "partials/trolley_dilemma_result.html",
+        {
+            "variante": variante,
+            "daten": daten,
+            "stimmt_zu": stimmt_zu,
+        },
     )
 
 

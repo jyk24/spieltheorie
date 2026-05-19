@@ -1,0 +1,40 @@
+{% set mehrheit_pro = daten.umfrage >= 50 %}
+{% set in_mehrheit = (stimmt_zu and mehrheit_pro) or (not stimmt_zu and not mehrheit_pro) %}
+<div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+  <div class="flex items-baseline justify-between mb-2">
+    <p class="font-semibold text-gray-800">
+      {% if stimmt_zu %}Du würdest {{ daten.akzeptanz_label }}.
+      {% else %}Du würdest {{ daten.ablehnung_label }}.{% endif %}
+    </p>
+    <span class="text-xs text-gray-500">
+      {% if in_mehrheit %}Mehrheit{% else %}Minderheit{% endif %}
+    </span>
+  </div>
+
+  <!-- Balken -->
+  <div class="mb-3">
+    <div class="flex items-center gap-2 text-xs text-gray-600 mb-1">
+      <span class="font-mono">{{ daten.umfrage }}%</span>
+      <span>würden eingreifen</span>
+    </div>
+    <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+      <div class="h-full bg-indigo-500" style="width: {{ daten.umfrage }}%"></div>
+    </div>
+  </div>
+
+  <!-- Pro & Contra -->
+  <div class="space-y-2 mt-3">
+    <div class="bg-blue-50 rounded-lg p-3">
+      <p class="text-xs font-bold text-blue-700 mb-1">Argument für Eingreifen</p>
+      <p class="text-sm text-gray-700 leading-relaxed">{{ daten.ethik_pro }}</p>
+    </div>
+    <div class="bg-amber-50 rounded-lg p-3">
+      <p class="text-xs font-bold text-amber-700 mb-1">Argument dagegen</p>
+      <p class="text-sm text-gray-700 leading-relaxed">{{ daten.ethik_contra }}</p>
+    </div>
+  </div>
+
+  <p class="text-sm text-gray-600 mt-3 leading-relaxed italic">
+    {{ daten.kontext }}
+  </p>
+</div>

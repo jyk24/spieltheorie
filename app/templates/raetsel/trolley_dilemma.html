@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% block title %}Das Trolley-Dilemma – Vier Varianten der Moralphilosophie{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+
+  <!-- Header -->
+  <div class="mb-6">
+    <a href="/raetsel" class="text-sm text-gray-500 hover:text-gray-700">← Alle Rätsel</a>
+  </div>
+  <div class="flex items-center gap-3 mb-2">
+    <span class="text-4xl">🚋</span>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-widest text-indigo-500">Moralphilosophie</p>
+      <h1 class="text-2xl font-bold text-gray-900">Das Trolley-Dilemma</h1>
+    </div>
+  </div>
+  <p class="text-gray-500 text-sm mb-8">Philippa Foot · 1967 · Judith Jarvis Thomson · 1976 · ~7 min</p>
+
+  <!-- Einleitung -->
+  <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 mb-6 border border-indigo-100">
+    <p class="text-gray-700 leading-relaxed">
+      Vier Szenarien. In jedem stehen <strong>fünf Leben gegen eines</strong>. Die kühle Rechnung
+      ist immer dieselbe – doch die meisten Menschen entscheiden völlig unterschiedlich.
+      Beantworte alle vier und entdecke, welcher ethischen Schule du folgst.
+    </p>
+  </div>
+
+  <!-- Variante 1: Weiche -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded">1 / 4</span>
+      <h2 class="font-bold text-gray-800">Die Weiche</h2>
+    </div>
+    <div class="bg-gray-50 rounded-xl p-4 mb-4 text-sm text-gray-700 leading-relaxed">
+      <p>Eine außer Kontrolle geratene Straßenbahn rast auf <strong>fünf Gleisarbeiter</strong> zu.
+      Sie können nicht ausweichen. Du stehst an einer Weiche und kannst die Bahn auf
+      ein Nebengleis umlenken – dort arbeitet aber <strong>ein einzelner Arbeiter</strong>, der dann stirbt.</p>
+      <div class="mt-3 font-mono text-xs bg-white rounded p-3 leading-relaxed">
+        <div>🚋 → 👷👷👷👷👷  (Hauptgleis)</div>
+        <div class="text-gray-400">↓ Weiche umstellen?</div>
+        <div>🚋 → 👷  (Nebengleis)</div>
+      </div>
+    </div>
+    <p class="font-semibold text-gray-800 mb-3">Würdest du die Weiche umstellen?</p>
+    <form hx-post="/raetsel/trolley-dilemma/antwort" hx-target="#result-weiche" hx-swap="innerHTML" class="flex gap-2">
+      <input type="hidden" name="variante" value="weiche">
+      <button type="submit" name="antwort" value="ja"
+        class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors">
+        Ja, umstellen
+      </button>
+      <button type="submit" name="antwort" value="nein"
+        class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-xl transition-colors">
+        Nein
+      </button>
+    </form>
+    <div id="result-weiche" class="mt-4"></div>
+  </div>
+
+  <!-- Variante 2: Brücke -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded">2 / 4</span>
+      <h2 class="font-bold text-gray-800">Der Mann auf der Brücke</h2>
+    </div>
+    <div class="bg-gray-50 rounded-xl p-4 mb-4 text-sm text-gray-700 leading-relaxed">
+      <p>Dieselbe Bahn, dieselben fünf Arbeiter. Diesmal stehst du auf einer
+      Fußgängerbrücke über den Gleisen – neben dir ein schwerer Fremder mit einem großen Rucksack.
+      Du erkennst: Würdest du ihn von der Brücke <strong>schubsen</strong>, wäre sein Körper schwer genug,
+      die Bahn aufzuhalten. Du selbst bist zu leicht.</p>
+      <div class="mt-3 font-mono text-xs bg-white rounded p-3 leading-relaxed">
+        <div>🧍🫸🧍‍♂️  (du · der Fremde auf der Brücke)</div>
+        <div class="text-gray-400">↓</div>
+        <div>🚋 → 👷👷👷👷👷</div>
+      </div>
+    </div>
+    <p class="font-semibold text-gray-800 mb-3">Würdest du den Fremden schubsen?</p>
+    <form hx-post="/raetsel/trolley-dilemma/antwort" hx-target="#result-bruecke" hx-swap="innerHTML" class="flex gap-2">
+      <input type="hidden" name="variante" value="bruecke">
+      <button type="submit" name="antwort" value="ja"
+        class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors">
+        Ja, schubsen
+      </button>
+      <button type="submit" name="antwort" value="nein"
+        class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-xl transition-colors">
+        Nein
+      </button>
+    </form>
+    <div id="result-bruecke" class="mt-4"></div>
+  </div>
+
+  <!-- Variante 3: Schleife -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded">3 / 4</span>
+      <h2 class="font-bold text-gray-800">Die Schleife</h2>
+    </div>
+    <div class="bg-gray-50 rounded-xl p-4 mb-4 text-sm text-gray-700 leading-relaxed">
+      <p>Wieder eine Weiche, wieder fünf Arbeiter auf dem Hauptgleis.
+      Diesmal aber ist das Nebengleis eine <strong>Schleife</strong>, die hinter den fünf Arbeitern wieder
+      ins Hauptgleis mündet. Auf dem Nebengleis steht ein einzelner Arbeiter, dessen Körper
+      schwer genug ist, die Bahn zu stoppen. Wäre er nicht dort, würde die Bahn um die Schleife
+      herumkommen und die fünf doch noch erwischen.</p>
+      <div class="mt-3 font-mono text-xs bg-white rounded p-3 leading-relaxed">
+        <div>🚋 →─→─→ 👷👷👷👷👷</div>
+        <div>     ↓ Schleife</div>
+        <div>     👷 ←─ (stoppt die Bahn)</div>
+      </div>
+    </div>
+    <p class="font-semibold text-gray-800 mb-3">Würdest du die Weiche umstellen?</p>
+    <form hx-post="/raetsel/trolley-dilemma/antwort" hx-target="#result-schleife" hx-swap="innerHTML" class="flex gap-2">
+      <input type="hidden" name="variante" value="schleife">
+      <button type="submit" name="antwort" value="ja"
+        class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors">
+        Ja, umstellen
+      </button>
+      <button type="submit" name="antwort" value="nein"
+        class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-xl transition-colors">
+        Nein
+      </button>
+    </form>
+    <div id="result-schleife" class="mt-4"></div>
+  </div>
+
+  <!-- Variante 4: Arzt -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded">4 / 4</span>
+      <h2 class="font-bold text-gray-800">Der Transplantations-Arzt</h2>
+    </div>
+    <div class="bg-gray-50 rounded-xl p-4 mb-4 text-sm text-gray-700 leading-relaxed">
+      <p>Du bist Chirurg. <strong>Fünf Patienten</strong> sterben, jeder benötigt ein anderes Organ.
+      Im Wartezimmer sitzt ein gesunder Mann zur Routineuntersuchung – seine Organe wären
+      perfekt kompatibel. Niemand würde es je erfahren.</p>
+      <div class="mt-3 font-mono text-xs bg-white rounded p-3 leading-relaxed">
+        <div>🏥 🫀🫁🧠🩸💉 → 5 Patienten sterben</div>
+        <div class="text-gray-400">↓</div>
+        <div>🧑‍⚕️ → 🧍 → ✂️ → rettet alle 5?</div>
+      </div>
+    </div>
+    <p class="font-semibold text-gray-800 mb-3">Würdest du den gesunden Mann operieren?</p>
+    <form hx-post="/raetsel/trolley-dilemma/antwort" hx-target="#result-arzt" hx-swap="innerHTML" class="flex gap-2">
+      <input type="hidden" name="variante" value="arzt">
+      <button type="submit" name="antwort" value="ja"
+        class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-xl transition-colors">
+        Ja, operieren
+      </button>
+      <button type="submit" name="antwort" value="nein"
+        class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-xl transition-colors">
+        Nein
+      </button>
+    </form>
+    <div id="result-arzt" class="mt-4"></div>
+  </div>
+
+  <!-- Die zwei großen Schulen -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-4">Die zwei großen ethischen Schulen</h2>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="bg-blue-50 rounded-xl p-4">
+        <p class="text-xs font-bold uppercase text-blue-700 mb-2">⚖️ Konsequentialismus</p>
+        <p class="text-sm text-gray-700 leading-relaxed">
+          <strong>Bentham, Mill (19. Jhd.)</strong>: Eine Handlung ist gut, wenn ihre <em>Folgen</em>
+          das größte Gesamtwohl bewirken. 5 gerettete Leben > 1 verlorenes Leben.
+          Bei allen vier Varianten lautet die Antwort konsequent: <strong>eingreifen</strong>.
+        </p>
+      </div>
+      <div class="bg-amber-50 rounded-xl p-4">
+        <p class="text-xs font-bold uppercase text-amber-700 mb-2">📜 Deontologie</p>
+        <p class="text-sm text-gray-700 leading-relaxed">
+          <strong>Kant (1785)</strong>: Manche Handlungen sind <em>an sich</em> falsch, unabhängig
+          von ihren Folgen. Einen Menschen als bloßes Mittel zu benutzen,
+          verletzt seine Würde. Bei Brücke und Arzt: <strong>nicht eingreifen</strong>.
+        </p>
+      </div>
+    </div>
+    <div class="bg-gray-50 rounded-xl p-4 mt-4">
+      <p class="text-xs font-bold uppercase text-gray-700 mb-2">🎯 Doktrin der Doppelwirkung</p>
+      <p class="text-sm text-gray-700 leading-relaxed">
+        Thomas von Aquin und Philippa Foot (1967): Es ist ein moralischer Unterschied, ob
+        ein Schaden <em>direkt beabsichtigt</em> ist – oder bloß als vorhergesehene <em>Nebenfolge</em>
+        einer guten Tat in Kauf genommen wird. Bei der Weiche ist der Tod des einzelnen Arbeiters
+        Nebenfolge. Bei der Brücke ist sein Tod das Mittel.
+      </p>
+    </div>
+  </div>
+
+  <!-- Joshua Greene & das Doppelsystem -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Was im Gehirn passiert</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      Joshua Greene (Harvard, 2001) scannte Gehirne von Versuchspersonen während sie das
+      Trolley-Dilemma lösten – und entdeckte zwei verschiedene neuronale Systeme:
+    </p>
+    <div class="space-y-3">
+      <div class="flex gap-3 items-start">
+        <span class="text-2xl flex-shrink-0">🧠</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Weiche: Präfrontaler Cortex</p>
+          <p class="text-sm text-gray-600">Kühles, rechnendes Denken. Vergleich von Zahlen, abstrakte Logik.
+          Das langsame "System 2" (Kahneman).</p>
+        </div>
+      </div>
+      <div class="flex gap-3 items-start">
+        <span class="text-2xl flex-shrink-0">❤️</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Brücke: Limbisches System & Amygdala</p>
+          <p class="text-sm text-gray-600">Emotionale Alarmglocke gegen direkte, körperliche Gewalt.
+          Das schnelle, intuitive "System 1".</p>
+        </div>
+      </div>
+    </div>
+    <p class="text-sm text-indigo-700 bg-indigo-50 rounded-lg p-3 mt-4">
+      💡 Unsere Moral ist kein einheitliches Programm – sondern ein <strong>Kompromiss zwischen zwei
+      konkurrierenden Systemen</strong>, die in der Evolution für ganz unterschiedliche Zwecke entstanden.
+    </p>
+  </div>
+
+  <!-- MIT Moral Machine -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Heute: Selbstfahrende Autos</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      Das Trolley-Dilemma war 50 Jahre lang reines Gedankenexperiment.
+      Mit autonomen Fahrzeugen wird es plötzlich <strong>Programmierungs-Aufgabe</strong>:
+      Soll das Auto die Insassen schützen – oder Fußgänger? Kinder oder Erwachsene?
+    </p>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      Das MIT startete 2016 die <em>Moral Machine</em>: 40 Millionen Antworten aus 233 Ländern.
+      Ergebnis: Es gibt <strong>kulturelle Unterschiede</strong> in der Moral.
+      Westliche Länder sparen Jüngere, östliche Länder Ältere. Lateinamerika rettet eher
+      Frauen und Kinder. Die "richtige" Antwort gibt es nicht – sie hängt vom Kulturkreis ab.
+    </p>
+    <a href="https://www.moralmachine.net" target="_blank" rel="noopener"
+      class="text-sm text-indigo-600 hover:text-indigo-800 underline">→ moralmachine.net besuchen</a>
+  </div>
+
+  <!-- Kritik -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+    <h2 class="font-bold text-gray-800 mb-3">Kritik am Trolley-Dilemma</h2>
+    <p class="text-sm text-gray-600 leading-relaxed">
+      Realität funktioniert nicht so: Wir haben kein vollständiges Wissen über Konsequenzen,
+      keine binäre Wahl, oft mehr als zwei Optionen. <strong>Bernard Williams</strong> kritisierte:
+      Solche Szenarien blenden die <em>Integrität</em> des Handelnden aus.
+      <strong>Judith Jarvis Thomson</strong> selbst zog ihre frühere Position 2008 teilweise zurück
+      und schrieb: "Niemand sollte die Weiche umstellen." Die ehrliche Antwort
+      könnte sein: <em>Keine der vorgegebenen Antworten ist gut genug.</em>
+    </p>
+  </div>
+
+  <!-- Navigation -->
+  <div class="flex justify-between">
+    <a href="/raetsel/milgram-gehorsam" class="text-sm text-gray-500 hover:text-gray-700">← Milgram-Experiment</a>
+    <a href="/raetsel/marshmallow-test" class="text-sm text-indigo-600 hover:text-indigo-800">Marshmallow-Test →</a>
+  </div>
+
+</div>
+{% endblock %}
