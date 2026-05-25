@@ -142,7 +142,7 @@ GAMES: list[dict] = [
         "icon": "🔨",
         "mechanic": "Dominante Strategie / Wahrheitsoffenbarung",
         "literature": "Vickrey (1961)",
-        "lesson_slug": "spieltheorie-grundlagen",
+        "lesson_slug": "auktionstheorie",
         "level": 3,
     },
     {
@@ -173,7 +173,7 @@ GAMES: list[dict] = [
         "icon": "🌷",
         "mechanic": "Absteigende Auktion / Bietstrategien",
         "literature": "Klemperer (1999)",
-        "lesson_slug": "spieltheorie-grundlagen",
+        "lesson_slug": "auktionstheorie",
         "level": 4,
     },
     {
@@ -183,7 +183,7 @@ GAMES: list[dict] = [
         "icon": "🔔",
         "mechanic": "Aufsteigende Auktion / Dominante Strategie",
         "literature": "Vickrey (1961), Klemperer (1999)",
-        "lesson_slug": "spieltheorie-grundlagen",
+        "lesson_slug": "auktionstheorie",
         "level": 4,
     },
     {
