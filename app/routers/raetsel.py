@@ -631,6 +631,12 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Ethik & Moralpsychologie ─────────────────────────────────────────────
+    {"id":"trolley-problem","name":"Das Trolley-Problem","icon":"🚃","beschreibung":"Ein außer Kontrolle geratener Zug rast auf fünf Menschen zu. Du kannst ihn durch einen Hebel auf ein Nebengleis lenken – wo eine einzelne Person steht. Drückst du den Hebel? Philippa Foot (1967) und Judith Thomson (1985) machten daraus das berühmteste moralische Gedankenexperiment der Moderne.","typ":"Ethik-Dilemma","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Psychologie"},
+    # ── Mathematik (Kombinatorik) ─────────────────────────────────────────────
+    {"id":"schubfachprinzip","name":"Das Schubfachprinzip","icon":"🗄️","beschreibung":"In jeder Großstadt gibt es zwei Menschen mit exakt gleich vielen Haaren auf dem Kopf – beweisbar, ohne einen einzigen Kopf zu zählen. Dirichlets elegantes Prinzip (1834) zeigt, wie aus dem Nichts Gewissheit entsteht.","typ":"Kombinatorik","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Mathematik"},
+    # ── Kognition (Bias) ─────────────────────────────────────────────────────
+    {"id":"ikea-effekt","name":"Der IKEA-Effekt","icon":"🪛","beschreibung":"Selbstgebaute Möbel halten wir für wertvoller als die identische, fertig gekaufte Variante. Norton, Mochon & Ariely (2012): Wer Arbeit hineinsteckt, überschätzt das Ergebnis – und kann es kaum verkaufen.","typ":"Verhaltensökonomie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
 ]
 
 
@@ -4046,6 +4052,56 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Der <strong>Fundamentale Attributionsfehler</strong> (FAE, Ross 1977): Wir überschätzen den Einfluss von Persönlichkeitseigenschaften und unterschätzen den Einfluss der Situation auf das Verhalten anderer.</p><p>Das Verhalten (Castro-Aufsatz) wurde der Disposition zugeschrieben (<em>er ist pro-Castro</em>) – obwohl die Situation (zufällige Zuweisung) das Verhalten vollständig erklärte.</p>",
         "kontext": "<p>Der FAE ist kulturell variabel: Westliche (individualistische) Kulturen zeigen ihn stärker als östliche (kollektivistische). Im Alltag: Wer uns auf der Autobahn schneidet, ist ein Idiot – nicht jemand mit einem Notfall.</p><p>In Verhandlungen: Wenn die Gegenseite hart verhandelt, schließen wir auf Gier oder Feindseligkeit – statt auf externen Druck, Vorgaben des Vorstands oder Zeitdruck. Das verzerrt unsere Strategie erheblich.</p>",
         "erkenntnis": "Wir sind natürliche Biographen, keine Situationsanalysten. Wenn jemand sich 'falsch' verhält, zuerst fragen: Welche situativen Kräfte könnten dieses Verhalten erklären? Das gibt ein realistischeres Bild – und bessere Verhandlungsstrategien.",
+    },
+    "trolley-problem": {
+        "id": "trolley-problem", "name": "Das Trolley-Problem", "icon": "🚃",
+        "farbe": "rose", "kategorie": "Psychologie", "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup_label": "Das Szenario:",
+        "setup": "Ein außer Kontrolle geratener Zug rast auf <strong>fünf Gleisarbeiter</strong> zu. Sie können nicht mehr fliehen.<br><br>Du stehst an einer Weiche. Mit einem Hebeldruck lenkst du den Zug auf ein <strong>Nebengleis</strong> – wo eine <strong>einzelne Person</strong> arbeitet, ebenfalls ohne Fluchtmöglichkeit.<br><br>Handelst du, stirbt eine Person statt fünf. Tust du nichts, sterben fünf.",
+        "frage": "Was machst du – und was sagt deine Antwort über deine Ethik?",
+        "optionen": [
+            {"text": "Hebel umlegen – eine Person opfern, fünf retten", "hinweis": "Utilitarismus (Bentham, Mill): maximaler Gesamtnutzen"},
+            {"text": "Nicht eingreifen – ich bin nicht aktiv schuld am Tod", "hinweis": "Deontologie (Kant): aktives Töten ≠ passives Geschehenlassen"},
+            {"text": "Kommt drauf an, wer auf dem Nebengleis steht", "hinweis": "Konsequentialismus mit Personenbezug"},
+            {"text": "Es gibt keine richtige Antwort – das ist der Punkt", "hinweis": "Moralisches Dilemma per Definition"},
+        ],
+        "loesung_text": "Die Mehrheit (~90%) wählt Hebel umlegen. Bei der Brücken-Variante – dieselbe Mathematik, aber man muss einen Fremden schubsen – kippt es: ~90% sagen Nein.",
+        "erklaerung": "<p>Philippa Foot stellte das Dilemma 1967 vor. Judith Jarvis Thomson erweiterte es 1985 um die <strong>Brücken-Variante</strong>: Ein dicker Mann steht auf einer Brücke über den Gleisen. Schubst du ihn herunter, stoppt sein Körper den Zug und rettet fünf. Mathematisch identisch – moralisch fühlen es 90% völlig anders.</p><p>Joshua Greene zeigte 2001 per fMRT: Beim direkten Schubsen aktivieren sich emotionale Hirnregionen (medialer präfrontaler Kortex). Beim Hebel werden eher analytische Areale aktiv. Wir haben zwei moralische Systeme – und sie geben unterschiedliche Antworten.</p>",
+        "kontext": "<p><strong>Das Doppelwirkungs-Prinzip (Thomas von Aquin):</strong> Ein moralisch schlechtes Ergebnis ist erlaubt, wenn es Nebenwirkung einer guten Absicht ist – nicht aber, wenn es Mittel zum Zweck wird. Beim Hebel ist der Tod des Einzelnen Nebenwirkung der Rettung. Beim Schubsen wird sein Körper zum Werkzeug.</p><p><strong>Reale Anwendung:</strong> Autonome Fahrzeuge (Mercedes-Benz 2016: \"Wir retten den Insassen\"), militärische Drohnen, Triage in der Notfallmedizin – alle stoßen auf Trolley-artige Dilemmata.</p><p><strong>Die MIT-Moral-Machine</strong> sammelte 40 Millionen Entscheidungen weltweit. Ergebnis: Westliche Länder bevorzugen Junge vor Alten, asiatische zeigen das Gegenteil. Moralische Intuitionen sind kulturell geprägt.</p>",
+        "erkenntnis": "Es gibt keine universell richtige Antwort – aber ein bewusster Blick auf die eigenen Intuitionen entlarvt, wo Bauchgefühl und Argument auseinanderfallen. Wer das Hebel-Szenario zustimmt und das Brücken-Szenario ablehnt, sollte zumindest begründen können, wieso fünf gerettete Leben mehr oder weniger wert sind – je nachdem, wie sie gerettet werden.",
+    },
+    "schubfachprinzip": {
+        "id": "schubfachprinzip", "name": "Das Schubfachprinzip", "icon": "🗄️",
+        "farbe": "indigo", "kategorie": "Mathematik", "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup": "Du verteilst <strong>n Tauben</strong> auf <strong>m Schubfächer</strong>. Wenn n > m, dann gilt: In mindestens einem Fach landen zwei oder mehr Tauben.<br><br>Klingt trivial – ist es auch. Aber daraus folgt eine erstaunliche Aussage:",
+        "frage": "In jeder Großstadt mit über 200 000 Einwohnern gibt es garantiert zwei Menschen mit exakt gleich vielen Kopfhaaren. Warum?",
+        "optionen": [
+            {"text": "Weil die Haarfarbe identisch ist", "hinweis": "Geht um die Anzahl, nicht die Farbe"},
+            {"text": "Ein Mensch hat höchstens ~150 000 Haare – also passen 200 000 Menschen in nur 150 000 mögliche Werte", "hinweis": "Mehr Tauben als Schubfächer"},
+            {"text": "Es ist eine statistische Wahrscheinlichkeit, kein Beweis", "hinweis": "Schubfachprinzip ist deterministisch"},
+            {"text": "Stimmt nicht – jeder Mensch hat eine andere Haarzahl", "hinweis": "Der Wertebereich ist beschränkt"},
+        ],
+        "loesung_text": "150 000 mögliche Haarzahlen + 200 000 Menschen → mindestens zwei haben dieselbe Zahl.",
+        "erklaerung": "<p>Ein Mensch hat zwischen 0 und ca. 150 000 Kopfhaaren. Das sind 150 001 mögliche Werte (\"Schubfächer\"). Bei 200 000 Einwohnern (\"Tauben\") <em>muss</em> nach dem Schubfachprinzip mindestens ein Fach doppelt belegt sein.</p><p>Formal: Gibt es eine Funktion f: A → B mit |A| > |B|, dann ist f nicht injektiv – es existieren a₁ ≠ a₂ mit f(a₁) = f(a₂).</p><p>Dirichlet formulierte es 1834 als <em>Schubladenprinzip</em>. Trivial in der Aussage – mächtig in der Konsequenz.</p>",
+        "kontext": "<p><strong>Eindrucksvolle Anwendungen:</strong></p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Geburtstagsparadoxon:</strong> 367 Menschen → zwei gleiche Geburtstage garantiert (≥ 366 Tage)</li><li><strong>Datenkompression:</strong> Verlustfreie Kompression kann <em>nicht</em> jede Datei kleiner machen – sonst gäbe es eine injektive Abbildung von n+1 Bits in n Bits</li><li><strong>Approximation irrationaler Zahlen:</strong> Für jede irrationale α existieren unendlich viele Brüche p/q mit |α − p/q| < 1/q² (Dirichlet 1842)</li><li><strong>Soziale Netzwerke:</strong> In jeder Gruppe von 6 Personen gibt es entweder 3, die sich gegenseitig kennen, oder 3, die sich gegenseitig <em>nicht</em> kennen (Ramsey-Theorie)</li></ul>",
+        "erkenntnis": "Wenn Möglichkeiten begrenzt sind und Objekte zahlreich, dann müssen Kollisionen eintreten. Dieses Prinzip beweist Existenzaussagen ganz ohne konstruktiven Algorithmus – ein Geschenk an Mathematiker.",
+    },
+    "ikea-effekt": {
+        "id": "ikea-effekt", "name": "Der IKEA-Effekt", "icon": "🪛",
+        "farbe": "amber", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup_label": "Das Experiment:",
+        "setup": "Norton, Mochon und Ariely (2012) gaben einer Gruppe einen fertigen IKEA-Schrank, einer anderen den gleichen Schrank zum Selberbauen. Danach durften beide Gruppen ihren Schrank an die jeweils andere verkaufen – per verdeckter Auktion.<br><br>Selbst-Bauer verlangten im Schnitt <strong>78 % mehr</strong> als Fertig-Empfänger zu zahlen bereit waren. Selbstgefaltete Origami-Kraniche wurden von ihren Faltern <strong>fünfmal teurer</strong> bewertet als von neutralen Beobachtern.",
+        "frage": "Welche Bedingung muss erfüllt sein, damit der IKEA-Effekt auftritt?",
+        "optionen": [
+            {"text": "Das Ergebnis muss perfekt sein", "hinweis": "Reicht das?"},
+            {"text": "Die Arbeit muss erfolgreich abgeschlossen werden", "hinweis": "Heißer Kandidat"},
+            {"text": "Es muss Geld investiert worden sein", "hinweis": "Geht eher um Aufwand"},
+            {"text": "Es muss professionell aussehen", "hinweis": "Spielt überraschend keine Rolle"},
+        ],
+        "loesung_text": "Die Arbeit muss <strong>erfolgreich abgeschlossen</strong> werden – Aufwand allein reicht nicht.",
+        "erklaerung": "<p>In der Vergleichsstudie ließen Norton und Kollegen Teilnehmer entweder einen Origami-Kranich falten <em>und behalten</em>, oder den Bau auf halbem Weg abbrechen. Nur die <strong>vollendete</strong> Arbeit erzeugte den Effekt. Der gescheiterte Versuch wirkte nicht aufwertend.</p><p>Auch <strong>professionelle Qualität</strong> ist nicht nötig: Hobby-Kranich-Falter überschätzten ihre wackeligen Werke genau so sehr wie elegant gebaute. Es zählt subjektiver Eigeneinsatz, nicht objektive Qualität.</p>",
+        "kontext": "<p><strong>Tiefere Erklärungen:</strong></p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Selbstwirksamkeit:</strong> Erfolgreich abgeschlossene Tätigkeit bestätigt Kompetenz (Bandura)</li><li><strong>Endowment-Effekt:</strong> Verstärkte Variante des klassischen Besitzeffekts (Thaler 1980)</li><li><strong>Kognitive Dissonanz:</strong> Wer 4 Stunden investiert hat, muss das Ergebnis aufwerten, sonst wirkt die Zeit verschwendet</li></ul><p><strong>Wirtschaftliche Anwendungen:</strong></p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Build-a-Bear-Workshop: Plüschtiere selbst zusammenstellen → 3× höhere Marge</li><li>Cake-Mix-Strategie: Erste Backmischungen waren \"Wasser dazu, fertig\". Hausfrauen kauften nicht. Erst als das Rezept ein Ei verlangte (= Arbeit), wurde das Produkt zum Bestseller</li><li>Crowdfunding: Wer mitfinanziert, fühlt sich als <em>Mit-Erschaffer</em></li></ul><p><strong>Schattenseite:</strong> Manager überschätzen selbst entwickelte Strategien. Forscher klammern sich an Hypothesen, in die sie Monate investiert haben. Der IKEA-Effekt erschwert das Loslassen schlechter Ideen.</p>",
+        "erkenntnis": "Aufwand verzerrt Wertwahrnehmung – sowohl positiv (Stolz auf Eigenleistung) als auch negativ (Festhalten an gescheiterten Projekten). Wer das eigene Werk neutral bewerten will, sollte einen unbeteiligten Dritten fragen.",
     },
     "schlaeger-ball": {
         "id": "schlaeger-ball", "name": "Schläger und Ball", "icon": "⚾",
