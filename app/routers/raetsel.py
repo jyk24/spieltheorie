@@ -631,6 +631,10 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neue Rätsel ──────────────────────────────────────────────────────────
+    {"id":"cobra-effekt","name":"Der Cobra-Effekt","icon":"🐍","beschreibung":"Britisch-Indien zahlt eine Prämie pro tote Kobra – die Kobra-Population steigt. Wie können gut gemeinte Anreize das Gegenteil bewirken?","typ":"Anreiz-Paradox","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Statistik"},
+    {"id":"banach-tarski","name":"Das Banach-Tarski-Paradoxon","icon":"🟠","beschreibung":"Zerlege eine Kugel in endlich viele Teile – und setze sie zu zwei gleich großen Kugeln zusammen. Mathematisch beweisbar, physikalisch unmöglich. Was steckt dahinter?","typ":"Mengenlehre","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Mathematik"},
+    {"id":"gummiseil-ameise","name":"Die Ameise auf dem Gummiseil","icon":"🐜","beschreibung":"Eine Ameise startet auf einem 1 km langen Gummiseil und kriecht 1 cm/s. Jede Sekunde wird das Seil um 1 km länger. Erreicht sie je das Ende? Intuition und Mathematik widersprechen sich.","typ":"Unendlichkeit","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Mathematik"},
 ]
 
 
@@ -4063,6 +4067,57 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "cobra-effekt": {
+        "id": "cobra-effekt", "name": "Der Cobra-Effekt", "icon": "🐍",
+        "farbe": "emerald", "kategorie": "Statistik", "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup_label": "Die Situation:",
+        "setup": "Im britisch-kolonialen Delhi grassiert eine Kobra-Plage. Die Verwaltung beschließt: Für jede tote Kobra zahlen wir eine Prämie. Anfangs scheint es zu funktionieren – Tausende Schlangen werden abgeliefert. Doch nach zwei Jahren ist die Population <strong>größer</strong> als zuvor.",
+        "frage": "Was war passiert?",
+        "optionen": [
+            {"text": "Die Schlangenjäger waren effizienter als erwartet und lockten Kobras aus Nachbarregionen an", "hinweis": "Migrationseffekt – wäre möglich, ist aber nicht die Hauptursache"},
+            {"text": "Einheimische begannen Kobras zu züchten, um die Prämie zu kassieren", "hinweis": "Anreize wirken – nur nicht immer wie geplant"},
+            {"text": "Die Verwaltung erhöhte die Prämie und verzerrte den Markt", "hinweis": "Anreizhöhe war nicht das Problem"},
+            {"text": "Die Statistik war fehlerhaft – die Population stieg gar nicht wirklich", "hinweis": "Doch, sie stieg messbar"},
+        ],
+        "loesung_text": "Einheimische züchteten Kobras, um die Prämie zu kassieren.",
+        "erklaerung": "<p>Als die Verwaltung das Programm einstellte, wurden die wertlos gewordenen Zuchtkobras freigelassen. Das Ergebnis: <strong>mehr</strong> Kobras als am Anfang. Die Maßnahme zur Lösung des Problems hatte das Problem verschärft.</p><p>Das Phänomen heißt seither <strong>Cobra-Effekt</strong> – nach dem deutschen Ökonomen Horst Siebert (2001). Es beschreibt jede Situation, in der ein Anreiz das Verhalten erzeugt, das er bekämpfen soll.</p>",
+        "kontext": "<p><strong>Weitere Cobra-Effekte:</strong></p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Hanoi 1902:</strong> Französische Verwaltung zahlt Prämie pro Rattenschwanz. Ergebnis: schwanzlose Ratten in der Stadt – Schwänze abgeschnitten, Ratten freigelassen.</li><li><strong>Mexiko-City Autoverkehr:</strong> Fahrverbot an einem Wochentag je nach Kennzeichen. Folge: Familien kaufen Zweitwagen mit anderem Kennzeichen – mehr Autos auf der Straße.</li><li><strong>Code-Kennzahlen:</strong> Wenn Entwickler nach Zeilen Code bezahlt werden, schreiben sie längeren Code. <em>Goodhart's Law</em> in Aktion.</li><li><strong>Versicherungen gegen Diebstahl:</strong> Erhöhen oft die Diebstahlrate (moral hazard).</li></ul><p>Der Cobra-Effekt ist eng verwandt mit <strong>Goodharts Gesetz</strong>: Wenn ein Maß zum Ziel wird, hört es auf, ein gutes Maß zu sein.</p>",
+        "erkenntnis": "Jeder Anreiz löst Verhaltensanpassungen aus – auch unbeabsichtigte. Bevor man eine Prämie ausschreibt, sollte man fragen: Welche kreativen Wege gibt es, sie zu kassieren, ohne das Ziel zu erreichen? Wer das nicht durchdenkt, finanziert am Ende das Gegenteil.",
+    },
+    "banach-tarski": {
+        "id": "banach-tarski", "name": "Das Banach-Tarski-Paradoxon", "icon": "🟠",
+        "farbe": "violet", "kategorie": "Mathematik", "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup_label": "Die Behauptung:",
+        "setup": "Stefan Banach und Alfred Tarski bewiesen 1924: Man kann eine massive Kugel in <strong>endlich viele</strong> Teilmengen zerlegen, diese ausschließlich durch <strong>Drehungen und Verschiebungen</strong> neu anordnen – und erhält <strong>zwei Kugeln</strong> derselben Größe wie die ursprüngliche. Kein Material wird hinzugefügt.",
+        "frage": "Wie kann das möglich sein, ohne den Massenerhaltungssatz zu verletzen?",
+        "optionen": [
+            {"text": "Die Teile haben kein definiertes Volumen – sie sind nicht messbar", "hinweis": "Das ist der entscheidende Punkt"},
+            {"text": "Das Paradoxon ist ein Beweisfehler und wurde 1957 widerlegt", "hinweis": "Nein – der Beweis ist sauber und akzeptiert"},
+            {"text": "Es funktioniert nur in höheren Dimensionen, nicht im 3D-Raum", "hinweis": "Doch, gerade ab 3D"},
+            {"text": "Banach-Tarski ist ein Witz unter Mathematikern, kein echtes Theorem", "hinweis": "Es ist ein bewiesenes Theorem"},
+        ],
+        "loesung_text": "Die Teilmengen sind nicht-messbar – sie haben kein definierbares Volumen.",
+        "erklaerung": "<p>Das Paradoxon nutzt das <strong>Auswahlaxiom</strong> der Mengenlehre, um Teilmengen zu konstruieren, die so „zerfasert\" sind, dass ihnen kein Lebesgue-Volumen zugeordnet werden kann. Volumen ist nur für messbare Mengen definiert – für die Banach-Tarski-Teile schlicht nicht.</p><p>Der „Erhaltungssatz\" für Volumen gilt also nicht, weil die Vorbedingung (messbare Stücke) verletzt wird. Es ist kein physikalischer, sondern ein <strong>rein mathematischer</strong> Satz.</p>",
+        "kontext": "<p><strong>Warum funktioniert das physisch nicht?</strong></p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Materie besteht aus endlich vielen Atomen – nicht aus überabzählbar vielen Punkten.</li><li>Die Banach-Tarski-Stücke sind <em>pathologische</em> Punktmengen, die in der physischen Welt kein Gegenstück haben.</li><li>Im 1D- und 2D-Raum funktioniert das Paradoxon nicht. Erst ab 3 Dimensionen entstehen die nötigen Rotationsfreiheitsgrade (die freie Gruppe F₂).</li></ul><p><strong>Konsequenz für die Mathematik:</strong> Manche Mathematiker lehnen das Auswahlaxiom genau wegen solcher Konsequenzen ab. Andere akzeptieren es – mit der Erkenntnis, dass nicht jede Punktmenge ein Volumen hat. Beide Positionen sind konsistent.</p>",
+        "erkenntnis": "Intuition aus der Alltagswelt versagt bei unendlichen Mengen. Was im Endlichen unmöglich klingt, kann im Reich der Überabzählbarkeit logisch zwingend sein. Mathematik ist nicht Physik – und die Welt der Punkte verhält sich anders als die der Atome.",
+    },
+    "gummiseil-ameise": {
+        "id": "gummiseil-ameise", "name": "Die Ameise auf dem Gummiseil", "icon": "🐜",
+        "farbe": "amber", "kategorie": "Mathematik", "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup_label": "Das Setup:",
+        "setup": "Eine Ameise startet am Anfang eines <strong>1 km langen Gummiseils</strong> und kriecht mit <strong>1 cm pro Sekunde</strong> in Richtung Ende. Am Ende jeder Sekunde wird das Seil <strong>gleichmäßig</strong> um 1 km gedehnt – auch das Stück hinter der Ameise. Die Ameise wird durch die Dehnung mitgenommen.",
+        "frage": "Erreicht die Ameise je das Ende des Seils?",
+        "optionen": [
+            {"text": "Nein – das Seil wird schneller länger, als die Ameise kriecht", "hinweis": "So sagt es die Intuition"},
+            {"text": "Ja – nach endlicher, aber gigantisch großer Zeit", "hinweis": "Mathematisch erreichbar"},
+            {"text": "Nein – die Ameise nähert sich asymptotisch dem Ende, erreicht es aber nie", "hinweis": "Klingt plausibel, ist es aber nicht"},
+            {"text": "Nur, wenn die Ameise schneller als 1 m/s wird", "hinweis": "Die Geschwindigkeit bleibt konstant"},
+        ],
+        "loesung_text": "Ja – nach unvorstellbar langer, aber endlicher Zeit.",
+        "erklaerung": "<p>Der Trick: Die Ameise wird durch die Dehnung mitgezogen. Der Anteil des bereits zurückgelegten Weges am Gesamtseil <em>wächst</em> – auch wenn die absolute Restdistanz größer wird.</p><p>Nach n Sekunden hat die Ameise den Bruchteil <code>1/(100·1) + 1/(100·2) + 1/(100·3) + … + 1/(100·n)</code> der Seillänge zurückgelegt. Das ist <code>(1/100) · H(n)</code>, mit der harmonischen Reihe H(n).</p><p>Die harmonische Reihe <strong>divergiert</strong> – sie wird beliebig groß. Sobald H(n) ≥ 100, hat die Ameise das Ende erreicht. Das ist bei <strong>n ≈ e¹⁰⁰</strong> Sekunden der Fall – etwa 10⁴³ Sekunden.</p>",
+        "kontext": "<p><strong>Die Zahl ist absurd:</strong></p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>e¹⁰⁰ ≈ 2,7 · 10⁴³ Sekunden</li><li>Das Alter des Universums: ≈ 4,4 · 10¹⁷ Sekunden</li><li>Die Ameise bräuchte also etwa <strong>10²⁶ × das Alter des Universums</strong>.</li><li>Das Seil wäre dann ≈ 10⁴³ km lang – mehr als der beobachtbare Universumsdurchmesser hoch tausend.</li></ul><p><strong>Mathematischer Kern:</strong> Die Aufgabe demonstriert die Macht der harmonischen Reihe. 1 + 1/2 + 1/3 + 1/4 + … wächst zwar extrem langsam, aber unbegrenzt. Das ist kontraintuitiv – die einzelnen Glieder gehen gegen 0.</p><p>Aufgabe stammt von Martin Gardner (<em>Scientific American</em>, 1980er) und ist eine bekannte Variante des „Wurm-auf-Gummiband\"-Problems.</p>",
+        "erkenntnis": "„Unendlich langsam wachsen\" und „beschränkt bleiben\" sind nicht dasselbe. Die harmonische Reihe wächst ohne Schranke – nur sehr, sehr gemütlich. Vermeintliche Unmöglichkeiten lassen sich oft mit der richtigen Bezugsgröße (relativer statt absoluter Fortschritt) auflösen.",
     },
 }
 
