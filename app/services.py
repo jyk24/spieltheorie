@@ -41,7 +41,12 @@ def save_game_session(
 def _update_progress(db: Session, game_type: str, score: int, user_id: int | None = None) -> None:
     prog = db.query(UserProgress).filter_by(game_type=game_type, user_id=user_id).first()
     if not prog:
-        prog = UserProgress(game_type=game_type, user_id=user_id)
+        # Spalten-Defaults greifen erst beim Flush – hier explizit setzen,
+        # damit die folgende Inkrementierung nicht auf None trifft.
+        prog = UserProgress(
+            game_type=game_type, user_id=user_id,
+            games_played=0, total_score=0, best_score=0,
+        )
         db.add(prog)
     prog.games_played += 1
     prog.total_score += score

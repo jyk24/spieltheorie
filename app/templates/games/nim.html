@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Nim – Kombinatorische Spieltheorie | VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="Spiele Nim gegen eine perfekt rechnende KI. Wer das letzte Hölzchen nimmt, gewinnt. Lerne die Nim-Summe und den Satz von Sprague-Grundy interaktiv kennen.">{% endblock %}
+{% block og_title %}Nim – Spiele gegen den Meister{% endblock %}
+{% block og_description %}Das klassische mathematische Spiel: drei Reihen Hölzchen, abwechselnd nehmen. Hinter dem simplen Spiel steckt eine perfekt lösbare Theorie.{% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🪵 Nim</h1>
+        <p class="text-slate-500 mt-1">Wer das letzte Hölzchen nimmt, gewinnt. Hinter dem simplen Spiel steckt perfekte Mathematik.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <div class="space-y-2 text-xs">
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 font-bold mt-0.5">→</span>
+                <span><strong>Du und die KI ziehen abwechselnd.</strong> Du beginnst.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 font-bold mt-0.5">→</span>
+                <span><strong>Pro Zug:</strong> Nimm beliebig viele Hölzchen – aber nur aus <em>einer</em> Reihe. Mindestens eines.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-amber-500 font-bold mt-0.5">→</span>
+                <span><strong>Ziel:</strong> Wer das letzte Hölzchen vom Tisch nimmt, gewinnt.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-emerald-500 font-bold mt-0.5">★</span>
+                <span><strong>Der Clou:</strong> Die Startposition 3-5-7 ist für dich gewinnbar – wenn du fehlerfrei spielst. Der Meister bestraft jeden Fehler.</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="nim-area">
+        {% include "partials/nim_board.html" %}
+    </div>
+</div>
+
+<script>
+// Hover-Highlight: hebt das überfahrene Hölzchen und alle rechts davon in
+// derselben Reihe hervor (die, die der Zug entfernen würde). Delegiert, damit
+// es htmx-Swaps übersteht.
+(function () {
+    function tokensFrom(token) {
+        var heap = token.getAttribute('data-heap');
+        var pos = parseInt(token.getAttribute('data-pos'), 10);
+        var row = token.closest('.nim-row');
+        if (!row) return [];
+        var all = row.querySelectorAll('.nim-token[data-heap="' + heap + '"]');
+        var out = [];
+        all.forEach(function (t) {
+            if (parseInt(t.getAttribute('data-pos'), 10) >= pos) out.push(t);
+        });
+        return out;
+    }
+    document.addEventListener('mouseover', function (ev) {
+        var token = ev.target.closest && ev.target.closest('.nim-token');
+        if (!token) return;
+        tokensFrom(token).forEach(function (t) { t.classList.add('nim-hl'); });
+    });
+    document.addEventListener('mouseout', function (ev) {
+        var token = ev.target.closest && ev.target.closest('.nim-token');
+        if (!token) return;
+        tokensFrom(token).forEach(function (t) { t.classList.remove('nim-hl'); });
+    });
+})();
+</script>
+<style>
+    .nim-token { cursor: pointer; filter: grayscale(0.1); }
+    .nim-token.nim-hl { transform: translateY(-3px) scale(1.12); filter: drop-shadow(0 3px 4px rgba(79,70,229,.45)); }
+</style>
+
+{% endblock %}

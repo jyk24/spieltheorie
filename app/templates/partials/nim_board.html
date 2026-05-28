@@ -1,0 +1,77 @@
+{# Wiederverwendbares Nim-Spielfeld: Haufen, Zustandsformular, Strategie-Hinweis. #}
+{% if round_events %}
+<div class="bg-slate-50 border border-slate-200 rounded-xl p-3 mb-4 text-sm">
+    <div class="flex flex-wrap gap-2">
+    {% for e in round_events %}
+        <span class="px-2.5 py-1 rounded-full text-xs font-medium
+            {% if e.actor == 'player' %}bg-indigo-100 text-indigo-700{% else %}bg-red-100 text-red-700{% endif %}">
+            {{ '👤 Du' if e.actor == 'player' else '🤖 KI' }} nahm
+            {{ e.count }} aus Reihe {{ e.heap + 1 }}
+        </span>
+    {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<form id="nim-state">
+    <input type="hidden" name="heaps_json" value="{{ heaps | tojson }}">
+    <input type="hidden" name="moves_json" value="{{ moves_json }}">
+    {% if difficulty %}
+        <input type="hidden" name="difficulty" value="{{ difficulty }}">
+    {% endif %}
+</form>
+
+{% if not difficulty %}
+<div class="bg-white rounded-xl border border-slate-200 p-4 mb-5">
+    <p class="text-sm font-semibold text-slate-700 mb-2">Gegner wählen:</p>
+    <div class="flex flex-col sm:flex-row gap-2">
+        <label class="flex-1 flex items-start gap-2 border border-slate-200 rounded-lg p-3 cursor-pointer hover:border-indigo-300">
+            <input type="radio" name="difficulty" value="anfaenger" form="nim-state" class="mt-1">
+            <span><span class="font-medium text-slate-700">Anfänger</span>
+            <span class="block text-xs text-slate-500">KI zieht zufällig – meist schlagbar.</span></span>
+        </label>
+        <label class="flex-1 flex items-start gap-2 border border-indigo-200 bg-indigo-50/40 rounded-lg p-3 cursor-pointer hover:border-indigo-400">
+            <input type="radio" name="difficulty" value="meister" form="nim-state" class="mt-1" checked>
+            <span><span class="font-medium text-slate-700">Meister</span>
+            <span class="block text-xs text-slate-500">Perfektes Spiel. Nur fehlerfreies Spiel gewinnt.</span></span>
+        </label>
+    </div>
+</div>
+{% endif %}
+
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+    <p class="text-xs text-slate-400 mb-4">Klicke ein Hölzchen – du entfernst es und alle rechts davon in derselben Reihe.</p>
+    <div class="space-y-3">
+    {% for heap in heaps %}
+        {% set hi = loop.index0 %}
+        {% set rownum = loop.index %}
+        <div class="flex items-center gap-3 nim-row" data-heap="{{ hi }}">
+            <span class="text-xs text-slate-400 w-14 shrink-0">Reihe {{ rownum }}</span>
+            <div class="flex flex-wrap gap-1.5 items-center">
+            {% if heap == 0 %}
+                <span class="text-xs text-slate-300 italic">— leer —</span>
+            {% else %}
+                {% for t in range(heap) %}
+                <button type="button"
+                        class="nim-token text-2xl leading-none transition-transform hover:scale-110"
+                        data-heap="{{ hi }}"
+                        data-pos="{{ t }}"
+                        hx-post="/spiele/nim/zug"
+                        hx-target="#nim-area"
+                        hx-swap="innerHTML"
+                        hx-include="#nim-state"
+                        hx-vals='{"heap": {{ hi }}, "count": {{ heap - t }}}'
+                        title="Reihe {{ rownum }}: {{ heap - t }} nehmen">🪵</button>
+                {% endfor %}
+            {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+
+<details class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-2 text-sm">
+    <summary class="cursor-pointer font-medium text-slate-600 select-none">💡 Strategie-Hinweis (Nim-Summe)</summary>
+    <p class="text-slate-600 mt-3 leading-relaxed">{{ hint }}</p>
+    <p class="text-xs text-slate-400 mt-2">Die Nim-Summe ist das XOR (bitweise) aller Reihengrößen. Wer den Gegner stets mit Nim-Summe 0 zurücklässt, gewinnt zwangsläufig.</p>
+</details>

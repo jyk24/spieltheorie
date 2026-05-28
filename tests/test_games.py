@@ -10,6 +10,11 @@ from app.game_engine import (
     gd_ai_move,
     gd_final_result,
     gd_play_round,
+    nim_ai_move,
+    nim_apply_move,
+    nim_play_turn,
+    nim_sum,
+    nim_winning_move,
     trust_ai_return,
     trust_final_result,
     ultimatum_ai_response,
@@ -183,3 +188,76 @@ class TestVerhandlungssimulation:
         # Kein Crash, Ergebnis hat korrekte Struktur
         assert "offer" in result
         assert "deal" in result
+
+
+# ---------------------------------------------------------------------------
+# Nim
+# ---------------------------------------------------------------------------
+
+class TestNim:
+    def test_nim_sum_basic(self):
+        assert nim_sum([3, 5, 7]) == 1
+        assert nim_sum([1, 2, 3]) == 0
+        assert nim_sum([0, 0, 0]) == 0
+
+    def test_winning_move_exists_when_nonzero(self):
+        move = nim_winning_move([3, 5, 7])
+        assert move is not None
+        i, c = move
+        after = nim_apply_move([3, 5, 7], i, c)
+        assert nim_sum(after) == 0
+
+    def test_no_winning_move_when_zero(self):
+        assert nim_winning_move([1, 2, 3]) is None
+
+    def test_apply_move_reduces_heap(self):
+        assert nim_apply_move([3, 5, 7], 1, 2) == [3, 3, 7]
+
+    def test_apply_move_rejects_too_many(self):
+        with pytest.raises(ValueError):
+            nim_apply_move([3, 5, 7], 0, 4)
+
+    def test_apply_move_rejects_zero(self):
+        with pytest.raises(ValueError):
+            nim_apply_move([3, 5, 7], 0, 0)
+
+    def test_apply_move_rejects_bad_index(self):
+        with pytest.raises(ValueError):
+            nim_apply_move([3, 5, 7], 5, 1)
+
+    def test_master_returns_to_zero_nim_sum(self):
+        # Nach einem Spielerfehler (Nim-Summe != 0) muss der Meister auf 0 stellen.
+        heaps = [3, 4, 5]  # nim_sum = 2 != 0
+        i, c = nim_ai_move(heaps, "meister")
+        after = nim_apply_move(heaps, i, c)
+        assert nim_sum(after) == 0
+
+    def test_master_unbeatable_from_losing_start(self):
+        # Wenn der Spieler in einer Verlustposition (Nim-Summe 0) startet und
+        # zufällig zieht, gewinnt der perfekte Meister immer.
+        import random as _r
+        _r.seed(42)
+        for _ in range(50):
+            heaps = [1, 2, 3]  # Nim-Summe 0 → Spieler am Zug verliert
+            player_won = False
+            while sum(heaps) > 0:
+                nonempty = [j for j, h in enumerate(heaps) if h > 0]
+                pi = _r.choice(nonempty)
+                pc = _r.randint(1, heaps[pi])
+                turn = nim_play_turn(heaps, pi, pc, "meister")
+                if turn["game_over"]:
+                    player_won = turn["winner"] == "player"
+                    break
+                heaps = turn["heaps"]
+            assert player_won is False
+
+    def test_player_takes_last_wins(self):
+        turn = nim_play_turn([0, 0, 2], 2, 2, "meister")
+        assert turn["game_over"] is True
+        assert turn["winner"] == "player"
+
+    def test_play_turn_includes_ai_event_when_continuing(self):
+        turn = nim_play_turn([3, 5, 7], 0, 1, "meister")
+        assert turn["game_over"] is False
+        actors = [e["actor"] for e in turn["events"]]
+        assert actors == ["player", "ai"]

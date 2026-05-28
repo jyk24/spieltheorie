@@ -13,7 +13,7 @@
      ["chicken","koordination","geschlechter-kampf","rps","gleiche-muenzen","habicht-taube","minderheit"],
      "Wann können wir uns koordinieren – und wann nicht? Nash-Gleichgewichte, Minimax und Focal Points."),
     ("🧠 Strategie & Information", "violet",  "strategie",
-     ["verhandlung","beauty-contest","centipede","el-farol"],
+     ["verhandlung","beauty-contest","centipede","nim","el-farol"],
      "Komplexe Entscheidungssituationen: Rückwärtsinduktion, K-Level-Thinking und Informationsasymmetrie."),
     ("🏛️ Auktionen & Märkte",     "amber",   "auktionen",
      ["auktion","englische-auktion","hollaendische-auktion","dollarauktion","gewinner-fluch","cournot"],
@@ -73,7 +73,7 @@
                     <h2 class="text-lg font-bold text-slate-800 group-hover:text-{{ farbe }}-700 transition-colors mb-2">{{ game.name }}</h2>
                     <p class="text-slate-500 text-sm mb-4 leading-relaxed">{{ game.beschreibung }}</p>
                     <div class="flex items-center gap-3 text-xs text-slate-400">
-                        <span>🔄 {{ game.runden }} Runden</span>
+                        <span>🔄 {{ game.runden }} Runde{% if game.runden != 1 %}n{% endif %}</span>
                         <span class="text-slate-200">·</span>
                         <span class="text-slate-400 truncate">{{ game.konzept.split(',')[0] }}</span>
                     </div>

@@ -62,6 +62,10 @@ from ..game_engine import (
     wc_play_round,
     cournot_final_result,
     cournot_play_round,
+    NIM_START,
+    nim_sum,
+    nim_winning_move,
+    nim_play_turn,
 )
 from ..services import save_game_session
 
@@ -618,6 +622,15 @@ GAME_META = [
         "schwierigkeit": "Fortgeschritten",
         "runden": 6,
         "konzept": "Cournot-Gleichgewicht, Oligopol, Kollusion vs. Wettbewerb",
+    },
+    {
+        "id": "nim",
+        "name": "Nim",
+        "icon": "🪵",
+        "beschreibung": "Drei Reihen Hölzchen, abwechselnd nehmen – wer das letzte nimmt, gewinnt. Hinter dem simplen Spiel steckt eine perfekt lösbare Mathematik. Schlägst du den Meister?",
+        "schwierigkeit": "Fortgeschritten",
+        "runden": 1,
+        "konzept": "Kombinatorische Spieltheorie, Nim-Summe, Sprague-Grundy",
     },
 ]
 
@@ -2908,6 +2921,120 @@ def cournot_zug(
             "total_player": total_player,
             "total_ai": total_ai,
             "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Nim
+# ---------------------------------------------------------------------------
+
+NIM_DIFFICULTIES = {
+    "anfaenger": {"name": "Anfänger", "desc": "Die KI zieht zufällig – gut zum Lernen der Mechanik."},
+    "meister": {"name": "Meister", "desc": "Perfektes Spiel nach der Nim-Summe. Nur fehlerfreies Spiel gewinnt."},
+}
+
+
+def _nim_hint(heaps: list[int]) -> str:
+    """Lehrreicher Strategie-Hinweis auf Basis der Nim-Summe."""
+    s = nim_sum(heaps)
+    if s == 0:
+        return ("Die Nim-Summe ist 0 – wer jetzt zieht, verliert bei perfektem "
+                "Gegenspiel. Deine einzige Chance: ein Fehler des Gegners.")
+    move = nim_winning_move(heaps)
+    if move is None:
+        return f"Die Nim-Summe ist {s}."
+    i, c = move
+    return (f"Die Nim-Summe ist {s} (≠ 0) – du kannst gewinnen. Ein Gewinnzug: "
+            f"nimm {c} aus Reihe {i + 1}, das setzt die Nim-Summe auf 0.")
+
+
+@router.get("/nim", response_class=HTMLResponse)
+def nim_page(request: Request):
+    heaps = list(NIM_START)
+    return templates.TemplateResponse(
+        request,
+        "games/nim.html",
+        {
+            "active_page": "spiele",
+            "heaps": heaps,
+            "difficulty": None,
+            "moves_json": "[]",
+            "nim_sum": nim_sum(heaps),
+            "hint": _nim_hint(heaps),
+        },
+    )
+
+
+@router.post("/nim/zug", response_class=HTMLResponse)
+def nim_zug(
+    request: Request,
+    heap: int = Form(...),
+    count: int = Form(...),
+    heaps_json: str = Form(...),
+    difficulty: str = Form("meister"),
+    moves_json: str = Form(default="[]"),
+    db: Session = Depends(get_db),
+):
+    heaps = json.loads(heaps_json)
+    moves = json.loads(moves_json)
+    if difficulty not in NIM_DIFFICULTIES:
+        difficulty = "meister"
+
+    try:
+        turn = nim_play_turn(heaps, heap, count, difficulty)
+    except ValueError:
+        # Ungültiger Zug (z. B. veralteter Spielstand) – Zustand unverändert zurück.
+        return templates.TemplateResponse(
+            request,
+            "partials/nim_board.html",
+            {
+                "heaps": heaps,
+                "difficulty": difficulty,
+                "moves_json": json.dumps(moves),
+                "nim_sum": nim_sum(heaps),
+                "hint": _nim_hint(heaps),
+                "round_events": [],
+            },
+        )
+
+    moves.extend(turn["events"])
+    new_heaps = turn["heaps"]
+
+    new_achievements: list = []
+    final = None
+    if turn["game_over"]:
+        result = "win" if turn["winner"] == "player" else "loss"
+        _, new_achievements = save_game_session(
+            db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
+            game_type="nim",
+            ai_strategy=difficulty,
+            moves=moves,
+            result=result,
+            score=1 if result == "win" else 0,
+            ai_score=0 if result == "win" else 1,
+        )
+        final = {
+            "result": result,
+            "winner": turn["winner"],
+            "difficulty": difficulty,
+            "total_moves": len([m for m in moves if m["actor"] == "player"]),
+        }
+
+    return templates.TemplateResponse(
+        request,
+        "partials/nim_result.html",
+        {
+            "heaps": new_heaps,
+            "difficulty": difficulty,
+            "moves_json": json.dumps(moves),
+            "nim_sum": nim_sum(new_heaps),
+            "hint": _nim_hint(new_heaps),
+            "round_events": turn["events"],
+            "is_final": turn["game_over"],
+            "final": final,
             "new_achievements": new_achievements,
         },
     )

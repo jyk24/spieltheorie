@@ -1828,3 +1828,99 @@ def knopf_final_result(history: list[dict]) -> dict:
         "efficiency": efficiency,
         "total_rounds": len(history),
     }
+
+
+# ---------------------------------------------------------------------------
+# Nim (kombinatorische Spieltheorie / Sprague-Grundy)
+# ---------------------------------------------------------------------------
+# Normalspiel-Konvention: Wer das letzte Hölzchen nimmt, GEWINNT.
+# Startposition 3-5-7 hat Nim-Summe 1 (≠ 0) ⇒ der anziehende Spieler (Mensch)
+# hat eine Gewinnstrategie. Der "Meister" bestraft jeden Fehler unbarmherzig.
+
+NIM_START = [3, 5, 7]
+
+
+def nim_sum(heaps: list[int]) -> int:
+    """XOR aller Haufengrößen – das Herz der Nim-Theorie."""
+    s = 0
+    for h in heaps:
+        s ^= h
+    return s
+
+
+def nim_winning_move(heaps: list[int]) -> tuple[int, int] | None:
+    """Gibt einen optimalen Zug (heap_index, anzahl) zurück, der die
+    Nim-Summe auf 0 bringt – oder None, wenn die Position bereits verloren
+    ist (Nim-Summe == 0)."""
+    s = nim_sum(heaps)
+    if s == 0:
+        return None
+    for i, h in enumerate(heaps):
+        target = h ^ s
+        if target < h:
+            return (i, h - target)
+    return None
+
+
+def nim_ai_move(heaps: list[int], difficulty: str) -> tuple[int, int]:
+    """Berechnet den Zug der KI. 'meister' spielt perfekt (Nim-Summe-Strategie),
+    'anfaenger' zieht zufällig."""
+    nonempty = [i for i, h in enumerate(heaps) if h > 0]
+    if difficulty == "meister":
+        move = nim_winning_move(heaps)
+        if move is not None:
+            return move
+        # Verlorene Position: Verzögere, indem 1 vom größten Haufen genommen wird.
+        i = max(nonempty, key=lambda j: heaps[j])
+        return (i, 1)
+    # Anfänger: zufälliger Haufen, zufällige Menge.
+    i = random.choice(nonempty)
+    return (i, random.randint(1, heaps[i]))
+
+
+def nim_apply_move(heaps: list[int], heap_idx: int, count: int) -> list[int]:
+    """Wendet einen Zug an und gibt die neue Haufenliste zurück (validiert)."""
+    new_heaps = list(heaps)
+    if not (0 <= heap_idx < len(new_heaps)):
+        raise ValueError("Ungültiger Haufen")
+    if not (1 <= count <= new_heaps[heap_idx]):
+        raise ValueError("Ungültige Anzahl")
+    new_heaps[heap_idx] -= count
+    return new_heaps
+
+
+def nim_play_turn(
+    heaps: list[int], heap_idx: int, count: int, difficulty: str
+) -> dict:
+    """Verarbeitet einen kompletten Spielzug: Spielerzug, dann (falls das Spiel
+    nicht vorbei ist) den KI-Zug. Gibt den neuen Zustand und ein Log zurück."""
+    after_player = nim_apply_move(heaps, heap_idx, count)
+    player_event = {"actor": "player", "heap": heap_idx, "count": count}
+
+    if sum(after_player) == 0:
+        # Spieler hat das letzte Hölzchen genommen → Spieler gewinnt.
+        return {
+            "heaps": after_player,
+            "events": [player_event],
+            "game_over": True,
+            "winner": "player",
+        }
+
+    ai_heap, ai_count = nim_ai_move(after_player, difficulty)
+    after_ai = nim_apply_move(after_player, ai_heap, ai_count)
+    ai_event = {"actor": "ai", "heap": ai_heap, "count": ai_count}
+
+    if sum(after_ai) == 0:
+        return {
+            "heaps": after_ai,
+            "events": [player_event, ai_event],
+            "game_over": True,
+            "winner": "ai",
+        }
+
+    return {
+        "heaps": after_ai,
+        "events": [player_event, ai_event],
+        "game_over": False,
+        "winner": None,
+    }

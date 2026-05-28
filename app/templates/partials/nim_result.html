@@ -1,0 +1,72 @@
+{% if not is_final %}
+    {% include "partials/nim_board.html" %}
+{% else %}
+{% include "partials/achievement_unlock.html" %}
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+    {% if round_events %}
+    <div class="flex flex-wrap gap-2 mb-4">
+    {% for e in round_events %}
+        <span class="px-2.5 py-1 rounded-full text-xs font-medium
+            {% if e.actor == 'player' %}bg-indigo-100 text-indigo-700{% else %}bg-red-100 text-red-700{% endif %}">
+            {{ '👤 Du' if e.actor == 'player' else '🤖 KI' }} nahm
+            {{ e.count }} aus Reihe {{ e.heap + 1 }}
+        </span>
+    {% endfor %}
+    </div>
+    {% endif %}
+
+    <h3 class="text-2xl font-bold text-slate-800 mb-2">
+        {% if final.result == 'win' %}🏆 Du hast gewonnen!{% else %}🤖 Die KI gewinnt{% endif %}
+    </h3>
+    <p class="text-sm text-slate-500 mb-5">
+        {% if final.winner == 'player' %}
+            Du hast das letzte Hölzchen genommen – nach {{ final.total_moves }} eigenen Zügen.
+        {% else %}
+            Die KI hat das letzte Hölzchen genommen.
+        {% endif %}
+    </p>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-4 text-sm">
+        <div class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">— Die Mathematik dahinter —</div>
+        <p class="font-bold text-slate-800 mb-2">Nim-Summe & Sprague-Grundy</p>
+        <p class="text-slate-600 mb-3 leading-relaxed">
+            Nim ist vollständig gelöst. Bilde das bitweise XOR aller Reihengrößen – die <strong>Nim-Summe</strong>.
+            Ist sie <strong>nicht 0</strong>, hat der Spieler am Zug eine Gewinnstrategie: Es gibt immer einen Zug,
+            der die Nim-Summe auf 0 setzt. Ist sie <strong>0</strong>, verliert der Ziehende bei perfektem Gegenspiel.
+        </p>
+        <div class="bg-white rounded-lg border border-slate-100 p-3 mb-3 font-mono text-xs text-slate-600">
+            Start 3-5-7 → 011 XOR 101 XOR 111 = 001 = 1 (≠ 0)<br>
+            ⇒ Der anziehende Spieler (du) <strong>kann</strong> immer gewinnen.
+        </div>
+        <p class="text-xs text-emerald-700 font-medium bg-emerald-50 rounded-lg px-3 py-2">
+            {% if final.result == 'win' %}
+            ✓ Gegen den {{ 'Meister' if final.difficulty == 'meister' else 'Anfänger' }} gewonnen – wer am Zug die Nim-Summe auf 0 hält, gewinnt zwangsläufig.
+            {% else %}
+            ✗ Ein einziger Zug, der die Nim-Summe ungleich 0 ließ, reichte dem Meister zum Sieg. Versuch, jeden Gegner mit Nim-Summe 0 zurückzulassen.
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="bg-indigo-50/60 border border-indigo-100 rounded-xl p-4 mb-5 text-sm text-slate-600">
+        <strong class="text-indigo-700">Das Konzept:</strong> Nim begründete die kombinatorische Spieltheorie.
+        Der Satz von Sprague-Grundy zeigt, dass <em>jedes</em> unparteiische Spiel (beide Spieler haben dieselben Züge,
+        kein Zufall, vollständige Information) einem Nim-Haufen entspricht. Aus Nim folgt also die Lösung einer
+        ganzen Spielklasse.
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <a href="/spiele/nim"
+           class="flex items-center justify-center gap-2 bg-indigo-600 text-white px-4 py-3 rounded-xl text-sm font-bold hover:bg-indigo-700 transition-colors">
+            🔄 Nochmal spielen
+        </a>
+        <a href="/lektionen/rueckwaertsinduktion"
+           class="flex items-center justify-center gap-2 border border-indigo-200 text-indigo-600 px-4 py-3 rounded-xl text-sm font-medium hover:bg-indigo-50 transition-colors">
+            📖 Rückwärtsinduktion
+        </a>
+        <a href="/spiele"
+           class="flex items-center justify-center gap-2 border border-slate-200 text-slate-600 px-4 py-3 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors">
+            🎮 Alle Spiele
+        </a>
+    </div>
+</div>
+{% endif %}
