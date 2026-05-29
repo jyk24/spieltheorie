@@ -631,6 +631,8 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Nicht-Transitivität & Zufall (neu) ───────────────────────────────────
+    {"id":"penney-spiel","name":"Das Penney-Spiel","icon":"🪙","beschreibung":"Du wählst eine Münzfolge wie Kopf-Kopf-Zahl. Dann darf das Haus seine wählen – und gewinnt fast immer. Egal, was du nimmst: Es gibt immer eine bessere Antwort. Warum „besser als“ hier nicht transitiv ist.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Wahrscheinlichkeit"},
 ]
 
 
@@ -4114,6 +4116,12 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
     )
+
+
+@router.get("/penney-spiel", response_class=HTMLResponse)
+def penney_spiel_page(request: Request):
+    ctx = {"active_page": "raetsel", **_nav_context("penney-spiel")}
+    return templates.TemplateResponse(request, "raetsel/penney_spiel.html", ctx)
 
 
 @router.get("/{puzzle_id}", response_class=HTMLResponse)
