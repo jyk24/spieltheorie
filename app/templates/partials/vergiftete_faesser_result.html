@@ -37,8 +37,8 @@
                 <tr class="border-t border-slate-200">
                     <td class="py-1 pr-4 text-slate-600">Nr. {{ fass }}</td>
                     {% for bit in range(9, -1, -1) %}
-                    <td class="py-1 pr-2 {% if (fass >> bit) & 1 %}text-red-600 font-bold{% else %}text-slate-300{% endif %}">
-                        {{ (fass >> bit) & 1 }}
+                    <td class="py-1 pr-2 {% if (fass // 2**bit) % 2 %}text-red-600 font-bold{% else %}text-slate-300{% endif %}">
+                        {{ (fass // 2**bit) % 2 }}
                     </td>
                     {% endfor %}
                 </tr>
