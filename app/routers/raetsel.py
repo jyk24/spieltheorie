@@ -631,6 +631,9 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"zwei-kind-problem","name":"Das Zwei-Kind-Problem","icon":"👧","beschreibung":"Eine Familie hat zwei Kinder. Du weißt: mindestens eines ist ein Mädchen. Wie wahrscheinlich ist es, dass beide Mädchen sind? Der Klassiker von Martin Gardner – die Antwort ist nicht 1/2.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Mathematik"},
+    {"id":"raben-paradoxon","name":"Hempels Raben-Paradoxon","icon":"🐦","beschreibung":"Alle Raben sind schwarz. Stützt ein roter Apfel diese Hypothese? Logisch gesehen ja – und genau das ist das Paradoxon der Bestätigung von Carl Hempel (1945).","typ":"Wissenschaftstheorie","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Logik"},
+    {"id":"sorites","name":"Das Sorites-Paradoxon","icon":"🏖️","beschreibung":"Ein Sandkorn ist kein Haufen. Zwei auch nicht. Aber 10.000 sicher. Wo genau wird aus Körnern ein Haufen? Eubulides (4. Jh. v. Chr.) und das Problem vager Begriffe.","typ":"Logik-Paradoxon","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Logik"},
 ]
 
 
@@ -4063,6 +4066,57 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "zwei-kind-problem": {
+        "id": "zwei-kind-problem", "name": "Das Zwei-Kind-Problem", "icon": "👧",
+        "farbe": "violet", "kategorie": "Mathematik", "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Das Szenario:",
+        "setup": "Eine Familie hat genau <strong>zwei Kinder</strong>. Beide Geschlechter sind unabhängig voneinander gleich wahrscheinlich (50/50).<br><br>Du erfährst eine einzige Information: <strong>Mindestens eines der beiden Kinder ist ein Mädchen.</strong>",
+        "frage": "Wie wahrscheinlich ist es, dass <em>beide</em> Kinder Mädchen sind?",
+        "optionen": [
+            {"text": "1/2 (50 %)", "hinweis": "Intuition – aber die Bedingung ändert den Stichprobenraum"},
+            {"text": "1/3 (≈ 33 %)", "hinweis": "Drei verbleibende Fälle, einer davon ist MM"},
+            {"text": "1/4 (25 %)", "hinweis": "Das wäre die a-priori-Wahrscheinlichkeit ohne Information"},
+            {"text": "2/3 (≈ 67 %)", "hinweis": "Das passt zum Monty-Hall-Problem – aber nicht hier"},
+        ],
+        "loesung_text": "Die Wahrscheinlichkeit ist 1/3.",
+        "erklaerung": "<p>Vor der Information gibt es vier gleich wahrscheinliche Möglichkeiten für die beiden Kinder (in Geburtsreihenfolge):</p><p class=\"font-mono text-center\">JJ &nbsp;·&nbsp; JM &nbsp;·&nbsp; MJ &nbsp;·&nbsp; MM</p><p>Die Information &#8222;<em>mindestens eines ist ein Mädchen</em>&#8220; schließt nur <strong>JJ</strong> aus. Es bleiben drei gleich wahrscheinliche Fälle: <strong>JM, MJ, MM</strong>. Nur einer davon ist <strong>MM</strong> → <strong>1/3</strong>.</p><p>Die meisten Menschen antworten 1/2, weil sie unbewusst auf <em>ein bestimmtes</em> Kind (z. B. das erstgeborene) konditionieren – dann wäre die Antwort wirklich 1/2. Aber &#8222;mindestens eines&#8220; ist eine andere Bedingung als &#8222;das erste ist eines&#8220;.</p>",
+        "kontext": "<p><strong>Martin Gardner (1959)</strong> stellte das Problem in seiner Kolumne <em>Mathematical Games</em> im Scientific American. Es wurde berühmt, weil Gardner selbst die Formulierung später als mehrdeutig bezeichnete: Je nachdem, <em>wie</em> man von der Information erfährt, kann die Antwort 1/2 oder 1/3 sein.</p><p><strong>Tuesday Boy (2010):</strong> Eine berüchtigte Variante: &#8222;Ich habe zwei Kinder, eines ist ein Junge, geboren an einem Dienstag.&#8220; Wie wahrscheinlich sind beide Jungen? Antwort: 13/27 – die scheinbar irrelevante Information &#8222;Dienstag&#8220; verändert die Wahrscheinlichkeit.</p><p>Das Problem zeigt: <strong>Bedingte Wahrscheinlichkeiten hängen davon ab, wie die Information gewonnen wurde</strong> – nicht nur davon, was sie aussagt. Das ist auch der Kern des Monty-Hall-Problems.</p>",
+        "erkenntnis": "&#8222;Mindestens eines ist X&#8220; und &#8222;ein bestimmtes ist X&#8220; sind verschiedene Bedingungen. Bei bedingten Wahrscheinlichkeiten muss immer der Stichprobenraum klar definiert sein – sonst rechnet man unbemerkt das falsche Problem.",
+    },
+    "raben-paradoxon": {
+        "id": "raben-paradoxon", "name": "Hempels Raben-Paradoxon", "icon": "🐦",
+        "farbe": "indigo", "kategorie": "Logik", "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup_label": "Die Hypothese:",
+        "setup": "Wir untersuchen die Hypothese:<br><br><strong>&#8222;Alle Raben sind schwarz.&#8220;</strong><br><br>Sie ist logisch äquivalent zur Kontraposition:<br><strong>&#8222;Alles, was nicht schwarz ist, ist kein Rabe.&#8220;</strong><br><br>Du beobachtest einen <strong>roten Apfel</strong>. Er ist nicht schwarz – und er ist kein Rabe.",
+        "frage": "Stützt der rote Apfel die Hypothese &#8222;Alle Raben sind schwarz&#8220;?",
+        "optionen": [
+            {"text": "Nein – Äpfel haben mit Raben nichts zu tun", "hinweis": "Intuitiv überzeugend, logisch problematisch"},
+            {"text": "Ja – jede Beobachtung eines nicht-schwarzen Nicht-Raben bestätigt die Kontraposition", "hinweis": "Das ist Hempels Schlussfolgerung – und das eigentliche Paradoxon"},
+            {"text": "Nur, wenn ich auch einen schwarzen Raben gesehen habe", "hinweis": "Verknüpft zwei unabhängige Bestätigungen"},
+            {"text": "Die Hypothese ist nicht überprüfbar", "hinweis": "Wäre Poppers Antwort – aber Hempel akzeptiert Bestätigung"},
+        ],
+        "loesung_text": "Ja – formal stützt der rote Apfel die Hypothese. Das ist das Paradoxon.",
+        "erklaerung": "<p>Hempels Bestätigungstheorie ruht auf zwei Prinzipien:</p><ol class=\"list-decimal ml-5 space-y-1\"><li><strong>Nicoder-Bedingung:</strong> Eine Beobachtung von etwas, das die Hypothese &#8222;Alle A sind B&#8220; erfüllt (also ein A, das B ist), stützt die Hypothese.</li><li><strong>Äquivalenzbedingung:</strong> Was eine Hypothese stützt, stützt auch jede logisch äquivalente Hypothese.</li></ol><p>&#8222;Alle Raben sind schwarz&#8220; ist äquivalent zu &#8222;Alles Nicht-Schwarze ist Nicht-Rabe&#8220;. Ein roter Apfel ist nicht-schwarz und nicht-Rabe – also ein Bestätigungsfall der äquivalenten Hypothese, und damit auch der Originalhypothese.</p><p>Das Paradoxon: <strong>Ornithologie betreibt man im Obstladen.</strong> Jede grüne Banane, jedes weiße Blatt Papier bestätigt geringfügig &#8222;Alle Raben sind schwarz&#8220;.</p>",
+        "kontext": "<p><strong>Carl Gustav Hempel (1945)</strong> formulierte das Paradoxon in &#8222;Studies in the Logic of Confirmation&#8220;. Die heute übliche bayesianische Antwort: Ja, der Apfel bestätigt die Hypothese – aber <em>extrem schwach</em>, weil es viel mehr Nicht-Raben als Raben auf der Welt gibt. Ein schwarzer Rabe stützt die Hypothese sehr viel stärker.</p><p>Formal (Bayes): Die Information &#8222;rot, Apfel&#8220; hat hohe Vorwahrscheinlichkeit unter <em>jeder</em> Hypothese – die posterior-Verschiebung ist winzig, aber nicht null.</p><p>Karl Popper zog daraus eine andere Lehre: Wissenschaft sucht <strong>Falsifikation</strong>, nicht Bestätigung. Ein einziger weißer Rabe widerlegt die Hypothese – Millionen schwarze bestätigen sie nicht endgültig.</p>",
+        "erkenntnis": "Logische Äquivalenz und intuitive Relevanz sind nicht dasselbe. Was logisch eine Hypothese stützt, ist manchmal evidenzmäßig vernachlässigbar – und manchmal liegt der Erkenntnisgewinn in der Suche nach Gegenbeispielen, nicht nach Bestätigungen.",
+    },
+    "sorites": {
+        "id": "sorites", "name": "Das Sorites-Paradoxon", "icon": "🏖️",
+        "farbe": "amber", "kategorie": "Logik", "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup_label": "Das Paradoxon:",
+        "setup": "Zwei Aussagen, die einzeln plausibel erscheinen:<br><br><strong>(1)</strong> Ein einzelnes Sandkorn ist kein Haufen.<br><strong>(2)</strong> Wenn n Sandkörner kein Haufen sind, sind n+1 Sandkörner auch kein Haufen.<br><br>Per Induktion folgt: <strong>10.000 Sandkörner sind kein Haufen.</strong> Aber das widerspricht offensichtlich der Anschauung.",
+        "frage": "Welche Auflösung ist philosophisch am tragfähigsten?",
+        "optionen": [
+            {"text": "Es gibt eine exakte Schwelle (z. B. bei 1.000 Körnern) – wir kennen sie nur nicht", "hinweis": "Die Position des Epistemizismus (Williamson)"},
+            {"text": "Die Prämisse (2) ist falsch – ein einziges Korn macht manchmal den Unterschied", "hinweis": "Schwer zu akzeptieren, aber logisch eine Option"},
+            {"text": "&#8222;Haufen&#8220; ist ein vager Begriff – klassische Logik ist auf solche Begriffe nicht anwendbar", "hinweis": "Die Position der vielwertigen / Fuzzy-Logik"},
+            {"text": "Das Paradoxon zeigt, dass &#8222;Haufen&#8220; gar nicht existiert", "hinweis": "Nihilismus über vage Begriffe – sehr radikal"},
+        ],
+        "loesung_text": "Es gibt keinen unstrittigen Konsens – alle vier Antworten haben prominente Verteidiger.",
+        "erklaerung": "<p>Das Paradoxon (griech. <em>sorós</em> = Haufen) wird Eubulides von Milet (4. Jh. v. Chr.) zugeschrieben. Es ist <strong>keine bloße sprachliche Verlegenheit</strong>, sondern ein hartes Problem der Logik vager Prädikate.</p><p><strong>Die drei Hauptpositionen:</strong></p><ul class=\"list-disc ml-5 space-y-1\"><li><strong>Epistemizismus (Timothy Williamson, 1994):</strong> Es gibt eine exakte Grenze – wir kennen sie nur nicht. Vagheit ist Unwissen, nicht ontologisch.</li><li><strong>Fuzzy-Logik / vielwertige Logik:</strong> Wahrheit ist graduell. &#8222;Das ist ein Haufen&#8220; hat einen Wahrheitswert zwischen 0 und 1.</li><li><strong>Supervaluationismus (Fine, 1975):</strong> Eine Aussage ist wahr, wenn sie unter <em>jeder</em> zulässigen Präzisierung wahr ist – sonst weder wahr noch falsch.</li></ul>",
+        "kontext": "<p>Das Problem ist nicht akademisch: <strong>Wann beginnt das Leben?</strong> Wann ist jemand &#8222;kahl&#8220;? Wann ist eine Person &#8222;arm&#8220;? Vage Begriffe durchziehen Recht, Medizin und Ethik.</p><p><strong>Praktische Beispiele:</strong></p><ul class=\"list-disc ml-5 space-y-1\"><li>Steuerschwellen (ab welchem Einkommen &#8222;reich&#8220;?)</li><li>Krankheitsdefinitionen (Bluthochdruck ab 140 oder 135 mmHg?)</li><li>Strafrecht (jugendlich vs. erwachsen)</li></ul><p>Im Verhandlungskontext: Wer eine vage Forderung (&#8222;eine faire Vergütung&#8220;) konkretisiert, gewinnt Kontrolle – derjenige, der die Schwelle setzt, definiert das Spiel.</p>",
+        "erkenntnis": "Vagheit ist kein Fehler unserer Sprache, sondern eine Eigenschaft vieler echter Begriffe. In Argumentation und Verhandlung lohnt es sich, die Schwelle früh und explizit zu benennen – sonst tut es jemand anders zu seinen Gunsten.",
     },
 }
 
