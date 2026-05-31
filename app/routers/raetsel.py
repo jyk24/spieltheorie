@@ -82,6 +82,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Wahrscheinlichkeit",
     },
+    {
+        "id": "buffon-nadel",
+        "name": "Buffons Nadelproblem",
+        "icon": "📌",
+        "beschreibung": "Wirf eine Nadel zufällig auf einen Boden mit parallelen Linien. Die Wahrscheinlichkeit, dass sie eine Linie kreuzt, hängt von π ab. Wirf 1000 Nadeln – und du berechnest π experimentell. Buffon (1733): Geometrie trifft Zufall.",
+        "typ": "Wahrscheinlichkeits-Experiment",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
     # ── Statistik & Kognition ──────────────────────────────────────────────────
     {
         "id": "simpson",
@@ -3239,6 +3249,23 @@ GENERIC_PUZZLES: dict = {
         "kontext": "<p>Random Walks beschreiben Diffusion, Aktienkurse, Genomevolution und Proteinfaltung. Das √n-Wachstum erklärt, warum Diffusion so langsam ist: verdoppelt man die Zeit, geht man nur √2 ≈ 1,4× weiter.</p>",
         "erkenntnis": "Zufall akkumuliert langsam. Das √n-Gesetz hat fundamentale Konsequenzen für Physik, Biologie und Finanzen: Diversifikation reduziert Risiko proportional zu √n.",
     },
+    "buffon-nadel": {
+        "id": "buffon-nadel", "name": "Buffons Nadelproblem", "icon": "📌",
+        "farbe": "sky", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Ein Boden ist mit parallelen Linien im Abstand <strong>d</strong> bemalt. Du wirfst eine Nadel der Länge <strong>ℓ</strong> (mit ℓ ≤ d) zufällig auf den Boden. Position und Winkel der Nadel seien gleichverteilt.",
+        "frage": "Wie groß ist die Wahrscheinlichkeit, dass die Nadel mindestens eine Linie kreuzt?",
+        "optionen": [
+            {"text": "ℓ / d", "hinweis": "Naheliegend, aber ignoriert den Winkel"},
+            {"text": "2ℓ / (π·d)", "hinweis": "Geometrie + Integration über Winkel"},
+            {"text": "ℓ² / d²", "hinweis": "Quadratische Abhängigkeit – aber wovon?"},
+            {"text": "1 / π", "hinweis": "Hängt nicht von Nadel- oder Linienabstand ab?"},
+        ],
+        "loesung_text": "P = 2ℓ / (π · d)",
+        "erklaerung": "<p>Sei <em>x</em> der Abstand des Nadelmittelpunkts zur nächsten Linie (0 ≤ x ≤ d/2) und <em>θ</em> der Winkel zur Senkrechten (0 ≤ θ ≤ π/2). Beides ist gleichverteilt. Die Nadel kreuzt eine Linie genau dann, wenn x ≤ (ℓ/2)·cos(θ).</p><p>Doppelintegral: P = (4 / (π·d)) · ∫₀^(π/2) (ℓ/2)·cos(θ) dθ = (2ℓ) / (π·d). Für ℓ = d ergibt sich P = 2/π ≈ 0,6366.</p><p><strong>Praktische Anwendung:</strong> Wirf N Nadeln, zähle k Kreuzungen. Dann gilt π ≈ (2ℓ·N) / (d·k) — ein experimentelles Monte-Carlo-Verfahren für π.</p>",
+        "kontext": "<p>Georges-Louis Leclerc, Comte de Buffon, formulierte das Problem 1733 — es war eines der ersten Probleme der <strong>geometrischen Wahrscheinlichkeit</strong>. Pierre-Simon Laplace verwendete es 1812 erstmals, um π experimentell zu schätzen.</p><p>1901 warf der italienische Mathematiker Mario Lazzarini angeblich 3408 Nadeln und erhielt π = 3,1415929 (sechs Nachkommastellen korrekt). Das ist verdächtig genau — Statistiker vermuten heute, dass Lazzarini die Versuchszahl gezielt wählte, damit das Ergebnis stimmt.</p><p>Buffons Nadel war Vorläufer der modernen <em>Monte-Carlo-Methoden</em>: Probleme durch zufällige Stichproben numerisch lösen — heute Standard in Physik, Finanzwesen und KI.</p>",
+        "erkenntnis": "Zufall und Geometrie sind tief verbunden. Eine simple physikalische Aktion (Nadelwurf) genügt, um eine fundamentale mathematische Konstante zu messen — ohne π je zu berechnen.",
+    },
     "littlewoods-law": {
         "id": "littlewoods-law", "name": "Littlewoods Gesetz der Wunder", "icon": "✨",
         "farbe": "sky", "kategorie": "Wahrscheinlichkeit",
@@ -4108,11 +4135,10 @@ def pawlow_hund_page(request: Request):
 
 @router.post("/pawlow-hund/antwort", response_class=HTMLResponse)
 def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
-    correct = antwort in ["glocke", "unkonditioniert_stimulus", "klassisch", "konditionierter_reiz"]
     return templates.TemplateResponse(
         request,
         "partials/pawlow_hund_result.html",
-        {"antwort": antwort, "correct": correct},
+        {"antwort": antwort},
     )
 
 
