@@ -305,6 +305,36 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Logik",
     },
+    {
+        "id": "ritter-schurken",
+        "name": "Ritter und Schurken",
+        "icon": "🛡️",
+        "beschreibung": "Auf einer Insel leben Ritter (sagen immer die Wahrheit) und Schurken (lügen immer). Eine einzige Frage entscheidet — kannst du sie finden?",
+        "typ": "Logik-Puzzle",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Logik",
+    },
+    {
+        "id": "ziegen-kohl-wolf",
+        "name": "Wolf, Ziege und Kohl",
+        "icon": "🛶",
+        "beschreibung": "Du musst einen Wolf, eine Ziege und einen Kohlkopf über den Fluss bringen. Dein Boot fasst nur dich und ein Objekt. Was bleibt nie unbeaufsichtigt?",
+        "typ": "Transportlogik",
+        "schwierigkeit": "Einsteiger",
+        "dauer": "4 min",
+        "kategorie": "Logik",
+    },
+    {
+        "id": "drei-tueren-waechter",
+        "name": "Zwei Wächter, eine Frage",
+        "icon": "🚪",
+        "beschreibung": "Zwei Türen, zwei Wächter — einer lügt immer, einer sagt immer die Wahrheit. Du weißt nicht, wer wer ist. Welche eine Frage führt dich zur richtigen Tür?",
+        "typ": "Logik-Klassiker",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+        "kategorie": "Logik",
+    },
     # ── Spieltheorie & Entscheidung ────────────────────────────────────────────
     {
         "id": "allais",
@@ -2741,6 +2771,58 @@ def trugschluesse_page(request: Request):
 # ---------------------------------------------------------------------------
 
 GENERIC_PUZZLES: dict = {
+    # ── Logik ─────────────────────────────────────────────────────────────
+    "ritter-schurken": {
+        "id": "ritter-schurken", "name": "Ritter und Schurken", "icon": "🛡️",
+        "farbe": "indigo", "kategorie": "Logik",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Auf einer Insel leben nur zwei Arten von Bewohnern: <strong>Ritter</strong>, die <em>immer</em> die Wahrheit sagen, und <strong>Schurken</strong>, die <em>immer</em> lügen. Du triffst zwei Bewohner, A und B. <br><br>A sagt zu dir: <em>„Mindestens einer von uns ist ein Schurke.“</em>",
+        "frage": "Was sind A und B?",
+        "optionen": [
+            {"text": "Beide sind Ritter", "hinweis": "Was hieße das für A's Aussage?"},
+            {"text": "Beide sind Schurken", "hinweis": "Kann ein Schurke das überhaupt sagen?"},
+            {"text": "A ist Ritter, B ist Schurke", "hinweis": "Klassische Smullyan-Lösung"},
+            {"text": "A ist Schurke, B ist Ritter", "hinweis": "Wer kann was wahrheitsgetreu behaupten?"},
+        ],
+        "loesung_text": "A ist ein Ritter, B ist ein Schurke",
+        "erklaerung": "<p>Angenommen, A wäre ein Schurke — dann wäre seine Aussage <em>‚mindestens einer von uns ist ein Schurke‘</em> wahr (denn er selbst ist einer). Aber Schurken können keine wahren Aussagen machen. Widerspruch.</p><p>Also ist A ein Ritter, und seine Aussage stimmt. Da A selbst ein Ritter ist, muss B der angekündigte Schurke sein.</p>",
+        "kontext": "<p>Raymond Smullyan (1919–2017) machte diese Rätsel mit seinem Buch <em>What Is the Name of This Book?</em> (1978) weltberühmt. Sie sind nicht nur Knobelaufgaben — sie sind die Grundlage moderner Komplexitätstheorie: Selbstbezug, Lügnerparadox, Gödels Unvollständigkeitssätze.</p><p>Knights-and-Knaves-Probleme tauchen heute als Aufgaben in Aussagenlogik-Vorlesungen auf, in Sicherheitsprotokollen (Zero-Knowledge-Proofs) und in der KI-Forschung zu glaubwürdigen Agenten.</p>",
+        "erkenntnis": "Logisches Denken ersetzt fehlende Information. Wenn du Regeln über Aussagen kennst, kannst du aus einer einzigen Behauptung mehr ableiten, als der Sprecher selbst preisgibt.",
+    },
+    "drei-tueren-waechter": {
+        "id": "drei-tueren-waechter", "name": "Zwei Wächter, eine Frage", "icon": "🚪",
+        "farbe": "rose", "kategorie": "Logik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Du stehst vor zwei Türen: eine führt zur Freiheit, eine in den Tod. Vor jeder Tür steht ein Wächter. Einer von ihnen <strong>lügt immer</strong>, der andere <strong>sagt immer die Wahrheit</strong>. Du weißt nicht, wer wer ist — und du hast nur <em>eine</em> Frage frei, die du <em>einem</em> der Wächter stellen darfst.",
+        "frage": "Welche Frage führt dich garantiert zur richtigen Tür?",
+        "optionen": [
+            {"text": "„Bist du der Lügner?“", "hinweis": "Was würden beide antworten?"},
+            {"text": "„Welche Tür führt zur Freiheit?“", "hinweis": "Direktes Fragen reicht nicht"},
+            {"text": "„Welche Tür würde der <em>andere</em> Wächter mir als Freiheits-Tür nennen?“ — dann die andere wählen", "hinweis": "Eine Lüge plus eine Wahrheit = Lüge"},
+            {"text": "„Wenn ich dich gestern gefragt hätte, was hättest du geantwortet?“", "hinweis": "Zeitfragen helfen nicht"},
+        ],
+        "loesung_text": "Frage einen beliebigen Wächter: „Welche Tür würde der andere mir als Freiheit nennen?“ — und nimm die andere Tür.",
+        "erklaerung": "<p>Egal welchen Wächter du fragst: die Antwort enthält genau <em>eine</em> Lüge.</p><ul><li>Fragst du den Wahrheitssagenden: Er sagt dir, was der Lügner sagen würde — und das ist die falsche Tür.</li><li>Fragst du den Lügner: Er lügt über das, was der Wahrheitssagende sagen würde — also nennt er ebenfalls die falsche Tür.</li></ul><p>Beide Wege führen zur falschen Tür — also wähle die andere.</p>",
+        "kontext": "<p>Dieses Rätsel ist berühmt geworden durch <em>Labyrinth</em> (Jim Henson, 1986). Es ist die Mini-Variante eines tiefen logischen Prinzips: <strong>doppelte Negation</strong>. Eine Wahrheit über eine Lüge bleibt eine Lüge — und genau das macht die Antwort vorhersagbar.</p><p>Das Prinzip steckt heute in Kryptographie (XOR-Verschlüsselung), in formaler Logik (¬¬A = A nur in klassischer Logik) und in Spieltheorie-Modellen mit unzuverlässigen Spielern.</p>",
+        "erkenntnis": "Zwei unzuverlässige Quellen können <em>verlässlich</em> werden, wenn du ihre Unzuverlässigkeit gegeneinander ausspielst. Strukturwissen schlägt Vertrauen.",
+    },
+    "ziegen-kohl-wolf": {
+        "id": "ziegen-kohl-wolf", "name": "Wolf, Ziege und Kohl", "icon": "🛶",
+        "farbe": "emerald", "kategorie": "Logik",
+        "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup": "Ein Bauer steht am Flussufer mit einem Wolf, einer Ziege und einem Kohlkopf. Sein Boot fasst nur ihn selbst und <em>ein</em> weiteres Objekt. Wird der Wolf mit der Ziege allein gelassen, frisst er sie. Wird die Ziege mit dem Kohl allein gelassen, frisst sie ihn. Wolf und Kohl ignorieren sich.",
+        "frage": "Wie viele Flussüberquerungen braucht der Bauer minimal, um alle drei sicher hinüberzubringen?",
+        "optionen": [
+            {"text": "5 Überquerungen", "hinweis": "Etwas zu wenig — irgendwer wird gefressen"},
+            {"text": "7 Überquerungen", "hinweis": "Das klassische Ergebnis"},
+            {"text": "9 Überquerungen", "hinweis": "Zu viele Hin- und Herfahrten"},
+            {"text": "Es ist unmöglich", "hinweis": "Mit dem richtigen Trick funktioniert es"},
+        ],
+        "loesung_text": "Mit 7 Überquerungen ist die Aufgabe lösbar.",
+        "erklaerung": "<p>Schritt für Schritt:</p><ol><li>Bauer bringt die <strong>Ziege</strong> hinüber. (Wolf + Kohl bleiben sicher zurück.)</li><li>Bauer fährt allein zurück.</li><li>Bauer bringt den <strong>Wolf</strong> hinüber.</li><li>Bauer nimmt die <strong>Ziege</strong> wieder mit zurück. <em>(Der Trick!)</em></li><li>Bauer bringt den <strong>Kohl</strong> hinüber. (Wolf + Kohl zusammen sind sicher.)</li><li>Bauer fährt allein zurück.</li><li>Bauer bringt die <strong>Ziege</strong> wieder hinüber. ✓</li></ol>",
+        "kontext": "<p>Das Rätsel stammt aus dem 9. Jahrhundert: Alcuin von York stellte es Karl dem Großen in <em>Propositiones ad acuendos juvenes</em> („Aufgaben zur Schärfung der Jugend“). Es ist eines der ältesten dokumentierten kombinatorischen Probleme der westlichen Welt.</p><p>Modern betrachtet ist es ein <strong>Zustandsraum-Suchproblem</strong> mit 8 möglichen Konfigurationen, bei denen 2 verboten sind. Genau dieselbe Logik nutzt jeder moderne KI-Planungsalgorithmus.</p>",
+        "erkenntnis": "Manchmal muss man einen Schritt zurückgehen, um vorwärts zu kommen. In der Optimierung heißt das <em>Backtracking</em> — die Bereitschaft, gewonnene Position aufzugeben, um den globalen Plan zu retten.",
+    },
     # ── Mathematik ────────────────────────────────────────────────────────
     "hanoi": {
         "id": "hanoi", "name": "Die Türme von Hanoi", "icon": "🗼",
