@@ -562,6 +562,8 @@ RAETSEL_META = [
     # ── Spieltheorie (neu) ───────────────────────────────────────────────────
     {"id":"matching-pennies","name":"Matching Pennies","icon":"🪙","beschreibung":"Zwei Spieler legen gleichzeitig eine Münze auf den Tisch. Einer gewinnt bei gleichen Seiten, der andere bei verschiedenen. Gibt es eine optimale Strategie?","typ":"Nullsummenspiel","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Spieltheorie"},
     {"id":"cake-cutting","name":"Cake Cutting","icon":"🎂","beschreibung":"Wie teilt man einen Kuchen zwischen zwei Personen fair auf, ohne eine Instanz als Schiedsrichter? Die Lösung ist so einfach wie elegant.","typ":"Fairness-Algorithmus","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Spieltheorie"},
+    {"id":"hirschjagd","name":"Die Hirschjagd","icon":"🦌","beschreibung":"Zwei Jäger – ein Hirsch, der nur gemeinsam zu erlegen ist, oder zwei Hasen, die jeder allein bekommt. Rousseaus 270 Jahre alte Frage über Vertrauen, Risiko und Koordination.","typ":"Koordinations-Dilemma","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Spieltheorie"},
+    {"id":"tausendfuessler","name":"Das Tausendfüßler-Spiel","icon":"🐛","beschreibung":"Zwei Spieler, ein wachsender Topf, 100 Runden. Bei perfekter Logik müsste der erste sofort aussteigen – doch tatsächlich kooperieren Menschen seitenlang. Wo versagt die Spieltheorie?","typ":"Rückwärtsinduktion","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Spieltheorie"},
     # ── Statistik (neu) ──────────────────────────────────────────────────────
     {"id":"berkson","name":"Das Berkson-Paradoxon","icon":"🏥","beschreibung":"Im Krankenhaus scheinen Raucher seltener Lungenkrebs zu haben. Ein scheinbarer Widerspruch – erklärt durch verzerrte Stichproben.","typ":"Statistik-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Statistik"},
     {"id":"p-hacking","name":"P-Hacking","icon":"🎰","beschreibung":"Ein Forscher testet 20 Hypothesen und findet eine mit p < 0,05. Ist das ein echter Befund? Die gefährlichste Methode der modernen Wissenschaft.","typ":"Wissenschaftsmethodik","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Statistik"},
@@ -3083,6 +3085,40 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Der Schneider (Alice) wird genau in der Mitte schneiden — denn er weiß, dass Bob das größere Stück nimmt. Beide erhalten mindestens 50 % in ihrer eigenen Bewertung. Das Verfahren ist <em>proportional</em> (jeder ≥ 1/n) und <em>envy-free</em> (keiner beneidet den anderen) — ohne jegliche Kommunikation über Präferenzen.</p>",
         "kontext": "<p>Für n &gt; 2 Personen ist envy-free Teilung algorithmisch komplex. Das Selfridge-Conway-Verfahren (1960/1993) löst es für 3 Personen endlich; für n Personen wurde erst 2016 ein endlicher Algorithmus gefunden (Aziz & Mackenzie).</p>",
         "erkenntnis": "Faire Verfahren brauchen keine Informationen über Präferenzen — sie müssen nur die richtigen Anreize setzen. Das 'Du schneidest, ich wähle'-Prinzip nutzt egoistisches Verhalten als Design-Element.",
+    },
+    "hirschjagd": {
+        "id": "hirschjagd", "name": "Die Hirschjagd", "icon": "🦌",
+        "farbe": "emerald", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Jean-Jacques Rousseau, 1755: Zwei Jäger stehen vor der Wahl. Gemeinsam können sie einen Hirsch erlegen (Lohn: 8 pro Person) — aber nur, wenn <em>beide</em> mitziehen. Jeder kann stattdessen allein einen Hasen jagen (sicherer Lohn: 3), egal was der andere tut. Wer aber auf den Hirsch wartet, während der andere zum Hasen wechselt, geht leer aus (Lohn: 0).<br><br><table class='mx-auto my-2 text-center text-sm'><tr><th class='px-3 py-1'></th><th class='px-3 py-1 border'>B: Hirsch</th><th class='px-3 py-1 border'>B: Hase</th></tr><tr><th class='px-3 py-1 border'>A: Hirsch</th><td class='px-3 py-1 border bg-emerald-50'>8 / 8</td><td class='px-3 py-1 border'>0 / 3</td></tr><tr><th class='px-3 py-1 border'>A: Hase</th><td class='px-3 py-1 border'>3 / 0</td><td class='px-3 py-1 border bg-amber-50'>3 / 3</td></tr></table>",
+        "frage": "Wie viele Nash-Gleichgewichte hat dieses Spiel — und welches wird empirisch häufiger gespielt?",
+        "optionen": [
+            {"text": "Genau ein Gleichgewicht: (Hirsch, Hirsch) — Pareto-optimal", "hinweis": "Wäre das die naheliegende Wahl?"},
+            {"text": "Zwei reine Gleichgewichte: (Hirsch, Hirsch) und (Hase, Hase) — empirisch dominiert die <em>Hasen-Lösung</em>", "hinweis": "Risikodominanz vs. Pareto-Dominanz"},
+            {"text": "Kein Gleichgewicht — das Spiel ist instabil", "hinweis": "Doch — beide haben sich gegenseitig als beste Antwort"},
+            {"text": "Drei Gleichgewichte: zwei reine plus ein gemischtes mit 50/50", "hinweis": "Stimmt der Anteil?"},
+        ],
+        "loesung_text": "Zwei reine Nash-Gleichgewichte — das risikodominante (Hase, Hase) wird empirisch häufiger gespielt",
+        "erklaerung": "<p>Es gibt zwei reine Nash-Gleichgewichte: <strong>(Hirsch, Hirsch)</strong> ist Pareto-dominant — beide bekommen 8 statt 3. Aber <strong>(Hase, Hase)</strong> ist <em>risikodominant</em>: Hase liefert garantiert 3, egal was der andere tut. Hirsch jagen lohnt sich nur, wenn man dem Partner mit ≥ 3/8 Wahrscheinlichkeit zutraut, ebenfalls Hirsch zu wählen.</p><p>Zusätzlich existiert ein gemischtes Gleichgewicht (je 3/8 Hirsch, 5/8 Hase). Harsanyi & Selten (1988) zeigten formal, dass risikodominante Gleichgewichte bei strategischer Unsicherheit fokal werden — und empirische Studien bestätigen das in Laborversuchen wieder und wieder.</p>",
+        "kontext": "<p>Brian Skyrms (<em>The Stag Hunt and the Evolution of Social Structure</em>, 2004) argumentiert, dass die Hirschjagd das eigentliche Grundproblem der Sozialphilosophie ist — nicht das Gefangenendilemma. In der Hirschjagd ist Kooperation kein Verzicht auf Eigennutz, sondern eine Frage des <em>Vertrauens</em>. Ohne Vertrauen kollabiert die Gesellschaft auf das suboptimale Hasen-Gleichgewicht: jeder versorgt sich selbst, das gemeinsame Großwild bleibt im Wald.</p><p>Anwendungen: Klimaschutz (alle gewinnen bei kollektiver Aktion, einseitige Vorleistung wird bestraft), Standards in der Industrie (gemeinsame Plattform vs. eigener Standard), Aufstände gegen Diktaturen (alle gewinnen bei gemeinsamem Aufstand, der einzelne verliert alles).</p>",
+        "erkenntnis": "Kooperation scheitert oft nicht an Eigennutz, sondern an mangelndem Vertrauen. Wer Hirschjagd-Gleichgewichte etablieren will, muss zuerst die Unsicherheit über das Verhalten der anderen reduzieren — durch Kommunikation, Verträge oder wiederholte Interaktion.",
+    },
+    "tausendfuessler": {
+        "id": "tausendfuessler", "name": "Das Tausendfüßler-Spiel", "icon": "🐛",
+        "farbe": "indigo", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Robert Rosenthal, 1981: Zwei Spieler, ein wachsender Topf. Runde 1 enthält 2 €. In jeder Runde darf der am Zug entweder <strong>aussteigen</strong> (er nimmt 80 % des Topfs, der andere bekommt 20 %) oder <strong>weitergeben</strong> (der Topf verdoppelt sich, der andere ist am Zug). Nach 100 Runden enden die Auszahlungen automatisch 50/50. Maximaler Topf nach 100 Runden: 2 · 2¹⁰⁰ ≈ 2,5 · 10³⁰ €.",
+        "frage": "Was sagt die Spieltheorie über das rationale Verhalten — und was passiert empirisch?",
+        "optionen": [
+            {"text": "Rational: Spieler 1 steigt sofort aus (Rückwärtsinduktion). Empirisch: das tut praktisch niemand.", "hinweis": "Backwards induction vs. Verhalten"},
+            {"text": "Rational und empirisch: Spieler kooperieren bis Runde 100, weil der Topf so schnell wächst.", "hinweis": "Was sagt der vorletzte Spieler?"},
+            {"text": "Es gibt kein Nash-Gleichgewicht — das Spiel ist unentscheidbar.", "hinweis": "Endliche Spiele haben immer ein NG"},
+            {"text": "Rational steigen beide gleichzeitig nach Runde 50 aus.", "hinweis": "Ist 'gleichzeitig' möglich?"},
+        ],
+        "loesung_text": "Rückwärtsinduktion → Aussteigen in Runde 1. Empirisch: Menschen kooperieren oft 5–15 Runden lang.",
+        "erklaerung": "<p>Rückwärtsinduktion: In Runde 100 würde der Spieler aussteigen (80 % &gt; 50 %). Das antizipiert der Spieler in Runde 99 und steigt vorher aus. Iteriert ergibt sich: Spieler 1 steigt in Runde 1 aus und nimmt 1,60 € — statt 100 Runden zu warten und potenziell 10³⁰ € zu verdienen.</p><p>Empirisch zeigt sich genau das Gegenteil: McKelvey & Palfrey (1992) ließen Probanden eine 6-stufige Version spielen — nur 7 % stiegen sofort aus, Median war Aussteigen in Runde 3–4. Bei mehr Runden kooperieren Spieler noch länger, auch unter Profis.</p>",
+        "kontext": "<p>Das Tausendfüßler-Spiel ist <em>der</em> Stolperstein der klassischen Spieltheorie. Es zeigt, dass Rückwärtsinduktion drei sehr starke Annahmen voraussetzt: (1) beide Spieler sind rational, (2) beide wissen, dass beide rational sind, (3) das ist Common Knowledge bis ins Unendliche. Sobald nur ein Zweifel im Spiel ist — 'vielleicht ist der andere kein perfekter Maximierer?' — wird Kooperation rational (Kreps, Milgrom, Roberts, Wilson, 1982).</p><p>Lösungsansätze: Quanten-Response-Gleichgewichte (Spieler machen mit kleiner Wahrscheinlichkeit Fehler), Reputation (vielleicht ist der Gegner ein 'Kooperator-Typ'), soziale Präferenzen (Fairness in der Nutzenfunktion). Keiner dieser Ansätze hat den Streit beigelegt.</p>",
+        "erkenntnis": "Rationalität alleine erklärt menschliches Verhalten nicht. Selbst bei perfekter Information greifen Heuristiken, Sozialnormen und epistemische Unsicherheit. Wo Spieltheorie scheitert, beginnt Verhaltensökonomie.",
     },
     # ── Statistik ─────────────────────────────────────────────────────────
     "berkson": {
