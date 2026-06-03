@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% block title %}Das Trolley-Problem – Ethik in zwei Szenarien{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+
+  <!-- Header -->
+  <div class="mb-6">
+    <a href="/raetsel" class="text-sm text-gray-500 hover:text-gray-700">← Alle Rätsel</a>
+  </div>
+  <div class="flex items-center gap-3 mb-2">
+    <span class="text-4xl">🚃</span>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-widest text-rose-500">Ethik-Experiment</p>
+      <h1 class="text-2xl font-bold text-gray-900">Das Trolley-Problem</h1>
+    </div>
+  </div>
+  <p class="text-gray-500 text-sm mb-8">Philippa Foot · 1967 · Mittel · ~5 min</p>
+
+  <!-- Einleitung -->
+  <div class="bg-rose-50 rounded-2xl p-6 mb-6">
+    <p class="text-sm text-gray-700 leading-relaxed">
+      Stell dir vor, du wirst zur Augenzeugin einer Katastrophe – und es liegt an dir,
+      eine Entscheidung zu treffen, die Leben kostet. Dieses Gedankenexperiment hat seit
+      über 50 Jahren Philosophinnen, Psychologinnen und Neurowissenschaftlerinnen beschäftigt.
+      <strong>Es gibt keine „richtige" Antwort</strong> – aber die meisten Menschen antworten
+      in den beiden Szenarien unten sehr unterschiedlich. Warum?
+    </p>
+  </div>
+
+  <!-- Szenario 1: Klassische Variante -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <p class="text-xs font-bold uppercase tracking-widest text-rose-600 mb-3">Szenario 1 – Der Hebel</p>
+    <h2 class="text-lg font-bold text-gray-900 mb-3">Die klassische Variante</h2>
+
+    <div class="bg-slate-50 rounded-xl p-4 mb-4">
+      <div class="text-center mb-3 text-3xl">🚃 ━━━━━━ ➜</div>
+      <div class="flex items-center justify-between text-sm">
+        <div class="flex-1 text-center">
+          <p class="text-2xl mb-1">👥👥👥👥👥</p>
+          <p class="text-xs text-gray-500">5 Menschen auf dem Hauptgleis</p>
+        </div>
+        <div class="text-2xl px-2">⇆</div>
+        <div class="flex-1 text-center">
+          <p class="text-2xl mb-1">👤</p>
+          <p class="text-xs text-gray-500">1 Mensch auf dem Nebengleis</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-sm text-gray-600 leading-relaxed mb-2">
+      Ein außer Kontrolle geratener Zug rast auf <strong>fünf Menschen</strong> zu.
+      Du stehst neben einem Hebel. Wenn du ihn umlegst, wird der Zug auf ein Nebengleis
+      umgeleitet – wo <strong>ein Mensch</strong> arbeitet, der dann sterben wird.
+    </p>
+    <p class="text-sm text-gray-700 font-semibold">
+      Legst du den Hebel um?
+    </p>
+  </div>
+
+  <!-- Szenario 2: Footbridge -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <p class="text-xs font-bold uppercase tracking-widest text-amber-600 mb-3">Szenario 2 – Die Brücke</p>
+    <h2 class="text-lg font-bold text-gray-900 mb-3">Die Footbridge-Variante</h2>
+
+    <div class="bg-slate-50 rounded-xl p-4 mb-4">
+      <div class="text-center mb-2">
+        <p class="text-2xl">🌉 🧍‍♂️</p>
+        <p class="text-xs text-gray-500">Du und ein schwergewichtiger Fremder auf einer Brücke</p>
+      </div>
+      <div class="text-center mb-2 text-2xl">🚃 ━━ ➜ 👥👥👥👥👥</div>
+      <p class="text-xs text-gray-500 text-center">Der Zug rast auf 5 Menschen zu – keine Weiche, kein Hebel</p>
+    </div>
+
+    <p class="text-sm text-gray-600 leading-relaxed mb-2">
+      Selbe Situation – aber kein Hebel. Du stehst mit einem <strong>schwergewichtigen Fremden</strong>
+      auf einer Brücke über dem Gleis. Wenn du ihn stößt, würde sein Körper den Zug aufhalten –
+      er stirbt, die fünf überleben. Du selbst bist zu leicht, dich zu opfern bringt nichts.
+    </p>
+    <p class="text-sm text-gray-700 font-semibold">
+      Würdest du den Fremden stoßen?
+    </p>
+  </div>
+
+  <!-- Interaktive Antwort -->
+  <div class="bg-indigo-50 rounded-2xl p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-4">Deine Antworten</h2>
+    <form hx-post="/raetsel/trolley-problem/antwort" hx-target="#trolley-result" hx-swap="innerHTML" class="space-y-5">
+
+      <div>
+        <p class="text-sm font-semibold text-rose-700 mb-2">🚃 Szenario 1: Legst du den Hebel um?</p>
+        <div class="space-y-2">
+          <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-rose-300 transition-colors">
+            <input type="radio" name="klassisch" value="ja" class="text-rose-600" required>
+            <span class="text-sm text-gray-700">Ja – 1 stirbt, 5 überleben.</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-rose-300 transition-colors">
+            <input type="radio" name="klassisch" value="nein" class="text-rose-600">
+            <span class="text-sm text-gray-700">Nein – ich greife nicht aktiv ein.</span>
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <p class="text-sm font-semibold text-amber-700 mb-2">🌉 Szenario 2: Stößt du den Fremden?</p>
+        <div class="space-y-2">
+          <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-amber-300 transition-colors">
+            <input type="radio" name="footbridge" value="ja" class="text-amber-600" required>
+            <span class="text-sm text-gray-700">Ja – derselbe Tausch: 1 für 5.</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-amber-300 transition-colors">
+            <input type="radio" name="footbridge" value="nein" class="text-amber-600">
+            <span class="text-sm text-gray-700">Nein – ich kann niemanden mit eigenen Händen töten.</span>
+          </label>
+        </div>
+      </div>
+
+      <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors">
+        Antworten auswerten
+      </button>
+    </form>
+    <div id="trolley-result" class="mt-4"></div>
+  </div>
+
+  <!-- Historischer Kontext -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Die Geschichte des Gedankenexperiments</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      <strong>Philippa Foot</strong> entwarf 1967 die ursprüngliche Variante, um den Unterschied zwischen
+      <em>vorhergesehenen</em> und <em>beabsichtigten</em> Folgen zu untersuchen.
+      <strong>Judith Jarvis Thomson</strong> ergänzte 1985 die Footbridge-Variante und schuf so eine der
+      meistdiskutierten Asymmetrien der modernen Ethik.
+    </p>
+    <p class="text-sm text-gray-600 leading-relaxed">
+      Empirische Studien zeigen: Etwa <strong>90 % der Menschen</strong> würden den Hebel umlegen –
+      aber nur <strong>etwa 10 %</strong> würden den Fremden stoßen.
+      Obwohl die Bilanz identisch ist: 1 Tod statt 5.
+    </p>
+  </div>
+
+  <!-- Zwei Denkschulen -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-4">Zwei ethische Denkschulen</h2>
+    <div class="grid md:grid-cols-2 gap-3">
+      <div class="bg-emerald-50 rounded-xl p-4">
+        <p class="text-xs font-bold uppercase text-emerald-700 mb-1">Konsequentialismus</p>
+        <p class="text-sm text-gray-700 mb-2 font-semibold">Der Zweck heiligt die Mittel.</p>
+        <p class="text-sm text-gray-600">
+          Was zählt, ist das Ergebnis. 1 Tod &lt; 5 Tode – also: in beiden Szenarien handeln.
+          Bentham, Mill, Singer.
+        </p>
+      </div>
+      <div class="bg-purple-50 rounded-xl p-4">
+        <p class="text-xs font-bold uppercase text-purple-700 mb-1">Deontologie</p>
+        <p class="text-sm text-gray-700 mb-2 font-semibold">Der Mensch ist Zweck, nie nur Mittel.</p>
+        <p class="text-sm text-gray-600">
+          Es gibt Handlungen, die unabhängig vom Ergebnis verboten sind.
+          Einen Menschen instrumentell zu töten verletzt seine Würde.
+          Kant.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Neurowissenschaftlicher Twist -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+    <h2 class="font-bold text-gray-800 mb-3">Was das Gehirn dabei tut</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      <strong>Joshua Greene</strong> (Harvard, 2001) scannte Versuchspersonen während sie die beiden Szenarien
+      beurteilten. Sein Befund:
+    </p>
+    <ul class="text-sm text-gray-600 leading-relaxed space-y-2 list-disc pl-5">
+      <li>Beim <strong>Hebel</strong> ist hauptsächlich das <em>rationale, kalkulierende</em> Netzwerk aktiv
+        (dorsolateraler präfrontaler Cortex).</li>
+      <li>Beim <strong>Stoßen</strong> aktivieren sich zusätzlich starke <em>emotionale</em> Areale
+        (medialer präfrontaler Cortex, Amygdala) – sie blockieren das kalte Rechnen.</li>
+    </ul>
+    <p class="text-sm text-amber-700 bg-amber-50 rounded-lg p-3 mt-3">
+      💡 Die Asymmetrie ist also nicht „unlogisch" – sie ist <strong>neuronal verankert</strong>.
+      Körperliche Nähe und persönliche Gewalt aktivieren ein Vetorecht, das Statistik nicht überschreibt.
+    </p>
+  </div>
+
+  {% if ted_links %}
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">🎙️ Tiefer eintauchen – TED Talks</h2>
+    <div class="space-y-2">
+      {% for t in ted_links %}
+        <a href="{{ t.ted_url }}" target="_blank" rel="noopener" class="block bg-slate-50 hover:bg-slate-100 rounded-xl p-3 transition-colors">
+          <p class="text-sm font-semibold text-slate-800">{{ t.titel_de }}</p>
+          <p class="text-xs text-slate-500">{{ t.sprecher }} · {{ t.jahr }}</p>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if related_puzzles %}
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Ähnliche Rätsel</h2>
+    <div class="space-y-2">
+      {% for r in related_puzzles %}
+        <a href="/raetsel/{{ r.id }}" class="block bg-slate-50 hover:bg-slate-100 rounded-xl p-3 transition-colors">
+          <p class="text-sm font-semibold text-slate-800">{{ r.icon }} {{ r.name }}</p>
+          <p class="text-xs text-slate-500 line-clamp-2">{{ r.beschreibung }}</p>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="flex justify-between items-center">
+    <a href="/raetsel" class="text-sm text-gray-500 hover:text-gray-700">← Alle Rätsel</a>
+    {% if next_puzzle %}
+      <a href="/raetsel/{{ next_puzzle.id }}" class="text-sm text-indigo-600 hover:text-indigo-800">{{ next_puzzle.icon }} {{ next_puzzle.name }} →</a>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

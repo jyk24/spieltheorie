@@ -613,6 +613,7 @@ RAETSEL_META = [
     {"id":"flow-analyse","name":"Flow – der optimale Zustand","icon":"🌊","beschreibung":"Zwischen Langeweile und Überforderung liegt ein schmaler Kanal: Flow. Csikszentmihalyi (1990) beschreibt, wann Menschen völlig aufgehen in einer Tätigkeit.","typ":"Motivationspsychologie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"milgram-gehorsam","name":"Das Milgram-Experiment","icon":"⚡","beschreibung":"65% der Versuchspersonen verabreichten tödliche Elektroschocks – weil eine Autoritätsperson es verlangte. Was sagt das über moralischen Mut?","typ":"Sozialpsychologie","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Psychologie"},
     {"id":"pawlow-hund","name":"Pawlows Hund","icon":"🐕","beschreibung":"Pavlov entdeckte zufällig: Ein Hund speichelt nicht nur beim Fressen – sondern schon beim Klang der Glocke. Wie lernt das Gehirn Verknüpfungen, die eigentlich nicht existieren?","typ":"Verhaltenspsychologie","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Psychologie"},
+    {"id":"trolley-problem","name":"Das Trolley-Problem","icon":"🚃","beschreibung":"Ein außer Kontrolle geratener Zug rast auf fünf Menschen zu. Du kannst einen Hebel umlegen – dann stirbt nur einer. Würdest du es tun? Und ändert sich deine Antwort, wenn du jemanden von einer Brücke stoßen müsstest?","typ":"Ethik-Experiment","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Psychologie"},
     # ── Verhaltensökonomie & Entscheidung (neu) ──────────────────────────────
     {"id":"sunk-cost","name":"Der Sunk-Cost-Fehlschluss","icon":"🎟️","beschreibung":"Du sitzt im Theater, das Stück ist furchtbar. Du hast 80€ bezahlt. Bleibst du – oder gehst du? Der häufigste Denkfehler bei Investitionsentscheidungen.","typ":"Entscheidungsfehler","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"verlustaversion","name":"Verlustaversion","icon":"⚖️","beschreibung":"Verliere 50€ oder gewinne 50€ – welches Ereignis fühlt sich intensiver an? Kahneman & Tversky (1979): Verluste wiegen psychologisch doppelt so schwer wie gleich große Gewinne.","typ":"Prospect Theory","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
@@ -4108,11 +4109,31 @@ def pawlow_hund_page(request: Request):
 
 @router.post("/pawlow-hund/antwort", response_class=HTMLResponse)
 def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
-    correct = antwort in ["glocke", "unkonditioniert_stimulus", "klassisch", "konditionierter_reiz"]
     return templates.TemplateResponse(
         request,
         "partials/pawlow_hund_result.html",
-        {"antwort": antwort, "correct": correct},
+        {"antwort": antwort},
+    )
+
+
+@router.get("/trolley-problem", response_class=HTMLResponse)
+def trolley_problem_page(request: Request):
+    ctx = {"active_page": "raetsel", **_nav_context("trolley-problem")}
+    return templates.TemplateResponse(
+        request, "raetsel/trolley_problem.html", ctx
+    )
+
+
+@router.post("/trolley-problem/antwort", response_class=HTMLResponse)
+def trolley_problem_antwort(
+    request: Request,
+    klassisch: str = Form(...),
+    footbridge: str = Form(...),
+):
+    return templates.TemplateResponse(
+        request,
+        "partials/trolley_problem_result.html",
+        {"klassisch": klassisch, "footbridge": footbridge},
     )
 
 

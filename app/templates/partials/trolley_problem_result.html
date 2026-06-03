@@ -1,0 +1,83 @@
+{% set utilitarisch = klassisch == "ja" and footbridge == "ja" %}
+{% set deontologisch = klassisch == "nein" and footbridge == "nein" %}
+{% set typisch = klassisch == "ja" and footbridge == "nein" %}
+{% set untypisch = klassisch == "nein" and footbridge == "ja" %}
+
+<div class="bg-white border border-slate-200 rounded-xl p-5 space-y-4">
+
+  <div class="grid grid-cols-2 gap-3 text-center">
+    <div class="bg-rose-50 rounded-xl p-3">
+      <p class="text-xs font-bold uppercase text-rose-700">Hebel</p>
+      <p class="text-lg font-bold text-rose-900 mt-1">
+        {% if klassisch == "ja" %}umgelegt{% else %}nicht umgelegt{% endif %}
+      </p>
+    </div>
+    <div class="bg-amber-50 rounded-xl p-3">
+      <p class="text-xs font-bold uppercase text-amber-700">Brücke</p>
+      <p class="text-lg font-bold text-amber-900 mt-1">
+        {% if footbridge == "ja" %}gestoßen{% else %}nicht gestoßen{% endif %}
+      </p>
+    </div>
+  </div>
+
+  {% if typisch %}
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+      <p class="font-semibold text-indigo-800">📊 Du antwortest wie ~80 % der Menschen.</p>
+      <p class="text-sm text-indigo-700 mt-2 leading-relaxed">
+        Du würdest den Hebel umlegen, aber den Fremden <em>nicht</em> stoßen –
+        obwohl die Bilanz identisch ist. Diese Asymmetrie nennt man
+        <strong>„doctrine of double effect"</strong>: Es ist moralisch akzeptabler, einen Tod als
+        <em>Nebenfolge</em> in Kauf zu nehmen, als ihn als <em>Mittel zum Zweck</em> zu nutzen.
+      </p>
+    </div>
+  {% elif utilitarisch %}
+    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+      <p class="font-semibold text-emerald-800">⚖️ Du denkst konsequentialistisch.</p>
+      <p class="text-sm text-emerald-700 mt-2 leading-relaxed">
+        Du entscheidest in beiden Szenarien gleich – das Ergebnis zählt, nicht die Methode.
+        Nur etwa 10 % der Menschen würden auch im Brücken-Szenario aktiv werden.
+        Philosophisch stehst du Jeremy Bentham und Peter Singer nahe.
+      </p>
+    </div>
+  {% elif deontologisch %}
+    <div class="bg-purple-50 border border-purple-200 rounded-xl p-4">
+      <p class="font-semibold text-purple-800">🛡️ Du denkst deontologisch.</p>
+      <p class="text-sm text-purple-700 mt-2 leading-relaxed">
+        Du würdest in beiden Fällen nicht eingreifen. Aktives Töten ist für dich nicht durch
+        eine bessere Bilanz zu rechtfertigen.
+        Damit teilst du die Position von Kant – etwa 10 % der Befragten antworten so.
+      </p>
+    </div>
+  {% elif untypisch %}
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+      <p class="font-semibold text-slate-800">🤔 Eine seltene Kombination.</p>
+      <p class="text-sm text-slate-700 mt-2 leading-relaxed">
+        Du würdest beim Hebel <em>nicht</em> eingreifen, aber im Brücken-Szenario stoßen.
+        Diese Kombination ist sehr ungewöhnlich – möglicherweise hast du die Szenarien
+        anders gelesen als gemeint, oder du bewertest Verantwortung anders, wenn der
+        Tod nicht auf einer Maschinen-Entscheidung beruht. Spannend.
+      </p>
+    </div>
+  {% endif %}
+
+  <div class="bg-amber-50 border border-amber-100 rounded-xl p-4">
+    <p class="text-sm font-semibold text-amber-800 mb-2">🧠 Was dein Gehirn dabei tut</p>
+    <p class="text-sm text-amber-700 leading-relaxed">
+      Joshua Greene zeigte 2001 im fMRT: Beim Brücken-Szenario aktivieren sich starke emotionale
+      Areale (Amygdala, medialer präfrontaler Cortex) – sie blockieren das kalte Rechnen.
+      Beim Hebel-Szenario rechnet vor allem der rationale, präfrontale Cortex.
+      Die Asymmetrie ist also <strong>neuronal verankert</strong>.
+    </p>
+  </div>
+
+  <div class="bg-slate-50 rounded-xl p-4">
+    <p class="text-sm font-semibold text-slate-800 mb-2">🚗 Weiter denken: Autonomes Fahren</p>
+    <p class="text-sm text-slate-600 leading-relaxed">
+      Selbstfahrende Autos müssen heute echte Trolley-Entscheidungen programmieren.
+      Das <strong>Moral Machine</strong>-Projekt des MIT befragte 40 Millionen Menschen aus 233 Ländern –
+      und fand systematische kulturelle Unterschiede, wer im Zweifel zu retten ist.
+      Die Theorie ist längst praktische Ingenieursarbeit.
+    </p>
+  </div>
+
+</div>
