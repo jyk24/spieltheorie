@@ -619,6 +619,15 @@ GAME_META = [
         "runden": 6,
         "konzept": "Cournot-Gleichgewicht, Oligopol, Kollusion vs. Wettbewerb",
     },
+    {
+        "id": "knopf",
+        "name": "Der Knopf",
+        "icon": "🔴",
+        "beschreibung": "Rot ist sicher (+3), Blau zahlt mehr (+5) – aber nur wenn mindestens 6 von 11 Spielern Blau wählen. Das Schwellenwert-Kollektivgut viral als Tim-Urban-Gedankenexperiment.",
+        "schwierigkeit": "Einsteiger",
+        "runden": 8,
+        "konzept": "Schwellenwert-Kollektivgut, dominante Strategie, kollektive Rationalität",
+    },
 ]
 
 
