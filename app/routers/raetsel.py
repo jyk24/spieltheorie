@@ -631,6 +631,7 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"penney","name":"Penney's Spiel","icon":"🪙","beschreibung":"Wähle eine 3er-Münzfolge wie KKZ. Egal welche du nimmst – die KI findet eine zweite Folge, die deine fast immer schlägt. Wer den zweiten Zug hat, gewinnt. Intransitivität in Reinform.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
 ]
 
 
@@ -4113,6 +4114,99 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         request,
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
+    )
+
+
+# ---------------------------------------------------------------------------
+# Penney's Spiel (intransitive Münzfolgen)
+# ---------------------------------------------------------------------------
+
+# Conway's Antwort-Regel: nimm das negierte 2. Bit der Spielerfolge und hänge
+# die ersten zwei Bits des Spielers daran. Diese Antwort gewinnt mit p > 1/2
+# gegen JEDE Spielerwahl – das ist der überraschende Effekt.
+_PENNEY_FLIP = {"K": "Z", "Z": "K"}
+
+# Exakte Gewinnwahrscheinlichkeiten der Conway-Antwort gegen Spielerwahl
+# (klassisches Ergebnis, hergeleitet via Conway-Leading-Number-Algorithmus).
+PENNEY_TABLE = {
+    "KKK": {"ai": "ZKK", "ai_wins": 7,  "total": 8},   # 87,5 %
+    "KKZ": {"ai": "ZKK", "ai_wins": 3,  "total": 4},   # 75,0 %
+    "KZK": {"ai": "KKZ", "ai_wins": 2,  "total": 3},   # 66,7 %
+    "KZZ": {"ai": "KKZ", "ai_wins": 2,  "total": 3},   # 66,7 %
+    "ZKK": {"ai": "ZZK", "ai_wins": 2,  "total": 3},   # 66,7 %
+    "ZKZ": {"ai": "ZZK", "ai_wins": 2,  "total": 3},   # 66,7 %
+    "ZZK": {"ai": "KZZ", "ai_wins": 3,  "total": 4},   # 75,0 %
+    "ZZZ": {"ai": "KZZ", "ai_wins": 7,  "total": 8},   # 87,5 %
+}
+
+
+def _penney_conway_response(player: str) -> str:
+    """Wendet Conways Heuristik auf eine 3er-Folge aus K/Z an."""
+    return _PENNEY_FLIP[player[1]] + player[0] + player[1]
+
+
+def _penney_simulate_round(player: str, ai: str, max_flips: int = 200) -> dict:
+    """Wirft eine Münze, bis eine Folge zum ersten Mal komplett erscheint."""
+    flips = []
+    last3 = ""
+    for _ in range(max_flips):
+        flips.append(_random.choice(["K", "Z"]))
+        last3 = "".join(flips[-3:])
+        if len(flips) < 3:
+            continue
+        if last3 == player:
+            return {"flips": flips, "winner": "player"}
+        if last3 == ai:
+            return {"flips": flips, "winner": "ai"}
+    return {"flips": flips, "winner": "none"}
+
+
+@router.get("/penney", response_class=HTMLResponse)
+def penney_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/penney.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/penney/result", response_class=HTMLResponse)
+def penney_result(request: Request, player: str = Form(...)):
+    player = (player or "").upper().strip()
+    if player not in PENNEY_TABLE:
+        raise HTTPException(status_code=400, detail="Ungültige Folge")
+
+    ai = _penney_conway_response(player)
+    info = PENNEY_TABLE[player]
+    ai_win_pct = round(info["ai_wins"] / info["total"] * 100, 1)
+    player_win_pct = round(100 - ai_win_pct, 1)
+
+    sim_n = 1000
+    ai_wins = 0
+    player_wins = 0
+    for _ in range(sim_n):
+        r = _penney_simulate_round(player, ai)
+        if r["winner"] == "ai":
+            ai_wins += 1
+        elif r["winner"] == "player":
+            player_wins += 1
+    sample_run = _penney_simulate_round(player, ai)
+
+    return templates.TemplateResponse(
+        request,
+        "partials/penney_result.html",
+        {
+            "player": player,
+            "ai": ai,
+            "ai_win_pct": ai_win_pct,
+            "player_win_pct": player_win_pct,
+            "ai_wins_fraction": f"{info['ai_wins']}/{info['total']}",
+            "sim_n": sim_n,
+            "sim_ai": ai_wins,
+            "sim_player": player_wins,
+            "sim_ai_rate": round(ai_wins / sim_n * 100, 1),
+            "sim_player_rate": round(player_wins / sim_n * 100, 1),
+            "sample_flips": sample_run["flips"],
+            "sample_winner": sample_run["winner"],
+        },
     )
 
 

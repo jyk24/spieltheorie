@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Penney's Spiel – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🪙 Penney's Spiel</h1>
+        <p class="text-slate-500 mt-1">Wer den zweiten Zug hat, gewinnt. Eine intransitive Falle in der Wahrscheinlichkeit.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Spielregeln:</p>
+        <ol class="space-y-2 mb-4 list-decimal list-inside">
+            <li>Du wählst eine <strong>3er-Folge</strong> aus <strong>K</strong> (Kopf) und <strong>Z</strong> (Zahl), z. B. <code class="bg-white px-1.5 py-0.5 rounded border">KKZ</code>.</li>
+            <li>Die KI sieht deine Wahl und wählt eine <strong>eigene 3er-Folge</strong>.</li>
+            <li>Eine faire Münze wird wiederholt geworfen. Wessen Folge zuerst erscheint, gewinnt.</li>
+        </ol>
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs">
+            <strong>Vorhersage:</strong> Egal welche Folge du wählst – die KI findet eine zweite Folge, mit der sie dich
+            mit über 50 % Wahrscheinlichkeit schlägt. Bei manchen Wahlen verliert deine Folge sogar in <strong>7 von 8</strong> Fällen.
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6" id="spiel-area">
+        <p class="font-semibold text-slate-800 mb-2">Wähle deine 3er-Folge:</p>
+        <p class="text-sm text-slate-500 mb-5">Click eine der acht Möglichkeiten. Die KI wählt danach.</p>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {% for seq in ["KKK", "KKZ", "KZK", "KZZ", "ZKK", "ZKZ", "ZZK", "ZZZ"] %}
+            <button type="button"
+                    hx-post="/raetsel/penney/result"
+                    hx-target="#spiel-area"
+                    hx-swap="innerHTML"
+                    hx-vals='{"player": "{{ seq }}"}'
+                    class="p-4 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-indigo-400 hover:bg-indigo-50 transition-all text-center">
+                <div class="text-2xl font-mono font-bold tracking-widest text-slate-800">
+                    {% for c in seq %}<span class="{% if c == 'K' %}text-amber-600{% else %}text-sky-600{% endif %}">{{ c }}</span>{% endfor %}
+                </div>
+                <div class="text-xs text-slate-500 mt-1">
+                    {{ seq | replace("K", "Kopf-") | replace("Z", "Zahl-") | trim("-") | replace("-", " · ") }}
+                </div>
+            </button>
+            {% endfor %}
+        </div>
+
+        <div class="mt-6 text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded-lg p-3">
+            <strong>Tipp:</strong> Versuche zuerst eine Folge, die symmetrisch wirkt (z. B. <code>KKK</code> oder <code>ZKZ</code>).
+            Du wirst sehen, dass auch sie nicht „neutral" ist.
+        </div>
+    </div>
+</div>
+
+{% endblock %}
