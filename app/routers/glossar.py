@@ -134,7 +134,7 @@ GLOSSAR = [
             "Das ist keine Frage der Technologie - es ist ein fundamentales Prinzip der Quantenwelt."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "bounded-rationality",
@@ -534,7 +534,7 @@ GLOSSAR = [
             "Grundlage fuer Laser, Transistoren, MRT und Quantencomputer."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "regression-zur-mitte",
@@ -667,7 +667,7 @@ GLOSSAR = [
             "wenn dieses Prinzip auf makroskopische Objekte zutreffen wuerde."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "survivorship-bias",
@@ -763,7 +763,7 @@ GLOSSAR = [
             "Bei einer Messung 'kollabiert' die Wellenfunktion auf einen einzigen Wert."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "winner-fluch",
@@ -976,6 +976,30 @@ GLOSSAR = [
         ),
         "kategorie": "Psychologie",
         "link": "/raetsel/verfuegbarkeitsheuristik",
+    },
+    {
+        "id": "pascals-wette",
+        "titel": "Pascals Wette",
+        "definition": (
+            "Blaise Pascal (um 1660): Modelliert die Frage nach Gottes Existenz als "
+            "Entscheidung unter Unsicherheit. Mit endlichen Kosten gewinnt man bei richtigem Tipp "
+            "unendlich viel - daher rational: glauben. Fruehwerk der Entscheidungstheorie. "
+            "Schwachstelle: Es gibt nicht einen, sondern viele moegliche Goetter ('Viele-Goetter-Einwand')."
+        ),
+        "kategorie": "Entscheidung",
+        "link": "/raetsel/pascals-wette",
+    },
+    {
+        "id": "buridans-esel",
+        "titel": "Buridans Esel",
+        "definition": (
+            "Jean Buridan (ca. 1340): Ein Esel verhungert zwischen zwei identischen Heuhaufen, "
+            "weil keine rationale Wahl moeglich ist. Zeigt: Reine Erwartungswert-Maximierung "
+            "ist bei Indifferenz unvollstaendig - es braucht Zufall, Konvention oder Heuristik. "
+            "Vorlaeufer von 'Bounded Rationality' (Herbert Simon, 1956)."
+        ),
+        "kategorie": "Entscheidung",
+        "link": "/raetsel/buridans-esel",
     },
 ]
 
