@@ -631,6 +631,11 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neue Mathematik & Spieltheorie ───────────────────────────────────────
+    {"id":"keynes-beauty-contest","name":"Keynes' Beauty Contest","icon":"🎯","beschreibung":"Wähle eine Zahl zwischen 0 und 100. Gewinner ist, wer 2/3 des Durchschnitts aller Antworten trifft. Was wählst du – und was lehrt uns das über Märkte?","typ":"Erwartungs-Spiel","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Spieltheorie"},
+    {"id":"cantor-diagonale","name":"Cantors Diagonalargument","icon":"♾️","beschreibung":"Es gibt unendlich viele natürliche Zahlen – und unendlich viele reelle Zahlen. Sind diese 'Unendlichkeiten' gleich groß? Cantor (1891) bewies: nein. Und das mit einem Trick auf einer Diagonale.","typ":"Mengentheorie","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Mathematik"},
+    {"id":"goldbachsche-vermutung","name":"Goldbachsche Vermutung","icon":"➕","beschreibung":"Jede gerade Zahl > 2 lässt sich als Summe zweier Primzahlen schreiben. Geprüft bis 4·10¹⁸, ohne Gegenbeispiel. Aber: bewiesen ist es bis heute nicht. Wer es schafft, ist berühmt.","typ":"Offenes Problem","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Mathematik"},
+    {"id":"schubfachprinzip","name":"Das Schubfachprinzip","icon":"🗂️","beschreibung":"Wie viele Menschen brauchst du, damit garantiert zwei im selben Monat Geburtstag haben? Das einfachste Prinzip der Mathematik – mit verblüffend tiefen Konsequenzen.","typ":"Kombinatorik","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Mathematik"},
 ]
 
 
@@ -4063,6 +4068,75 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    # ── Neue Spieltheorie & Mathematik (2026-06) ─────────────────────────
+    "keynes-beauty-contest": {
+        "id": "keynes-beauty-contest", "name": "Keynes' Beauty Contest", "icon": "🎯",
+        "farbe": "violet", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Stell dir vor, 100 Spieler wählen jeweils eine Zahl zwischen 0 und 100. Gewinner ist, wessen Zahl am nächsten an <strong>2/3 des Durchschnitts</strong> aller Antworten liegt. Alle wissen die Regel. Alle wissen, dass alle die Regel kennen. Was wählst du?",
+        "frage": "Welche Zahl ist im Nash-Gleichgewicht die rational beste Wahl?",
+        "optionen": [
+            {"text": "50 – die Mitte des Intervalls", "hinweis": "Naive Intuition – ignoriert die 2/3-Regel"},
+            {"text": "33 – also 2/3 von 50", "hinweis": "Eine Iteration weitergedacht"},
+            {"text": "22 – also 2/3 von 33", "hinweis": "Noch eine Iteration weiter"},
+            {"text": "0 – nach unendlicher Iteration", "hinweis": "Wenn alle perfekt rational sind"},
+        ],
+        "loesung_text": "0 – das einzige Nash-Gleichgewicht",
+        "erklaerung": "<p>Wenn alle 50 wählen, wäre 2/3·50 = 33 die Gewinnzahl. Also sollte jeder 33 wählen – dann ist 22 die Gewinnzahl. Diese Kette iteriert nach unten bis 0. Im einzigen Nash-Gleichgewicht wählen <em>alle</em> 0.</p><p>In der Praxis wählen Menschen Werte zwischen 20 und 35. Das zeigt: Reale Spieler iterieren das Argument nur 1–2 Stufen tief – nicht unendlich.</p>",
+        "kontext": "<p>Keynes (1936) verglich Aktienmärkte mit einem Zeitungs-Schönheitswettbewerb: Du gewinnst nicht, indem du die schönste Frau wählst, sondern die, von der du glaubst, dass andere sie schön finden. Und die wiederum glauben, dass du glaubst, dass...</p><p>Nagel (1995) ließ Studenten das Spiel real spielen. Mittelwert: ~36. Profis und Mathematiker: ~22. Spieltheorie-Doktoranden: ~14. Nur Schach-Großmeister landeten in der Nähe von 0.</p>",
+        "erkenntnis": "Märkte sind keine rationalen Antwortmaschinen – sie sind Erwartungs-an-Erwartungs-Spiele. Wer eine Stufe weiter denkt als der Markt, gewinnt. Wer zwei Stufen weiter denkt, verliert wieder.",
+    },
+    "cantor-diagonale": {
+        "id": "cantor-diagonale", "name": "Cantors Diagonalargument", "icon": "♾️",
+        "farbe": "indigo", "kategorie": "Mathematik",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": "Es gibt unendlich viele natürliche Zahlen (1, 2, 3, …). Es gibt auch unendlich viele reelle Zahlen zwischen 0 und 1 (0,1; 0,141…; π/10…). Beide sind unendlich. Aber: <em>Sind diese Unendlichkeiten gleich groß?</em> Cantor (1891) suchte eine systematische Liste, die alle reellen Zahlen zwischen 0 und 1 enthält.",
+        "frage": "Was zeigte Cantor durch sein Diagonalargument?",
+        "optionen": [
+            {"text": "Die reellen Zahlen lassen sich vollständig auflisten – sie sind abzählbar", "hinweis": "Cantors Schluss ist das Gegenteil"},
+            {"text": "Es gibt mehr reelle als natürliche Zahlen – die Unendlichkeit der Reellen ist 'überabzählbar'", "hinweis": "Verschiedene Mächtigkeiten"},
+            {"text": "Beide Mengen haben gleich viele Elemente, da beide unendlich sind", "hinweis": "Naive Intuition"},
+            {"text": "Es gibt mehr natürliche als reelle Zahlen", "hinweis": "Logisch ausgeschlossen"},
+        ],
+        "loesung_text": "Die reellen Zahlen sind 'mehr' – sie bilden eine überabzählbare Unendlichkeit",
+        "erklaerung": "<p>Angenommen, du könntest alle reellen Zahlen zwischen 0 und 1 in eine Liste schreiben: r₁ = 0,1234…, r₂ = 0,5821…, usw. Cantor konstruierte daraus eine <em>neue</em> Zahl x: An der n-ten Nachkommastelle wählt er eine andere Ziffer als rₙ an der n-ten Stelle. Dann unterscheidet sich x von <em>jeder</em> Zahl in der Liste an mindestens einer Stelle – es ist also nicht in der Liste. Widerspruch.</p><p>Also lassen sich die reellen Zahlen <em>nicht</em> auflisten. Es gibt <em>mehr</em> reelle als natürliche Zahlen. Die Unendlichkeit hat verschiedene Größen: ℵ₀ (abzählbar) und 𝔠 (Kontinuum).</p>",
+        "kontext": "<p>Cantors Beweis löste einen mathematischen Erdrutsch aus. Kronecker nannte Cantor einen 'Verderber der Jugend'. Hilbert verteidigte ihn: 'Aus dem Paradies, das Cantor uns geschaffen hat, soll uns niemand vertreiben können.'</p><p>Die <em>Kontinuumshypothese</em> – gibt es eine Unendlichkeit <em>zwischen</em> ℵ₀ und 𝔠? – wurde von Gödel (1940) und Cohen (1963) als unentscheidbar bewiesen. Sie ist weder beweisbar noch widerlegbar in der Standardmengentheorie.</p>",
+        "erkenntnis": "Unendlichkeit ist kein einheitliches Konzept. Manche Unendlichkeiten sind echt größer als andere. Cantors Argument ist ein Meisterstück: Es widerlegt eine Annahme durch Konstruktion eines einzigen Gegenbeispiels – auf einer Diagonale.",
+    },
+    "goldbachsche-vermutung": {
+        "id": "goldbachsche-vermutung", "name": "Goldbachsche Vermutung", "icon": "➕",
+        "farbe": "amber", "kategorie": "Mathematik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Christian Goldbach schrieb 1742 an Leonhard Euler: 'Jede gerade Zahl größer als 2 lässt sich als Summe zweier Primzahlen schreiben.' Beispiele: 4 = 2+2, 6 = 3+3, 8 = 3+5, 10 = 3+7 = 5+5, 100 = 3+97 = 11+89 = 17+83 = 29+71 = 41+59 = 47+53.",
+        "frage": "Wie ist der Stand 280 Jahre später?",
+        "optionen": [
+            {"text": "Bewiesen 1995 durch Andrew Wiles", "hinweis": "Wiles bewies Fermats letzten Satz – nicht Goldbach"},
+            {"text": "Widerlegt durch ein Gegenbeispiel bei n ≈ 10⁸", "hinweis": "Nein – kein Gegenbeispiel gefunden"},
+            {"text": "Unbewiesen – aber per Computer geprüft bis ~4·10¹⁸ ohne Gegenbeispiel", "hinweis": "Numerische Evidenz, aber kein Beweis"},
+            {"text": "Aus dem Primzahlsatz von Hadamard folgt es", "hinweis": "Primzahlsatz beschreibt Häufigkeit – nicht Summen"},
+        ],
+        "loesung_text": "Unbewiesen – geprüft bis 4·10¹⁸, kein Gegenbeispiel",
+        "erklaerung": "<p>Die Vermutung ist eines der bekanntesten ungelösten Probleme der Mathematik. Numerisch ist sie bis 4·10¹⁸ (≈ 4 Trillionen) verifiziert (Oliveira e Silva, 2014) – ohne Gegenbeispiel. Aber Beweis ist kein Computerlauf.</p><p>Bewiesen wurde nur eine 'schwache' Variante: Jede ungerade Zahl > 5 ist Summe <em>dreier</em> Primzahlen (Helfgott 2013). Vinogradov bewies das ab einer großen Schranke (1937). Aber die echte (binäre) Goldbach-Vermutung bleibt offen.</p>",
+        "kontext": "<p>1 Million US-Dollar bot der Verlag Faber 2000–2002 für einen Beweis (im Rahmen der Vermarktung von Apostolos Doxiadis' Roman 'Onkel Petros und die Goldbachsche Vermutung'). Niemand kassierte.</p><p>Goldbach steht stellvertretend für eine Klasse von Problemen, die einfach zu formulieren sind, aber alle bisherigen Techniken trotzen. Vergleichbar: Riemann-Hypothese (Primzahlverteilung), P vs NP, Collatz-Vermutung.</p>",
+        "erkenntnis": "Einfachheit der Formulierung ist kein Indiz für Einfachheit des Beweises. Mathematik kennt Aussagen, die jeder 12-Jährige versteht – und die alle Genies seit 280 Jahren ratlos lassen.",
+    },
+    "schubfachprinzip": {
+        "id": "schubfachprinzip", "name": "Das Schubfachprinzip", "icon": "🗂️",
+        "farbe": "emerald", "kategorie": "Mathematik",
+        "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup": "Du hast eine Gruppe Menschen. Jeder ist in irgendeinem Monat geboren. Es gibt 12 Monate. Wenn du <em>mehr</em> Menschen als Schubfächer hast, müssen mindestens zwei im selben Monat geboren sein. Das ist Dirichlets <strong>Schubfachprinzip</strong> (1834).",
+        "frage": "Wie viele Menschen brauchst du <em>mindestens</em>, damit <em>garantiert</em> zwei im selben Monat Geburtstag haben?",
+        "optionen": [
+            {"text": "7 Menschen – statistisch wahrscheinlich", "hinweis": "Wahrscheinlich ≠ garantiert"},
+            {"text": "12 Menschen – einer pro Monat", "hinweis": "Wäre genau einer pro Schubfach möglich"},
+            {"text": "13 Menschen – mehr Tauben als Käfige", "hinweis": "n+1 Tauben in n Käfigen"},
+            {"text": "23 Menschen – das Geburtstagsparadoxon", "hinweis": "23 ist für selben <em>Tag</em>, nicht selben Monat"},
+        ],
+        "loesung_text": "13 Menschen reichen garantiert",
+        "erklaerung": "<p>Bei 12 Menschen können theoretisch alle in verschiedenen Monaten geboren sein. Bei 13 Menschen aber müssen zwei in denselben 12 Monatsfächern landen – egal wie 'unwahrscheinlich' das verteilt ist. Schubfachprinzip: <em>n+1 Objekte in n Schubfächern</em> → mindestens 2 in einem Fach.</p><p>Mathematisch trivial – aber unglaublich nützlich. Es liefert Existenzaussagen ohne konstruktive Konstruktion.</p>",
+        "kontext": "<p>Mit dem Schubfachprinzip beweist man:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>In London gibt es mindestens zwei Menschen mit gleicher Haaranzahl (≤ 1 Million Haare, > 9 Millionen Einwohner).</li><li>In jeder Gruppe von 6 Personen gibt es entweder 3, die sich kennen, oder 3, die sich nicht kennen (Ramsey-Theorie R(3,3)=6).</li><li>Wenn du 5 Punkte in ein Einheitsquadrat setzt, sind mindestens zwei näher als √2/2 zueinander.</li><li>Die Dezimaldarstellung einer rationalen Zahl ist immer periodisch (Reste bei Division wiederholen sich).</li></ul>",
+        "erkenntnis": "Die einfachsten Prinzipien sind oft die mächtigsten. Schubfachprinzip beweist Existenz ohne Konstruktion – und ist die Grundlage von Ramsey-Theorie, Komplexitätsanalysen und kombinatorischen Beweisen.",
     },
 }
 
