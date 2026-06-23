@@ -631,6 +631,8 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"zwei-kinder","name":"Das Zwei-Kinder-Paradoxon","icon":"👧👦","beschreibung":"Eine Frau hat zwei Kinder. Eines davon ist ein Junge. Wie groß ist die Wahrscheinlichkeit, dass auch das andere ein Junge ist? Intuition sagt ½ – die Mathematik sagt ⅓.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
+    {"id":"wartezeit-paradoxon","name":"Das Wartezeit-Paradoxon","icon":"🚌","beschreibung":"Busse fahren im Mittel alle 10 Minuten. Du kommst zufällig an der Haltestelle an. Wie lange wartest du im Schnitt? Die Antwort ist meistens nicht 5 Minuten – und der Grund offenbart einen tiefen Bias der Stichprobenwahl.","typ":"Statistik-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Statistik"},
 ]
 
 
@@ -4063,6 +4065,42 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "zwei-kinder": {
+        "id": "zwei-kinder", "name": "Das Zwei-Kinder-Paradoxon", "icon": "👧👦",
+        "farbe": "rose", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Das Problem:",
+        "setup": "Eine Frau hat <strong>zwei Kinder</strong>. Du erfährst (etwa beiläufig im Gespräch): <em>„Mindestens eines davon ist ein Junge.“</em><br><br>Mehr weißt du nicht – keine Reihenfolge, kein Alter, kein Name. Geburten gelten als unabhängig, Junge/Mädchen gleich wahrscheinlich.",
+        "frage": "Wie wahrscheinlich ist es, dass <strong>auch das andere Kind</strong> ein Junge ist?",
+        "optionen": [
+            {"text": "½ (50 %)", "hinweis": "Die intuitive Antwort"},
+            {"text": "⅓ (≈ 33 %)", "hinweis": "Die mathematisch korrekte Antwort"},
+            {"text": "¼ (25 %)", "hinweis": "Zu niedrig"},
+            {"text": "⅔ (≈ 67 %)", "hinweis": "Zu hoch"},
+        ],
+        "loesung_text": "⅓ – nicht ½.",
+        "erklaerung": "<p>Vor jeder Information sind <strong>vier gleich wahrscheinliche</strong> Familienkonfigurationen möglich (älteres Kind zuerst):</p><table class=\"text-center my-2\"><tr><th>JJ</th><th>JM</th><th>MJ</th><th>MM</th></tr><tr><td>¼</td><td>¼</td><td>¼</td><td>¼</td></tr></table><p>Die Aussage „mindestens ein Junge“ schließt nur <strong>MM</strong> aus. Übrig bleiben drei gleich wahrscheinliche Fälle: <strong>JJ, JM, MJ</strong>. In nur <em>einem</em> davon (JJ) ist auch das andere Kind ein Junge.</p><p>→ P(beide Jungen | mindestens ein Junge) = 1/3.</p>",
+        "kontext": "<p><strong>Martin Gardner</strong> stellte das Rätsel 1959 im <em>Scientific American</em>. Es teilt die Welt seither in zwei Lager – nicht weil die Mathematik unklar wäre, sondern weil die <strong>Formulierung der Information</strong> die Antwort verändert.</p><p><strong>Die Tücke der Formulierung:</strong> Sage stattdessen <em>„mein älteres Kind ist ein Junge“</em>, dann ist die Antwort plötzlich <strong>½</strong> – weil du den Fall <strong>MJ</strong> ebenfalls ausschließt.</p><p><strong>Der Tuesday-Boy-Twist (Foshee, 2010):</strong> <em>„Eines meiner Kinder ist ein Junge, geboren an einem Dienstag.“</em> Plötzlich liegt die Wahrscheinlichkeit für „auch das andere ein Junge“ bei <strong>13/27 ≈ 48 %</strong>. Eine scheinbar irrelevante Zusatzinfo (der Wochentag) verschiebt die Antwort dramatisch.</p><p><strong>Warum?</strong> Weil sich der Stichprobenraum ändert. Probabilitäten leben in den Ereignissen, die wir <em>überhaupt beobachten könnten</em> – nicht nur in dem, was wir gerade hören.</p>",
+        "erkenntnis": "Bedingte Wahrscheinlichkeiten sind keine Eigenschaften der Welt, sondern der Information, die du hast. Wer fragt, wie du etwas erfahren hast, bekommt oft eine andere Antwort als wer nur fragt, was du erfahren hast.",
+    },
+    "wartezeit-paradoxon": {
+        "id": "wartezeit-paradoxon", "name": "Das Wartezeit-Paradoxon", "icon": "🚌",
+        "farbe": "amber", "kategorie": "Statistik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Das Szenario:",
+        "setup": "An deiner Haltestelle fährt durchschnittlich <strong>alle 10 Minuten</strong> ein Bus. Die Abstände sind aber nicht exakt 10 Minuten – mal kommen zwei kurz hintereinander, mal klafft eine Lücke von 20 Minuten. Du kommst zu einer <strong>zufälligen Uhrzeit</strong> an.",
+        "frage": "Wie lange wartest du <strong>im Schnitt</strong> auf den nächsten Bus?",
+        "optionen": [
+            {"text": "Genau 5 Minuten – die halbe Wartezeit", "hinweis": "Die intuitive Antwort"},
+            {"text": "Weniger als 5 Minuten – du hast meist Glück", "hinweis": "Falsche Richtung"},
+            {"text": "Mehr als 5 Minuten – manchmal sogar fast 10", "hinweis": "Inspection Paradox"},
+            {"text": "Lässt sich ohne mehr Daten nicht sagen", "hinweis": "Doch – der Mittelwert reicht nicht, aber das Prinzip ist eindeutig"},
+        ],
+        "loesung_text": "Mehr als 5 Minuten – fast immer.",
+        "erklaerung": "<p>Wenn die Buslücken alle <em>exakt</em> 10 Minuten betrügen, wäre die mittlere Wartezeit tatsächlich 5 Minuten. Sobald sie aber <strong>variieren</strong>, gilt:</p><p>→ Wer zu einem zufälligen Zeitpunkt ankommt, landet mit <em>höherer Wahrscheinlichkeit in einer langen Lücke</em> als in einer kurzen – einfach weil lange Lücken mehr Zeit der Uhr einnehmen.</p><p>Mathematisch (für Lücken mit Mittel μ und Varianz σ²):<br>Erwartete Wartezeit = (μ² + σ²) / (2μ) = μ/2 + σ²/(2μ).</p><p>Bei einem <strong>Poisson-Prozess</strong> (zufällige Ankünfte, σ² = μ²) ergibt sich sogar eine erwartete Wartezeit von <strong>vollen 10 Minuten</strong> – obwohl der mittlere Abstand auch 10 Minuten beträgt.</p>",
+        "kontext": "<p>Das ist das berühmte <strong>Inspection Paradox</strong> (auch <em>Waiting-Time Paradox</em>, <em>Length-Biased Sampling</em>). Es taucht überall dort auf, wo eine Stichprobe lange Objekte häufiger trifft als kurze:</p><ul class=\"list-disc ml-4 mt-2 space-y-1\"><li><strong>Klassenzimmer-Paradoxon:</strong> Die mittlere Klassengröße aus Sicht der Schule ist deutlich kleiner als die mittlere Klassengröße aus Sicht eines zufälligen Schülers – große Klassen werden öfter erlebt.</li><li><strong>Freunde-Paradoxon (Feld, 1991):</strong> Deine Freunde haben im Schnitt mehr Freunde als du – weil populäre Menschen in mehr Freundeskreisen auftauchen.</li><li><strong>Filmlängen-Paradoxon:</strong> Schaltest du zufällig den Fernseher ein, landest du eher in einem langen Film als in einem kurzen.</li><li><strong>Krankenhaus-Aufenthalte:</strong> Eine Stichprobe aktueller Patienten überschätzt die typische Aufenthaltsdauer systematisch.</li></ul><p>Die Lehre: <em>Aus welcher Perspektive misst du?</em> – ist oft wichtiger als <em>was misst du?</em></p>",
+        "erkenntnis": "Mittelwerte täuschen, wenn die Stichprobe nicht zufällig aus dem ist, was du eigentlich messen willst. Wer Erlebnisse statt Ereignisse zählt, sieht eine systematisch andere Welt.",
     },
 }
 
