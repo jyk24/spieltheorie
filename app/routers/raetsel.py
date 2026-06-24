@@ -631,6 +631,10 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neu (2026-06-24) ─────────────────────────────────────────────────────
+    {"id":"cantor-diagonal","name":"Cantors Diagonalargument","icon":"♾️","beschreibung":"Es gibt unendlich viele natürliche Zahlen und unendlich viele reelle Zahlen. Beide unendlich – aber sind sie 'gleich groß'? Cantor zeigte 1891 das Gegenteil.","typ":"Mengenlehre","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Mathematik"},
+    {"id":"aumann-agreement","name":"Aumanns Agree-to-Disagree-Theorem","icon":"🤝","beschreibung":"Zwei perfekte Bayesianer tauschen ihre Überzeugungen aus. Aumann (Nobelpreis 2005) bewies: Sie können nicht zugleich rational sein und unterschiedlicher Meinung bleiben. Warum?","typ":"Erkenntnistheorie","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Spieltheorie"},
+    {"id":"diamant-wasser","name":"Das Diamant-Wasser-Paradoxon","icon":"💎","beschreibung":"Wasser hält uns am Leben – kostet wenig. Diamanten sind nutzlos – kosten ein Vermögen. Adam Smith stellte 1776 dieses Paradox vor. Wie löst es die moderne Ökonomie?","typ":"Wertlehre","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
 ]
 
 
@@ -4063,6 +4067,58 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    # ── Neu (2026-06-24) ─────────────────────────────────────────────────────
+    "cantor-diagonal": {
+        "id": "cantor-diagonal", "name": "Cantors Diagonalargument", "icon": "♾️",
+        "farbe": "violet", "kategorie": "Mathematik",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Es gibt unendlich viele natürliche Zahlen (1, 2, 3, …) und unendlich viele reelle Zahlen im Intervall [0,1] (0,1729…, 0,5000…, π/4 …). Beide Mengen sind unendlich — aber kann man die reellen Zahlen 'durchnummerieren', sodass jede irgendwann an der Reihe ist?",
+        "frage": "Wie verhält sich die Anzahl der reellen Zahlen in [0,1] zur Anzahl der natürlichen Zahlen?",
+        "optionen": [
+            {"text": "Genau gleich viele — beide sind unendlich", "hinweis": "Unendlich = unendlich?"},
+            {"text": "Doppelt so viele reelle wie natürliche", "hinweis": "Endlicher Faktor?"},
+            {"text": "Es gibt eine echt 'größere' Unendlichkeit reeller Zahlen", "hinweis": "Cantor 1891"},
+            {"text": "Die Frage ist sinnlos — Unendlichkeiten kann man nicht vergleichen", "hinweis": "Was sagt Cantor dazu?"},
+        ],
+        "loesung_text": "Die reellen Zahlen sind überabzählbar — eine echt größere Unendlichkeit als die abzählbar unendlichen natürlichen Zahlen.",
+        "erklaerung": "<p><strong>Cantors Diagonalbeweis (1891):</strong> Angenommen, man könnte alle reellen Zahlen in [0,1] in einer unendlichen Liste auflisten:</p><p class=\"font-mono text-xs\">r₁ = 0,<u>1</u>4159…<br>r₂ = 0,2<u>7</u>182…<br>r₃ = 0,57<u>7</u>21…<br>r₄ = 0,141<u>4</u>2…<br>…</p><p>Nun konstruiert man eine neue Zahl <em>d</em>: an Stelle n nimmt man <em>nicht</em> die n-te Ziffer von rₙ. Aus 1, 7, 7, 4… wird z. B. 2, 8, 8, 5… also d = 0,2885…</p><p>Diese Zahl <em>d</em> unterscheidet sich von jeder rₙ in mindestens einer Stelle — sie kann in der Liste also gar nicht vorkommen. <strong>Egal, wie die Liste aussieht: Sie ist niemals vollständig.</strong></p>",
+        "kontext": "<p>Cantor zeigte: Es gibt unendlich viele <em>Stufen</em> der Unendlichkeit. Die natürlichen Zahlen sind ℵ₀ (Aleph-Null, abzählbar). Die reellen Zahlen sind 𝔠 = 2^ℵ₀ (Kontinuum, überabzählbar). Die <em>Kontinuumshypothese</em> fragt, ob es eine Unendlichkeit dazwischen gibt — und ist innerhalb der heutigen Mathematik weder beweisbar noch widerlegbar (Gödel 1940 / Cohen 1963).</p><p>Cantor wurde zu Lebzeiten heftig angegriffen: 'Wissenschaftlicher Scharlatan' (Kronecker), 'aus Konfusion geboren' (Poincaré). Heute ist seine Mengenlehre Fundament der modernen Mathematik. Das Diagonalverfahren kehrt in Gödels Unvollständigkeitssatz und Turings Halteproblem wieder — derselbe Trick, andere Bühne.</p>",
+        "erkenntnis": "Unendlich ist nicht gleich unendlich. Selbst zwischen Mengen, die niemals enden, gibt es strenge Größenvergleiche. Das Werkzeug heißt Diagonalisierung — eines der mächtigsten Beweisinstrumente überhaupt.",
+    },
+    "aumann-agreement": {
+        "id": "aumann-agreement", "name": "Aumanns Agree-to-Disagree-Theorem", "icon": "🤝",
+        "farbe": "indigo", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": "Anna und Ben sind perfekte Bayesianer mit identischen Vorannahmen ('common prior'), aber unterschiedlichen Informationen. Anna sagt: 'Ich glaube zu 70 %, dass die Aktie steigt.' Ben antwortet: '40 %.' Anna korrigiert nach Bens Aussage: '55 %.' Ben: '60 %.' … Sie tauschen weiter ihre Wahrscheinlichkeiten aus.",
+        "frage": "Was sagt Aumanns Theorem (1976) über das Endergebnis dieses Austauschs?",
+        "optionen": [
+            {"text": "Sie nähern sich einem Kompromiss in der Mitte (z. B. 55 %)", "hinweis": "Wäre das Bayes-konsistent?"},
+            {"text": "Sobald die Überzeugungen 'common knowledge' werden, müssen sie identisch sein", "hinweis": "Common-Knowledge-Annahme"},
+            {"text": "Sie behalten unterschiedliche Meinungen — das ist mathematisch zulässig", "hinweis": "Echte 'agree to disagree'?"},
+            {"text": "Die Reihenfolge entscheidet, wessen Meinung 'gewinnt'", "hinweis": "Ist Bayes reihenfolgesensitiv?"},
+        ],
+        "loesung_text": "Zwei rationale Bayesianer mit gemeinsamem Prior können nicht beide wissen, dass sie unterschiedlicher Meinung sind.",
+        "erklaerung": "<p><strong>Aumann (Nobelpreis 2005):</strong> Wenn (1) beide Akteure bayesianisch rational sind, (2) denselben Prior haben und (3) ihre Posterior-Wahrscheinlichkeiten <em>common knowledge</em> werden (jeder weiß, dass jeder weiß, dass jeder weiß …), dann <em>müssen</em> diese Wahrscheinlichkeiten übereinstimmen.</p><p>Intuition: Jeder Bayesianer aktualisiert seine Überzeugung nicht nur an Daten — sondern auch daran, dass der andere bei seiner Zahl bleibt. Diese Information ist selbst ein Signal. Bestünden nach allen Iterationen noch Unterschiede, hätten sie nicht alles aus den Aussagen gelernt — Widerspruch zur Annahme der Rationalität.</p>",
+        "kontext": "<p>Das Theorem hat verstörende Folgen für Verhandlungen, Politik und Wissenschaft: Anhaltende Meinungsverschiedenheiten zwischen ehrlichen, rationalen Diskutanten sind nur möglich, wenn (a) jemand <em>nicht</em> bayesianisch denkt, (b) sie unterschiedliche Priors haben oder (c) sie nicht ehrlich kommunizieren.</p><p>Die <strong>Robin-Hanson-Folgerung:</strong> Wenn du dich mit einem klugen, ehrlichen Menschen nicht einigst, solltest du deine Meinung Richtung Mitte verschieben — oder akzeptieren, dass einer von euch nicht rational ist (möglicherweise du selbst).</p><p>Geanakoplos & Polemarchakis (1982) zeigten später: Schon zwei oder drei Austauschrunden reichen in vielen Fällen aus, um konvergent zu werden — wenn die Beteiligten ihre Iteration ernst nehmen.</p>",
+        "erkenntnis": "Echte Meinungsverschiedenheit ist in einem strengen Sinn irrational. Das ist keine Einladung zur Anpassung — sondern eine Mahnung, Diskussion als Werkzeug zur Wahrheitsfindung statt als Ringkampf zu sehen.",
+    },
+    "diamant-wasser": {
+        "id": "diamant-wasser", "name": "Das Diamant-Wasser-Paradoxon", "icon": "💎",
+        "farbe": "cyan", "kategorie": "Kognition",
+        "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup": "Adam Smith stellte 1776 in <em>Der Wohlstand der Nationen</em> ein scheinbares Paradox vor: Wasser ist überlebenswichtig — und spottbillig. Diamanten sind fürs Überleben nutzlos — kosten ein Vermögen. Wie kann das sein?",
+        "frage": "Wie löst die moderne Ökonomie dieses Paradoxon?",
+        "optionen": [
+            {"text": "Wasser ist nur lokal billig — global ist es teurer als Diamanten", "hinweis": "Stimmt das ökonomisch?"},
+            {"text": "Der Preis bestimmt sich nicht am Gesamtnutzen, sondern am Grenznutzen", "hinweis": "Marginale Analyse"},
+            {"text": "Diamanten sind Statussymbol — der Preis ist irrational", "hinweis": "Aber Wasser bleibt selbst in der Wüste relativ billig"},
+            {"text": "Es ist eine reine Frage des Marketings", "hinweis": "1776 gab es noch kein Marketing"},
+        ],
+        "loesung_text": "Der Preis spiegelt den Grenznutzen — nicht den Gesamtnutzen.",
+        "erklaerung": "<p><strong>Marginalrevolution (Menger, Jevons, Walras, ca. 1870):</strong> Bei Wasser ist die Menge so groß, dass das <em>letzte</em> Glas — der Grenzliter — nur noch geringen zusätzlichen Nutzen stiftet (Blumengießen, Autowäsche). Diesen geringen Grenznutzen widerspiegelt der Preis.</p><p>Bei Diamanten ist das Angebot extrem knapp. Fast jedes neue Exemplar stiftet hohen Grenznutzen (Schmuck, Verlobungsring, Industriebohrer). Daher der hohe Preis.</p><p>Der <em>Gesamtnutzen</em> von Wasser bleibt enorm — ohne Wasser stirbt man. Aber wir entscheiden am Rand: 'Was bringt mir die <em>nächste</em> Einheit?', nicht 'Was ist die Gesamtmenge wert?'</p>",
+        "kontext": "<p>Die Marginalrevolution kippte die klassische Werttheorie (Arbeitswertlehre von Smith, Ricardo, Marx) und begründete die Neoklassik. Heute ist das Konzept Standard: Was kostet die nächste Einheit? Nicht: Was ist die ganze Menge wert?</p><p>In Gehaltsverhandlungen ist das Prinzip mächtig: Ein erfahrener Mitarbeiter mag <em>insgesamt</em> 10× wertvoller sein als ein Junior — aber das Gehalt richtet sich danach, wie viel <em>zusätzlichen</em> Wert er gegenüber dem nächstbesten Bewerber liefert (Opportunitätskosten).</p><p>In der Verhaltensökonomie weiter: Menschen denken oft in Totalwerten ('Das Auto ist 30 000 € wert'), nicht in Grenzwerten ('Was nützt mir das nächste Feature?'). Genau das macht Verkäufer reich.</p>",
+        "erkenntnis": "Wir entscheiden am Rand — auch wenn wir es selten merken. Wer in Gesamtwerten denkt, zahlt zu viel. Wer in Grenzwerten denkt, verhandelt schärfer und investiert klüger.",
     },
 }
 

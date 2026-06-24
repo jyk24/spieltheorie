@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
-from fastapi.responses import PlainTextResponse, Response
+from fastapi.responses import FileResponse, PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 # ── AUTH-AKTIVIERUNG: diesen Block einkommentieren ────────────────────────────
@@ -102,12 +102,28 @@ _SITEMAP_URLS = [
     "/gedaechtnis/technik/elaborative-enkodierung", "/gedaechtnis/technik/zeigarnik",
     "/gedaechtnis/reaktionszeit", "/gedaechtnis/chimp", "/gedaechtnis/verbal",
     "/gedaechtnis/bestenliste",
+    "/raetsel/cantor-diagonal", "/raetsel/aumann-agreement", "/raetsel/diamant-wasser",
 ]
 
 
 @app.get("/robots.txt", response_class=PlainTextResponse, include_in_schema=False)
 def robots_txt():
     return f"User-agent: *\nAllow: /\nSitemap: {BASE_URL}/sitemap.xml\n"
+
+
+# Service Worker an Wurzel ausliefern, damit Scope = '/' und nicht '/static/'.
+@app.get("/sw.js", include_in_schema=False)
+def service_worker():
+    return FileResponse(
+        "app/static/sw.js",
+        media_type="application/javascript",
+        headers={"Service-Worker-Allowed": "/", "Cache-Control": "no-cache"},
+    )
+
+
+@app.get("/manifest.json", include_in_schema=False)
+def manifest_root():
+    return FileResponse("app/static/manifest.json", media_type="application/manifest+json")
 
 
 @app.get("/sitemap.xml", include_in_schema=False)
