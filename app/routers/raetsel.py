@@ -562,6 +562,8 @@ RAETSEL_META = [
     # ── Spieltheorie (neu) ───────────────────────────────────────────────────
     {"id":"matching-pennies","name":"Matching Pennies","icon":"🪙","beschreibung":"Zwei Spieler legen gleichzeitig eine Münze auf den Tisch. Einer gewinnt bei gleichen Seiten, der andere bei verschiedenen. Gibt es eine optimale Strategie?","typ":"Nullsummenspiel","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Spieltheorie"},
     {"id":"cake-cutting","name":"Cake Cutting","icon":"🎂","beschreibung":"Wie teilt man einen Kuchen zwischen zwei Personen fair auf, ohne eine Instanz als Schiedsrichter? Die Lösung ist so einfach wie elegant.","typ":"Fairness-Algorithmus","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Spieltheorie"},
+    {"id":"efron-wuerfel","name":"Efrons nicht-transitive Würfel","icon":"🎲","beschreibung":"Vier Würfel A, B, C, D. A schlägt B, B schlägt C, C schlägt D – und doch schlägt D wieder A. Wer den Gegner zuerst wählen lässt, gewinnt fast immer. Eine paradoxe Schere-Stein-Papier-Variante mit Würfeln.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Spieltheorie"},
+    {"id":"penney-spiel","name":"Penney-Spiel","icon":"🪙","beschreibung":"Spieler A wählt eine Münzfolge (z. B. KKZ), Spieler B kontert mit ZKK. Sobald eine der beiden Folgen beim Werfen erscheint, gewinnt der Besitzer. Verblüffend: B kann mit der richtigen Wahl immer im Vorteil sein.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Spieltheorie"},
     # ── Statistik (neu) ──────────────────────────────────────────────────────
     {"id":"berkson","name":"Das Berkson-Paradoxon","icon":"🏥","beschreibung":"Im Krankenhaus scheinen Raucher seltener Lungenkrebs zu haben. Ein scheinbarer Widerspruch – erklärt durch verzerrte Stichproben.","typ":"Statistik-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Statistik"},
     {"id":"p-hacking","name":"P-Hacking","icon":"🎰","beschreibung":"Ein Forscher testet 20 Hypothesen und findet eine mit p < 0,05. Ist das ein echter Befund? Die gefährlichste Methode der modernen Wissenschaft.","typ":"Wissenschaftsmethodik","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Statistik"},
@@ -3083,6 +3085,40 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Der Schneider (Alice) wird genau in der Mitte schneiden — denn er weiß, dass Bob das größere Stück nimmt. Beide erhalten mindestens 50 % in ihrer eigenen Bewertung. Das Verfahren ist <em>proportional</em> (jeder ≥ 1/n) und <em>envy-free</em> (keiner beneidet den anderen) — ohne jegliche Kommunikation über Präferenzen.</p>",
         "kontext": "<p>Für n &gt; 2 Personen ist envy-free Teilung algorithmisch komplex. Das Selfridge-Conway-Verfahren (1960/1993) löst es für 3 Personen endlich; für n Personen wurde erst 2016 ein endlicher Algorithmus gefunden (Aziz & Mackenzie).</p>",
         "erkenntnis": "Faire Verfahren brauchen keine Informationen über Präferenzen — sie müssen nur die richtigen Anreize setzen. Das 'Du schneidest, ich wähle'-Prinzip nutzt egoistisches Verhalten als Design-Element.",
+    },
+    "efron-wuerfel": {
+        "id": "efron-wuerfel", "name": "Efrons nicht-transitive Würfel", "icon": "🎲",
+        "farbe": "indigo", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Bradley Efron entwarf vier sechsseitige Würfel mit ungewöhnlichen Beschriftungen:<br><strong>A</strong> = (4, 4, 4, 4, 0, 0)<br><strong>B</strong> = (3, 3, 3, 3, 3, 3)<br><strong>C</strong> = (6, 6, 2, 2, 2, 2)<br><strong>D</strong> = (5, 5, 5, 1, 1, 1)<br>Beide Spieler wählen je einen Würfel und werfen ihn einmal. Der höhere Wert gewinnt.",
+        "frage": "Du darfst <em>nach</em> deinem Gegner wählen. Wie groß ist deine Gewinnchance, wenn du immer perfekt konterst?",
+        "optionen": [
+            {"text": "50 % — über einen langen Zeitraum gleicht sich alles aus", "hinweis": "Symmetrie-Argument"},
+            {"text": "Genau ⅔ — egal welchen Würfel der Gegner wählt", "hinweis": "Erstaunlich konstant"},
+            {"text": "Variiert zwischen 50 % und 100 % je nach Würfel", "hinweis": "Schwankt es wirklich?"},
+            {"text": "Nur knapp über 50 % — der Vorteil ist marginal", "hinweis": "Wie groß ist der Effekt?"},
+        ],
+        "loesung_text": "⅔ Gewinnchance — bei jedem Würfel des Gegners",
+        "erklaerung": "<p>Es gilt: <strong>A schlägt B</strong> mit P = 4/6 = ⅔ (immer wenn A eine 4 wirft, was 4 von 6 Mal passiert). <strong>B schlägt C</strong> mit P = 4/6 = ⅔ (B wirft 3, C zeigt 4 von 6 Mal eine 2). <strong>C schlägt D</strong> mit P = 24/36 = ⅔. <strong>D schlägt A</strong> mit P = 24/36 = ⅔. Also gibt es zu jedem Würfel einen Konter, der mit ⅔ gewinnt. Wer zuletzt wählen darf, hat strukturell den Vorteil.</p>",
+        "kontext": "<p>Nicht-Transitivität widerspricht unserer Intuition: Wenn A > B und B > C, sollte A > C gelten. Bei Würfelvergleichen mit Wahrscheinlichkeiten gilt diese Logik nicht. Warren Buffett soll Bill Gates einmal mit ähnlichen Würfeln zum Spielen eingeladen haben — und Gates erkannte den Trick erst, als er Buffett zuerst wählen ließ. Das Prinzip taucht auch in Schere-Stein-Papier, bei Wahlsystemen (Condorcet-Paradox) und bei Tier-Lebensstrategien (etwa der seitenfleckigen Leguan-Eidechse) auf.</p>",
+        "erkenntnis": "Manche Vergleichsrelationen sind zyklisch statt linear geordnet. Wer als Letzter wählen darf, gewinnt — eine seltene Situation, in der Information statt Macht entscheidet.",
+    },
+    "penney-spiel": {
+        "id": "penney-spiel", "name": "Penney-Spiel", "icon": "🪙",
+        "farbe": "amber", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Walter Penney (1969): Alice wählt eine Folge von drei Münzwürfen, z. B. <strong>KKK</strong> (Kopf-Kopf-Kopf). Bob sieht Alices Wahl und wählt seine eigene Folge. Dann wird eine Münze geworfen, bis eine der beiden Folgen als zusammenhängende Sequenz erscheint. Der Besitzer dieser Folge gewinnt.",
+        "frage": "Alice wählt <strong>KKK</strong>. Welche Folge sollte Bob wählen, um seine Gewinnchance zu maximieren?",
+        "optionen": [
+            {"text": "ZZZ — das perfekte Spiegelbild von KKK", "hinweis": "Symmetrie? Wirklich?"},
+            {"text": "KKZ — möglichst ähnlich zu Alice", "hinweis": "Ist ähnlich besser?"},
+            {"text": "ZKK — Bobs Folge endet wie Alices beginnt", "hinweis": "Conway-Trick"},
+            {"text": "KZK — Mischung aus Kopf und Zahl", "hinweis": "Klingt 'zufälliger'"},
+        ],
+        "loesung_text": "ZKK — Bob gewinnt mit P = 7/8 ≈ 87,5 %",
+        "erklaerung": "<p>Conway-Regel: Setze den umgekehrten Wert des mittleren Wurfs der gegnerischen Folge an den Anfang, und schiebe die ersten beiden Würfe der gegnerischen Folge nach hinten. Aus KKK wird so <strong>ZKK</strong>. Sobald irgendwo in der Wurffolge zweimal Kopf hintereinander erscheinen, muss der nächste Wurf entscheiden: kommt K, hat Alice schon gewonnen — aber Bob hat dann bereits ZKK vorher gehabt (denn vor KK musste ein Z stehen, sonst hätte KKK früher gewonnen). So gewinnt Bob in 7 von 8 Fällen. Verblüffend: das Spiel ist <em>intransitiv</em> — zu jeder Folge gibt es eine bessere Konterfolge.</p>",
+        "kontext": "<p>Penneys Spiel ist eines der wenigen alltagstauglichen Beispiele für intransitive Wahrscheinlichkeitsstrukturen. John Conway entdeckte die einfache Konter-Regel. Das Spiel zeigt, warum 'fairer Wettkampf' Gleichzeitigkeit der Wahl voraussetzt: Wer als Zweiter wählen darf, hat strukturelle Macht. Verwandt: Efron-Würfel, Condorcet-Paradox.</p>",
+        "erkenntnis": "Intuition versagt bei Sequenzen: Ähnlich wirkende Muster haben ganz unterschiedliche Wartezeiten. Wer reagieren darf, gewinnt – auch bei reinem Zufall.",
     },
     # ── Statistik ─────────────────────────────────────────────────────────
     "berkson": {
