@@ -631,6 +631,8 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Nicht-transitive Spiele ──────────────────────────────────────────────
+    {"id":"penney-spiel","name":"Penneys Münzwurf-Spiel","icon":"🪙","beschreibung":"Du wählst eine Dreierfolge wie HHT. Dein Gegner wählt danach. Er gewinnt fast immer – ganz egal, was du wählst. Ein nicht-transitives Spiel, das jeder Intuition widerspricht. Walter Penney (1969).","typ":"Nicht-transitives Spiel","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Spieltheorie"},
 ]
 
 
@@ -4113,6 +4115,106 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         request,
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
+    )
+
+
+# ---------------------------------------------------------------------------
+# Penneys Münzwurf-Spiel – nicht-transitives Spiel mit verblüffender Strategie
+# ---------------------------------------------------------------------------
+
+# Conways Konter-Regel: für Sequenz X1 X2 X3 wähle (NOT X2) X1 X2.
+_PENNEY_COUNTER = {
+    "HHH": "THH", "HHT": "THH",
+    "HTH": "HHT", "HTT": "HHT",
+    "THH": "TTH", "THT": "TTH",
+    "TTH": "HTT", "TTT": "HTT",
+}
+
+# Theoretisch korrekte Gewinnwahrscheinlichkeiten des Konters (in Prozent).
+_PENNEY_THEORY_PCT = {
+    "HHH": 87.5, "HHT": 75.0,
+    "HTH": 66.7, "HTT": 66.7,
+    "THH": 66.7, "THT": 66.7,
+    "TTH": 75.0, "TTT": 87.5,
+}
+
+_PENNEY_ALL_SEQUENCES = ["HHH", "HHT", "HTH", "HTT", "THH", "THT", "TTH", "TTT"]
+
+
+def _simulate_penney(user_seq: str, counter_seq: str, trials: int = 5000,
+                     max_flips: int = 200) -> tuple[int, int, list[str]]:
+    """Spiele Penney trials-mal. Liefert (user_wins, counter_wins, demo_sequence)."""
+    user_wins = 0
+    counter_wins = 0
+    demo_history = ""
+    demo_winner: str | None = None
+    for trial in range(trials):
+        history = ""
+        for _ in range(max_flips):
+            history += "H" if _random.random() < 0.5 else "T"
+            if history.endswith(user_seq):
+                user_wins += 1
+                if demo_winner is None:
+                    demo_history, demo_winner = history, "user"
+                break
+            if history.endswith(counter_seq):
+                counter_wins += 1
+                if demo_winner is None:
+                    demo_history, demo_winner = history, "counter"
+                break
+        # Falls Demo nach 100 Trials immer noch nicht gesetzt (extrem unwahrscheinlich),
+        # nehmen wir die letzte Runde – egal welcher Ausgang.
+        if trial == 100 and demo_winner is None and history:
+            demo_history = history
+            demo_winner = "user" if history.endswith(user_seq) else "counter"
+    # Demo-Sequenz in Wurfschritte zerlegen (max. 24 für die Anzeige).
+    demo_flips = list(demo_history[-24:]) if demo_history else []
+    return user_wins, counter_wins, demo_flips
+
+
+@router.get("/penney-spiel", response_class=HTMLResponse)
+def penney_spiel_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/penney_spiel.html",
+        {"active_page": "raetsel", "all_sequences": _PENNEY_ALL_SEQUENCES},
+    )
+
+
+@router.post("/penney-spiel/result", response_class=HTMLResponse)
+def penney_spiel_result(request: Request, user_seq: str = Form(...)):
+    user_seq = user_seq.upper().strip()
+    if user_seq not in _PENNEY_COUNTER:
+        raise HTTPException(status_code=400, detail="Ungültige Sequenz")
+    counter_seq = _PENNEY_COUNTER[user_seq]
+    trials = 5000
+    user_wins, counter_wins, demo_flips = _simulate_penney(user_seq, counter_seq, trials=trials)
+    user_pct = round(user_wins / trials * 100, 1)
+    counter_pct = round(counter_wins / trials * 100, 1)
+    theory_counter_pct = _PENNEY_THEORY_PCT[user_seq]
+    # Komplette Tabelle: jede Sequenz mit ihrem optimalen Konter
+    full_table = [
+        {
+            "seq": s,
+            "counter": _PENNEY_COUNTER[s],
+            "theory": _PENNEY_THEORY_PCT[s],
+        } for s in _PENNEY_ALL_SEQUENCES
+    ]
+    return templates.TemplateResponse(
+        request,
+        "partials/penney_result.html",
+        {
+            "user_seq": user_seq,
+            "counter_seq": counter_seq,
+            "user_wins": user_wins,
+            "counter_wins": counter_wins,
+            "user_pct": user_pct,
+            "counter_pct": counter_pct,
+            "trials": trials,
+            "theory_counter_pct": theory_counter_pct,
+            "theory_user_pct": round(100 - theory_counter_pct, 1),
+            "demo_flips": demo_flips,
+            "full_table": full_table,
+        },
     )
 
 

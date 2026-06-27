@@ -1,0 +1,112 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    {% if counter_pct >= 50 %}
+    <div class="mb-5 p-4 rounded-xl bg-rose-50 border-2 border-rose-300">
+        <h3 class="text-xl font-bold text-rose-800 mb-1">Der Gegner hat dich abgehängt.</h3>
+        <p class="text-sm text-rose-700">In <strong>{{ counter_wins }}</strong> von {{ trials }} Spielen ({{ counter_pct }} %) erschien <strong>{{ counter_seq }}</strong> vor deiner Sequenz <strong>{{ user_seq }}</strong>. Theoretisch erwartet: <strong>{{ theory_counter_pct }} %</strong>.</p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">Du hast Glück gehabt.</h3>
+        <p class="text-sm text-emerald-700">Trotz Konter hat deine Sequenz {{ user_seq }} öfter gewonnen ({{ user_pct }} %). Bei {{ trials }} Würfen liegt das im Rauschen – die Theorie sagt, der Konter müsste {{ theory_counter_pct }} % erreichen.</p>
+    </div>
+    {% endif %}
+
+    <!-- Simulations-Ergebnis -->
+    <div class="mb-5">
+        <h4 class="font-bold text-slate-800 mb-3">5 000 simulierte Spiele:</h4>
+        <div class="space-y-3">
+            <div>
+                <div class="flex justify-between text-xs text-slate-600 mb-1">
+                    <span><strong class="font-mono text-indigo-700">{{ user_seq }}</strong> (du)</span>
+                    <span class="font-bold text-indigo-700">{{ user_pct }} %</span>
+                </div>
+                <div class="bg-slate-100 rounded-full h-5 overflow-hidden">
+                    <div class="h-full bg-indigo-500 rounded-full" style="width: {{ user_pct }}%"></div>
+                </div>
+            </div>
+            <div>
+                <div class="flex justify-between text-xs text-slate-600 mb-1">
+                    <span><strong class="font-mono text-rose-700">{{ counter_seq }}</strong> (Gegner)</span>
+                    <span class="font-bold text-rose-700">{{ counter_pct }} %</span>
+                </div>
+                <div class="bg-slate-100 rounded-full h-5 overflow-hidden">
+                    <div class="h-full bg-rose-500 rounded-full" style="width: {{ counter_pct }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if demo_flips %}
+    <div class="mb-5 bg-slate-50 border border-slate-200 rounded-xl p-4">
+        <p class="text-xs font-semibold text-slate-600 mb-2">Beispiel-Wurfsequenz (eines der simulierten Spiele):</p>
+        <div class="flex flex-wrap gap-1">
+            {% for flip in demo_flips %}
+            <span class="inline-flex items-center justify-center w-7 h-7 rounded {% if flip == 'H' %}bg-amber-100 text-amber-800{% else %}bg-slate-200 text-slate-700{% endif %} font-mono text-sm font-bold">{{ flip }}</span>
+            {% endfor %}
+        </div>
+        <p class="text-xs text-slate-500 mt-2">Die letzten drei Würfe enthalten die Siegersequenz.</p>
+    </div>
+    {% endif %}
+
+    <!-- Wie der Konter berechnet wird -->
+    <div class="mb-5 bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-900">
+        <p class="font-semibold mb-2">Conways Konter-Regel</p>
+        <p class="mb-2">Für eine Sequenz <code class="font-mono px-1 bg-white border rounded">X₁ X₂ X₃</code> wähle als Konter: <code class="font-mono px-1 bg-white border rounded">(NOT X₂) X₁ X₂</code>.</p>
+        <p class="font-mono text-xs bg-white rounded p-2 border border-amber-200">
+            Deine Wahl: <strong>{{ user_seq }}</strong> &nbsp;→&nbsp; Konter: <strong>{{ counter_seq }}</strong>
+        </p>
+        <p class="mt-2">Die Logik: Der Konter „lauert" vor deiner Sequenz. Bevor deine Folge auftauchen kann, muss sehr oft erst der Konter da gewesen sein.</p>
+    </div>
+
+    <!-- Vollständige Tabelle -->
+    <div class="mb-5">
+        <h4 class="font-bold text-slate-800 mb-3">Alle 8 Möglichkeiten – und ihre Konter:</h4>
+        <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border-collapse">
+                <thead class="bg-slate-100 text-slate-700">
+                    <tr>
+                        <th class="px-3 py-2 font-semibold">Deine Wahl</th>
+                        <th class="px-3 py-2 font-semibold">Optimaler Konter</th>
+                        <th class="px-3 py-2 font-semibold text-right">Konter gewinnt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in full_table %}
+                    <tr class="border-b border-slate-100 {% if row.seq == user_seq %}bg-indigo-50 font-semibold{% endif %}">
+                        <td class="px-3 py-2 font-mono">{{ row.seq }}</td>
+                        <td class="px-3 py-2 font-mono">{{ row.counter }}</td>
+                        <td class="px-3 py-2 text-right">{{ row.theory }} %</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Warum überhaupt? -->
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-800">
+        <p class="font-semibold mb-2">Warum ist das Spiel nicht-transitiv?</p>
+        <p class="mb-2">Bei Würfeln gilt: A schlägt B, B schlägt C ⟹ A schlägt C. Penneys Spiel ist anders. Die „beste" Sequenz gibt es nicht – jede hat einen Konter, der seinerseits einen Konter hat.</p>
+        <p class="mb-2">Beispiel-Kette: HHH ← THH ← TTH ← HTT ← HHT ← THH ← TTH ← … Wer als <strong>zweiter</strong> wählt, kennt den Konter und kann immer dominieren.</p>
+        <p class="text-xs italic">Verwandte nicht-transitive Strukturen: Schere-Stein-Papier, Efron-Würfel und das Schelling-Koordinationsspiel.</p>
+    </div>
+
+    <!-- Anwendung -->
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-5 text-sm text-slate-700">
+        <p class="font-semibold mb-1">Verhandlungs- und Strategierelevanz:</p>
+        <p>Wer als Zweiter zieht, hat manchmal einen radikalen Vorteil – nicht trotz, sondern wegen der späteren Position. Bei Tarifverhandlungen, Beweiseinreichungen oder Geboten lohnt die Frage: <em>Lohnt es, das eigene Angebot zurückzuhalten und auf die Gegenseite zu reagieren?</em></p>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+        <a href="/raetsel/penney-spiel" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Andere Sequenz testen
+        </a>
+        <a href="/raetsel/matching-pennies" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Matching Pennies →
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Alle Rätsel
+        </a>
+    </div>
+</div>
