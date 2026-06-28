@@ -73,6 +73,16 @@ RAETSEL_META = [
         "kategorie": "Wahrscheinlichkeit",
     },
     {
+        "id": "benford",
+        "name": "Benfordsches Gesetz",
+        "icon": "🔢",
+        "beschreibung": "Sammle echte Zahlen aus der Welt – Einwohnerzahlen, Aktienkurse, Stromrechnungen – und schau dir nur die erste Ziffer an. Naive Erwartung: gleichverteilt. Realität: Ziffer 1 dominiert mit 30 %. Forensiker entlarven so Steuerbetrug.",
+        "typ": "Mathematik-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
+    {
         "id": "bertrand-paradoxon",
         "name": "Das Bertrand-Paradoxon",
         "icon": "⭕",
@@ -3171,6 +3181,23 @@ GENERIC_PUZZLES: dict = {
         "erkenntnis": "Aggregatstatistiken können irreführen, selbst wenn alle Einzeldaten stimmen. Immer fragen: Welche Gruppe wechselt zwischen den Kategorien?",
     },
     # ── Wahrscheinlichkeit ────────────────────────────────────────────────
+    "benford": {
+        "id": "benford", "name": "Benfordsches Gesetz", "icon": "🔢",
+        "farbe": "indigo", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Du sammelst echte Zahlen aus der Welt: Einwohnerzahlen aller Länder, Flusslängen, Aktienkurse, Stromrechnungen, Steuererklärungen. Du notierst nur die <strong>erste Ziffer</strong> jeder Zahl (also bei 4711 die '4', bei 88 die '8'). Naive Intuition: Jede Ziffer 1–9 sollte etwa gleich oft vorkommen — also je ~11,1 %.",
+        "frage": "Wie häufig tritt die Ziffer <strong>1</strong> als führende Ziffer wirklich auf?",
+        "optionen": [
+            {"text": "Etwa 11 % — Gleichverteilung", "hinweis": "Klingt plausibel — ist aber falsch"},
+            {"text": "Etwa 30 % — fast dreimal so oft wie erwartet", "hinweis": "log₁₀(2) ≈ 0,301"},
+            {"text": "Etwa 50 % — die häufigste Ziffer dominiert", "hinweis": "Zu viel — auch 2–9 kommen vor"},
+            {"text": "Etwa 5 % — Ziffer 1 ist seltener als der Mittelwert", "hinweis": "Im Gegenteil"},
+        ],
+        "loesung_text": "Etwa 30,1 % — die Ziffer 1 dominiert (Benfordsches Gesetz)",
+        "erklaerung": "<p>Bei vielen realen Datensätzen ist die Wahrscheinlichkeit, dass die führende Ziffer <em>d</em> ist, gegeben durch <strong>P(d) = log₁₀(1 + 1/d)</strong>. Das ergibt: 1 → 30,1 %, 2 → 17,6 %, 3 → 12,5 %, …, 9 → nur 4,6 %. Der Grund: Wenn eine Größe exponentiell wächst (von 100 auf 200 dauert genauso lange wie von 1000 auf 2000), verbringt sie mehr Zeit mit kleinen führenden Ziffern als mit großen. Auf einer logarithmischen Achse ist der Abstand von 1 bis 2 größer als der von 8 bis 9.</p>",
+        "kontext": "<p>Benford (1938) bestätigte, was Simon Newcomb schon 1881 in einem Logarithmenbuch bemerkt hatte: Die ersten Seiten (Zahlen beginnend mit 1) waren stärker abgenutzt. <strong>Anwendung in der Forensik:</strong> Steuerbetrug, Wahlbetrug und Bilanzfälschungen lassen sich oft entlarven, weil gefälschte Zahlen zu gleichmäßig verteilt sind. Der Enron-Skandal und der griechische Schuldenfälschungs-Skandal zeigten beide Abweichungen vom Benford-Profil. Voraussetzung: Die Daten müssen mehrere Größenordnungen abdecken — Schuhgrößen oder Telefonnummern folgen Benford nicht.</p>",
+        "erkenntnis": "Echte Zahlen sind nicht gleichverteilt — sie folgen einer logarithmischen Struktur. Wer Daten fälscht und gleichmäßig verteilt, hinterlässt einen statistischen Fingerabdruck.",
+    },
     "kelly-kriterium": {
         "id": "kelly-kriterium", "name": "Das Kelly-Kriterium", "icon": "📊",
         "farbe": "violet", "kategorie": "Wahrscheinlichkeit",
