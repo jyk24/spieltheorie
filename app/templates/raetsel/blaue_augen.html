@@ -1,0 +1,327 @@
+{% extends "base.html" %}
+{% block title %}Die Insel der blauen Augen – Common-Knowledge-Paradox{% endblock %}
+{% block meta_description %}<meta name="description" content="100 Inselbewohner mit blauen Augen. Ein Fremder verkündet, was alle bereits wissen – und 100 Tage später ist die Insel leer. Eines der berühmtesten Logikrätsel der Welt, interaktiv erklärt.">{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+
+  <!-- Breadcrumb -->
+  <div class="mb-6">
+    <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+    <h1 class="text-3xl font-bold text-slate-800 mt-2">👁️ Die Insel der blauen Augen</h1>
+    <div class="flex items-center gap-3 mt-1.5 flex-wrap">
+      <span class="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 font-medium">Logik</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium">Fortgeschritten</span>
+      <span class="text-xs text-slate-400">⏱ 8 min</span>
+    </div>
+    <p class="text-slate-500 mt-2 text-sm">Terence Tao nannte es „eines der schwersten Logikrätsel, die ich je gesehen habe". Smullyan, Gardner, Tao – das Common-Knowledge-Paradox.</p>
+  </div>
+
+  <!-- Setup -->
+  <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6">
+    <p class="font-semibold text-slate-800 mb-3">Die Geschichte:</p>
+    <div class="bg-sky-50 border border-sky-200 rounded-xl p-5 text-sky-900 text-base leading-relaxed space-y-3">
+      <p>Auf einer Insel leben <strong>100 perfekt logische Bewohner</strong>. Jeder hat <strong>blaue Augen</strong> – aber niemand weiß das von sich selbst.</p>
+      <p>Die Inselregel ist strikt: Wer <em>weiß</em>, dass er blaue Augen hat, muss die Insel in der nächsten Mitternacht verlassen.</p>
+      <p>Es gibt <strong>keine Spiegel</strong>, <strong>keine Reflexionen</strong>, und über Augenfarbe wird niemals gesprochen. Jeder sieht zwar die 99 anderen – aber nie sich selbst.</p>
+      <p>Eines Tages besucht ein Fremder die Insel und sagt zur versammelten Bevölkerung einen einzigen Satz:</p>
+      <p class="text-center font-bold text-lg pt-1">„Mindestens einer von euch hat blaue Augen."</p>
+      <p>Was passiert?</p>
+    </div>
+  </div>
+
+  <!-- Erste Frage / Intuition -->
+  <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5" id="question-area">
+    <p class="font-semibold text-slate-800 mb-2">Erste Intuition:</p>
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5 text-center text-base font-bold text-amber-800 leading-snug">
+      Der Fremde sagt nichts Neues – jeder sieht ja 99 Paar blaue Augen. Was passiert?
+    </div>
+    <div class="space-y-3">
+      <button onclick="reveal(0)" class="w-full text-left p-4 rounded-xl border-2 border-blue-200 bg-blue-50 hover:border-blue-400 transition-all">
+        <div class="font-bold text-blue-800 mb-0.5">A) Nichts. Die Aussage ist redundant – jeder weiß das längst.</div>
+        <div class="text-sm text-blue-600">Intuitive Antwort – aber falsch.</div>
+      </button>
+      <button onclick="reveal(1)" class="w-full text-left p-4 rounded-xl border-2 border-violet-200 bg-violet-50 hover:border-violet-400 transition-all">
+        <div class="font-bold text-violet-800 mb-0.5">B) In der ersten Nacht verlassen alle 100 die Insel.</div>
+        <div class="text-sm text-violet-600">Zu schnell – wer wüsste das schon?</div>
+      </button>
+      <button onclick="reveal(2)" class="w-full text-left p-4 rounded-xl border-2 border-rose-200 bg-rose-50 hover:border-rose-400 transition-all">
+        <div class="font-bold text-rose-800 mb-0.5">C) Nach 100 Tagen verlassen alle 100 die Insel – gleichzeitig.</div>
+        <div class="text-sm text-rose-600">Klingt verrückt. Aber zwingend.</div>
+      </button>
+      <button onclick="reveal(3)" class="w-full text-left p-4 rounded-xl border-2 border-emerald-200 bg-emerald-50 hover:border-emerald-400 transition-all">
+        <div class="font-bold text-emerald-800 mb-0.5">D) Nur die Bewohner mit blauen Augen verlassen die Insel sofort.</div>
+        <div class="text-sm text-emerald-600">Wer weiß denn, dass er blaue Augen hat?</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Solution + Simulation -->
+  <div id="solution" class="hidden space-y-4">
+
+    <div class="bg-emerald-50 border border-emerald-300 rounded-xl p-5">
+      <p class="font-bold text-emerald-800 text-lg mb-2">✓ C) Nach genau 100 Tagen verlassen alle 100 Bewohner die Insel – gleichzeitig in derselben Mitternacht.</p>
+      <p class="text-sm text-emerald-700">Das klingt unmöglich. Lass es uns Schritt für Schritt aufbauen – mit kleinen Inseln.</p>
+    </div>
+
+    <!-- Interactive Simulator -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+      <p class="font-bold text-slate-800 mb-1">🧪 Simulator – Induktion live</p>
+      <p class="text-sm text-slate-500 mb-4">Wähle die Anzahl der Bewohner mit blauen Augen und gehe Tag für Tag durch. So baut sich die Logik induktiv auf.</p>
+
+      <div class="flex flex-wrap items-center gap-2 mb-5">
+        <span class="text-xs text-slate-500 mr-1">Blauäugige Bewohner:</span>
+        {% for n in [1, 2, 3, 4, 5, 7, 10] %}
+        <button type="button" onclick="setN({{ n }})" id="n-btn-{{ n }}"
+                class="n-btn px-3 py-1.5 rounded-full text-sm font-semibold border-2 border-slate-200 bg-white text-slate-600 hover:border-indigo-400 transition-colors">
+          N = {{ n }}
+        </button>
+        {% endfor %}
+      </div>
+
+      <!-- Bewohner-Visualisierung -->
+      <div class="bg-gradient-to-b from-sky-50 to-emerald-50 border border-slate-200 rounded-xl p-5 mb-4">
+        <div id="islanders" class="flex flex-wrap gap-2 justify-center min-h-[80px] mb-3"></div>
+        <div id="day-label" class="text-center text-sm font-semibold text-slate-600 mb-1">Tag 0 – Der Fremde spricht.</div>
+        <div id="leaving-label" class="text-center text-xs text-slate-400 min-h-[1.2em]"></div>
+      </div>
+
+      <!-- Steuerung -->
+      <div class="flex flex-wrap gap-2 mb-4">
+        <button type="button" onclick="prevDay()" id="prev-day"
+                class="flex-1 min-w-[7rem] px-3 py-2 rounded-xl text-sm font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">
+          ← Vorheriger Tag
+        </button>
+        <button type="button" onclick="resetDay()"
+                class="px-3 py-2 rounded-xl text-sm font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">
+          ⟲ Reset
+        </button>
+        <button type="button" onclick="nextDay()" id="next-day"
+                class="flex-1 min-w-[7rem] px-3 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
+          Nächster Tag →
+        </button>
+      </div>
+
+      <!-- Reasoning text -->
+      <div id="reasoning" class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-900 leading-relaxed"></div>
+    </div>
+
+    <!-- Erklärung des Mechanismus -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+      <p class="font-bold text-slate-800 mb-3">🔁 Die induktive Logik</p>
+      <div class="space-y-3 text-sm text-slate-700">
+        <div class="flex items-start gap-3">
+          <span class="bg-indigo-100 text-indigo-700 rounded-full w-7 h-7 flex items-center justify-center font-bold text-xs shrink-0">N=1</span>
+          <p>Der einzige blauäugige Bewohner sieht keine blauen Augen. Der Fremde sagt: „mindestens einer". Also muss <em>er</em> es sein. Er verlässt die Insel <strong>in Nacht 1</strong>.</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="bg-indigo-100 text-indigo-700 rounded-full w-7 h-7 flex items-center justify-center font-bold text-xs shrink-0">N=2</span>
+          <p>Jeder der zwei sieht <em>einen</em> Blauäugigen. Er denkt: „Wenn ich braune Augen hätte, würde er nach dem N=1-Fall heute Nacht gehen." Am Morgen ist niemand gegangen – also wissen beide gleichzeitig, dass sie selbst blau sind. Sie verlassen die Insel <strong>in Nacht 2</strong>.</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="bg-indigo-100 text-indigo-700 rounded-full w-7 h-7 flex items-center justify-center font-bold text-xs shrink-0">N=3</span>
+          <p>Jeder sieht zwei Blauäugige. Er denkt: „Falls ich braune Augen habe, sehen die anderen beiden nur einen – also gehen sie in Nacht 2." Sie tun es nicht. Am Tag 3 wissen alle: <em>ich bin selbst blau.</em> Sie gehen <strong>in Nacht 3</strong>.</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="bg-indigo-100 text-indigo-700 rounded-full w-7 h-7 flex items-center justify-center font-bold text-xs shrink-0">N=k</span>
+          <p>Per Induktion: Bei <strong>k</strong> blauäugigen Bewohnern verlassen alle die Insel in Nacht <strong>k</strong>. Für k = 100: <strong>Tag 100</strong>.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aha: Was hat der Fremde überhaupt gesagt? -->
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-5">
+      <p class="font-bold text-amber-800 mb-2">💡 Aber jeder sah doch 99 Blauäugige – was war neu?</p>
+      <div class="space-y-2 text-sm text-amber-900 leading-relaxed">
+        <p>Die Aussage „mindestens einer von euch hat blaue Augen" ist <em>im Inhalt</em> tatsächlich nicht neu. Was sie liefert, ist <strong>Common Knowledge</strong> (gemeinsames Wissen):</p>
+        <ul class="list-disc ml-5 space-y-1">
+          <li><strong>Vorher:</strong> Jeder weiß es. Jeder weiß, dass jeder es weiß. Aber irgendwann auf einer höheren Wissens-Ebene reißt die Kette ab.</li>
+          <li><strong>Nachher:</strong> Jeder weiß es <em>und</em> jeder weiß, dass jeder es weiß <em>und</em> jeder weiß, dass jeder weiß, dass jeder es weiß – unendlich tief.</li>
+        </ul>
+        <p>Erst diese <strong>unendliche Wissensschachtelung</strong> macht die Induktion möglich. Eine öffentliche Aussage tut etwas, was tausend private Aussagen nicht können.</p>
+      </div>
+    </div>
+
+    <!-- Kontext -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+      <button onclick="toggleKontext()" class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-slate-50 transition-colors">
+        <span class="font-semibold text-slate-700 text-sm">📚 Tiefer eintauchen</span>
+        <span id="kontext-arrow" class="text-slate-400 text-sm transition-transform">▼</span>
+      </button>
+      <div id="kontext-body" class="hidden px-5 pb-5 text-sm text-slate-700 leading-relaxed space-y-3 border-t border-slate-100 pt-4">
+        <p><strong>Frühe Quellen.</strong> Versionen des Rätsels finden sich bei Raymond Smullyan (<em>What Is the Name of This Book?</em>, 1978), Martin Gardner und John Conway. <strong>Terence Tao</strong> popularisierte die strenge Logikformulierung 2008 in seinem Blog und nannte sie „eines der schwersten Logikrätsel, die ich je gesehen habe".</p>
+        <p><strong>Common Knowledge (David Lewis, 1969).</strong> Eine Aussage <em>p</em> ist Common Knowledge in einer Gruppe, wenn jeder <em>p</em> weiß, jeder weiß, dass jeder <em>p</em> weiß, und so weiter – unendlich oft. Solche Wissens-Hierarchien sind das Fundament der epistemischen Logik (Aumann 1976, Halpern &amp; Moses 1990).</p>
+        <p><strong>Anwendung in der Spieltheorie.</strong> Robert Aumann zeigte 1976: Wenn zwei rationale Agenten gemeinsam wissen, was sie wissen, können sie nicht "agree to disagree". Common Knowledge erklärt Bank-Runs (Diamond-Dybvig), Koordinationsspiele (Schelling-Punkte), Sprachkonventionen – und warum eine simple öffentliche Aussage politische Bewegungen lostreten kann (Chwe, <em>Rational Ritual</em>, 2001).</p>
+        <p><strong>Realwelt-Analog.</strong> In autoritären Regimen ist oft jedem klar, dass die Regierung unbeliebt ist – aber jeder fürchtet, der einzige Kritiker zu sein. Eine öffentliche Erklärung („der Kaiser ist nackt") fügt nichts Neues hinzu – außer Common Knowledge. Dann kippt das System.</p>
+        <p><strong>Weiterführend.</strong> Tao's Originalpost: <em>terrytao.wordpress.com → „The blue-eyed islanders puzzle"</em>. Steven Pinker diskutiert die soziale Dimension in <em>The Stuff of Thought</em> (2007).</p>
+      </div>
+    </div>
+
+    <!-- Erkenntnis -->
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+      <p class="font-semibold text-amber-800 mb-1 text-sm">💡 Erkenntnis</p>
+      <p class="text-sm text-amber-700">Wissen ist nicht binär. Es gibt einen scharfen Unterschied zwischen „alle wissen es" und „alle wissen, dass alle es wissen ... unendlich tief". Eine öffentliche Aussage kann die Welt verändern, obwohl sie keine private Information liefert.</p>
+    </div>
+
+    <!-- TED Talks -->
+    {% if ted_links %}
+    <div class="bg-red-50 border border-red-100 rounded-xl p-4">
+      <p class="text-xs font-semibold text-red-400 uppercase tracking-wide mb-3">🎤 Passende TED Talks</p>
+      <div class="space-y-2">
+        {% for t in ted_links %}
+        <a href="{{ t.ted_url }}" target="_blank" rel="noopener"
+           class="flex items-center gap-3 p-2.5 bg-white border border-red-100 rounded-lg hover:border-red-300 hover:shadow-sm transition-all">
+          <span class="text-lg">▶️</span>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-slate-800 text-sm truncate">{{ t.sprecher }}: {{ t.titel_de }}</p>
+            <p class="text-xs text-slate-400">TED {{ t.jahr }}</p>
+          </div>
+          <span class="text-xs text-red-400 shrink-0">↗</span>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Navigation -->
+    <div class="flex gap-3">
+      <a href="/raetsel" class="flex-1 text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors text-sm">← Alle Rätsel</a>
+      {% if next_puzzle %}
+      <a href="/raetsel/{{ next_puzzle.id }}" class="flex-1 text-center bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium transition-colors text-sm">
+        {{ next_puzzle.icon }} {{ next_puzzle.name }} →
+      </a>
+      {% endif %}
+    </div>
+
+    <!-- Ähnliche Rätsel -->
+    {% if related_puzzles %}
+    <div class="mt-2">
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Ähnliche Rätsel</p>
+      <div class="space-y-2">
+        {% for r in related_puzzles %}
+        <a href="/raetsel/{{ r.id }}" class="flex items-start gap-3 p-3 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 hover:shadow-sm transition-all">
+          <span class="text-xl">{{ r.icon }}</span>
+          <div>
+            <p class="font-semibold text-slate-800 text-sm">{{ r.name }}</p>
+            {% if r.beschreibung %}<p class="text-xs text-slate-500 mt-0.5 line-clamp-2">{{ r.beschreibung }}</p>{% endif %}
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<script>
+let CURRENT_N = 3;
+let CURRENT_DAY = 0;
+
+function reveal(i) {
+  document.getElementById('question-area').classList.add('hidden');
+  document.getElementById('solution').classList.remove('hidden');
+  document.getElementById('solution').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  try { localStorage.setItem('rs_blaue-augen', '1'); } catch (e) {}
+  setN(3);
+}
+
+function toggleKontext() {
+  const body = document.getElementById('kontext-body');
+  const arrow = document.getElementById('kontext-arrow');
+  const open = !body.classList.contains('hidden');
+  body.classList.toggle('hidden', open);
+  arrow.style.transform = open ? '' : 'rotate(180deg)';
+}
+
+function setN(n) {
+  CURRENT_N = n;
+  CURRENT_DAY = 0;
+  document.querySelectorAll('.n-btn').forEach(b => {
+    b.classList.remove('border-indigo-500', 'bg-indigo-50', 'text-indigo-700');
+    b.classList.add('border-slate-200', 'bg-white', 'text-slate-600');
+  });
+  const btn = document.getElementById('n-btn-' + n);
+  if (btn) {
+    btn.classList.remove('border-slate-200', 'bg-white', 'text-slate-600');
+    btn.classList.add('border-indigo-500', 'bg-indigo-50', 'text-indigo-700');
+  }
+  render();
+}
+
+function resetDay() { CURRENT_DAY = 0; render(); }
+
+function nextDay() {
+  if (CURRENT_DAY < CURRENT_N) {
+    CURRENT_DAY++;
+    render();
+  }
+}
+
+function prevDay() {
+  if (CURRENT_DAY > 0) {
+    CURRENT_DAY--;
+    render();
+  }
+}
+
+function render() {
+  const n = CURRENT_N;
+  const d = CURRENT_DAY;
+  const islanders = document.getElementById('islanders');
+  islanders.innerHTML = '';
+  const leftCount = (d >= n) ? n : 0;
+  for (let i = 0; i < n; i++) {
+    const span = document.createElement('span');
+    if (i < leftCount) {
+      span.textContent = '🚶';
+      span.title = 'Hat die Insel verlassen';
+      span.className = 'text-3xl opacity-40 grayscale';
+    } else {
+      span.textContent = '👤';
+      span.title = 'Blauäugig, noch auf der Insel';
+      span.className = 'text-3xl';
+    }
+    islanders.appendChild(span);
+  }
+
+  const dayLabel = document.getElementById('day-label');
+  const leavingLabel = document.getElementById('leaving-label');
+  const reasoning = document.getElementById('reasoning');
+  const nextBtn = document.getElementById('next-day');
+  const prevBtn = document.getElementById('prev-day');
+
+  if (d === 0) {
+    dayLabel.textContent = 'Tag 0 – Der Fremde spricht: „Mindestens einer hat blaue Augen."';
+    leavingLabel.textContent = 'Alle ' + n + ' sind noch da. Niemand weiß die eigene Augenfarbe.';
+    reasoning.innerHTML = '<strong>Frage dich:</strong> Was sieht ein einzelner Bewohner? Er sieht ' + (n - 1) + ' Blauäugige. Er weiß nicht, ob er selbst der ' + n + '-te ist.';
+  } else if (d < n) {
+    dayLabel.textContent = 'Tag ' + d + ' – Morgen. Niemand ist gegangen.';
+    leavingLabel.textContent = 'Alle ' + n + ' sind noch da. Aber die Information wächst.';
+    reasoning.innerHTML = baseReasoning(n, d);
+  } else if (d === n) {
+    dayLabel.textContent = 'Tag ' + n + ' – Mitternacht. Alle ' + n + ' verlassen die Insel gleichzeitig.';
+    leavingLabel.textContent = '🎯 Common Knowledge hat die Insel entvölkert.';
+    reasoning.innerHTML = '<strong>Warum heute?</strong> Jeder sieht ' + (n - 1) + ' Blauäugige. Hätte er selbst braune Augen, hätten diese ' + (n - 1) + ' bereits in Nacht ' + (n - 1) + ' die Insel verlassen. Sie taten es nicht – also weiß heute jeder: <em>ich bin selbst blau</em>. Alle ' + n + ' gehen in derselben Mitternacht.';
+  }
+
+  nextBtn.disabled = (d >= n);
+  nextBtn.classList.toggle('opacity-40', d >= n);
+  nextBtn.classList.toggle('cursor-not-allowed', d >= n);
+  prevBtn.disabled = (d <= 0);
+  prevBtn.classList.toggle('opacity-40', d <= 0);
+  prevBtn.classList.toggle('cursor-not-allowed', d <= 0);
+}
+
+function baseReasoning(n, d) {
+  if (n === 1) {
+    return 'Der einzige Bewohner sieht keine blauen Augen. Der Fremde sagte „mindestens einer". Also muss er es selbst sein – er geht in Nacht 1.';
+  }
+  if (d === 1) {
+    return 'Jeder denkt: „Wenn ich braune Augen hätte, würden die anderen ' + (n - 1) + ' nur ' + (n - 2) + ' Blauäugige sehen. Im Grenzfall N=1 würde der einzige in Nacht 1 gehen." Heute geht aber keiner.';
+  }
+  return 'Bisher ist niemand gegangen. Jeder weiß: Wären es weniger Blauäugige, wären sie spätestens in Nacht ' + d + ' weg. Sie sind nicht weg – also ist die Anzahl größer. Mit jedem stillen Morgen schrumpft die Unsicherheit um eine Ebene.';
+}
+</script>
+
+{% endblock %}

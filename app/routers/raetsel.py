@@ -236,6 +236,16 @@ RAETSEL_META = [
     },
     # ── Logik & Rätsel ─────────────────────────────────────────────────────────
     {
+        "id": "blaue-augen",
+        "name": "Die Insel der blauen Augen",
+        "icon": "👁️",
+        "beschreibung": "100 Inselbewohner mit blauen Augen, keine Spiegel, kein Gespräch über Augenfarbe. Ein Fremder sagt etwas, das alle schon wissen – und 100 Tage später verlassen alle die Insel. Wie kann eine offensichtliche Wahrheit die Welt verändern?",
+        "typ": "Common-Knowledge-Paradox",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "8 min",
+        "kategorie": "Logik",
+    },
+    {
         "id": "piraten",
         "name": "Das Piratenspiel",
         "icon": "🏴‍☠️",
@@ -4114,6 +4124,16 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
     )
+
+
+# ---------------------------------------------------------------------------
+# Insel der blauen Augen (Common-Knowledge-Paradox)
+# ---------------------------------------------------------------------------
+
+@router.get("/blaue-augen", response_class=HTMLResponse)
+def blaue_augen_page(request: Request):
+    ctx = {"active_page": "raetsel", **_nav_context("blaue-augen")}
+    return templates.TemplateResponse(request, "raetsel/blaue_augen.html", ctx)
 
 
 @router.get("/{puzzle_id}", response_class=HTMLResponse)

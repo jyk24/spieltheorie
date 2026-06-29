@@ -93,6 +93,7 @@ _SITEMAP_URLS = [
     "/", "/lernpfade", "/spieltheorie", "/denkraetsel", "/soziales", "/verhaltensoko", "/ted", "/ted/quiz", "/tagesraetsel",
     "/grundlagen", "/konzepte", "/spiele", "/raetsel",
     "/skills", "/gedaechtnis", "/fortschritt", "/glossar",
+    "/raetsel/blaue-augen",
     "/gedaechtnis/theorie", "/gedaechtnis/wortfolge", "/gedaechtnis/zahlen",
     "/gedaechtnis/corsi", "/gedaechtnis/memory", "/gedaechtnis/namen", "/gedaechtnis/karten",
     "/gedaechtnis/technik/gedaechtnispalast", "/gedaechtnis/technik/major-system",
