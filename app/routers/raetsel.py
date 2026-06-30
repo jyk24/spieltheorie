@@ -568,6 +568,7 @@ RAETSEL_META = [
     {"id":"stichproben-raetsel","name":"Die Literary-Digest-Katastrophe","icon":"📰","beschreibung":"1936: Zehn Millionen Befragte, und trotzdem die falscheste Wahlprognose der Geschichte. Was ging schief?","typ":"Stichproben-Fehler","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Statistik"},
     {"id":"benfords-gesetz","name":"Benfords Gesetz","icon":"1️⃣","beschreibung":"In echten Datensätzen beginnt ~30% aller Zahlen mit der Ziffer 1. Finanzbetrüger kennen dieses Gesetz nicht – und werden damit überführt.","typ":"Forensik-Statistik","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Statistik"},
     {"id":"will-rogers","name":"Das Will-Rogers-Phänomen","icon":"📈","beschreibung":"Eine Gruppe wandert aus. Der Durchschnitt beider Gruppen steigt. Wie ist das arithmetisch möglich – und was hat das mit Krebsstatistiken zu tun?","typ":"Statistik-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Statistik"},
+    {"id":"freundschaftsparadox","name":"Das Freundschaftsparadox","icon":"🫂","beschreibung":"„Deine Freunde haben im Schnitt mehr Freunde als du.“ Klingt nach einem fiesen Spruch – ist aber mathematisch fast immer wahr. Scott Feld zeigte 1991, warum.","typ":"Netzwerk-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Statistik"},
     # ── Wahrscheinlichkeit (neu) ─────────────────────────────────────────────
     {"id":"kelly-kriterium","name":"Das Kelly-Kriterium","icon":"📊","beschreibung":"Du gewinnst 60% aller Wetten zum Kurs 1:1. Wie viel deines Kapitals setzt du pro Wette ein, um langfristig maximal zu wachsen?","typ":"Risikomanagement","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Wahrscheinlichkeit"},
     {"id":"martingale","name":"Das Martingale-System","icon":"🎲","beschreibung":"Verdopple nach jedem Verlust – und du gewinnst immer, oder? Das System klingt narrensicher. Die Mathematik sagt etwas anderes.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
@@ -3169,6 +3170,23 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Wenn jemand einen Wert <em>zwischen</em> beiden Mittelwerten hat, hebt er den niedrigeren Mittelwert und senkt den höheren. Beide Mittelwerte 'verbessern' sich rein rechnerisch — ohne dass sich irgendjemand verändert hat. Das Phänomen taucht in Krebsstadien-Statistiken auf: Neue Diagnose-Technologien entdecken frühe Stadien, die dann in eine 'bessere' Kategorie eingestuft werden — und beide Kategorien zeigen höhere Überlebensraten.</p>",
         "kontext": "<p>Benannt nach dem Witz: 'Als die Okies nach Kalifornien auswanderten, stieg der Durchschnitts-IQ in beiden Staaten.' Das Phänomen erklärt zahlreiche medizinische Statistikfehler (Lead-Time Bias).</p>",
         "erkenntnis": "Aggregatstatistiken können irreführen, selbst wenn alle Einzeldaten stimmen. Immer fragen: Welche Gruppe wechselt zwischen den Kategorien?",
+    },
+    "freundschaftsparadox": {
+        "id": "freundschaftsparadox", "name": "Das Freundschaftsparadox", "icon": "🫂",
+        "farbe": "rose", "kategorie": "Statistik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Stell dir ein kleines Netzwerk vor: Anna hat 1 Freund (Ben). Ben hat 3 Freunde (Anna, Clara, Dora). Clara hat 1 Freund (Ben). Dora hat 1 Freund (Ben). Durchschnittliche Freundeszahl im Netz: (1+3+1+1)/4 = 1,5. Aber wenn du jede Person fragst, wie viele Freunde <em>ihre Freunde</em> haben, kommt etwas anderes heraus.",
+        "frage": "Wie viele Freunde haben die Freunde der Personen im Schnitt?",
+        "optionen": [
+            {"text": "Etwa 1,5 — wie der Netzwerk-Durchschnitt", "hinweis": "Stimmt das wirklich?"},
+            {"text": "Etwa 2,3 — deutlich mehr als der Durchschnitt", "hinweis": "Wer wird häufiger gezählt?"},
+            {"text": "Genau 1,0 — niemand hat überdurchschnittlich viele", "hinweis": "Schau auf Bens Grad"},
+            {"text": "Es kommt auf die Person an — kein klares Muster", "hinweis": "Es gibt ein systematisches Muster"},
+        ],
+        "loesung_text": "Etwa 2,3 — Freunde haben fast immer mehr Freunde als du",
+        "erklaerung": "<p>Anna nennt Ben (3 Freunde). Ben nennt Anna (1), Clara (1), Dora (1). Clara nennt Ben (3). Dora nennt Ben (3). Insgesamt: (3+1+1+1+3+3) / 6 ≈ 2,33. Der Grund: Wer viele Freunde hat, taucht in <em>vielen</em> Freundeslisten auf — und wird bei der Mittelwertbildung überproportional oft gezählt. Mathematisch: ⟨k²⟩ / ⟨k⟩ ≥ ⟨k⟩, mit Gleichheit nur in einem regulären Netz.</p>",
+        "kontext": "<p>Scott L. Feld bewies 1991 (<em>American Journal of Sociology</em>): <em>„Your friends have more friends than you do.“</em> Das Paradox gilt in fast jedem realen Netzwerk und erklärt, warum Social-Media-Feeds, Fitnessstudio-Eindrücke und Bildungsstatistiken systematisch verzerrt wirken: Du siehst überrepräsentativ die populären, aktiven, hubartigen Knoten – nicht den Durchschnitt.</p><p>Praktische Anwendung: Beim Impfen zuerst die <em>Freunde zufälliger Personen</em> impfen (statt zufällige Personen selbst) – sie liegen näher am Netzwerk-Zentrum und stoppen Pandemien schneller (Christakis & Fowler, 2010).</p>",
+        "erkenntnis": "Stichproben von Beziehungen sind nicht dasselbe wie Stichproben von Personen. Wer Knoten über Kanten samplet, übergewichtet die Hubs — und sieht eine Welt, die populärer, vernetzter und überlegener wirkt als sie ist.",
     },
     # ── Wahrscheinlichkeit ────────────────────────────────────────────────
     "kelly-kriterium": {
