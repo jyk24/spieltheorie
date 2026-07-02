@@ -631,6 +631,7 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"zwei-kinder-problem","name":"Das Zwei-Kinder-Problem","icon":"👶","beschreibung":"Eine Familie hat zwei Kinder. Du erfährst: mindestens eines ist ein Mädchen. Wie wahrscheinlich sind beide Mädchen? Deine Intuition sagt 1/2. Bayes sagt etwas anderes.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Wahrscheinlichkeit"},
 ]
 
 
@@ -4046,6 +4047,23 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Der <strong>Fundamentale Attributionsfehler</strong> (FAE, Ross 1977): Wir überschätzen den Einfluss von Persönlichkeitseigenschaften und unterschätzen den Einfluss der Situation auf das Verhalten anderer.</p><p>Das Verhalten (Castro-Aufsatz) wurde der Disposition zugeschrieben (<em>er ist pro-Castro</em>) – obwohl die Situation (zufällige Zuweisung) das Verhalten vollständig erklärte.</p>",
         "kontext": "<p>Der FAE ist kulturell variabel: Westliche (individualistische) Kulturen zeigen ihn stärker als östliche (kollektivistische). Im Alltag: Wer uns auf der Autobahn schneidet, ist ein Idiot – nicht jemand mit einem Notfall.</p><p>In Verhandlungen: Wenn die Gegenseite hart verhandelt, schließen wir auf Gier oder Feindseligkeit – statt auf externen Druck, Vorgaben des Vorstands oder Zeitdruck. Das verzerrt unsere Strategie erheblich.</p>",
         "erkenntnis": "Wir sind natürliche Biographen, keine Situationsanalysten. Wenn jemand sich 'falsch' verhält, zuerst fragen: Welche situativen Kräfte könnten dieses Verhalten erklären? Das gibt ein realistischeres Bild – und bessere Verhandlungsstrategien.",
+    },
+    "zwei-kinder-problem": {
+        "id": "zwei-kinder-problem", "name": "Das Zwei-Kinder-Problem", "icon": "👶",
+        "farbe": "blue", "kategorie": "Wahrscheinlichkeit", "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup_label": "Die Ausgangslage:",
+        "setup": "Eine Familie hat <strong>zwei Kinder</strong>. Nimm an: Jedes Kind ist unabhängig mit 50% Wahrscheinlichkeit Junge oder Mädchen.<br><br>Ein Nachbar erzählt dir: <em>„Mindestens eines der beiden Kinder ist ein Mädchen.“</em>",
+        "frage": "Wie wahrscheinlich ist es, dass <strong>beide</strong> Kinder Mädchen sind?",
+        "optionen": [
+            {"text": "1/2 (50%)", "hinweis": "Das zweite Kind wirkt wie ein separater Münzwurf – ist es aber nicht"},
+            {"text": "1/3 (≈33%)", "hinweis": "Bayes-korrekt bei gleichverteilten Geschwister-Kombinationen"},
+            {"text": "1/4 (25%)", "hinweis": "Das ist die A-priori-Wahrscheinlichkeit ohne jede Info"},
+            {"text": "2/3 (≈67%)", "hinweis": "Umgekehrter Fehler – zu optimistisch"},
+        ],
+        "loesung_text": "1/3 (≈33%)",
+        "erklaerung": "<p>Vor der Information sind vier gleich wahrscheinliche Kombinationen möglich – geordnet nach Geburt (älter, jünger):</p><ul class=\"list-disc ml-4 my-2\"><li>(J, J) – beide Jungen</li><li>(J, M) – älterer Junge, jüngeres Mädchen</li><li>(M, J) – älteres Mädchen, jüngerer Junge</li><li>(M, M) – beide Mädchen</li></ul><p>Die Information <em>„mindestens ein Mädchen“</em> schließt (J, J) aus. Es bleiben <strong>drei</strong> gleich wahrscheinliche Fälle. Nur einer davon ist (M, M) → Wahrscheinlichkeit <strong>1/3</strong>.</p><p>Der Trugschluss <em>„das andere Kind ist ein separater Münzwurf, also 1/2“</em> ist verlockend – aber ignoriert, dass wir nicht wissen, <em>welches</em> Kind das Mädchen ist. Erst wenn du sagst „<em>das ältere</em> ist ein Mädchen“, kollabiert das Sample-Space auf zwei Fälle {(M, J), (M, M)} und die Antwort wird tatsächlich 1/2.</p>",
+        "kontext": "<p><strong>Der Zwei-Kinder-Problem-Klassiker</strong> – Martin Gardner, <em>Scientific American</em>, Oktober 1959</p><p>Gardner formulierte das Problem in seiner berühmten Kolumne und löste damit eine der längsten Debatten der Populärmathematik aus – weil die Formulierung entscheidet, welche Zahl richtig ist.</p><p><strong>Die Tuesday-Variante</strong> (Gary Foshee, 2010): „Ich habe zwei Kinder. Eines ist ein Junge, geboren an einem <em>Dienstag</em>. Wie wahrscheinlich sind beide Jungen?“ Die verblüffende Antwort: <strong>13/27</strong> ≈ 48%, nicht 1/3. Der willkürliche Zusatz „Dienstag“ verändert das Sample-Space – ein Paradebeispiel, wie sensibel Bayes auf die Beobachtungs-Auswahl reagiert.</p><p><strong>Der Kern</strong>: Bedingte Wahrscheinlichkeit hängt nicht nur vom <em>Ereignis</em> ab, sondern vom <em>Prozess</em>, der zur Beobachtung geführt hat. Genau dieser Effekt steckt auch hinter dem Monty-Hall-Problem und dem Bertrand-Paradoxon.</p>",
+        "erkenntnis": "Wahrscheinlichkeiten sind Fragen über Sample-Spaces, nicht über einzelne Ereignisse. Wenn eine Information zwei Fälle gleich behandelt, obwohl sie unterschiedlich entstanden sind, kippt die Antwort. Immer fragen: <em>Wie hat man das erfahren?</em>",
     },
     "schlaeger-ball": {
         "id": "schlaeger-ball", "name": "Schläger und Ball", "icon": "⚾",
