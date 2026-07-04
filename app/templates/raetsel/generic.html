@@ -55,16 +55,23 @@
     <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5 text-center text-lg font-bold text-amber-800 leading-snug">
       {{ p.frage|safe }}
     </div>
-    <div class="space-y-3">
+    <div class="space-y-3" id="options-list"
+         {% if p.richtige_option_index is defined %}data-correct="{{ p.richtige_option_index }}"{% endif %}>
       {% for opt in p.optionen %}
       {% set pal = opt_paletten[loop.index0 % 4] %}
-      <button onclick="reveal({{ loop.index0 }})"
-              class="w-full text-left p-4 rounded-xl border-2 {{ pal[0] }} transition-all">
-        <div class="font-bold {{ pal[1] }} mb-0.5">{{ opt.text }}</div>
-        {% if opt.hinweis %}<div class="text-sm {{ pal[2] }}">{{ opt.hinweis }}</div>{% endif %}
+      <button onclick="reveal({{ loop.index0 }})" data-idx="{{ loop.index0 }}"
+              class="w-full text-left p-4 rounded-xl border-2 {{ pal[0] }} transition-all option-btn">
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex-1 min-w-0">
+            <div class="font-bold {{ pal[1] }} mb-0.5">{{ opt.text|safe }}</div>
+            {% if opt.hinweis %}<div class="text-sm {{ pal[2] }}">{{ opt.hinweis }}</div>{% endif %}
+          </div>
+          <span class="feedback-icon text-xl shrink-0 hidden"></span>
+        </div>
       </button>
       {% endfor %}
     </div>
+    <div id="user-feedback" class="hidden mt-4 rounded-xl p-3 text-sm text-center font-semibold"></div>
   </div>
 
   <!-- Lösung (hidden) -->
@@ -157,9 +164,45 @@
 
 <script>
 function reveal(i) {
-  document.getElementById('question-area').classList.add('hidden');
-  document.getElementById('solution').classList.remove('hidden');
-  document.getElementById('solution').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const list = document.getElementById('options-list');
+  const correctAttr = list ? list.dataset.correct : null;
+  if (correctAttr !== null && correctAttr !== undefined && correctAttr !== '') {
+    const correct = parseInt(correctAttr, 10);
+    const buttons = list.querySelectorAll('.option-btn');
+    buttons.forEach(btn => {
+      const idx = parseInt(btn.dataset.idx, 10);
+      const icon = btn.querySelector('.feedback-icon');
+      btn.disabled = true;
+      btn.classList.remove('hover:border-blue-400','hover:border-violet-400','hover:border-rose-400','hover:border-emerald-400');
+      btn.classList.add('cursor-default');
+      if (idx === correct) {
+        btn.classList.add('ring-2','ring-emerald-500','border-emerald-500','bg-emerald-50');
+        if (icon) { icon.textContent = '✓'; icon.classList.remove('hidden'); icon.classList.add('text-emerald-600'); }
+      } else if (idx === i) {
+        btn.classList.add('ring-2','ring-rose-400','border-rose-400','bg-rose-50','opacity-80');
+        if (icon) { icon.textContent = '✗'; icon.classList.remove('hidden'); icon.classList.add('text-rose-500'); }
+      } else {
+        btn.classList.add('opacity-50');
+      }
+    });
+    const fb = document.getElementById('user-feedback');
+    if (fb) {
+      fb.classList.remove('hidden');
+      if (i === correct) {
+        fb.textContent = '🎉 Richtig – gut gedacht!';
+        fb.classList.add('bg-emerald-50','text-emerald-700','border','border-emerald-200');
+      } else {
+        fb.textContent = '↓ Nicht ganz. Die korrekte Antwort und Erklärung stehen unten.';
+        fb.classList.add('bg-rose-50','text-rose-700','border','border-rose-200');
+      }
+    }
+    document.getElementById('solution').classList.remove('hidden');
+    document.getElementById('solution').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    document.getElementById('question-area').classList.add('hidden');
+    document.getElementById('solution').classList.remove('hidden');
+    document.getElementById('solution').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 function toggleKontext() {
   const body = document.getElementById('kontext-body');
