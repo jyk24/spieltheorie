@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}{{ q.name }} – Fermi-Schätzung{% endblock %}
+{% block meta_description %}<meta name="description" content="Fermi-Schätzung: {{ q.frage }} Schätze zuerst, sieh dann die Zerlegung und die richtige Größenordnung.">{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+
+  <div class="mb-6">
+    <a href="/fermi" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Fermi-Fragen</a>
+    <div class="flex items-center gap-3 mt-2 flex-wrap">
+      <h1 class="text-3xl font-bold text-slate-800">{{ q.icon }} {{ q.name }}</h1>
+    </div>
+    <div class="flex items-center gap-3 mt-1.5 flex-wrap">
+      <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium">{{ q.kategorie }}</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium">{{ q.schwierigkeit }}</span>
+    </div>
+  </div>
+
+  <!-- Frage -->
+  <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5" id="frage-area">
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5 text-center text-lg font-bold text-amber-800 leading-snug">
+      {{ q.frage }}
+    </div>
+
+    <p class="text-sm text-slate-600 mb-3 leading-relaxed">
+      <strong>Bevor du weiterliest:</strong> Nimm dir 30 Sekunden. Zerlege die Frage in
+      Faktoren, die du grob schätzen kannst, multipliziere sie im Kopf. Deine Antwort in
+      <em>{{ q.einheit }}</em>:
+    </p>
+
+    <form hx-post="/fermi/{{ q.id }}/schaetzung"
+          hx-target="#loesung"
+          hx-swap="innerHTML"
+          hx-on::after-request="document.getElementById('frage-area').classList.add('hidden'); document.getElementById('loesung').scrollIntoView({behavior:'smooth', block:'start'});"
+          class="space-y-3">
+      <div class="flex gap-3">
+        <input type="text"
+               name="schaetzung"
+               required
+               placeholder="z. B. 200 oder 1.500.000"
+               autocomplete="off"
+               inputmode="decimal"
+               class="flex-1 border-2 border-slate-200 rounded-xl px-4 py-3 text-base font-mono text-center focus:border-indigo-400 focus:outline-none">
+        <button type="submit"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl font-semibold text-sm transition-colors">
+          Schätzen
+        </button>
+      </div>
+      <p class="text-xs text-slate-400 text-center">Punkte als Tausender-Trenner sind erlaubt (deutsch: 1.500.000). Ergebnis erst nach dem Absenden.</p>
+    </form>
+  </div>
+
+  <!-- Lösung -->
+  <div id="loesung"></div>
+
+</div>
+
+{% endblock %}

@@ -15,7 +15,7 @@ from .routers import (
     dashboard, lektionen, spiele, fortschritt, raetsel, grundlagen,
     spielpfad, konzepte, lernpfade, skills, redesign, gedaechtnis,
     spieltheorie_hub, denkraetsel, soziales, glossar, ted, tagesraetsel,
-    verhaltensoko,
+    verhaltensoko, fermi,
 )
 
 # ── AUTH-AKTIVIERUNG: diese Zeile einkommentieren ─────────────────────────────
@@ -85,13 +85,14 @@ app.include_router(glossar.router)
 app.include_router(ted.router)
 app.include_router(tagesraetsel.router)
 app.include_router(verhaltensoko.router)
+app.include_router(fermi.router)
 
 
 BASE_URL = "https://imaginative-fulfillment-production.up.railway.app"
 
 _SITEMAP_URLS = [
     "/", "/lernpfade", "/spieltheorie", "/denkraetsel", "/soziales", "/verhaltensoko", "/ted", "/ted/quiz", "/tagesraetsel",
-    "/grundlagen", "/konzepte", "/spiele", "/raetsel",
+    "/grundlagen", "/konzepte", "/spiele", "/raetsel", "/fermi",
     "/skills", "/gedaechtnis", "/fortschritt", "/glossar",
     "/gedaechtnis/theorie", "/gedaechtnis/wortfolge", "/gedaechtnis/zahlen",
     "/gedaechtnis/corsi", "/gedaechtnis/memory", "/gedaechtnis/namen", "/gedaechtnis/karten",
@@ -112,9 +113,12 @@ def robots_txt():
 
 @app.get("/sitemap.xml", include_in_schema=False)
 def sitemap_xml():
+    from .routers.fermi import FERMI_QUESTIONS
     lines = ['<?xml version="1.0" encoding="UTF-8"?>',
              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for path in _SITEMAP_URLS:
         lines.append(f"  <url><loc>{BASE_URL}{path}</loc></url>")
+    for q in FERMI_QUESTIONS:
+        lines.append(f"  <url><loc>{BASE_URL}/fermi/{q['id']}</loc></url>")
     lines.append("</urlset>")
     return Response(content="\n".join(lines), media_type="application/xml")
