@@ -497,6 +497,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Spieltheorie",
     },
+    {
+        "id": "newcomb-paradoxon",
+        "name": "Das Newcomb-Paradoxon",
+        "icon": "🔮",
+        "beschreibung": "Ein Wesen, das dich fast perfekt vorhersagen kann, füllt zwei Boxen. Nimmst du beide – oder nur eine? Zwei völlig rationale Argumente kommen zu entgegengesetzten Antworten. Nozick 1969.",
+        "typ": "Entscheidungs-Paradox",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "5 min",
+        "kategorie": "Spieltheorie",
+    },
     # ── Psychologie & Sozialverhalten ─────────────────────────────────────────
     {
         "id": "priming",
@@ -3050,6 +3060,50 @@ GENERIC_PUZZLES: dict = {
         "erkenntnis": "Einfache Experimente können tiefste Prinzipien aufdecken. Newton und Mach sahen dasselbe Wasser und zogen grundlegend verschiedene Schlüsse — beide hatten ihre Stärken.",
     },
     # ── Spieltheorie ─────────────────────────────────────────────────────
+    "newcomb-paradoxon": {
+        "id": "newcomb-paradoxon", "name": "Das Newcomb-Paradoxon", "icon": "🔮",
+        "farbe": "indigo", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": (
+            "Vor dir stehen zwei Boxen: <strong>Box A</strong> (transparent) enthält sichtbar 1.000 €. "
+            "<strong>Box B</strong> (undurchsichtig) enthält entweder 1.000.000 € oder gar nichts. "
+            "Ein <em>Prognostiker</em>, der 99 % deiner bisherigen Entscheidungen korrekt vorhergesagt hat, hat gestern gehandelt: "
+            "Sagte er voraus, dass du <em>nur Box B</em> nimmst, hat er sie mit 1.000.000 € gefüllt. "
+            "Sagte er voraus, dass du <em>beide Boxen</em> nimmst, ließ er Box B leer. "
+            "Seine Entscheidung steht seit gestern unwiderruflich fest. Jetzt bist du dran."
+        ),
+        "frage": "Nimmst du <strong>nur Box B</strong> — oder <strong>beide Boxen</strong>?",
+        "optionen": [
+            {"text": "Beide Boxen — der Inhalt steht ja schon fest", "hinweis": "Dominanz-Argument der Entscheidungstheorie"},
+            {"text": "Nur Box B — der Prognostiker liegt fast immer richtig", "hinweis": "Erwartungsnutzen-Argument"},
+            {"text": "Münze werfen — beide Argumente sind gleich stark", "hinweis": "Zufällige Wahl umgeht das Problem nicht"},
+            {"text": "Es gibt keine richtige Antwort — das Szenario ist inkohärent", "hinweis": "Setzt Willensfreiheit + perfekte Vorhersage voraus"},
+        ],
+        "loesung_text": "Es gibt keine einheitliche Antwort — Philosophen sind bis heute gespalten",
+        "erklaerung": (
+            "<p><strong>Argument 1 (Zwei Boxen):</strong> Was in Box B ist, steht seit gestern fest. Was du jetzt tust, ändert daran nichts. "
+            "Egal ob leer oder voll — mit beiden Boxen hast du immer 1.000 € mehr. Beide Boxen zu nehmen <em>dominiert</em> die Wahl klar.</p>"
+            "<p><strong>Argument 2 (Nur B):</strong> Der Prognostiker liegt zu 99 % richtig. Erwartungswert bei nur B: 0,99·1.000.000 + 0,01·0 = 990.000 €. "
+            "Erwartungswert bei beiden: 0,99·1.000 + 0,01·1.001.000 = 11.000 €. Der Ein-Boxer verdient im Schnitt fast 90× mehr.</p>"
+            "<p>Beide Argumente sind formal einwandfrei — aber sie widersprechen sich. "
+            "Nozick (1969): <em>„Fast jeder findet die Antwort völlig offensichtlich — nur teilen sich die Antworten etwa 50/50.“</em></p>"
+        ),
+        "kontext": (
+            "<p>Das Paradoxon ist der Prüfstein für Entscheidungstheorien. "
+            "Kausale Entscheidungstheorie (Lewis, Gibbard/Harper) empfiehlt zwei Boxen: Deine Wahl <em>verursacht</em> den Inhalt nicht. "
+            "Evidentielle Entscheidungstheorie (Jeffrey) empfiehlt eine Box: Deine Wahl ist <em>evidenzstark</em>, weil sie mit dem Zustand der Box korreliert.</p>"
+            "<p>Newcomb-Paradoxien tauchen überall auf, wo Vorhersagen und Handlungen korrelieren: Wählen (zählt meine Stimme?), "
+            "Gefangenendilemma mit einem Klon von dir, medizinische Entscheidungen mit genetischer Prädisposition. "
+            "Das reine Gefangenendilemma ist strukturell verwandt — nur ist der 'Prognostiker' hier der andere Spieler.</p>"
+            "<p>Empirie: In einer PhilPapers-Umfrage 2020 unter 1785 Philosophen wählten 39 % zwei Boxen, 31 % eine Box, 30 % 'unklar'. "
+            "Die Frage ist heute so offen wie 1969.</p>"
+        ),
+        "erkenntnis": (
+            "Rationalität ist nicht eindeutig. Wenn zwei plausible Argumente zu entgegengesetzten Handlungen führen, "
+            "ist die Frage nicht 'Was ist richtig?', sondern 'Welche Kausalstruktur nimmst du an?'. "
+            "Wer nur die eigene Entscheidung sieht, wählt zwei Boxen. Wer sich als Teil eines Musters versteht, wählt eine."
+        ),
+    },
     "matching-pennies": {
         "id": "matching-pennies", "name": "Matching Pennies", "icon": "🪙",
         "farbe": "violet", "kategorie": "Spieltheorie",

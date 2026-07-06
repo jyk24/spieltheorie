@@ -12,29 +12,38 @@ GAME_TYPES = ["gefangenendilemma", "ultimatum", "vertrauen", "verhandlung", "chi
 
 
 def seed_lessons(db: Session) -> None:
-    """Lektionen aus lektionen.json laden – fehlende Einträge werden ergänzt."""
+    """Lektionen aus lektionen.json laden – fehlende Einträge werden ergänzt.
+    Für bereits vorhandene Lektionen wird `related_game` mit der JSON abgeglichen,
+    damit URL-Kürzel wie ``stag_hunt``→``stag-hunt`` auch nach dem ersten Seed noch
+    korrigiert werden können."""
     with open(DATA_DIR / "lektionen.json", encoding="utf-8") as f:
         lessons = json.load(f)
 
-    existing_slugs = {slug for (slug,) in db.query(Lesson.slug).all()}
+    existing = {l.slug: l for l in db.query(Lesson).all()}
     added = 0
+    updated = 0
     for item in lessons:
-        if item["slug"] in existing_slugs:
-            continue
-        lesson = Lesson(
-            slug=item["slug"],
-            title=item["title"],
-            category=item["category"],
-            difficulty=item["difficulty"],
-            content_md=item["content_md"],
-            sources_json=json.dumps(item["sources"], ensure_ascii=False),
-            related_game=item.get("related_game"),
-            order_index=item["order_index"],
-        )
-        db.add(lesson)
-        added += 1
+        current = existing.get(item["slug"])
+        if current is None:
+            lesson = Lesson(
+                slug=item["slug"],
+                title=item["title"],
+                category=item["category"],
+                difficulty=item["difficulty"],
+                content_md=item["content_md"],
+                sources_json=json.dumps(item["sources"], ensure_ascii=False),
+                related_game=item.get("related_game"),
+                order_index=item["order_index"],
+            )
+            db.add(lesson)
+            added += 1
+        else:
+            new_related = item.get("related_game")
+            if current.related_game != new_related:
+                current.related_game = new_related
+                updated += 1
 
-    if added:
+    if added or updated:
         db.commit()
 
 
