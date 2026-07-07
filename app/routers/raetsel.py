@@ -82,6 +82,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Wahrscheinlichkeit",
     },
+    {
+        "id": "zwei-kinder",
+        "name": "Das Zwei-Kinder-Problem",
+        "icon": "👦",
+        "beschreibung": "Eine Familie hat zwei Kinder. Mindestens eines ist ein Junge. Wie groß ist die Wahrscheinlichkeit, dass das andere auch ein Junge ist? Fast alle sagen 1/2 – die richtige Antwort ist 1/3. Und mit einem Zusatz-Detail wird's noch verrückter.",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
     # ── Statistik & Kognition ──────────────────────────────────────────────────
     {
         "id": "simpson",
@@ -3255,6 +3265,23 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>8 Stunden × 3600 Sekunden × 30 Tage ≈ 864.000 ≈ 10⁶. Bei 10⁶ Ereignissen pro Monat und 'Wunder'-Wahrscheinlichkeit 1/10⁶ erwartet man im Schnitt <em>ein Wunder pro Monat</em>. Das Staunen über Koinzidenzen ist also fehlplatziert — wir sollten mehr überrascht sein, wenn keine auftreten.</p>",
         "kontext": "<p>Littlewood erklärt damit Erscheinungen wie 'Ich habe gerade an jemanden gedacht und er ruft an' oder 'Ich sah dasselbe Auto dreimal heute'. Diese Ereignisse erscheinen bedeutsam — sind aber statistisch erwartbar.</p>",
         "erkenntnis": "Was selten erscheint, passiert sicher — wenn man nur genug Gelegenheiten betrachtet. Wunder sind nicht Beweis für Übernatürliches, sondern für die Stärke großer Zahlen.",
+    },
+    "zwei-kinder": {
+        "id": "zwei-kinder", "name": "Das Zwei-Kinder-Problem", "icon": "👦",
+        "farbe": "indigo", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Frau Meier hat genau zwei Kinder. Du triffst sie zufällig auf der Straße und fragst: <em>'Ist mindestens eines Ihrer Kinder ein Junge?'</em> — Sie antwortet: <em>'Ja.'</em><br><br>Weitere Informationen bekommst du nicht.",
+        "frage": "Wie groß ist die Wahrscheinlichkeit, dass <strong>beide</strong> Kinder Jungen sind?",
+        "optionen": [
+            {"text": "1/2 (50 %)", "hinweis": "Das zweite Kind ist doch unabhängig?"},
+            {"text": "1/3 (≈ 33 %)", "hinweis": "Bedingte Wahrscheinlichkeit à la Bayes"},
+            {"text": "1/4 (25 %)", "hinweis": "Wahrscheinlichkeit für JJ ohne jede Info"},
+            {"text": "2/3 (≈ 67 %)", "hinweis": "Zu hoch – man weiß nur, dass mind. 1 Junge existiert"},
+        ],
+        "loesung_text": "1/3 – nicht 1/2, wie fast alle spontan sagen",
+        "erklaerung": "<p>Vor der Frage sind alle 4 Kombinationen gleich wahrscheinlich:<br><strong>JJ, JM, MJ, MM</strong> — jede mit Wahrscheinlichkeit 1/4.</p><p>Die Aussage 'mindestens ein Junge' schließt nur <strong>MM</strong> aus. Es bleiben drei gleich wahrscheinliche Fälle: <strong>JJ, JM, MJ</strong>.</p><p>Nur in einem davon (JJ) sind beide Jungen. Also: <strong>P(beide Jungen | mindestens 1 Junge) = 1/3</strong>.</p><p>Die 'natürliche' Antwort 1/2 wäre nur richtig, wenn die Frage lauten würde: <em>'Ist Ihr älteres/erstes Kind ein Junge?'</em> – dann wären die beiden Kinder tatsächlich unabhängig.</p>",
+        "kontext": "<p><strong>Martin Gardner</strong> stellte diese Aufgabe 1959 in <em>Scientific American</em> vor und musste sich anschließend eine wütende Leserpost anhören – die 1/3 wirkte für viele wie ein Rechenfehler.</p><p>Noch verblüffender: <strong>Der Dienstags-Junge (2010)</strong>. Wenn man ergänzt <em>'…und der Junge ist an einem Dienstag geboren'</em>, springt die Antwort auf <strong>13/27 ≈ 48 %</strong>. Der scheinbar irrelevante Wochentag ändert die Wahrscheinlichkeit dramatisch – weil er über die Menge der 'kompatiblen Familien' entscheidet, die man beobachten kann.</p><p>Der Kern der Verwirrung: Wir denken an <em>ein bestimmtes Kind</em>, obwohl die Angabe eine <em>Aussage über den Haushalt</em> ist. Das ist die häufigste Wurzel Bayesscher Fehlschlüsse — Ärzte, Juristen und Journalisten stolpern hier täglich.</p>",
+        "erkenntnis": "Bedingte Wahrscheinlichkeit ist nicht Symmetrie zwischen den 'Zweigen' – sondern die Frage, welche Weltzustände die Beobachtung überhaupt zulässt. Kleine Änderungen in der Fragestellung können die Antwort halbieren oder verdoppeln.",
     },
     # ── Kommunikation ─────────────────────────────────────────────────────
     "johari-fenster": {
