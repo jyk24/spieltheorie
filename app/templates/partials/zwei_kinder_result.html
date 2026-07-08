@@ -1,0 +1,97 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    {% if reaction == "exakt" %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">Exakt! Die Antwort ist 1/3 (≈ 33 %).</h3>
+        <p class="text-sm text-emerald-700">Du hast das Paradox durchschaut. Die meisten Menschen tippen auf 50 %.</p>
+    </div>
+    {% elif reaction == "nah" %}
+    <div class="mb-5 p-4 rounded-xl bg-blue-50 border-2 border-blue-300">
+        <h3 class="text-xl font-bold text-blue-800 mb-1">Fast! Du hast {{ guess }} % geschätzt, richtig ist 1/3 ≈ 33 %.</h3>
+        <p class="text-sm text-blue-700">Sehr nah dran – du hast dich der Intuitionsfalle „50 %" widersetzt.</p>
+    </div>
+    {% elif reaction == "mittel" %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-xl font-bold text-amber-800 mb-1">Nicht ganz – die richtige Antwort ist 1/3 (≈ 33 %).</h3>
+        <p class="text-sm text-amber-700">Du hast {{ guess }} % gesagt. Die meisten Menschen tippen auf 50 %, weil sie das andere Kind isoliert betrachten.</p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-slate-50 border-2 border-slate-300">
+        <h3 class="text-xl font-bold text-slate-800 mb-1">Die Antwort überrascht: nur 1/3 (≈ 33 %).</h3>
+        <p class="text-sm text-slate-600">Du hast {{ guess }} % geschätzt. Die Info „mindestens ein Junge" halbiert die Wahrscheinlichkeit nicht – sie schließt nur eine von vier Familien aus.</p>
+    </div>
+    {% endif %}
+
+    <div class="mb-5">
+        <h4 class="font-bold text-slate-800 mb-3">Vier gleich wahrscheinliche Familien:</h4>
+        <div class="grid grid-cols-4 gap-2 text-center text-sm">
+            <div class="p-3 rounded-lg bg-emerald-50 border-2 border-emerald-300">
+                <div class="text-2xl mb-1">👦👦</div>
+                <div class="text-xs font-bold text-emerald-700">JJ</div>
+                <div class="text-[10px] text-emerald-600">← gesucht</div>
+            </div>
+            <div class="p-3 rounded-lg bg-white border border-slate-200">
+                <div class="text-2xl mb-1">👦👧</div>
+                <div class="text-xs font-medium text-slate-600">JM</div>
+                <div class="text-[10px] text-slate-500">passt</div>
+            </div>
+            <div class="p-3 rounded-lg bg-white border border-slate-200">
+                <div class="text-2xl mb-1">👧👦</div>
+                <div class="text-xs font-medium text-slate-600">MJ</div>
+                <div class="text-[10px] text-slate-500">passt</div>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-100 border border-slate-200 opacity-50">
+                <div class="text-2xl mb-1">👧👧</div>
+                <div class="text-xs font-medium text-slate-500 line-through">MM</div>
+                <div class="text-[10px] text-slate-400">ausgeschlossen</div>
+            </div>
+        </div>
+        <p class="text-xs text-slate-500 mt-3 text-center">
+            Drei Familien bleiben nach der Information. Nur eine ist JJ. → <strong>1/3</strong>
+        </p>
+    </div>
+
+    <div class="mb-5">
+        <h4 class="font-bold text-slate-800 mb-3">Ein einziges Wort verändert alles:</h4>
+        <div class="space-y-3">
+            {% for s in scenarios %}
+            <div class="rounded-xl border-2 {{ s.card_classes }} p-4">
+                <div class="flex items-start justify-between gap-3 mb-2">
+                    <p class="italic {{ s.text_classes }} text-sm flex-1">„{{ s.frage }}"</p>
+                    <div class="{{ s.count_classes }} font-bold text-base whitespace-nowrap">
+                        {{ s.wahrsch }}
+                    </div>
+                </div>
+                <div class="h-2 {{ s.bar_bg }} rounded-full overflow-hidden mb-2">
+                    <div class="h-full {{ s.bar_fill }} rounded-full" style="width: {{ s.wahrsch_pct }}%"></div>
+                </div>
+                <p class="text-xs {{ s.explain_classes }}">{{ s.erklaerung }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-4 text-sm text-violet-800">
+        <p class="font-semibold mb-2">Der Kern des Paradoxons</p>
+        <p class="mb-2">Die Antwort hängt nicht davon ab, <em>was</em> wir wissen – sondern <em>wie</em> die Information zustande kam.</p>
+        <ul class="list-disc ml-5 space-y-1 text-xs">
+            <li>„Mindestens ein Junge" ist ein <em>Filter</em> über Familien.</li>
+            <li>„Das ältere Kind ist ein Junge" fixiert ein bestimmtes Kind.</li>
+            <li>Extra-Details wie „Dienstag" schränken den Filter enger ein und verschieben die Wahrscheinlichkeit.</li>
+        </ul>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5 text-sm text-amber-800">
+        <p class="font-semibold mb-1">Warum das für Entscheidungen relevant ist</p>
+        <p>Bayessche Wahrscheinlichkeit ist unser Werkzeug für Diagnosen, Screenings und Marktprognosen. Wer die Herkunft einer Information ignoriert (Random Sampling vs. Filter vs. Zeugenaussage), zieht falsche Schlüsse aus richtigen Daten – dieselbe Falle wie bei falsch-positiven Tests, Simpsons Paradox oder dem Basisraten-Fehler.</p>
+    </div>
+
+    <div class="flex gap-3">
+        <a href="/raetsel/zwei-kinder" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>

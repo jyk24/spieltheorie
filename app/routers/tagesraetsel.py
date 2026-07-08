@@ -26,8 +26,11 @@ def _get_session_id(request: Request) -> str:
 
 def _calc_streak(session_id: str, db: Session) -> int:
     today = _dt.date.today()
+    done_today = db.query(TagesraetselStreak).filter_by(
+        session_id=session_id, date=today.isoformat()
+    ).first() is not None
     streak = 0
-    check = today
+    check = today if done_today else today - _dt.timedelta(days=1)
     while True:
         exists = db.query(TagesraetselStreak).filter_by(
             session_id=session_id, date=check.isoformat()

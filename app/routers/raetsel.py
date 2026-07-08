@@ -631,6 +631,7 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"zwei-kinder","name":"Das Zwei-Kinder-Paradox","icon":"👶","beschreibung":"Herr Meier hat zwei Kinder. Mindestens eines ist ein Junge. Wie hoch ist die Wahrscheinlichkeit, dass beide Jungen sind? Fast alle sagen ½ – korrekt ist ⅓. Und ein einziges Zusatzwort verändert die Antwort dramatisch.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Wahrscheinlichkeit"},
 ]
 
 
@@ -4113,6 +4114,82 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         request,
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
+    )
+
+
+@router.get("/zwei-kinder", response_class=HTMLResponse)
+def zwei_kinder_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/zwei_kinder.html",
+        {"active_page": "raetsel", **_nav_context("zwei-kinder")},
+    )
+
+
+@router.post("/zwei-kinder/result", response_class=HTMLResponse)
+def zwei_kinder_result(request: Request, guess: int = Form(...)):
+    guess = max(0, min(100, guess))
+    correct_pct = round(100 / 3, 1)  # 33.3%
+    diff = abs(guess - correct_pct)
+    if guess == 33 or guess == 34:
+        reaction = "exakt"
+    elif diff <= 8:
+        reaction = "nah"
+    elif diff <= 20:
+        reaction = "mittel"
+    else:
+        reaction = "weit"
+
+    scenarios = [
+        {
+            "id": "at-least",
+            "frage": "Herr Meier hat zwei Kinder. Mindestens eines ist ein Junge.",
+            "wahrsch": "1/3 ≈ 33,3 %",
+            "wahrsch_pct": 33.3,
+            "erklaerung": "Vier gleich wahrscheinliche Familien: JJ, JM, MJ, MM. Die Info schließt MM aus – drei Familien bleiben, nur eine hat zwei Jungen.",
+            "card_classes": "border-violet-300 bg-violet-50",
+            "text_classes": "text-violet-800",
+            "count_classes": "text-violet-900",
+            "bar_bg": "bg-violet-100",
+            "bar_fill": "bg-violet-500",
+            "explain_classes": "text-violet-700",
+        },
+        {
+            "id": "older",
+            "frage": "Das ältere Kind ist ein Junge.",
+            "wahrsch": "1/2 = 50 %",
+            "wahrsch_pct": 50.0,
+            "erklaerung": "Jetzt liegt das Geschlecht des älteren Kindes fest. Nur das jüngere ist noch zufällig – 50/50.",
+            "card_classes": "border-emerald-300 bg-emerald-50",
+            "text_classes": "text-emerald-800",
+            "count_classes": "text-emerald-900",
+            "bar_bg": "bg-emerald-100",
+            "bar_fill": "bg-emerald-500",
+            "explain_classes": "text-emerald-700",
+        },
+        {
+            "id": "tuesday",
+            "frage": "Ein Junge, geboren an einem Dienstag.",
+            "wahrsch": "13/27 ≈ 48,1 %",
+            "wahrsch_pct": 48.1,
+            "erklaerung": "Der scheinbar irrelevante Zusatz 'Dienstag' verschiebt die Antwort. Mit 14 Wochentag-Slots pro Kind gibt es 27 Familien, die einen Dienstags-Jungen enthalten – 13 davon haben zwei Jungen. Gary Foshee (2010).",
+            "card_classes": "border-amber-300 bg-amber-50",
+            "text_classes": "text-amber-800",
+            "count_classes": "text-amber-900",
+            "bar_bg": "bg-amber-100",
+            "bar_fill": "bg-amber-500",
+            "explain_classes": "text-amber-700",
+        },
+    ]
+
+    return templates.TemplateResponse(
+        request,
+        "partials/zwei_kinder_result.html",
+        {
+            "guess": guess,
+            "correct_pct": correct_pct,
+            "reaction": reaction,
+            "scenarios": scenarios,
+        },
     )
 
 
