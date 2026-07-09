@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% block title %}Das Zwei-Kinder-Problem – Junge-oder-Mädchen-Paradoxon{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+
+  <!-- Header -->
+  <div class="mb-6">
+    <a href="/raetsel" class="text-sm text-gray-500 hover:text-gray-700">← Alle Rätsel</a>
+  </div>
+  <div class="flex items-center gap-3 mb-2">
+    <span class="text-4xl">👦</span>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-widest text-indigo-500">Wahrscheinlichkeits-Paradox</p>
+      <h1 class="text-2xl font-bold text-gray-900">Das Zwei-Kinder-Problem</h1>
+    </div>
+  </div>
+  <p class="text-gray-500 text-sm mb-8">Martin Gardner · Scientific American 1959 · Mittel · ~4 min</p>
+
+  <!-- Die Frage -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Die Frage</h2>
+    <p class="text-gray-700 leading-relaxed">
+      Herr Schmidt hat <strong>zwei Kinder</strong>. Du erfährst: <em>„Mindestens eines der beiden ist ein Junge."</em>
+    </p>
+    <p class="text-gray-700 leading-relaxed mt-3">
+      Wie groß ist die Wahrscheinlichkeit, dass <strong>beide</strong> Kinder Jungen sind?
+    </p>
+    <p class="text-sm text-gray-500 mt-3">
+      (Vereinfachende Annahmen: Junge und Mädchen sind gleich wahrscheinlich; die beiden Geburten sind unabhängig; Zwillinge werden ignoriert.)
+    </p>
+  </div>
+
+  <!-- Interaktive Frage -->
+  <div class="bg-indigo-50 rounded-2xl p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-2">Deine Intuition</h2>
+    <p class="text-sm text-gray-600 mb-4">Wähle die Antwort, die dir zuerst in den Kopf kommt – ohne zu rechnen.</p>
+    <form hx-post="/raetsel/zwei-kinder/antwort" hx-target="#zk-result" hx-swap="innerHTML" class="space-y-2">
+      <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="ein-viertel" class="text-indigo-600" required>
+        <span class="text-sm text-gray-700"><strong>¼</strong> – „Beide Jungen ist so selten wie beide Mädchen."</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="ein-drittel" class="text-indigo-600">
+        <span class="text-sm text-gray-700"><strong>⅓</strong> – „Es gibt drei mögliche Fälle, nur einer davon passt."</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="ein-halb" class="text-indigo-600">
+        <span class="text-sm text-gray-700"><strong>½</strong> – „Ein Kind ist ein Junge, das andere zu 50 % auch."</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="zwei-drittel" class="text-indigo-600">
+        <span class="text-sm text-gray-700"><strong>⅔</strong> – „Zwei von drei Fällen enthalten zwei Jungen."</span>
+      </label>
+      <button type="submit" class="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors">
+        Antwort prüfen
+      </button>
+    </form>
+    <div id="zk-result" class="mt-4"></div>
+  </div>
+
+  <!-- Die Herleitung -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-4">Warum ⅓ und nicht ½?</h2>
+    <p class="text-sm text-gray-600 mb-4">
+      Bevor du irgendetwas weißt, gibt es <strong>vier gleich wahrscheinliche</strong> Kombinationen –
+      der Reihenfolge nach (ältestes Kind zuerst):
+    </p>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-5">
+      <div class="rounded-xl p-3 text-center bg-blue-50 border border-blue-200">
+        <div class="text-2xl">👦👦</div>
+        <div class="text-xs text-blue-700 font-semibold mt-1">J-J</div>
+      </div>
+      <div class="rounded-xl p-3 text-center bg-emerald-50 border border-emerald-200">
+        <div class="text-2xl">👦👧</div>
+        <div class="text-xs text-emerald-700 font-semibold mt-1">J-M</div>
+      </div>
+      <div class="rounded-xl p-3 text-center bg-emerald-50 border border-emerald-200">
+        <div class="text-2xl">👧👦</div>
+        <div class="text-xs text-emerald-700 font-semibold mt-1">M-J</div>
+      </div>
+      <div class="rounded-xl p-3 text-center bg-gray-100 border border-gray-200 opacity-40">
+        <div class="text-2xl">👧👧</div>
+        <div class="text-xs text-gray-600 font-semibold mt-1">M-M</div>
+      </div>
+    </div>
+
+    <p class="text-sm text-gray-600 mb-3">
+      Die Information <em>„mindestens ein Junge"</em> streicht die Kombination
+      <strong>M-M</strong> – aber sonst nichts. Es bleiben <strong>drei</strong> gleich wahrscheinliche Fälle:
+    </p>
+    <ul class="text-sm text-gray-600 space-y-1 mb-4 ml-4">
+      <li>• <strong>J-J</strong> – beide Jungen ✓</li>
+      <li>• <strong>J-M</strong> – älter Junge, jünger Mädchen</li>
+      <li>• <strong>M-J</strong> – älter Mädchen, jünger Junge</li>
+    </ul>
+    <div class="bg-indigo-50 border-l-4 border-indigo-400 rounded-r-lg p-4">
+      <p class="text-sm text-gray-800">
+        Nur in <strong>einem</strong> von drei Fällen sind beide Jungen. Also:
+        <span class="font-mono text-indigo-700 font-bold">P = 1/3 ≈ 33,3 %</span>.
+      </p>
+    </div>
+  </div>
+
+  <!-- Der Twist -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-4">Der Twist: Was ändert die Reihenfolge?</h2>
+    <p class="text-sm text-gray-600 mb-4">
+      Angenommen, Herr Schmidt sagt stattdessen: <em>„Das <strong>ältere</strong> Kind ist ein Junge."</em>
+      Wie groß ist jetzt die Wahrscheinlichkeit, dass beide Jungen sind?
+    </p>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+      <div class="rounded-xl p-3 text-center bg-blue-50 border border-blue-200">
+        <div class="text-2xl">👦👦</div>
+        <div class="text-xs text-blue-700 font-semibold mt-1">J-J ✓</div>
+      </div>
+      <div class="rounded-xl p-3 text-center bg-emerald-50 border border-emerald-200">
+        <div class="text-2xl">👦👧</div>
+        <div class="text-xs text-emerald-700 font-semibold mt-1">J-M ✓</div>
+      </div>
+      <div class="rounded-xl p-3 text-center bg-gray-100 border border-gray-200 opacity-40">
+        <div class="text-2xl">👧👦</div>
+        <div class="text-xs text-gray-600 font-semibold mt-1">M-J ✗</div>
+      </div>
+      <div class="rounded-xl p-3 text-center bg-gray-100 border border-gray-200 opacity-40">
+        <div class="text-2xl">👧👧</div>
+        <div class="text-xs text-gray-600 font-semibold mt-1">M-M ✗</div>
+      </div>
+    </div>
+
+    <p class="text-sm text-gray-600 mb-3">
+      Jetzt streichen wir <strong>zwei</strong> Fälle (M-J und M-M), es bleiben nur J-J und J-M.
+      In <strong>einem von zwei</strong> Fällen sind beide Jungen:
+    </p>
+    <div class="bg-amber-50 border-l-4 border-amber-400 rounded-r-lg p-4">
+      <p class="text-sm text-gray-800">
+        <span class="font-mono text-amber-700 font-bold">P = 1/2 = 50 %</span> – die Antwort hängt davon ab,
+        <em>wie</em> du die Information bekommst!
+      </p>
+    </div>
+  </div>
+
+  <!-- Warum unsere Intuition versagt -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Warum ist das so schwer?</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      Unser Gehirn behandelt die beiden Kinder unbewusst wie eine <strong>Reihenfolge</strong>: „Das eine ist ein Junge – was ist das andere?"
+      Diese Sichtweise führt zur Antwort ½ – aber sie ist falsch, weil <em>welches</em> Kind der Junge ist, offengelassen wird.
+    </p>
+    <p class="text-sm text-gray-600 leading-relaxed">
+      Das Paradox ist ein Musterbeispiel für <strong>bedingte Wahrscheinlichkeit</strong>: Wie du die
+      Information erhältst, ändert die Menge der Fälle, die noch möglich sind. Wer nur schaut,
+      ob mindestens ein Junge dabei ist, betrachtet drei Fälle. Wer die Reihenfolge kennt,
+      betrachtet nur zwei.
+    </p>
+  </div>
+
+  <!-- Bayes -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Formal – mit Bayes</h2>
+    <div class="bg-slate-50 rounded-xl p-4 font-mono text-sm text-gray-700 overflow-x-auto">
+      P(JJ | mind. 1 Junge) = P(JJ ∩ mind. 1 J) / P(mind. 1 J)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = (1/4) / (3/4)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 1/3
+    </div>
+    <p class="text-sm text-gray-500 mt-3">
+      P(JJ) = ¼ (nur die Kombination J-J). P(mind. 1 Junge) = ¾ (alle Kombinationen außer M-M).
+      Die bedingte Wahrscheinlichkeit ist der Quotient beider.
+    </p>
+  </div>
+
+  <!-- Historischer Kontext -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Woher kommt das Rätsel?</h2>
+    <p class="text-sm text-gray-600 leading-relaxed">
+      Martin Gardner stellte das Problem 1959 in seiner legendären Kolumne <em>Mathematical Games</em> im
+      <em>Scientific American</em>. Es löste sofort Streit aus – auch unter Statistikern, weil die Formulierung
+      der „Information" mehrdeutig ist. Gardner selbst gab zu, das Rätsel zunächst missverständlich formuliert zu haben.
+    </p>
+    <p class="text-sm text-gray-600 leading-relaxed mt-3">
+      2010 zeigte Gary Foshee auf der <em>Gathering 4 Gardner</em>: „Mindestens ein Junge, der an einem Dienstag geboren wurde" –
+      und die Wahrscheinlichkeit ändert sich auf ~<span class="font-mono">13/27 ≈ 48,1 %</span>.
+      Die Wochentag-Information zieht mehr Kombinationen ins Feld und verschiebt das Ergebnis.
+    </p>
+  </div>
+
+  <!-- Ähnliche Rätsel -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+    <h2 class="font-bold text-gray-800 mb-3">Tiefer eintauchen</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <a href="/raetsel/monty-hall" class="block bg-slate-50 rounded-xl p-4 hover:bg-slate-100 transition-colors">
+        <p class="font-semibold text-gray-800 text-sm">🚪 Monty Hall Problem</p>
+        <p class="text-xs text-gray-500 mt-1">Der Klassiker der bedingten Wahrscheinlichkeit.</p>
+      </a>
+      <a href="/raetsel/geburtstag" class="block bg-slate-50 rounded-xl p-4 hover:bg-slate-100 transition-colors">
+        <p class="font-semibold text-gray-800 text-sm">🎂 Geburtstagsparadoxon</p>
+        <p class="text-xs text-gray-500 mt-1">Warum 23 Menschen für 50 % Übereinstimmung reichen.</p>
+      </a>
+      <a href="/raetsel/bayes-theorem" class="block bg-slate-50 rounded-xl p-4 hover:bg-slate-100 transition-colors">
+        <p class="font-semibold text-gray-800 text-sm">📐 Bayes-Theorem</p>
+        <p class="text-xs text-gray-500 mt-1">Die Formel hinter allen bedingten Wahrscheinlichkeiten.</p>
+      </a>
+      <a href="/raetsel/falsch-positiv" class="block bg-slate-50 rounded-xl p-4 hover:bg-slate-100 transition-colors">
+        <p class="font-semibold text-gray-800 text-sm">🔬 Falsch-Positiv-Paradoxon</p>
+        <p class="text-xs text-gray-500 mt-1">Warum ein 99 %-Test oft täuscht.</p>
+      </a>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="flex justify-between">
+    <a href="/raetsel" class="text-sm text-gray-500 hover:text-gray-700">← Alle Rätsel</a>
+    <a href="/raetsel/monty-hall" class="text-sm text-indigo-600 hover:text-indigo-800">Monty Hall Problem →</a>
+  </div>
+
+</div>
+{% endblock %}

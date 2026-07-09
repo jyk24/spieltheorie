@@ -82,6 +82,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Wahrscheinlichkeit",
     },
+    {
+        "id": "zwei-kinder",
+        "name": "Das Zwei-Kinder-Problem",
+        "icon": "👦",
+        "beschreibung": "Herr Schmidt hat zwei Kinder. Mindestens eines ist ein Junge. Wie hoch ist die Wahrscheinlichkeit, dass beide Jungen sind? Martin Gardner (1959) zeigte: Fast alle antworten ½ – die richtige Antwort schockiert.",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
     # ── Statistik & Kognition ──────────────────────────────────────────────────
     {
         "id": "simpson",
@@ -4112,6 +4122,23 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
     return templates.TemplateResponse(
         request,
         "partials/pawlow_hund_result.html",
+        {"antwort": antwort, "correct": correct},
+    )
+
+
+@router.get("/zwei-kinder", response_class=HTMLResponse)
+def zwei_kinder_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/zwei_kinder.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/zwei-kinder/antwort", response_class=HTMLResponse)
+def zwei_kinder_antwort(request: Request, antwort: str = Form(...)):
+    correct = antwort == "ein-drittel"
+    return templates.TemplateResponse(
+        request,
+        "partials/zwei_kinder_result.html",
         {"antwort": antwort, "correct": correct},
     )
 

@@ -12,15 +12,15 @@ templates = Jinja2Templates(directory="app/templates")
 _KATEGORIEN = {"Spieltheorie", "Wahrscheinlichkeit", "Statistik", "Kognition"}
 
 GRUNDLAGEN_SEKTIONEN = [
-    {"slug": "einfuehrung",        "titel": "Einführung in die Spieltheorie",    "icon": "🎯", "dauer": "8 min"},
-    {"slug": "nash",               "titel": "Nash-Gleichgewicht",                "icon": "♟️", "dauer": "10 min"},
-    {"slug": "dominante-strategie","titel": "Dominante Strategien",              "icon": "⚡", "dauer": "6 min"},
-    {"slug": "sequentiell",        "titel": "Sequentielle Spiele & Backward Induction", "icon": "🔢", "dauer": "8 min"},
-    {"slug": "gemischte",          "titel": "Gemischte Strategien",              "icon": "🎲", "dauer": "7 min"},
-    {"slug": "kooperation",        "titel": "Kooperation & Wiederholung",        "icon": "🤝", "dauer": "9 min"},
-    {"slug": "verhandlung",        "titel": "Verhandlung & Bargaining",          "icon": "💼", "dauer": "10 min"},
-    {"slug": "information",        "titel": "Information & Signaling",           "icon": "📡", "dauer": "10 min"},
-    {"slug": "evolution",          "titel": "Evolutionäre Spieltheorie",         "icon": "🧬", "dauer": "8 min"},
+    {"slug": "section-1", "titel": "Was ist Spieltheorie?",                 "icon": "🎯", "dauer": "5 min"},
+    {"slug": "section-2", "titel": "Was bedeutet „rational“?",              "icon": "🧠", "dauer": "4 min"},
+    {"slug": "section-3", "titel": "Die drei Kernkonzepte",                 "icon": "♟️", "dauer": "8 min"},
+    {"slug": "section-4", "titel": "Wichtige Spieltypen",                   "icon": "🗂️", "dauer": "6 min"},
+    {"slug": "section-5", "titel": "Gemischte Strategien",                  "icon": "🎲", "dauer": "7 min"},
+    {"slug": "section-6", "titel": "Grenzen der Rationalität",              "icon": "⚠️", "dauer": "6 min"},
+    {"slug": "section-7", "titel": "Signaling, Screening & Information",    "icon": "📡", "dauer": "8 min"},
+    {"slug": "section-8", "titel": "Verhandlung & Spieltheorie",            "icon": "💼", "dauer": "8 min"},
+    {"slug": "section-9", "titel": "Evolutionäre Spieltheorie",             "icon": "🧬", "dauer": "8 min"},
 ]
 
 SKILLS_CARDS = [

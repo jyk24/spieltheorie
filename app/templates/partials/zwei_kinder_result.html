@@ -1,0 +1,44 @@
+{% if correct %}
+<div class="bg-green-50 border border-green-200 rounded-xl p-4">
+  <p class="font-semibold text-green-800">✓ Richtig – gegen die Intuition!</p>
+  <p class="text-sm text-green-700 mt-2">
+    <strong>P = 1/3</strong>. Von den vier gleich wahrscheinlichen Fällen (J-J, J-M, M-J, M-M)
+    schließt „mindestens ein Junge" nur M-M aus. Es bleiben drei Fälle – und nur einer davon (J-J)
+    hat zwei Jungen.
+  </p>
+</div>
+{% elif antwort == "ein-halb" %}
+<div class="bg-red-50 border border-red-200 rounded-xl p-4">
+  <p class="font-semibold text-red-800">✗ Nicht ganz – der klassische Fallstrick.</p>
+  <p class="text-sm text-red-700 mt-2">
+    ½ wäre richtig, wenn man wüsste, <em>welches</em> Kind der Junge ist (z. B. „das ältere").
+    Aber „mindestens ein Junge" lässt offen, welches – und beide Reihenfolgen (J-M und M-J) sind
+    zwei separate, gleich wahrscheinliche Fälle. Richtige Antwort: <strong>1/3</strong>.
+  </p>
+</div>
+{% elif antwort == "ein-viertel" %}
+<div class="bg-red-50 border border-red-200 rounded-xl p-4">
+  <p class="font-semibold text-red-800">✗ Nicht ganz.</p>
+  <p class="text-sm text-red-700 mt-2">
+    ¼ wäre die Wahrscheinlichkeit <em>ohne</em> jede Information über die Kinder – die Kombination
+    J-J ist einer von vier gleich wahrscheinlichen Fällen. Aber wir wissen bereits: „mindestens ein
+    Junge" – das schließt M-M aus. Richtige Antwort: <strong>1/3</strong>.
+  </p>
+</div>
+{% elif antwort == "zwei-drittel" %}
+<div class="bg-red-50 border border-red-200 rounded-xl p-4">
+  <p class="font-semibold text-red-800">✗ Nicht ganz.</p>
+  <p class="text-sm text-red-700 mt-2">
+    ⅔ wäre die Wahrscheinlichkeit für <em>genau ein</em> Mädchen (die Fälle J-M und M-J).
+    Wir suchen aber <strong>beide Jungen</strong> – und das ist nur der Fall J-J. Richtige Antwort:
+    <strong>1/3</strong>.
+  </p>
+</div>
+{% else %}
+<div class="bg-red-50 border border-red-200 rounded-xl p-4">
+  <p class="font-semibold text-red-800">✗ Nicht ganz.</p>
+  <p class="text-sm text-red-700 mt-2">
+    Die richtige Antwort ist <strong>1/3</strong>. Schau dir die Herleitung mit den vier Fällen unten an.
+  </p>
+</div>
+{% endif %}
