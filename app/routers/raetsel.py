@@ -631,6 +631,8 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"duncker-kerze","name":"Dunckers Kerzenproblem","icon":"🕯️","beschreibung":"Eine Kerze, eine Streichholzschachtel, ein Kästchen mit Reißnägeln. Deine Aufgabe: Befestige die Kerze so an der Wand, dass sie brennen kann, ohne Wachs auf den Tisch tropfen zu lassen. Karl Duncker (1945) zeigte, warum die einfachste Lösung fast niemandem einfällt.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Kognition"},
+    {"id":"rabenparadoxon","name":"Hempels Rabenparadoxon","icon":"🐦‍⬛","beschreibung":"„Alle Raben sind schwarz.“ Und: „Alles Nichtschwarze ist kein Rabe.“ Beide Sätze sind logisch identisch. Bestätigt dann nicht ein grüner Apfel die Hypothese über Raben – ohne dass man je einen Raben sehen muss?","typ":"Wissenschaftstheorie","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Logik"},
 ]
 
 
@@ -4064,6 +4066,40 @@ GENERIC_PUZZLES: dict = {
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
     },
+    "duncker-kerze": {
+        "id": "duncker-kerze", "name": "Dunckers Kerzenproblem", "icon": "🕯️",
+        "farbe": "amber", "kategorie": "Kognition",
+        "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup": "Du bekommst folgende Gegenstände auf einem Tisch: eine <strong>Kerze</strong>, eine <strong>Streichholzschachtel</strong>, ein <strong>Kästchen mit Reißnägeln</strong>. An der Wand hängt eine Korkplatte. Deine Aufgabe: Befestige die Kerze so an der Wand, dass sie brennen kann, ohne dass Wachs auf den Tisch tropft.",
+        "frage": "Welche Lösung funktioniert – und wird nur von einer Minderheit auf Anhieb gefunden?",
+        "optionen": [
+            {"text": "Die Kerze direkt mit Reißnägeln an die Wand pinnen", "hinweis": "Klingt naheliegend – bricht aber das Wachs"},
+            {"text": "Etwas Wachs schmelzen und die Kerze damit ankleben", "hinweis": "Physikalisch – hält jedoch nicht"},
+            {"text": "Das Reißnagelkästchen leeren, an die Wand pinnen und als Kerzenhalter nutzen", "hinweis": "Perspektivwechsel: das Kästchen ist Werkzeug, nicht nur Behälter"},
+            {"text": "Die Streichhölzer als Brücke zwischen Wand und Kerze verwenden", "hinweis": "Kreativ – aber nicht stabil"},
+        ],
+        "loesung_text": "Die Reißnagelschachtel wird zur Kerzenhalterung.",
+        "erklaerung": "<p>Wer die Schachtel als bloßen Behälter für Reißnägel sieht, kommt nicht auf die Lösung. Wer sie neutral als <em>Objekt mit Eigenschaften</em> betrachtet (flach, klein, hohl), erkennt: sie kann als Wandregal dienen. Reißnagel durch die Schachtelrückwand → Schachtel an die Wand → Kerze in die Schachtel stellen und anzünden. Das Wachs tropft in die Schachtel, nicht auf den Tisch.</p>",
+        "kontext": "<p><strong>Karl Duncker (1945) – <em>On Problem-Solving</em></strong></p><p>Duncker prägte den Begriff <strong>funktionale Gebundenheit</strong> (functional fixedness): Wir sind an die typische Verwendung eines Objekts so gewöhnt, dass wir andere Nutzungen übersehen.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Wenn die Reißnägel <em>neben</em> der leeren Schachtel liegen, finden ~80 % die Lösung sofort.</li><li>Wenn sie <em>in</em> der Schachtel liegen, fallen die Lösungsquoten auf unter 25 %.</li><li>Sam Glucksberg (1962): Zeitdruck und Belohnung senken die Lösungsquote weiter – kreative Einsicht mag keine Belohnung.</li><li>Kinder unter fünf Jahren zeigen kaum funktionale Gebundenheit – sie haben die „richtige Verwendung“ noch nicht gelernt.</li></ul><p>Der Effekt erklärt, warum Innovation in reifen Branchen schwerer ist als in jungen: Je vertrauter man mit Werkzeugen ist, desto stärker sitzen die gedanklichen Kategorien.</p>",
+        "erkenntnis": "Kreativität ist selten der Einfall neuer Werkzeuge – sie ist die Bereitschaft, vertraute Dinge in neuer Funktion zu sehen. Frag dich bei jedem festgefahrenen Problem: Was hätte ich übersehen, wenn dieses Objekt neben mir läge, statt seinen Zweck zu erfüllen?",
+    },
+    "rabenparadoxon": {
+        "id": "rabenparadoxon", "name": "Hempels Rabenparadoxon", "icon": "🐦‍⬛",
+        "farbe": "indigo", "kategorie": "Logik",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Wir wollen die Hypothese prüfen: <strong>„Alle Raben sind schwarz.“</strong> Logisch ist dieser Satz identisch mit seiner Kontraposition: <strong>„Alles Nichtschwarze ist kein Rabe.“</strong> Jede Beobachtung, die die zweite Aussage bestätigt, sollte also auch die erste bestätigen. Du siehst nun einen roten Apfel – nichtschwarz und kein Rabe.",
+        "frage": "Wie sollte diese Beobachtung deine Meinung über schwarze Raben verändern?",
+        "optionen": [
+            {"text": "Gar nicht – Äpfel haben mit Raben nichts zu tun", "hinweis": "Klingt intuitiv, widerspricht aber der Logik der Kontraposition"},
+            {"text": "Sie bestätigt die Hypothese – aber nur um einen winzigen Bruchteil", "hinweis": "Bayes'sche Auflösung"},
+            {"text": "Sie widerlegt die Hypothese", "hinweis": "Wäre nur bei einem nichtschwarzen Raben der Fall"},
+            {"text": "Die Kontraposition ist logisch ungültig", "hinweis": "Doch – p → q ist äquivalent zu ¬q → ¬p"},
+        ],
+        "loesung_text": "Ja, sie bestätigt – aber nur minimal.",
+        "erklaerung": "<p>Aus rein logischer Sicht ist die Kontraposition <em>„Alles Nichtschwarze ist kein Rabe“</em> äquivalent zur ursprünglichen Hypothese. Ein roter Apfel ist eine wahre Instanz dieser Aussage und stärkt sie damit.</p><p>Die <strong>Bayes'sche Auflösung</strong> von I. J. Good (1960): Die Stärke des Belegs hängt vom Verhältnis der Alternativen ab. Es gibt weltweit vielleicht 10⁹ Nichtschwarzes, aber nur ~10⁷ Raben. Ein zufällig gezogener nichtschwarzer Gegenstand stärkt die Hypothese daher um den Faktor 10⁻⁹ – ein direkt gesichteter schwarzer Rabe dagegen um den Faktor 10⁻⁷. Beide bestätigen; nur eben nicht gleich viel.</p>",
+        "kontext": "<p><strong>Carl Gustav Hempel (1945) – „Studies in the Logic of Confirmation“</strong></p><p>Hempel formulierte das Paradoxon, um zu zeigen, dass unsere intuitive Idee von „Bestätigung“ mit der Logik in Konflikt gerät. Zwei Prinzipien wirken plausibel, sind zusammen aber unhaltbar:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Nicoders Kriterium:</strong> Ein Fx∧Gx bestätigt „Alle F sind G“.</li><li><strong>Äquivalenzbedingung:</strong> Was eine Aussage bestätigt, bestätigt auch alle logisch äquivalenten Aussagen.</li></ul><p>Nelson Goodmans „Grue“-Paradoxon (1955) verschärfte das Problem: Nicht jede Verallgemeinerung ist gleich induktiv haltbar, obwohl sie den logischen Kriterien genügt. Karl Popper folgerte daraus, dass Wissenschaft nicht Bestätigung, sondern <em>Falsifikation</em> suchen sollte.</p>",
+        "erkenntnis": "Aus wenigen Beobachtungen dürfen wir kaum je auf „alle X“ schließen. Wer wirklich lernen will, sucht nicht Bestätigungen (weiße Schwäne), sondern potenzielle Gegenbeispiele (nichtschwarze Raben). Das ist Poppers Falsifikationismus in einer Nussschale.",
+    },
 }
 
 
@@ -4108,7 +4144,7 @@ def pawlow_hund_page(request: Request):
 
 @router.post("/pawlow-hund/antwort", response_class=HTMLResponse)
 def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
-    correct = antwort in ["glocke", "unkonditioniert_stimulus", "klassisch", "konditionierter_reiz"]
+    correct = antwort == "konditionierter_reiz"
     return templates.TemplateResponse(
         request,
         "partials/pawlow_hund_result.html",
