@@ -631,6 +631,10 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── 12. Juli: neue Rätsel ────────────────────────────────────────────────
+    {"id":"sorites","name":"Das Sorites-Paradoxon","icon":"🌾","beschreibung":"Ein Sandkorn ist kein Haufen. Zwei Sandkörner sind kein Haufen. Wenn n Körner kein Haufen sind, sind n+1 auch keiner. Also gibt es keine Haufen. Wo bricht die Kette?","typ":"Logik-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Logik"},
+    {"id":"kinder-paradox","name":"Das Kinder-Paradoxon","icon":"👧","beschreibung":"Eine Familie hat zwei Kinder. Eines ist ein Mädchen. Wie hoch ist die Wahrscheinlichkeit, dass auch das andere ein Mädchen ist? Die Antwort ist nicht 1/2.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
+    {"id":"toleranz-paradox","name":"Poppers Toleranz-Paradoxon","icon":"⚖️","beschreibung":"Eine unbegrenzt tolerante Gesellschaft toleriert auch die Intoleranten – und wird von ihnen zerstört. Karl Popper (1945): Grenzenlose Toleranz führt zum Verschwinden von Toleranz.","typ":"Philosophisches Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Kognition"},
 ]
 
 
@@ -4063,6 +4067,58 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    # ── Neu (12. Juli) ─────────────────────────────────────────────────────
+    "sorites": {
+        "id": "sorites", "name": "Das Sorites-Paradoxon", "icon": "🌾",
+        "farbe": "amber", "kategorie": "Logik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Eubulides von Milet (4. Jhd. v. Chr.) argumentierte: <em>Ein Sandkorn ist kein Haufen. Zwei Sandkörner sind kein Haufen. Wenn n Körner kein Haufen sind, dann sind auch n+1 kein Haufen.</em> Per Induktion folgt: <strong>Auch 10 000 Sandkörner sind kein Haufen.</strong> Umgekehrt: Nimm einem Haufen ein Korn weg — er bleibt ein Haufen. Also ist auch 1 Korn ein Haufen. Beides führt zu Widersprüchen.",
+        "frage": "Wo liegt der Denkfehler — oder was folgt daraus, wenn keiner der Schritte falsch ist?",
+        "optionen": [
+            {"text": "Es gibt eine exakte Grenze (z. B. 10 000 Körner) — wir kennen sie nur nicht", "hinweis": "Epistemismus: Grenze existiert, ist aber unbekannt"},
+            {"text": "Der Begriff 'Haufen' ist vage — klassische Zweiwertigkeit (wahr/falsch) versagt hier", "hinweis": "Vagheit als sprachliches Phänomen"},
+            {"text": "Der Induktionsschritt ist falsch — er wirkt harmlos, aggregiert aber unendlich kleine Fehler", "hinweis": "Kumulierte Ungenauigkeit"},
+            {"text": "Das Paradoxon ist trivial — Sprache ist einfach unpräzise", "hinweis": "Zu bequem — der Widerspruch bleibt"},
+        ],
+        "loesung_text": "Der Begriff 'Haufen' ist genuin vage — klassische Logik greift nicht.",
+        "erklaerung": "<p>Es gibt keine scharfe Grenze zwischen 'Haufen' und 'Nicht-Haufen'. Die klassische Logik verlangt aber, dass jede Aussage entweder wahr oder falsch ist. Bei vagen Prädikaten (Haufen, groß, kahl, jung …) versagt diese Zweiteilung.</p><p>Moderne Ansätze:</p><ul class='list-disc ml-4 mt-2 space-y-1 text-sm'><li><strong>Fuzzy-Logik</strong> (Zadeh 1965): Wahrheitswerte zwischen 0 und 1 — 500 Körner sind 'zu 0,3 ein Haufen'.</li><li><strong>Supervaluationismus</strong>: Es gibt viele zulässige Grenzziehungen — wahr ist, was unter allen gilt.</li><li><strong>Epistemismus</strong> (Williamson 1994): Eine exakte Grenze existiert — sie ist für uns nur unerkennbar.</li></ul>",
+        "kontext": "<p>Sorites-Argumente stecken heute in juristischen Grenzfällen (ab wann ist jemand 'trunken am Steuer'?), in medizinischen Definitionen ('Vorstufe' vs. 'Krankheit') und in KI-Klassifikatoren (Confidence-Threshold). Wo immer diskrete Kategorien auf kontinuierliche Realitäten treffen, taucht der Sandhaufen wieder auf.</p><p>Das griechische <em>sōrós</em> heißt 'Haufen' — daher der Name. Verwandt: Das Glatzen-Paradox (bei welchem Haar wird man kahl?) und das Schiff-des-Theseus-Problem.</p>",
+        "erkenntnis": "Vagheit ist kein Sprachdefekt, sondern eine Anpassung an eine graduelle Welt. Wer scharfe Grenzen fordert, wo keine existieren, schafft künstliche Widersprüche.",
+    },
+    "kinder-paradox": {
+        "id": "kinder-paradox", "name": "Das Kinder-Paradoxon", "icon": "👧",
+        "farbe": "pink", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Eine Familie hat genau <strong>zwei Kinder</strong>. Jungen und Mädchen sind gleich wahrscheinlich (unabhängig, je 1/2). Du erfährst: <em>Mindestens eines der beiden Kinder ist ein Mädchen.</em>",
+        "frage": "Wie hoch ist die Wahrscheinlichkeit, dass <strong>beide</strong> Kinder Mädchen sind?",
+        "optionen": [
+            {"text": "1/2 — die Kinder sind unabhängig, also spielt das andere keine Rolle", "hinweis": "Naheliegende, aber falsche Antwort"},
+            {"text": "1/3", "hinweis": "Ergibt sich aus Bayes über die 4 Ausgangsfälle"},
+            {"text": "1/4", "hinweis": "Wäre die Antwort ohne Information"},
+            {"text": "2/3", "hinweis": "Vertauscht Zähler und Nenner"},
+        ],
+        "loesung_text": "1/3 — nicht 1/2!",
+        "erklaerung": "<p>Alle 4 gleich wahrscheinlichen Reihenfolgen (älter zuerst): <strong>JJ, JM, MJ, MM</strong>. Die Information 'mindestens ein Mädchen' schließt JJ aus. Übrig: <strong>JM, MJ, MM</strong> — drei Fälle, alle gleich wahrscheinlich. Nur einer davon (MM) hat zwei Mädchen. Also 1/3.</p><p>Formal (Bayes): P(MM | mind. 1 M) = P(mind. 1 M | MM) · P(MM) / P(mind. 1 M) = 1 · 0,25 / 0,75 = <strong>1/3</strong>.</p>",
+        "kontext": "<p>Der Trick: Die Aussage 'mindestens eines ist ein Mädchen' ist <em>nicht</em> dasselbe wie 'das erste ist ein Mädchen'. Zweite Variante würde JJ und MJ ausschließen — dann bliebe 1/2.</p><p>Noch verrückter: Erfährst du 'mindestens ein Mädchen, das an einem Dienstag geboren wurde', springt die Wahrscheinlichkeit auf ~13/27 ≈ 0,48 — <em>Wochentagsinformation</em> ändert eine reine Geschlechterwahrscheinlichkeit. Das Paradox wurde 2010 von Gary Foshee auf einer Mathe-Konferenz vorgestellt und löste eine Debatte aus.</p><p>Das Kinder-Paradoxon zeigt, wie stark die <strong>Art der Information</strong> (statt nur ihres Inhalts) Wahrscheinlichkeiten beeinflusst. Genau dieselbe Falle steckt in Monty Hall und im Bertrand-Box-Paradox.</p>",
+        "erkenntnis": "Bedingte Wahrscheinlichkeit ist kontraintuitiv. Immer fragen: 'Wie kam die Information zu mir?' — nicht nur 'Was besagt sie?'",
+    },
+    "toleranz-paradox": {
+        "id": "toleranz-paradox", "name": "Poppers Toleranz-Paradoxon", "icon": "⚖️",
+        "farbe": "slate", "kategorie": "Kognition",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Karl Popper schrieb 1945 in <em>Die offene Gesellschaft und ihre Feinde</em>: <em>'Uneingeschränkte Toleranz führt notwendigerweise zum Verschwinden der Toleranz. Denn wenn wir uneingeschränkte Toleranz sogar auf die Intoleranten ausdehnen und nicht bereit sind, eine tolerante Gesellschaftsordnung gegen die Angriffe der Intoleranz zu verteidigen, dann werden die Toleranten vernichtet und mit ihnen die Toleranz.'</em>",
+        "frage": "Was folgt aus Poppers Argument für eine tolerante Gesellschaft?",
+        "optionen": [
+            {"text": "Absolute Toleranz gegenüber allen Meinungen ist ethisch geboten", "hinweis": "Genau das führt laut Popper zum Kollaps"},
+            {"text": "Toleranz muss selbst intolerant gegenüber Intoleranz sein — mit Vorrang für rationale Argumente", "hinweis": "Poppers gestufte Antwort"},
+            {"text": "Intoleranz gegenüber Andersdenkenden ist immer zulässig, wenn man 'die Wahrheit' hat", "hinweis": "Das ist die intolerante Position"},
+            {"text": "Toleranz ist ein sinnloses Konzept, weil sie sich selbst widerspricht", "hinweis": "Ignoriert Poppers konstruktive Lösung"},
+        ],
+        "loesung_text": "Toleranz muss selbstverteidigend sein — aber mit rationalen Argumenten Vorrang.",
+        "erklaerung": "<p>Popper argumentiert nicht für Zensur oder repressive Gewalt gegen intolerante Meinungen. Sein Punkt ist präziser: Solange intolerante Ideen mit <strong>rationalen Argumenten</strong> beantwortet werden können, sollte man sie zulassen. Aber wenn Intolerante die rationale Debatte selbst ablehnen (Fäuste, Pistolen, Aufruf zu Gewalt), verliert eine tolerante Gesellschaft das Recht, sie zu tolerieren — <em>zur Selbstverteidigung</em>.</p><p>Damit ist Toleranz kein absolutes Prinzip, sondern ein <strong>reflexives Vertragsverhältnis</strong>: Wer sich weigert, die Regeln toleranter Diskussion einzuhalten, verwirkt seinen Anspruch auf Toleranz. Kein Widerspruch, sondern eine gestufte Regel.</p>",
+        "kontext": "<p>Poppers Text war eine Antwort auf Faschismus und Stalinismus (er verfasste ihn im neuseeländischen Exil während des Zweiten Weltkriegs). Heute wird das Paradox in Debatten über Hassrede, Plattform-Deplatforming und militante Demokratie zitiert — oft beide Seiten für sich beanspruchend.</p><p>Verwandte Ideen: John Rawls' <em>Theorie der Gerechtigkeit</em> (1971) formuliert ähnliche Grenzen der Duldung; das Grundgesetz enthält mit Art. 79 III eine 'Ewigkeitsklausel' — die Demokratie darf nicht demokratisch abgeschafft werden. Beides ist ohne Rückgriff auf Poppers Denkfigur schwer zu verteidigen.</p>",
+        "erkenntnis": "Prinzipien, die sich selbst nicht schützen können, verschwinden. Wer Toleranz für unbedingt hält, unterschätzt, wie leicht sie ausgeblutet wird.",
     },
 }
 
