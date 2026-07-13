@@ -1,0 +1,110 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    <div class="mb-4 text-xs text-slate-500">Info: „{{ scenario_label }}“</div>
+
+    {% if verdict == "exakt" %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">Punktgenau. {{ num }}/{{ den }} ≈ {{ correct_pct }} %.</h3>
+        <p class="text-sm text-emerald-700">Deine Schätzung ({{ guess }} %) trifft die exakte bedingte Wahrscheinlichkeit.</p>
+    </div>
+    {% elif verdict == "nah" %}
+    <div class="mb-5 p-4 rounded-xl bg-blue-50 border-2 border-blue-300">
+        <h3 class="text-xl font-bold text-blue-800 mb-1">Sehr nah dran – exakt sind {{ num }}/{{ den }} ≈ {{ correct_pct }} %.</h3>
+        <p class="text-sm text-blue-700">Du hast {{ guess }} % geschätzt. Die Größenordnung stimmt – Details unten.</p>
+    </div>
+    {% elif verdict == "mittel" %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-xl font-bold text-amber-800 mb-1">Nicht schlecht – korrekt sind {{ num }}/{{ den }} ≈ {{ correct_pct }} %.</h3>
+        <p class="text-sm text-amber-700">Du hast {{ guess }} % geschätzt. Das ist eine typische Intuitionsfalle bei bedingter Wahrscheinlichkeit.</p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-slate-50 border-2 border-slate-300">
+        <h3 class="text-xl font-bold text-slate-800 mb-1">Weit daneben – die Antwort ist {{ num }}/{{ den }} ≈ {{ correct_pct }} %.</h3>
+        <p class="text-sm text-slate-600">Du hast {{ guess }} % geschätzt. Die meisten sagen intuitiv „50 %“, weil zwei Kinder unabhängig scheinen. Doch die Bedingung verändert alles.</p>
+    </div>
+    {% endif %}
+
+    <!-- Simulation -->
+    <div class="mb-5 bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-700">
+        <p class="font-semibold mb-1">Monte-Carlo-Simulation (20 000 Familien):</p>
+        <p>Aus den simulierten Familien, die zur Bedingung passen, hatten <strong>{{ sim_pct }} %</strong> zwei Jungen. Theoriewert: {{ correct_pct }} %.</p>
+    </div>
+
+    <!-- Rechnung je nach Szenario -->
+    {% if scenario == "A" %}
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-900">
+        <p class="font-semibold mb-2">Warum 1/3 – nicht 1/2?</p>
+        <p class="mb-2">Alle vier Kombinationen sind zunächst gleich wahrscheinlich:
+            <span class="font-mono">(J,J), (J,M), (M,J), (M,M)</span>.
+        </p>
+        <p class="mb-2">Die Info „mindestens ein Junge“ schließt nur <span class="font-mono">(M,M)</span> aus. Übrig bleiben drei gleich wahrscheinliche Fälle. Nur <em>einer</em> davon ist (J,J).</p>
+        <p class="font-mono text-xs bg-white rounded p-2 mt-2">P(J,J | ≥1 Junge) = 1/3 ≈ 33,3 %</p>
+    </div>
+    {% elif scenario == "B" %}
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-900">
+        <p class="font-semibold mb-2">Warum 1/2 – hier stimmt die Intuition!</p>
+        <p class="mb-2">„Der ältere ist ein Junge“ fixiert Kind 1 auf J. Übrig bleiben zwei gleich wahrscheinliche Fälle: <span class="font-mono">(J,J)</span> und <span class="font-mono">(J,M)</span>.</p>
+        <p class="mb-2">Der Unterschied zu Szenario A: die Info identifiziert <em>welches</em> Kind der Junge ist. Dadurch sind die Fälle nicht mehr über beide Kinder verschmiert.</p>
+        <p class="font-mono text-xs bg-white rounded p-2 mt-2">P(J,J | Ältester = J) = 1/2 = 50 %</p>
+    </div>
+    {% else %}
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-900">
+        <p class="font-semibold mb-2">Warum 13/27 – und warum ist das so überraschend?</p>
+        <p class="mb-2">Wir zählen jetzt Paare aus (Geschlecht, Wochentag). Es gibt 14 · 14 = 196 gleich wahrscheinliche Kombinationen für zwei Kinder.</p>
+        <p class="mb-2">Wie viele davon enthalten „mindestens ein Junge, geb. am Dienstag“?</p>
+        <ul class="list-disc pl-5 space-y-1 mb-2">
+            <li>Erstes Kind = Junge-Dienstag, zweites beliebig: 1 · 14 = <strong>14</strong></li>
+            <li>Zweites Kind = Junge-Dienstag, erstes beliebig: 14 · 1 = <strong>14</strong></li>
+            <li>Doppelt gezählt: beide Junge-Dienstag: <strong>1</strong></li>
+            <li>Summe: 14 + 14 − 1 = <strong>27</strong> passende Paare</li>
+        </ul>
+        <p class="mb-2">Und wie viele davon sind zwei Jungen? Ein Junge-Dienstag plus ein weiterer Junge (mit beliebigem Wochentag): 7 + 7 − 1 = <strong>13</strong>.</p>
+        <p class="font-mono text-xs bg-white rounded p-2 mt-2">P(J,J | ein Junge-Dienstag) = 13/27 ≈ 48,1 %</p>
+        <p class="mt-3">Die scheinbar irrelevante Info „Dienstag“ engt die Menge der passenden Familien so ein, dass sich die Wahrscheinlichkeit fast auf 1/2 verschiebt.</p>
+    </div>
+    {% endif %}
+
+    <!-- Vergleichstafel aller drei Szenarien -->
+    <div class="mb-5">
+        <h4 class="font-bold text-slate-800 mb-3">Alle drei Szenarien im Vergleich:</h4>
+        <div class="space-y-2">
+            {% set rows = [
+                ("A", "Mindestens ein Junge", "1/3", 33.3),
+                ("B", "Ältester ist ein Junge", "1/2", 50.0),
+                ("C", "Ein Junge, geb. Dienstag", "13/27", 48.1),
+            ] %}
+            {% for key, label, frac, pct in rows %}
+            <div class="flex items-center gap-3">
+                <div class="w-8 text-right text-xs font-mono text-slate-500">{{ key }}</div>
+                <div class="flex-1 text-sm text-slate-700 {% if key == scenario %}font-semibold{% endif %}">
+                    {{ label }}
+                </div>
+                <div class="w-40 bg-slate-100 rounded-full h-3 overflow-hidden">
+                    <div class="h-full rounded-full {% if key == scenario %}bg-indigo-600{% else %}bg-slate-400{% endif %}"
+                         style="width: {{ pct }}%"></div>
+                </div>
+                <div class="w-20 text-right text-sm font-bold text-slate-700">{{ frac }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Take-away -->
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-900">
+        <p class="font-semibold mb-1">Was du mitnimmst:</p>
+        <p class="mb-1">Bedingte Wahrscheinlichkeit hängt davon ab, <strong>wie</strong> eine Information gewonnen wurde – nicht nur davon, <strong>welche</strong> Information vorliegt. Aussagen wie „ich habe einen Sohn“ und „mein ältestes Kind ist ein Sohn“ liefern unterschiedliches Wissen und damit unterschiedliche Wahrscheinlichkeiten – obwohl beide für dieselbe Familie zutreffen können.</p>
+        <p><strong>Praxis:</strong> Bei medizinischen Tests, Zeugenaussagen und Datenanalysen ist die Frage nach dem Auswahlprozess oft wichtiger als der beobachtete Wert selbst.</p>
+    </div>
+
+    <div class="flex gap-3">
+        <a href="/raetsel/zwei-kinder" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/raetsel/monty-hall" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            → Monty Hall
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>

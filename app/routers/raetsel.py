@@ -82,6 +82,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Wahrscheinlichkeit",
     },
+    {
+        "id": "zwei-kinder",
+        "name": "Das Zwei-Kinder-Paradoxon",
+        "icon": "👶",
+        "beschreibung": "Frau Müller hat zwei Kinder. Eines davon ist ein Junge, geboren an einem Dienstag. Wie wahrscheinlich sind zwei Jungen? Die Antwort ist 13/27 – und die Debatte tobt bis heute.",
+        "typ": "Bedingte Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
     # ── Statistik & Kognition ──────────────────────────────────────────────────
     {
         "id": "simpson",
@@ -1155,6 +1165,106 @@ def geburtstag_result(
             "p_guess": p_guess,
             "milestones": milestones,
             "table": _birthday_table,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Zwei-Kinder-Paradoxon (Boy-Girl-Paradox)
+# ---------------------------------------------------------------------------
+#
+# Klassisches bedingtes-Wahrscheinlichkeits-Rätsel. Wir bieten drei Szenarien:
+#   szenario A – "Mindestens ein Junge"           → P(2 Jungen | ≥1 Junge) = 1/3
+#   szenario B – "Der ältere ist ein Junge"       → P(2 Jungen | Ältester = J) = 1/2
+#   szenario C – "Ein Junge, geb. am Dienstag"    → P(2 Jungen | ≥1 Junge-Di) = 13/27
+#
+# Die Antworten sind exakt (kein Zufall in Berechnung). Zusätzlich starten wir
+# eine kurze Simulation als anschauliche Bestätigung.
+
+# Exakte Werte (Bruch → Dezimal)
+_ZK_ANSWERS = {
+    "A": {"num": 1, "den": 3, "pct": round(1/3 * 100, 1)},
+    "B": {"num": 1, "den": 2, "pct": 50.0},
+    "C": {"num": 13, "den": 27, "pct": round(13/27 * 100, 1)},
+}
+
+_ZK_TOL_PCT = 3.0  # Prozentpunkte – Toleranz für "nah dran"
+
+
+def _zk_verdict(scenario: str, guess_pct: float) -> str:
+    """Klassifiziert die Antwort: exakt/nah/mittel/weit."""
+    correct = _ZK_ANSWERS[scenario]["pct"]
+    diff = abs(guess_pct - correct)
+    if diff <= 1.0:
+        return "exakt"
+    if diff <= _ZK_TOL_PCT:
+        return "nah"
+    if diff <= 10.0:
+        return "mittel"
+    return "weit"
+
+
+def _zk_simulate(scenario: str, trials: int = 20000) -> float:
+    """Kurze Monte-Carlo-Simulation zur anschaulichen Bestätigung."""
+    hits = 0
+    matches = 0
+    for _ in range(trials):
+        # Zwei Kinder: (Geschlecht, Wochentag)
+        c1_sex = _random.choice(["J", "M"])
+        c2_sex = _random.choice(["J", "M"])
+        c1_day = _random.randint(0, 6)
+        c2_day = _random.randint(0, 6)
+        if scenario == "A":
+            cond = (c1_sex == "J") or (c2_sex == "J")
+        elif scenario == "B":
+            cond = c1_sex == "J"  # "der ältere ist Junge"
+        else:  # C
+            cond = (c1_sex == "J" and c1_day == 1) or (c2_sex == "J" and c2_day == 1)
+        if cond:
+            matches += 1
+            if c1_sex == "J" and c2_sex == "J":
+                hits += 1
+    return round(hits / matches * 100, 1) if matches else 0.0
+
+
+@router.get("/zwei-kinder", response_class=HTMLResponse)
+def zwei_kinder_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/zwei_kinder.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/zwei-kinder/result", response_class=HTMLResponse)
+def zwei_kinder_result(
+    request: Request,
+    scenario: str = Form(...),   # "A", "B" oder "C"
+    guess: float = Form(...),     # Schätzung in Prozent
+):
+    if scenario not in _ZK_ANSWERS:
+        raise HTTPException(status_code=400, detail="Unbekanntes Szenario")
+
+    ans = _ZK_ANSWERS[scenario]
+    verdict = _zk_verdict(scenario, guess)
+    sim_pct = _zk_simulate(scenario)
+
+    scenario_label = {
+        "A": "Mindestens eines der beiden Kinder ist ein Junge.",
+        "B": "Das ältere der beiden Kinder ist ein Junge.",
+        "C": "Eines der Kinder ist ein Junge, geboren an einem Dienstag.",
+    }[scenario]
+
+    return templates.TemplateResponse(
+        request,
+        "partials/zwei_kinder_result.html",
+        {
+            "scenario": scenario,
+            "scenario_label": scenario_label,
+            "guess": round(guess, 1),
+            "correct_pct": ans["pct"],
+            "num": ans["num"],
+            "den": ans["den"],
+            "verdict": verdict,
+            "sim_pct": sim_pct,
         },
     )
 
