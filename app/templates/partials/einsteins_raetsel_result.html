@@ -1,0 +1,73 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    {% if is_correct %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">🎉 Richtig! Der Deutsche hält den Fisch.</h3>
+        <p class="text-sm text-emerald-700">Du hast die 15 Hinweise sauber zu einer einzigen konsistenten Belegung reduziert. Das schaffen laut Legende nur 2 % der Menschen im Kopf.</p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-rose-50 border-2 border-rose-300">
+        <h3 class="text-xl font-bold text-rose-800 mb-1">Nicht ganz – deine Antwort: {{ guess }}.</h3>
+        <p class="text-sm text-rose-700">Die richtige Antwort ist: <strong>der Deutsche hält den Fisch</strong>. Schau dir unten die vollständige Lösung an – jeder Schritt folgt zwingend aus den Hinweisen.</p>
+    </div>
+    {% endif %}
+
+    <div class="mb-6">
+        <p class="font-semibold text-slate-800 mb-3">Die vollständige Belegung:</p>
+        <div class="overflow-x-auto -mx-2">
+        <table class="w-full text-sm border-separate border-spacing-0">
+            <thead>
+                <tr class="text-slate-500 text-xs uppercase tracking-wide">
+                    <th class="text-left px-2 py-2">Position</th>
+                    <th class="text-left px-2 py-2">Farbe</th>
+                    <th class="text-left px-2 py-2">Nationalität</th>
+                    <th class="text-left px-2 py-2">Getränk</th>
+                    <th class="text-left px-2 py-2">Zigarre</th>
+                    <th class="text-left px-2 py-2">Tier</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in solution %}
+                <tr class="{% if row.tier == 'Fisch' %}bg-emerald-50{% else %}bg-slate-50{% endif %}">
+                    <td class="px-2 py-2 font-semibold text-slate-700">Haus {{ row.pos }}</td>
+                    <td class="px-2 py-2 text-slate-700">
+                        <span class="inline-block w-3 h-3 rounded-full mr-1 align-middle border border-slate-300" style="background-color: {{ row.farbe_hex }}"></span>
+                        {{ row.farbe }}
+                    </td>
+                    <td class="px-2 py-2 text-slate-700">{{ row.nation }}</td>
+                    <td class="px-2 py-2 text-slate-700">{{ row.getraenk }}</td>
+                    <td class="px-2 py-2 text-slate-700">{{ row.zigarre }}</td>
+                    <td class="px-2 py-2 {% if row.tier == 'Fisch' %}font-bold text-emerald-700{% else %}text-slate-700{% endif %}">
+                        {% if row.tier == 'Fisch' %}🐟 {% endif %}{{ row.tier }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-5">
+        <p class="font-semibold text-slate-700 mb-2 text-sm">Deduktion Schritt für Schritt:</p>
+        <ol class="space-y-1.5 text-xs text-slate-600 list-decimal list-inside">
+            {% for step in deduktion %}
+            <li class="pl-1">{{ step }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-800">
+        <p class="font-semibold mb-1">Hintergrund:</p>
+        <p>Das Rätsel wird oft Albert Einstein zugeschrieben – ein Beleg fehlt. Erstmals dokumentiert erschien es 1962 im <em>Life International Magazine</em>. Es ist ein klassisches <strong>Constraint-Satisfaction-Problem</strong>: 25 Variablen (5 × 5 Attribute), Domäne je Attribut = 5, verbunden durch 15 Bedingungen. Genau eine Belegung erfüllt alle Bedingungen gleichzeitig.</p>
+        <p class="mt-2">Diese Struktur ist die Grundlage moderner SAT-Solver, Sudoku-Löser und Planungsalgorithmen – vom Stundenplan bis zur Chipfertigung.</p>
+    </div>
+
+    <div class="flex gap-3">
+        <a href="/raetsel/einsteins-raetsel" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>

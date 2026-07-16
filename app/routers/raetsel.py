@@ -236,6 +236,16 @@ RAETSEL_META = [
     },
     # ── Logik & Rätsel ─────────────────────────────────────────────────────────
     {
+        "id": "einsteins-raetsel",
+        "name": "Einsteins Rätsel",
+        "icon": "🦓",
+        "beschreibung": "Fünf Häuser, fünf Nationalitäten, fünf Getränke, fünf Zigarrenmarken, fünf Tiere. 15 Hinweise, eine Frage: Wer besitzt den Fisch? Einstein soll gesagt haben: Nur 2 % der Menschen lösen es im Kopf.",
+        "typ": "Logik-Puzzle",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "10 min",
+        "kategorie": "Logik",
+    },
+    {
         "id": "piraten",
         "name": "Das Piratenspiel",
         "icon": "🏴‍☠️",
@@ -4113,6 +4123,107 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         request,
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
+    )
+
+
+# ---------------------------------------------------------------------------
+# Einsteins Rätsel (Zebra Puzzle) – Fünf Häuser, 15 Hinweise, ein Fisch.
+# Attribution folk-lore: Einstein soll das Rätsel 1930 formuliert haben.
+# Historische Belege fehlen; erschienen erstmals im Life Magazine (1962).
+# Kanonische Lösung: Der Deutsche hält den Fisch.
+# ---------------------------------------------------------------------------
+
+EINSTEIN_CLUES = [
+    "Der Brite lebt im roten Haus.",
+    "Der Schwede hält Hunde.",
+    "Der Däne trinkt gerne Tee.",
+    "Das grüne Haus steht direkt links neben dem weißen Haus.",
+    "Der Besitzer des grünen Hauses trinkt Kaffee.",
+    "Die Person, die Pall Mall raucht, hält Vögel.",
+    "Der Bewohner des mittleren Hauses trinkt Milch.",
+    "Der Besitzer des gelben Hauses raucht Dunhill.",
+    "Der Norweger wohnt im ersten Haus.",
+    "Der Marlboro-Raucher wohnt neben dem, der Katzen hält.",
+    "Der Mann, der Pferde hält, wohnt neben dem Dunhill-Raucher.",
+    "Der Winfield-Raucher trinkt gerne Bier.",
+    "Der Norweger wohnt neben dem blauen Haus.",
+    "Der Deutsche raucht Rothmans.",
+    "Der Marlboro-Raucher hat einen Nachbarn, der Wasser trinkt.",
+]
+
+EINSTEIN_SOLUTION = [
+    {
+        "pos": 1, "farbe": "Gelb", "farbe_hex": "#facc15",
+        "nation": "Norweger", "getraenk": "Wasser",
+        "zigarre": "Dunhill", "tier": "Katzen",
+    },
+    {
+        "pos": 2, "farbe": "Blau", "farbe_hex": "#60a5fa",
+        "nation": "Däne", "getraenk": "Tee",
+        "zigarre": "Marlboro", "tier": "Pferde",
+    },
+    {
+        "pos": 3, "farbe": "Rot", "farbe_hex": "#ef4444",
+        "nation": "Brite", "getraenk": "Milch",
+        "zigarre": "Pall Mall", "tier": "Vögel",
+    },
+    {
+        "pos": 4, "farbe": "Grün", "farbe_hex": "#22c55e",
+        "nation": "Deutscher", "getraenk": "Kaffee",
+        "zigarre": "Rothmans", "tier": "Fisch",
+    },
+    {
+        "pos": 5, "farbe": "Weiß", "farbe_hex": "#f8fafc",
+        "nation": "Schwede", "getraenk": "Bier",
+        "zigarre": "Winfield", "tier": "Hund",
+    },
+]
+
+EINSTEIN_DEDUKTION = [
+    "Hinweis 9 + 13: Norweger im 1. Haus → Haus 2 ist blau.",
+    "Hinweis 7: Im mittleren (3.) Haus wird Milch getrunken.",
+    "Hinweis 4 + 5: Grün steht links neben Weiß, Grün trinkt Kaffee. In 1 (Norweger, Wasser?) und 3 (Milch) passt Kaffee nicht → Grün = 4, Weiß = 5.",
+    "Hinweis 1: Der Brite lebt im roten Haus. Bleiben Häuser 1 und 3 für Rot. Haus 1 muss nicht-rot sein (Norweger ≠ Brite) → Haus 3 = Rot, Brite.",
+    "Damit bleibt für Haus 1 nur die Farbe Gelb. Hinweis 8: Norweger raucht Dunhill.",
+    "Hinweis 11: Der Pferde-Halter wohnt neben Dunhill (Haus 1) → Pferde in Haus 2.",
+    "Hinweis 3: Der Däne trinkt Tee. Tee ist noch offen für Haus 2 → Däne in Haus 2.",
+    "Getränke: 1=Wasser (letzte Option), 2=Tee, 3=Milch, 4=Kaffee, 5=?. Hinweis 12: Winfield trinkt Bier → Bier = Haus 5, Winfield = Haus 5.",
+    "Hinweis 2: Schwede hält Hunde. In Haus 5 ist das Tier noch offen → Schwede in Haus 5.",
+    "Damit bleibt für Haus 4 nur der Deutsche. Hinweis 14: Der Deutsche raucht Rothmans.",
+    "Hinweis 6: Pall Mall raucht der Vogelhalter. Für Haus 3 (Brite) sind Zigarre und Tier noch offen → Brite raucht Pall Mall und hält Vögel.",
+    "Rest: Haus 2 raucht Marlboro (Hinweis 10 + 15 konsistent: Nachbar hat Katzen bzw. Wasser).",
+    "Tiere: 1 = Katzen (Hinweis 10, Nachbar von Marlboro), 5 = Hund (Hinweis 2). Für Haus 4 bleibt nur: 🐟 Fisch.",
+    "Antwort: Der Deutsche hält den Fisch.",
+]
+
+
+@router.get("/einsteins-raetsel", response_class=HTMLResponse)
+def einsteins_raetsel_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "raetsel/einsteins_raetsel.html",
+        {
+            "active_page": "raetsel",
+            "clues": EINSTEIN_CLUES,
+            "nationalities": ["Norweger", "Däne", "Brite", "Deutscher", "Schwede"],
+        },
+    )
+
+
+@router.post("/einsteins-raetsel/result", response_class=HTMLResponse)
+def einsteins_raetsel_result(request: Request, guess: str = Form(...)):
+    correct_nation = "Deutscher"
+    is_correct = guess == correct_nation
+    return templates.TemplateResponse(
+        request,
+        "partials/einsteins_raetsel_result.html",
+        {
+            "guess": guess,
+            "is_correct": is_correct,
+            "correct_nation": correct_nation,
+            "solution": EINSTEIN_SOLUTION,
+            "deduktion": EINSTEIN_DEDUKTION,
+        },
     )
 
 
