@@ -82,6 +82,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Wahrscheinlichkeit",
     },
+    {
+        "id": "nichttransitive-wuerfel",
+        "name": "Nicht-transitive Würfel",
+        "icon": "🎲",
+        "beschreibung": "Vier Würfel A, B, C, D. Du wählst zuerst, ich danach – und ich gewinne fast immer. Efrons Würfel (1970) zerstören die Intuition, dass 'besser als' eine transitive Relation ist.",
+        "typ": "Spieltheorie-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
     # ── Statistik & Kognition ──────────────────────────────────────────────────
     {
         "id": "simpson",
@@ -4103,6 +4113,15 @@ def _nav_context(current_id: str) -> dict:
 def pawlow_hund_page(request: Request):
     return templates.TemplateResponse(
         request, "raetsel/pawlow_hund.html", {"active_page": "raetsel"}
+    )
+
+
+@router.get("/nichttransitive-wuerfel", response_class=HTMLResponse)
+def nichttransitive_wuerfel_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "raetsel/nichttransitive_wuerfel.html",
+        {"active_page": "raetsel"},
     )
 
 

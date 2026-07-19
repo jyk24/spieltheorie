@@ -1,0 +1,306 @@
+{% extends "base.html" %}
+{% block title %}Nicht-transitive Würfel – Efron-Würfel-Paradox{% endblock %}
+{% block meta_description %}<meta name="description" content="Efron-Würfel: A schlägt B, B schlägt C, C schlägt D, D schlägt A. Wähle einen Würfel – ich schlage dich mit einem anderen. Ein Paradoxon aus der Spieltheorie zum Selbst-Erleben.">{% endblock %}
+{% block og_title %}Nicht-transitive Würfel – Wähle zuerst, verlier fast immer{% endblock %}
+{% block og_description %}Efron entdeckte 4 Würfel, deren Stärken kreisförmig angeordnet sind – wie Schere-Stein-Papier. Wer zweiter wählt, gewinnt. Interaktives Spiel.{% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🎲 Nicht-transitive Würfel</h1>
+        <p class="text-slate-500 mt-1">Vier Würfel, ein Paradox: Wer zuerst wählt, verliert fast immer. Wie kann das sein?</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-2">Die Situation:</p>
+        <p>Vor dir liegen <strong>vier Würfel A, B, C, D</strong>. Die Zahlen auf den Seiten sind unten aufgelistet. Wir spielen 100 Mal. Bei jeder Runde wirft jeder seinen Würfel – wer die höhere Zahl würfelt, gewinnt die Runde.</p>
+        <p class="mt-2">Die Regel: <strong>Du wählst zuerst</strong>. Dann wähle ich.</p>
+        <p class="mt-3 italic text-slate-500">Warren Buffett soll Bill Gates einmal genau dieses Spiel angeboten haben. Gates lehnte nach kurzem Überlegen ab. Warum?</p>
+    </div>
+
+    <!-- Würfel-Übersicht -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6" id="dice-select">
+        <button data-die="A" onclick="pickDie('A')"
+                class="dice-btn bg-white border-2 border-slate-200 hover:border-indigo-400 rounded-xl p-4 transition-all group text-left">
+            <div class="text-3xl font-bold text-indigo-600 mb-1">A</div>
+            <div class="text-xs text-slate-500 mb-2">Seiten:</div>
+            <div class="flex flex-wrap gap-1">
+                {% for v in [0,0,4,4,4,4] %}<span class="inline-block bg-slate-100 rounded px-2 py-0.5 text-sm font-mono">{{ v }}</span>{% endfor %}
+            </div>
+            <div class="text-xs text-slate-400 mt-2">Mittelwert 2.67</div>
+        </button>
+        <button data-die="B" onclick="pickDie('B')"
+                class="dice-btn bg-white border-2 border-slate-200 hover:border-indigo-400 rounded-xl p-4 transition-all group text-left">
+            <div class="text-3xl font-bold text-indigo-600 mb-1">B</div>
+            <div class="text-xs text-slate-500 mb-2">Seiten:</div>
+            <div class="flex flex-wrap gap-1">
+                {% for v in [3,3,3,3,3,3] %}<span class="inline-block bg-slate-100 rounded px-2 py-0.5 text-sm font-mono">{{ v }}</span>{% endfor %}
+            </div>
+            <div class="text-xs text-slate-400 mt-2">Mittelwert 3.00</div>
+        </button>
+        <button data-die="C" onclick="pickDie('C')"
+                class="dice-btn bg-white border-2 border-slate-200 hover:border-indigo-400 rounded-xl p-4 transition-all group text-left">
+            <div class="text-3xl font-bold text-indigo-600 mb-1">C</div>
+            <div class="text-xs text-slate-500 mb-2">Seiten:</div>
+            <div class="flex flex-wrap gap-1">
+                {% for v in [2,2,2,2,6,6] %}<span class="inline-block bg-slate-100 rounded px-2 py-0.5 text-sm font-mono">{{ v }}</span>{% endfor %}
+            </div>
+            <div class="text-xs text-slate-400 mt-2">Mittelwert 2.67</div>
+        </button>
+        <button data-die="D" onclick="pickDie('D')"
+                class="dice-btn bg-white border-2 border-slate-200 hover:border-indigo-400 rounded-xl p-4 transition-all group text-left">
+            <div class="text-3xl font-bold text-indigo-600 mb-1">D</div>
+            <div class="text-xs text-slate-500 mb-2">Seiten:</div>
+            <div class="flex flex-wrap gap-1">
+                {% for v in [1,1,1,5,5,5] %}<span class="inline-block bg-slate-100 rounded px-2 py-0.5 text-sm font-mono">{{ v }}</span>{% endfor %}
+            </div>
+            <div class="text-xs text-slate-400 mt-2">Mittelwert 3.00</div>
+        </button>
+    </div>
+
+    <div class="text-center text-sm text-slate-500 mb-6" id="prompt-line">
+        👆 Wähle einen Würfel. Danach starten wir 100 Runden.
+    </div>
+
+    <!-- Ergebnis-Bereich (versteckt bis Auswahl) -->
+    <div id="result-area" class="hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
+            <div class="flex items-center justify-between gap-4 mb-4 flex-wrap">
+                <div>
+                    <div class="text-xs text-slate-400 uppercase tracking-wide">Duell</div>
+                    <div class="text-lg font-bold text-slate-800">
+                        <span id="you-die" class="text-indigo-600">?</span>
+                        <span class="text-slate-400 mx-2">vs.</span>
+                        <span id="ai-die" class="text-rose-600">?</span>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="text-center">
+                        <div class="text-xs text-slate-400">Du</div>
+                        <div id="you-wins" class="text-2xl font-bold text-indigo-600">0</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs text-slate-400">Ich</div>
+                        <div id="ai-wins" class="text-2xl font-bold text-rose-600">0</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs text-slate-400">Unent.</div>
+                        <div id="ties" class="text-2xl font-bold text-slate-400">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full bg-slate-100 rounded-full h-4 overflow-hidden flex mb-3">
+                <div id="bar-you" class="bg-indigo-500 h-full transition-all" style="width:0%"></div>
+                <div id="bar-tie" class="bg-slate-300 h-full transition-all" style="width:0%"></div>
+                <div id="bar-ai" class="bg-rose-500 h-full transition-all" style="width:0%"></div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 text-center text-sm font-mono mb-4">
+                <div><div class="text-xs text-slate-500">Dein Wurf</div><div id="you-roll" class="text-2xl font-bold text-indigo-600">–</div></div>
+                <div><div class="text-xs text-slate-500">Runde</div><div id="round-num" class="text-2xl font-bold text-slate-500">0/100</div></div>
+                <div><div class="text-xs text-slate-500">Mein Wurf</div><div id="ai-roll" class="text-2xl font-bold text-rose-600">–</div></div>
+            </div>
+
+            <div class="flex gap-2 flex-wrap">
+                <button onclick="rollOnce()" id="btn-roll" class="flex-1 min-w-[120px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors">▶ Eine Runde</button>
+                <button onclick="rollAll()" id="btn-all" class="flex-1 min-w-[120px] bg-slate-800 hover:bg-slate-900 text-white font-semibold px-4 py-2 rounded-lg transition-colors">⏩ Alle 100 Runden</button>
+                <button onclick="resetGame()" class="bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold px-4 py-2 rounded-lg transition-colors">↺ Neu</button>
+            </div>
+        </div>
+
+        <!-- Aha-Bereich, erscheint erst nach dem Spiel -->
+        <div id="aha-area" class="hidden bg-amber-50 border-2 border-amber-300 rounded-xl p-5 mb-6">
+            <div class="text-xs font-bold text-amber-600 uppercase tracking-wide mb-2">Aha-Moment</div>
+            <p class="text-slate-800 leading-relaxed" id="aha-text"></p>
+            <div class="mt-3 text-sm text-slate-600" id="aha-detail"></div>
+        </div>
+    </div>
+
+    <!-- Auflösung -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-6">
+        <h2 class="text-xl font-bold text-slate-800 mb-3">Die Lösung: Nicht-Transitivität</h2>
+        <p class="text-slate-600 leading-relaxed mb-4">
+            Bradley Efron entwarf 1970 diese vier Würfel. Rechnet man die exakten Gewinnwahrscheinlichkeiten aus, entsteht ein <strong>Kreis</strong> — wie Schere-Stein-Papier:
+        </p>
+        <div class="bg-slate-50 rounded-xl p-4 text-center font-mono text-slate-800 mb-4 leading-loose">
+            A ⟶ B ⟶ C ⟶ D ⟶ A<br>
+            <span class="text-xs text-slate-500">jeweils mit Wahrscheinlichkeit 2/3</span>
+        </div>
+        <p class="text-slate-600 leading-relaxed mb-4">
+            Konkret: <strong>A schlägt B</strong> in 2/3 aller Duelle, <strong>B schlägt C</strong> in 2/3, <strong>C schlägt D</strong> in 2/3 — und <strong>D schlägt A</strong> in 2/3. Die Relation „ist besser als" ist <em>nicht transitiv</em>. Es gibt keinen „besten" Würfel.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
+            <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+                <div class="text-xs font-bold text-emerald-700 uppercase mb-1">Rechnung: A vs. B</div>
+                <p class="text-sm text-slate-700">B wirft immer 3. A wirft 4 mit p = 4/6 = 2/3. Also gewinnt A gegen B mit Wahrscheinlichkeit <strong>2/3</strong>.</p>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+                <div class="text-xs font-bold text-emerald-700 uppercase mb-1">Rechnung: D vs. A</div>
+                <p class="text-sm text-slate-700">A würfelt 0 oder 4. D würfelt 1 oder 5. D gewinnt, wenn D = 5 (p = 1/2) oder wenn D = 1 und A = 0 (p = 1/2 · 1/3 = 1/6). Zusammen: <strong>1/2 + 1/6 = 2/3</strong>.</p>
+            </div>
+        </div>
+
+        <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+            <div class="text-xs font-bold text-indigo-700 uppercase mb-1">Warum das ein Spieltheorie-Problem ist</div>
+            <p class="text-sm text-slate-700">Das Konzept „X ist besser als Y" scheint intuitiv transitiv (wenn X > Y und Y > Z, dann X > Z). Bei Wahrscheinlichkeitsverteilungen — und bei vielen Präferenz-Ordnungen — <strong>gilt das nicht</strong>. Dieselbe Struktur taucht auf bei Condorcet-Zyklen in Wahlen (A schlägt B, B schlägt C, C schlägt A), bei Waffen-Auktionen und bei bestimmten Portfolio-Vergleichen.</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-6">
+        <h2 class="text-xl font-bold text-slate-800 mb-3">Deine Strategie als Zweitwähler</h2>
+        <p class="text-slate-600 mb-3">Wenn dein Gegner … wählt, wähle du …:</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-center text-sm">
+            <div class="bg-slate-50 rounded-lg p-3"><div class="text-slate-500 text-xs">Er wählt</div><div class="font-bold text-slate-800 text-lg">A</div><div class="text-emerald-600 mt-1">→ nimm D</div></div>
+            <div class="bg-slate-50 rounded-lg p-3"><div class="text-slate-500 text-xs">Er wählt</div><div class="font-bold text-slate-800 text-lg">B</div><div class="text-emerald-600 mt-1">→ nimm A</div></div>
+            <div class="bg-slate-50 rounded-lg p-3"><div class="text-slate-500 text-xs">Er wählt</div><div class="font-bold text-slate-800 text-lg">C</div><div class="text-emerald-600 mt-1">→ nimm B</div></div>
+            <div class="bg-slate-50 rounded-lg p-3"><div class="text-slate-500 text-xs">Er wählt</div><div class="font-bold text-slate-800 text-lg">D</div><div class="text-emerald-600 mt-1">→ nimm C</div></div>
+        </div>
+        <p class="text-xs text-slate-500 mt-3">In allen vier Fällen liegt deine Gewinnwahrscheinlichkeit pro Runde bei 2/3 ≈ 66.7 %.</p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-6">
+        <h2 class="text-xl font-bold text-slate-800 mb-3">Erkenntnis</h2>
+        <p class="text-slate-600 leading-relaxed">
+            Nicht-Transitivität ist keine Kuriosität, sondern die Regel in Systemen mit vielen Vergleichsdimensionen. Wer <strong>zweiter zieht</strong>, hat oft den strukturellen Vorteil — nicht wegen Information, sondern wegen der Wahl der Achse. Diese Idee taucht überall auf: von der Second-Mover-Advantage in Auktionen bis zu Meta-Strategien in kompetitiven Spielen.
+        </p>
+    </div>
+
+    <div class="text-center">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Zurück zur Rätselübersicht</a>
+        <span class="text-slate-300 mx-2">·</span>
+        <a href="/raetsel/rps" class="text-sm text-slate-400 hover:text-indigo-600">Ähnliches: Schere-Stein-Papier →</a>
+    </div>
+</div>
+
+<script>
+const DICE = {
+    A: [0,0,4,4,4,4],
+    B: [3,3,3,3,3,3],
+    C: [2,2,2,2,6,6],
+    D: [1,1,1,5,5,5]
+};
+// Beat-Zyklus: A > B > C > D > A (mit p = 2/3)
+const BEATS = {A:'B', B:'C', C:'D', D:'A'};
+// Wenn Gegner X wählt, wähle Y, sodass Y schlägt X.
+const COUNTER = {A:'D', B:'A', C:'B', D:'C'};
+
+let state = null;
+const MAX_ROUNDS = 100;
+
+function pickDie(you) {
+    const ai = COUNTER[you];
+    state = { you, ai, youWins: 0, aiWins: 0, ties: 0, round: 0 };
+    document.getElementById('you-die').textContent = you;
+    document.getElementById('ai-die').textContent = ai;
+    document.getElementById('you-wins').textContent = '0';
+    document.getElementById('ai-wins').textContent = '0';
+    document.getElementById('ties').textContent = '0';
+    document.getElementById('you-roll').textContent = '–';
+    document.getElementById('ai-roll').textContent = '–';
+    document.getElementById('round-num').textContent = '0/' + MAX_ROUNDS;
+    document.getElementById('bar-you').style.width = '0%';
+    document.getElementById('bar-tie').style.width = '0%';
+    document.getElementById('bar-ai').style.width = '0%';
+    document.getElementById('aha-area').classList.add('hidden');
+    document.getElementById('btn-roll').disabled = false;
+    document.getElementById('btn-all').disabled = false;
+
+    document.getElementById('result-area').classList.remove('hidden');
+    document.getElementById('prompt-line').innerHTML =
+        `Du hast <strong class="text-indigo-600">${you}</strong> gewählt. Ich nehme <strong class="text-rose-600">${ai}</strong>. Roll 'em!`;
+
+    // Highlight ausgewählten Würfel
+    document.querySelectorAll('.dice-btn').forEach(b => {
+        b.classList.remove('border-indigo-500','ring-2','ring-indigo-300','border-rose-500','ring-rose-300');
+        const d = b.dataset.die;
+        if (d === you) b.classList.add('border-indigo-500','ring-2','ring-indigo-300');
+        if (d === ai) b.classList.add('border-rose-500','ring-2','ring-rose-300');
+    });
+
+    document.getElementById('result-area').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function rollDie(id) {
+    const sides = DICE[id];
+    return sides[Math.floor(Math.random()*sides.length)];
+}
+
+function rollOnce() {
+    if (!state || state.round >= MAX_ROUNDS) return;
+    const yr = rollDie(state.you);
+    const ar = rollDie(state.ai);
+    state.round++;
+    if (yr > ar) state.youWins++;
+    else if (ar > yr) state.aiWins++;
+    else state.ties++;
+
+    document.getElementById('you-roll').textContent = yr;
+    document.getElementById('ai-roll').textContent = ar;
+    document.getElementById('round-num').textContent = state.round + '/' + MAX_ROUNDS;
+    document.getElementById('you-wins').textContent = state.youWins;
+    document.getElementById('ai-wins').textContent = state.aiWins;
+    document.getElementById('ties').textContent = state.ties;
+    const p = state.round / MAX_ROUNDS * 100;
+    // Balken proportional zu Runden gespielt
+    document.getElementById('bar-you').style.width = (state.youWins / MAX_ROUNDS * 100) + '%';
+    document.getElementById('bar-tie').style.width = (state.ties / MAX_ROUNDS * 100) + '%';
+    document.getElementById('bar-ai').style.width = (state.aiWins / MAX_ROUNDS * 100) + '%';
+
+    if (state.round >= MAX_ROUNDS) endGame();
+}
+
+function rollAll() {
+    if (!state) return;
+    document.getElementById('btn-roll').disabled = true;
+    document.getElementById('btn-all').disabled = true;
+    // Schnelle Simulation via kurzem Interval für Animation
+    const remaining = MAX_ROUNDS - state.round;
+    let i = 0;
+    const chunk = Math.max(1, Math.floor(remaining/25));
+    const interval = setInterval(() => {
+        for (let k=0; k<chunk && state.round < MAX_ROUNDS; k++) rollOnce();
+        i++;
+        if (state.round >= MAX_ROUNDS) {
+            clearInterval(interval);
+        }
+    }, 40);
+}
+
+function endGame() {
+    document.getElementById('btn-roll').disabled = true;
+    document.getElementById('btn-all').disabled = true;
+    const pct = (state.aiWins / MAX_ROUNDS * 100).toFixed(0);
+    const yourPct = (state.youWins / MAX_ROUNDS * 100).toFixed(0);
+    let msg, detail;
+    if (state.aiWins > state.youWins) {
+        msg = `Ich habe ${state.aiWins} : ${state.youWins} gewonnen (${pct} % Rundensiege).`;
+        detail = `Das ist kein Zufall — im Erwartungswert liegt meine Gewinnwahrscheinlichkeit pro Runde bei genau 2/3 ≈ 66.7 %. Warren Buffett kannte dieses Paradox. Bill Gates auch — er lehnte deshalb ab.`;
+    } else if (state.youWins > state.aiWins) {
+        msg = `Du hast ${state.youWins} : ${state.aiWins} gewonnen (${yourPct} %). Statistisches Glück!`;
+        detail = `Bei einer erwarteten Gewinnrate von 33.3 % pro Runde für dich passiert das in ca. 1 % aller 100er-Serien. Herzlichen Glückwunsch — und probier's nochmal.`;
+    } else {
+        msg = `Unentschieden ${state.youWins} : ${state.aiWins}. Sehr ungewöhnlich.`;
+        detail = `Wahrscheinlich ${((0).toFixed(1))} … statistischer Sonderfall.`;
+    }
+    document.getElementById('aha-text').textContent = msg;
+    document.getElementById('aha-detail').textContent = detail;
+    document.getElementById('aha-area').classList.remove('hidden');
+
+    // Als gelöst markieren
+    try { localStorage.setItem('rs_nichttransitive-wuerfel', '1'); } catch(e){}
+}
+
+function resetGame() {
+    state = null;
+    document.getElementById('result-area').classList.add('hidden');
+    document.getElementById('prompt-line').innerHTML = '👆 Wähle einen Würfel. Danach starten wir 100 Runden.';
+    document.querySelectorAll('.dice-btn').forEach(b => {
+        b.classList.remove('border-indigo-500','ring-2','ring-indigo-300','border-rose-500','ring-rose-300');
+    });
+}
+</script>
+
+{% endblock %}
