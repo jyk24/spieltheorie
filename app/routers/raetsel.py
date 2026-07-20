@@ -631,6 +631,10 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neu (2026-07-20) ─────────────────────────────────────────────────────
+    {"id":"zwei-kinder","name":"Das Zwei-Kinder-Paradoxon","icon":"👶","beschreibung":"Ein Nachbar sagt: mindestens eines seiner zwei Kinder ist ein Junge. Wie groß ist die Wahrscheinlichkeit, dass das andere auch ein Junge ist? Die intuitive Antwort ist falsch – und zeigt, wie tückisch bedingte Wahrscheinlichkeit ist.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
+    {"id":"blaue-augen","name":"Die Blauäugigen Insulaner","icon":"👁️","beschreibung":"Auf einer Insel leben 100 blauäugige Logiker. Wer weiß, dass er blaue Augen hat, muss die Insel verlassen. Ein Fremder verkündet öffentlich: mindestens einer hat blaue Augen. Am 100. Tag verlassen alle die Insel. Warum?","typ":"Common-Knowledge-Paradox","schwierigkeit":"Fortgeschritten","dauer":"6 min","kategorie":"Spieltheorie"},
+    {"id":"nim-spiel","name":"Das Nim-Spiel","icon":"🪙","beschreibung":"Drei Häufchen mit 3, 4 und 5 Münzen. Zwei Spieler nehmen abwechselnd beliebig viele aus einem Häufchen. Wer die letzte nimmt, gewinnt. Es gibt eine perfekte Strategie – sie steckt in einer XOR-Operation.","typ":"Kombinatorische Spieltheorie","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Spieltheorie"},
 ]
 
 
@@ -4046,6 +4050,57 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Der <strong>Fundamentale Attributionsfehler</strong> (FAE, Ross 1977): Wir überschätzen den Einfluss von Persönlichkeitseigenschaften und unterschätzen den Einfluss der Situation auf das Verhalten anderer.</p><p>Das Verhalten (Castro-Aufsatz) wurde der Disposition zugeschrieben (<em>er ist pro-Castro</em>) – obwohl die Situation (zufällige Zuweisung) das Verhalten vollständig erklärte.</p>",
         "kontext": "<p>Der FAE ist kulturell variabel: Westliche (individualistische) Kulturen zeigen ihn stärker als östliche (kollektivistische). Im Alltag: Wer uns auf der Autobahn schneidet, ist ein Idiot – nicht jemand mit einem Notfall.</p><p>In Verhandlungen: Wenn die Gegenseite hart verhandelt, schließen wir auf Gier oder Feindseligkeit – statt auf externen Druck, Vorgaben des Vorstands oder Zeitdruck. Das verzerrt unsere Strategie erheblich.</p>",
         "erkenntnis": "Wir sind natürliche Biographen, keine Situationsanalysten. Wenn jemand sich 'falsch' verhält, zuerst fragen: Welche situativen Kräfte könnten dieses Verhalten erklären? Das gibt ein realistischeres Bild – und bessere Verhandlungsstrategien.",
+    },
+    "zwei-kinder": {
+        "id": "zwei-kinder", "name": "Das Zwei-Kinder-Paradoxon", "icon": "👶",
+        "farbe": "cyan", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Ein Nachbar erzählt dir: er hat zwei Kinder, und <strong>mindestens eines ist ein Junge</strong>. Sonst verrät er nichts. Nimm an, jedes Kind ist unabhängig mit Wahrscheinlichkeit ½ ein Junge oder ein Mädchen.",
+        "frage": "Wie groß ist die Wahrscheinlichkeit, dass <strong>beide</strong> Kinder Jungen sind?",
+        "optionen": [
+            {"text": "1/2 – das andere Kind ist ja unabhängig", "hinweis": "Klingt intuitiv"},
+            {"text": "1/3 – die Bedingung schließt nur Mädchen–Mädchen aus", "hinweis": "Zähle die verbleibenden Fälle"},
+            {"text": "1/4 – ursprüngliche Wahrscheinlichkeit für JJ", "hinweis": "Ohne Bedingung"},
+            {"text": "2/3 – Wechsel-Argument wie bei Monty Hall", "hinweis": "Zu hoch"},
+        ],
+        "loesung_text": "1/3 – die Antwort überrascht fast alle.",
+        "erklaerung": "<p>Ohne Zusatzinfo gibt es 4 gleich wahrscheinliche Kombinationen: <strong>JJ, JM, MJ, MM</strong> (Reihenfolge = Geburt).</p><p>Die Aussage <em>mindestens ein Junge</em> schließt nur <strong>MM</strong> aus. Übrig bleiben <strong>JJ, JM, MJ</strong> – 3 Fälle mit gleicher Wahrscheinlichkeit. In nur einem davon (JJ) sind <em>beide</em> Kinder Jungen.</p><p>→ P(beide Jungen | mindestens ein Junge) = <strong>1/3</strong>, nicht 1/2.</p>",
+        "kontext": "<p><strong>Der Selektions-Mechanismus zählt.</strong> Die Antwort ändert sich radikal, wenn die Info anders zustande kommt:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Aussage: <em>mein ältestes Kind ist ein Junge</em> → P = 1/2 (nur JJ und JM bleiben).</li><li>Aussage: <em>ich habe einen Sohn, der am Dienstag geboren wurde</em> → P ≈ 13/27 (Gary Foshee, 2010).</li><li>Ein zufällig getroffener Junge sagt: <em>ich habe ein Geschwister</em> → P = 1/2.</li></ul><p>Martin Gardner stellte das Rätsel 1959 im <em>Scientific American</em> und musste die Antwort später präzisieren, weil das Wording mehrdeutig war. Das Paradoxon zeigt: In der bedingten Wahrscheinlichkeit ist <em>wie</em> du eine Information erhältst genauso wichtig wie <em>welche</em>.</p>",
+        "erkenntnis": "Bedingte Wahrscheinlichkeit ist eine Funktion des Beobachtungsprozesses, nicht nur der Fakten. Wer beim bayesianischen Denken die Selektion vergisst, rechnet systematisch falsch – auch Ärzte, Juristen und Ökonomen.",
+    },
+    "blaue-augen": {
+        "id": "blaue-augen", "name": "Die Blauäugigen Insulaner", "icon": "👁️",
+        "farbe": "sky", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Fortgeschritten", "dauer": "6 min",
+        "setup": "Auf einer Insel leben 100 perfekt logische Menschen mit blauen Augen und 100 mit braunen. Es gibt keine Spiegel, sie sprechen nicht über Augenfarben. <strong>Regel:</strong> Wer weiß, dass er blaue Augen hat, verlässt die Insel am nächsten Mittag mit der Fähre. Eines Tages sagt ein Fremder laut vor allen: <em>mindestens einer von euch hat blaue Augen</em>.",
+        "frage": "Was passiert – und warum ist die Aussage des Fremden überhaupt neu?",
+        "optionen": [
+            {"text": "Nichts – jeder wusste schon, dass es Blauäugige gibt", "hinweis": "Aber wusste jeder, dass jeder es weiß?"},
+            {"text": "Am nächsten Tag verlassen alle 100 Blauäugigen die Insel", "hinweis": "Zu schnell"},
+            {"text": "Am 100. Tag verlassen alle 100 Blauäugigen gemeinsam die Insel", "hinweis": "Induktion nach Tagen"},
+            {"text": "Nur einer geht – die anderen kennen ja seine Farbe", "hinweis": "Was ist mit gegenseitigem Wissen?"},
+        ],
+        "loesung_text": "Am 100. Tag verlassen alle 100 Blauäugigen die Insel gleichzeitig.",
+        "erklaerung": "<p>Beweis per Induktion nach n = Zahl der Blauäugigen:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>n = 1:</strong> Der einzige Blauäugige sieht keinen anderen mit blauen Augen. Nach der Ansage weiß er sofort: <em>ich muss es sein</em>. → Geht an Tag 1.</li><li><strong>n = 2:</strong> Jeder Blauäugige sieht genau einen anderen. Er denkt: <em>wenn ich braune Augen hätte, würde er an Tag 1 gehen</em>. Er geht nicht. Also weiß jeder an Tag 2: <em>wir beide haben blaue Augen</em>. → Beide gehen an Tag 2.</li><li><strong>n = 100:</strong> An Tag 99 geht niemand. Also folgert jeder Blauäugige: <em>es sind mehr als 99 – also 100. Und einer davon bin ich.</em> → Alle gehen an Tag 100.</li></ul><p>Der Fremde hat keine neue Information über <em>Fakten</em> geliefert – jeder wusste ja längst, dass Blauäugige existieren. Aber seine öffentliche Ansage machte diese Tatsache zu <strong>Common Knowledge</strong>: Jeder weiß es, jeder weiß dass jeder es weiß, jeder weiß dass jeder weiß dass jeder es weiß – ad infinitum.</p>",
+        "kontext": "<p>Das Rätsel wurde 2008 von Terence Tao (Fields-Medaille) populär gemacht. Es ist das Standardbeispiel für den Unterschied zwischen <em>mutual knowledge</em> (jeder weiß X) und <em>common knowledge</em> (jeder weiß, dass jeder weiß… X).</p><p><strong>Ökonomische Relevanz:</strong> Robert Aumann bekam 2005 den Wirtschaftsnobelpreis unter anderem für das Konzept Common Knowledge. Ohne Common Knowledge kein Koordinationsgleichgewicht – Bank-Runs, Revolutionen und Marktcrashes hängen daran, ob eine private Überzeugung <em>öffentlich</em> wird.</p><p>Verwandt: Das <strong>Muddy-Children-Puzzle</strong> (John Conway), das <strong>Byzantinische-Generäle-Problem</strong> in verteilten Systemen und Bitcoin – Konsens ohne zentrale Autorität baut auf denselben logischen Prinzipien auf.</p>",
+        "erkenntnis": "Öffentliche Ansagen sind nicht redundant, auch wenn alle Fakten längst bekannt sind. Erst wenn Wissen <em>gemeinsam anerkannt</em> ist, entstehen kollektive Handlungen. Deshalb sind Zeitungen, Reden und Protokolle keine bloßen Wiederholungen – sie schaffen Koordination.",
+    },
+    "nim-spiel": {
+        "id": "nim-spiel", "name": "Das Nim-Spiel", "icon": "🪙",
+        "farbe": "amber", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Drei Häufchen mit <strong>3, 4 und 5</strong> Münzen. Zwei Spieler ziehen abwechselnd. Ein Zug: aus <em>einem</em> Häufchen beliebig viele Münzen nehmen (mindestens eine). Wer die letzte Münze nimmt, gewinnt. Du bist am Zug.",
+        "frage": "Ist deine Position gewonnen oder verloren – und wenn gewonnen: Was ist der richtige Zug?",
+        "optionen": [
+            {"text": "Verloren – bei perfektem Spiel verliert der Anziehende immer", "hinweis": "Prüfe das Nim-Sum"},
+            {"text": "Gewonnen – nimm 2 aus dem Häufchen mit 3 Münzen", "hinweis": "Verwandelt (3,4,5) in (1,4,5)"},
+            {"text": "Gewonnen – nimm 3 aus dem Häufchen mit 5 Münzen", "hinweis": "Ergibt (3,4,2)"},
+            {"text": "Egal welcher Zug – Nim ist Zufall", "hinweis": "Nim ist deterministisch lösbar"},
+        ],
+        "loesung_text": "Gewonnen – der eindeutige Gewinnzug: Nimm 2 aus dem 3er-Häufchen. Es verbleibt (1, 4, 5).",
+        "erklaerung": "<p><strong>Nim-Sum:</strong> Bilde die XOR-Summe der Häufchengrößen (bitweise Addition ohne Übertrag).</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>3 = 011</li><li>4 = 100</li><li>5 = 101</li><li>XOR: 011 ⊕ 100 ⊕ 101 = <strong>010</strong> = 2 ≠ 0 → Gewinnposition für den Anziehenden.</li></ul><p><strong>Strategie:</strong> Nach jedem eigenen Zug soll die XOR-Summe <em>0</em> sein. Für jedes Häufchen p rechne p′ = p ⊕ 2:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Häufchen 3 → 3 ⊕ 2 = 1. Da 1 &lt; 3: Reduziere 3 auf <strong>1</strong> (nimm 2 Münzen). Check: 001 ⊕ 100 ⊕ 101 = 000 ✓</li><li>Häufchen 4 → 4 ⊕ 2 = 6. Da 6 &gt; 4: unzulässig.</li><li>Häufchen 5 → 5 ⊕ 2 = 7. Da 7 &gt; 5: unzulässig.</li></ul><p>Der einzige Gewinnzug ist also (3→1). Von nun an gilt: Jeder Zug des Gegners zerstört die 0-Summe – du stellst sie mit deinem Antwortzug immer wieder her. Die letzte Münze nimmst am Ende du.</p>",
+        "kontext": "<p><strong>Bouton-Theorem (1901):</strong> Charles Bouton bewies: Eine Nim-Position ist genau dann eine Verlustposition (für den Anziehenden), wenn die XOR-Summe aller Häufchen 0 ist.</p><p>Nim ist das <em>Ur-Beispiel</em> der kombinatorischen Spieltheorie. Der <strong>Sprague-Grundy-Satz</strong> (1935, 1939) verallgemeinert es: Jedes unparteiische Zwei-Spieler-Spiel mit vollständiger Information und ohne Zufall ist äquivalent zu einem Nim-Häufchen mit einer bestimmten Grundy-Zahl.</p><p><strong>Praxis:</strong> Damit lassen sich Endspiele in Go, Domineering, Hackenbush und viele andere Spiele algorithmisch analysieren. Auch der Film <em>Letztes Jahr in Marienbad</em> (1961) machte Nim populär – die Figuren spielen es dort ununterbrochen.</p>",
+        "erkenntnis": "Ein scheinbar chaotisches Spiel hat eine kristallklare mathematische Lösung – versteckt in einer Bit-Operation. Wer die richtige Repräsentation findet, verwandelt Intuition in Berechnung. Genau das macht die Spieltheorie mit vielen realen Konflikten.",
     },
     "schlaeger-ball": {
         "id": "schlaeger-ball", "name": "Schläger und Ball", "icon": "⚾",
