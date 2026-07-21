@@ -631,6 +631,9 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"widget-maschinen","name":"5 Maschinen, 5 Widgets","icon":"⚙️","beschreibung":"5 Maschinen brauchen 5 Minuten für 5 Widgets. Wie lange brauchen 100 Maschinen für 100 Widgets? Die zweite Frage des Cognitive Reflection Tests – und wieder liegen selbst MIT-Studenten mehrheitlich daneben.","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"seerose","name":"Die Seerose","icon":"🪷","beschreibung":"Ein Seerosen-Fleck im Teich verdoppelt sich jeden Tag. Nach 48 Tagen ist der ganze Teich bedeckt. Nach wie vielen Tagen war die Hälfte bedeckt? Exponentielles Wachstum ist der blinde Fleck der Intuition – dieselbe Falle wie bei Pandemien und Zinseszins.","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"ikea-effekt","name":"Der IKEA-Effekt","icon":"🪑","beschreibung":"Zwei identische Regale – eins selbst zusammengebaut, eins fertig gekauft. Wieviel mehr würdest du für dein Regal bezahlen? Norton, Mochon & Ariely (2012) zeigten: Eigenleistung inflationiert den gefühlten Wert um 63%.","typ":"Verhaltensökonomie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
 ]
 
 
@@ -4063,6 +4066,56 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "widget-maschinen": {
+        "id": "widget-maschinen", "name": "5 Maschinen, 5 Widgets", "icon": "⚙️",
+        "farbe": "sky", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "1 min",
+        "setup_label": "Das Problem:",
+        "setup": "5 Maschinen brauchen <strong>5 Minuten</strong>, um <strong>5 Widgets</strong> herzustellen.",
+        "frage": "Wie lange brauchen 100 Maschinen, um 100 Widgets herzustellen?",
+        "optionen": [
+            {"text": "100 Minuten", "hinweis": "Skaliert linear mit der Widget-Anzahl"},
+            {"text": "5 Minuten", "hinweis": "Jede Maschine baut in derselben Zeit ein Widget"},
+            {"text": "20 Minuten", "hinweis": "Ein Viertel der Ausgangszeit"},
+            {"text": "500 Minuten", "hinweis": "100 × 5 Minuten"},
+        ],
+        "loesung_text": "5 Minuten.",
+        "erklaerung": "<p>5 Maschinen → 5 Widgets in 5 Minuten. Das heißt: <strong>eine Maschine baut ein Widget in 5 Minuten</strong>.</p><p>Bei 100 Maschinen bauen dann auch 100 Widgets parallel – in denselben <strong>5 Minuten</strong>. Die Anzahl der Maschinen skaliert mit der Anzahl der Widgets. Die Zeit bleibt konstant.</p><p>Die intuitive Antwort '100 Minuten' übernimmt einfach die 100 aus der Aufgabe – ein klassischer Attribut-Substitutions-Fehler.</p>",
+        "kontext": "<p><strong>Der Cognitive Reflection Test (CRT), Frage 2 – Shane Frederick, 2005</strong></p><p>Zusammen mit dem Schläger-Ball-Problem und der Seerose gehört diese Aufgabe zum meistzitierten Kurztest der kognitiven Reflexionsfähigkeit. In Fredericks Originalstudie an Harvard, Princeton und MIT beantwortete nur <strong>ein Drittel</strong> alle drei Fragen korrekt.</p><p>Kahneman ordnet den Fehler in <em>Thinking, Fast and Slow</em> so ein: System 1 registriert die Zahlen 5, 5, 5 und 100, 100 und liefert reflexartig '100'. System 2 müsste jetzt einen einfachen Dreisatz rechnen – bleibt aber oft passiv. Wer System 2 aktiviert, erkennt in Sekunden: <em>Eine Maschine, ein Widget, 5 Minuten.</em></p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Frederick (2005): Selbst an Elite-Universitäten scheitern über 50 % an dieser Frage</li><li>Der CRT-Score sagt Wetten, Lotterie-Entscheidungen und intertemporale Präferenzen gut voraus</li><li>Wer den CRT trainiert, verbessert später Bayesianisches Denken (Toplak, West, Stanovich 2011)</li></ul>",
+        "erkenntnis": "Wenn eine Aufgabe eine markante Zahl anbietet, greift System 1 danach. Die Frage 'skaliert das wirklich?' ist ein Ein-Sekunden-Check, der die richtige Antwort meist freilegt.",
+    },
+    "seerose": {
+        "id": "seerose", "name": "Die Seerose", "icon": "🪷",
+        "farbe": "emerald", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "1 min",
+        "setup_label": "Das Problem:",
+        "setup": "In einem Teich wächst ein Seerosen-Fleck. Jeden Tag <strong>verdoppelt</strong> er seine Fläche.<br><br>Nach <strong>48 Tagen</strong> ist der ganze Teich bedeckt.",
+        "frage": "Nach wie vielen Tagen war die Hälfte des Teiches bedeckt?",
+        "optionen": [
+            {"text": "24 Tage", "hinweis": "Die Hälfte der Gesamtzeit"},
+            {"text": "47 Tage", "hinweis": "Ein Tag vor der vollen Bedeckung"},
+            {"text": "12 Tage", "hinweis": "Ein Viertel der Zeit"},
+            {"text": "46 Tage", "hinweis": "Zwei Tage vor der vollen Bedeckung"},
+        ],
+        "loesung_text": "47 Tage.",
+        "erklaerung": "<p>Die Fläche verdoppelt sich pro Tag. Wenn der Teich am Tag 48 voll ist, war er am Tag 47 genau <strong>halb voll</strong> – am nächsten Tag hat sich diese Hälfte verdoppelt und den Teich geschlossen.</p><p>Die intuitive Antwort '24 Tage' übernimmt naiv das lineare Denken (halbe Zeit = halbe Fläche). Doch <strong>exponentielles Wachstum ist bis kurz vor dem Ende praktisch unsichtbar</strong>: An Tag 40 sind erst 0,4 % des Teiches bedeckt, an Tag 44 rund 6 %, an Tag 46 rund 25 %.</p>",
+        "kontext": "<p><strong>Der Cognitive Reflection Test (CRT), Frage 3 – Shane Frederick, 2005</strong></p><p>Die dritte CRT-Frage prüft, ob wir <strong>lineare Intuition</strong> gegen <strong>exponentielle Realität</strong> unterscheiden können. Diese Frage schneidet in Studien am schlechtesten ab – nur etwa 20 % antworten spontan korrekt.</p><p>Al Bartlett, Physiker an der University of Colorado, hielt über 1 700 Mal denselben Vortrag <em>Arithmetic, Population, and Energy</em> und formulierte: <strong>„Die größte Schwäche der Menschheit ist unsere Unfähigkeit, die Exponentialfunktion zu verstehen.“</strong> Dieselbe Falle liegt hinter:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Pandemien:</strong> Von 1 auf 1 000 Fälle dauert lang – von 1 000 auf 1 000 000 fast genauso lang</li><li><strong>Zinseszins:</strong> 7 % über 30 Jahre → Achtfaches, nicht 3× (Regel der 72: 72/7 ≈ 10 Jahre pro Verdopplung)</li><li><strong>Moore's Law:</strong> Rechenleistung verdoppelt sich rund alle 2 Jahre – in 20 Jahren das 1 024-Fache</li><li><strong>Ressourcenverbrauch:</strong> Wächst der Verbrauch um 7 % pro Jahr, ist er in 10 Jahren doppelt so hoch</li></ul>",
+        "erkenntnis": "Bei Verdopplungsraten ist die vorletzte Stufe immer nur halb da. Wer diesen Reflex verinnerlicht, versteht Pandemien, Zinseszins und Klimarisiken intuitiver – und trifft in Krisen früher Entscheidungen.",
+    },
+    "ikea-effekt": {
+        "id": "ikea-effekt", "name": "Der IKEA-Effekt", "icon": "🪑",
+        "farbe": "amber", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup": "Norton, Mochon & Ariely (2012) legten zwei Gruppen identische IKEA-Aufgaben vor. Gruppe A baute eine schlichte Aufbewahrungsbox selbst zusammen. Gruppe B erhielt dieselbe Box bereits fertig. Anschließend wurden beide Gruppen gefragt, wie viel sie maximal bereit wären, für „ihre“ Box zu zahlen.",
+        "frage": "Wie viel mehr boten die Selbstbauer im Durchschnitt für die identische Box?",
+        "optionen": [
+            {"text": "Kein Unterschied – die Selbstbauer wollten die Box eher schnell loswerden", "hinweis": "Der Effekt geht in die andere Richtung"},
+            {"text": "Rund 15 % mehr – ein leichter Effekt", "hinweis": "Der Effekt war deutlich stärker"},
+            {"text": "Rund 63 % mehr – Selbstbauer bewerteten sie fast so hoch wie Experten fertige Möbel", "hinweis": "Der IKEA-Effekt in Reinform"},
+            {"text": "Rund 30 % weniger – wer weiß, wie einfach das war, zahlt weniger", "hinweis": "Selbstbau erhöht den gefühlten Wert, senkt ihn nicht"},
+        ],
+        "loesung_text": "Rund 63 % mehr – die Selbstbauer bewerteten die identische Box massiv höher.",
+        "erklaerung": "<p>Der Kern des <strong>IKEA-Effekts</strong>: Eigene Arbeit schafft Bindung. Selbst <strong>eine banale Aufgabe wie das Zusammenschrauben einer Kiste</strong> reicht aus, damit Menschen das Produkt als wertvoller empfinden als ein Vergleichsobjekt vom selben Hersteller.</p><p>Bedingung für den Effekt: Der Bau muss <strong>gelingen</strong>. In einer Folgestudie (Mochon, Norton, Ariely 2012) verschwand der Wertzuwachs, sobald Teilnehmer während des Zusammenbaus abbrechen mussten – der Stolz war der Wertträger, nicht die Zeit.</p><p>Neben IKEA-Möbeln zeigten die Autoren denselben Effekt für Origami-Frösche und LEGO-Modelle. Käufer schätzten ihre eigenen Frösche fast fünfmal so wertvoll ein wie unbeteiligte Beobachter dieselben Frösche.</p>",
+        "kontext": "<p><strong>Michael Norton, Daniel Mochon, Dan Ariely (2012):</strong> <em>The IKEA Effect: When labor leads to love.</em> Journal of Consumer Psychology.</p><p>Verwandte Effekte:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Endowment-Effekt</strong> (Thaler 1980, Kahneman/Knetsch/Thaler 1990): Wir wollen mehr für Dinge, die uns bereits gehören – auch ohne selbst gebaut zu haben.</li><li><strong>Sunk-Cost-Effekt:</strong> Investierte Zeit wird auch dann verteidigt, wenn sie sich nicht mehr auszahlt.</li><li><strong>Ownership Bias</strong> in Verhandlungen: Wer den Vertragsentwurf schreibt, hält ihn instinktiv für fairer als die andere Seite ihn empfindet.</li></ul><p>Anwendungsbeispiele: Betsy Crocker verkaufte in den 1950ern Fertigmehle für Kuchen mit dem Zusatz „nur Ei hinzugeben“ – und stieg im Absatz erst dann, als die Ehefrauen wieder <em>etwas</em> beitragen mussten. Bausatz-Ketten wie IKEA, Selbstpflücker-Erdbeerfelder und Software-Bootcamps nutzen den Effekt ebenfalls.</p>",
+        "erkenntnis": "Eigenleistung ist ein Wertverstärker – im Guten (höheres Commitment) wie im Schlechten (schlechte Investitionen werden zu lange verteidigt). In Verhandlungen: Wer die andere Seite mitgestalten lässt, kauft sich Zustimmung – aber steckt auch die eigenen Bewertungen fest.",
     },
 }
 
