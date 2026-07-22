@@ -619,6 +619,7 @@ RAETSEL_META = [
     {"id":"hyperbolisches-diskontieren","name":"Hyperbolisches Diskontieren","icon":"⏰","beschreibung":"100€ jetzt oder 110€ morgen? Fast alle wählen jetzt. Aber 100€ in 30 Tagen oder 110€ in 31 Tagen? Plötzlich ist Warten einfach. Warum sind wir bei naher Zukunft inkonsistent?","typ":"Temporal Discounting","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Psychologie"},
     {"id":"status-quo-bias","name":"Status-quo-Bias","icon":"🔒","beschreibung":"Opt-in vs. Opt-out: Deutschland hat 12% Organspender, Österreich 99%. Selbe Menschen, andere Voreinstellung. Was erklärt diesen dramatischen Unterschied?","typ":"Verhaltensökonomie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"schelling-fokuspunkt","name":"Schelling-Fokuspunkte","icon":"📍","beschreibung":"Du musst dich mit einem Fremden in New York treffen – ohne Kommunikation. Wo und wann? Thomas Schelling (1960) zeigte: Menschen koordinieren intuitiv auf 'naheliegende' Lösungen.","typ":"Koordination","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Spieltheorie"},
+    {"id":"schelling-koordination","name":"Koordinieren ohne Worte","icon":"🤝","beschreibung":"Sieben Fragen. Kein Wort zu deiner Partnerin. Ihr gewinnt nur, wenn ihr dieselbe Antwort wählt. Wie gut triffst du den kollektiven Fokuspunkt?","typ":"Fokuspunkt-Experiment","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Spieltheorie"},
     {"id":"hawthorne-effekt","name":"Der Hawthorne-Effekt","icon":"💡","beschreibung":"1924: Bessere Beleuchtung → mehr Produktion. Schlechtere Beleuchtung → auch mehr Produktion. Was erklärt diesen Widerspruch? Beobachtung verändert das Beobachtete.","typ":"Statistik-Paradox","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Statistik"},
     {"id":"mere-exposure","name":"Mere-Exposure-Effekt","icon":"🔁","beschreibung":"Ein fremdsprachiges Wort, das dir anfangs fremd ist, gefällt dir nach zehnmaliger Begegnung besser. Zajonc (1968): Bloße Wiederholung erzeugt Sympathie – selbst ohne Bewusstsein.","typ":"Wahrnehmungspsychologie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"goodharts-gesetz","name":"Goodharts Gesetz","icon":"📏","beschreibung":"\"Wenn ein Maß zum Ziel wird, hört es auf, ein gutes Maß zu sein.\" Schulen optimieren auf PISA – und verfehlen Bildung. Wann kippen Metriken?","typ":"Wissenschaftsmethodik","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Statistik"},
@@ -4108,12 +4109,132 @@ def pawlow_hund_page(request: Request):
 
 @router.post("/pawlow-hund/antwort", response_class=HTMLResponse)
 def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
-    correct = antwort in ["glocke", "unkonditioniert_stimulus", "klassisch", "konditionierter_reiz"]
     return templates.TemplateResponse(
         request,
         "partials/pawlow_hund_result.html",
-        {"antwort": antwort, "correct": correct},
+        {"antwort": antwort},
     )
+
+
+# ---------------------------------------------------------------------------
+# Schelling-Koordination – interaktives Fokuspunkt-Spiel (7 Runden)
+# ---------------------------------------------------------------------------
+
+SCHELLING_FRAGEN = [
+    {
+        "id": "ort_nyc",
+        "situation": "Ihr müsst euch morgen in New York treffen – ohne vorher zu kommunizieren. Kein Ort ist verabredet.",
+        "frage": "Wo würdest du hingehen?",
+        "optionen": [
+            {"key": "grand_central", "label": "Grand Central Station"},
+            {"key": "times_square", "label": "Times Square"},
+            {"key": "empire_state", "label": "Empire State Building"},
+            {"key": "central_park", "label": "Central Park"},
+            {"key": "statue_of_liberty", "label": "Freiheitsstatue"},
+        ],
+        "fokus": "grand_central",
+        "prozent": 56,
+        "quelle": "Schelling (1960) The Strategy of Conflict – Yale-Studenten-Umfrage",
+    },
+    {
+        "id": "zeit_nyc",
+        "situation": "Ihr habt den Ort intuitiv gefunden. Aber welche Uhrzeit?",
+        "frage": "Wann würdest du dort sein?",
+        "optionen": [
+            {"key": "09_00", "label": "09:00 Uhr"},
+            {"key": "12_00", "label": "12:00 Uhr (Mittag)"},
+            {"key": "17_00", "label": "17:00 Uhr"},
+            {"key": "18_00", "label": "18:00 Uhr"},
+            {"key": "20_00", "label": "20:00 Uhr"},
+        ],
+        "fokus": "12_00",
+        "prozent": 87,
+        "quelle": "Schelling (1960) – 12 Uhr Mittag als 'natürlicher' Tagesmittelpunkt",
+    },
+    {
+        "id": "muenze",
+        "situation": "Ihr müsst euch beide unabhängig für 'Kopf' oder 'Zahl' entscheiden – nur wenn ihr dieselbe Seite wählt, gewinnt ihr.",
+        "frage": "Was wählst du?",
+        "optionen": [
+            {"key": "kopf", "label": "Kopf"},
+            {"key": "zahl", "label": "Zahl"},
+        ],
+        "fokus": "kopf",
+        "prozent": 70,
+        "quelle": "Mehlhaff / Schelling-Replikationen – 'Kopf' als kulturell primäre Seite",
+    },
+    {
+        "id": "zahl_1_100",
+        "situation": "Wählt beide unabhängig eine positive ganze Zahl. Ihr gewinnt nur, wenn ihr dieselbe Zahl wählt.",
+        "frage": "Welche Zahl?",
+        "optionen": [
+            {"key": "1", "label": "1"},
+            {"key": "7", "label": "7"},
+            {"key": "13", "label": "13"},
+            {"key": "42", "label": "42"},
+            {"key": "100", "label": "100"},
+        ],
+        "fokus": "1",
+        "prozent": 40,
+        "quelle": "Mehlhaff (2019) – kleinste Zahl als robuster Fokuspunkt",
+    },
+    {
+        "id": "geld_teilen",
+        "situation": "Ihr sollt 100 € unter euch aufteilen. Jede/r schreibt einen Betrag auf. Wenn eure Beträge sich zu 100 addieren, bekommt jede/r ihren Teil. Andernfalls nichts.",
+        "frage": "Wie viel forderst du für dich?",
+        "optionen": [
+            {"key": "25", "label": "25 €"},
+            {"key": "40", "label": "40 €"},
+            {"key": "50", "label": "50 €"},
+            {"key": "60", "label": "60 €"},
+            {"key": "75", "label": "75 €"},
+        ],
+        "fokus": "50",
+        "prozent": 76,
+        "quelle": "Schelling (1960) – 50:50 als Fairness-Fokus dominiert alle Alternativen",
+    },
+    {
+        "id": "farbe",
+        "situation": "Wählt beide gleichzeitig eine Farbe – ohne Absprache.",
+        "frage": "Welche Farbe?",
+        "optionen": [
+            {"key": "rot", "label": "Rot"},
+            {"key": "blau", "label": "Blau"},
+            {"key": "gruen", "label": "Grün"},
+            {"key": "gelb", "label": "Gelb"},
+        ],
+        "fokus": "rot",
+        "prozent": 40,
+        "quelle": "Bardsley et al. (2010) – Rot als sichtbarste, salienteste Primärfarbe",
+    },
+    {
+        "id": "berg",
+        "situation": "Nenne einen berühmten Berg – ihr gewinnt, wenn ihr denselben nennt.",
+        "frage": "Welchen Berg?",
+        "optionen": [
+            {"key": "everest", "label": "Mount Everest"},
+            {"key": "kilimanjaro", "label": "Kilimandscharo"},
+            {"key": "matterhorn", "label": "Matterhorn"},
+            {"key": "fuji", "label": "Fuji"},
+            {"key": "kilimanjaro_zug", "label": "Zugspitze"},
+        ],
+        "fokus": "everest",
+        "prozent": 62,
+        "quelle": "Fokuspunkt-Studien – 'höchster/bekanntester' als Salienz-Kriterium",
+    },
+]
+
+
+@router.get("/schelling-koordination", response_class=HTMLResponse)
+def schelling_koordination_page(request: Request):
+    ctx = {
+        "active_page": "raetsel",
+        "fragen": SCHELLING_FRAGEN,
+        "fragen_json": json.dumps(SCHELLING_FRAGEN, ensure_ascii=False),
+        "gesamt": len(SCHELLING_FRAGEN),
+        **_nav_context("schelling-koordination"),
+    }
+    return templates.TemplateResponse(request, "raetsel/schelling_koordination.html", ctx)
 
 
 @router.get("/{puzzle_id}", response_class=HTMLResponse)

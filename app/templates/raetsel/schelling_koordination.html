@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+{% block title %}Koordinieren ohne Worte – Schelling-Fokuspunkte{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+
+  <!-- Header -->
+  <div class="mb-6">
+    <a href="/raetsel" class="text-sm text-gray-500 hover:text-gray-700">← Alle Rätsel</a>
+  </div>
+  <div class="flex items-center gap-3 mb-2">
+    <span class="text-4xl">🤝</span>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-widest text-indigo-500">Spieltheorie · Fokuspunkte</p>
+      <h1 class="text-2xl font-bold text-gray-900">Koordinieren ohne Worte</h1>
+    </div>
+  </div>
+  <p class="text-gray-500 text-sm mb-6">Thomas Schelling · 1960 · Mittel · ~5 min</p>
+
+  <!-- Setup -->
+  <div class="bg-indigo-50 rounded-2xl p-5 mb-6">
+    <p class="text-sm text-indigo-900 leading-relaxed">
+      Stell dir vor: Du und eine Fremde müsst euch koordinieren – <strong>ohne miteinander zu reden</strong>.
+      Ihr gewinnt nur, wenn ihr beide unabhängig <em>dieselbe</em> Antwort wählt.
+      Auf welche Lösung würdest du intuitiv setzen? Sieben Runden, dann sehen wir, wie oft du den
+      <strong>Fokuspunkt</strong> triffst, auf den auch die meisten anderen Menschen tippen.
+    </p>
+  </div>
+
+  <!-- Fortschritt -->
+  <div id="progress-bar" class="mb-4">
+    <div class="flex justify-between text-xs text-gray-500 mb-1">
+      <span>Runde <span id="round-num">1</span> von {{ gesamt }}</span>
+      <span id="score-text">0 Treffer</span>
+    </div>
+    <div class="w-full bg-gray-200 rounded-full h-2">
+      <div id="progress-fill" class="bg-indigo-600 h-2 rounded-full transition-all" style="width: 14%"></div>
+    </div>
+  </div>
+
+  <!-- Frage-Container -->
+  <div id="quiz-container"></div>
+
+  <!-- Erklärung (nach Ende) -->
+  <div id="ende-erklaerung" class="hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-6">
+    <h2 class="font-bold text-gray-800 mb-3">Was du gerade erlebt hast</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      Thomas Schelling nannte diese Lösungen <strong>Fokuspunkte</strong> (engl. <em>focal points</em>).
+      Ohne Absprache konvergieren Menschen auf Antworten, die kulturell <strong>hervorstechen</strong>: die bekannteste, die einfachste,
+      die fairste, die auffälligste. Rekursiv gedacht: „Ich wähle, was du wählen würdest — wenn du weißt,
+      dass ich wähle, was du wählst." Diese Kette endet bei dem <strong>salientesten</strong> Kandidaten.
+    </p>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      Schelling zeigte damit: Menschen können <strong>ohne Kommunikation</strong> koordinieren – nicht
+      immer, aber überraschend oft. Dies erklärt, warum sich Verhandlungspositionen bei runden Zahlen
+      versammeln (100 €, nicht 97 €), warum Waffenstillstandslinien meist auf Flüssen liegen, und
+      warum Marktkonventionen ohne Kartell entstehen.
+    </p>
+    <p class="text-sm text-gray-600 leading-relaxed">
+      Für seine Arbeit erhielt Schelling <strong>2005 den Wirtschaftsnobelpreis</strong>.
+      Sein Buch <em>The Strategy of Conflict</em> (1960) gilt als Gründungsdokument der modernen
+      Konflikt- und Kooperationstheorie.
+    </p>
+  </div>
+
+  <!-- Anwendungen (nach Ende) -->
+  <div id="ende-anwendungen" class="hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-6">
+    <h2 class="font-bold text-gray-800 mb-3">Wo Fokuspunkte wirken</h2>
+    <div class="space-y-3">
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">💰</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Verhandlungen</p>
+          <p class="text-sm text-gray-600">Runde Zahlen (10.000 €, 50:50-Split) sind mächtiger als jedes ausgeklügelte Argument – weil sie <em>gemeinsam</em> als „natürlich" gelten.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">🌍</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Grenzen & Konflikte</p>
+          <p class="text-sm text-gray-600">Waffenstillstandslinien folgen fast immer Flüssen oder Höhenzügen. Sie sind nicht militärisch optimal – sie sind kognitiv salient.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">📱</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Netzwerkeffekte</p>
+          <p class="text-sm text-gray-600">WhatsApp, iPhone-Ports, Verkehrsseite (rechts fahren): Konventionen setzen sich durch, wenn sie einmal Fokuspunkt sind. Wechsel wird teuer.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">🗣️</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Sprache</p>
+          <p class="text-sm text-gray-600">„Meet at the usual place" funktioniert, obwohl nichts spezifiziert ist. Gemeinsames Wissen bildet den Fokus.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav am Ende -->
+  <div id="ende-nav" class="hidden flex flex-wrap gap-3 mt-8 justify-between">
+    <a href="/raetsel/schelling-fokuspunkt" class="text-sm text-indigo-600 hover:text-indigo-800">
+      📖 Vertiefung: Was ist ein Fokuspunkt?
+    </a>
+    <a href="/raetsel/koordination" class="text-sm text-indigo-600 hover:text-indigo-800">
+      🎮 Koordinationsspiel spielen →
+    </a>
+  </div>
+
+</div>
+
+<script id="schelling-data" type="application/json">{{ fragen_json | safe }}</script>
+
+<script>
+(function () {
+  const raw = document.getElementById('schelling-data').textContent;
+  const fragen = JSON.parse(raw);
+  const container = document.getElementById('quiz-container');
+  const progressFill = document.getElementById('progress-fill');
+  const roundNum = document.getElementById('round-num');
+  const scoreText = document.getElementById('score-text');
+
+  const antworten = [];
+  let idx = 0;
+
+  function render() {
+    if (idx >= fragen.length) {
+      renderEnd();
+      return;
+    }
+    const f = fragen[idx];
+    roundNum.textContent = idx + 1;
+    const pct = Math.round(((idx + 1) / fragen.length) * 100);
+    progressFill.style.width = pct + '%';
+
+    const btns = f.optionen.map(o =>
+      '<button data-key="' + o.key + '" class="option-btn w-full text-left bg-white hover:bg-indigo-50 border-2 border-gray-200 hover:border-indigo-400 rounded-xl p-4 transition-colors text-sm text-gray-800 font-medium">'
+      + o.label
+      + '</button>'
+    ).join('');
+
+    container.innerHTML =
+      '<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">'
+      + '<p class="text-xs font-semibold uppercase text-indigo-500 mb-2">Runde ' + (idx + 1) + '</p>'
+      + '<p class="text-sm text-gray-600 mb-3 leading-relaxed">' + f.situation + '</p>'
+      + '<p class="font-semibold text-gray-900 mb-4">' + f.frage + '</p>'
+      + '<div class="space-y-2">' + btns + '</div>'
+      + '</div>';
+
+    container.querySelectorAll('.option-btn').forEach(btn => {
+      btn.addEventListener('click', () => choose(btn.getAttribute('data-key')));
+    });
+  }
+
+  function choose(key) {
+    const f = fragen[idx];
+    const treffer = (key === f.fokus);
+    antworten.push({ frage: f, gewaehlt: key, treffer: treffer });
+    const trefferAnzahl = antworten.filter(a => a.treffer).length;
+    scoreText.textContent = trefferAnzahl + ' Treffer';
+
+    const chosenLabel = f.optionen.find(o => o.key === key).label;
+    const fokusLabel = f.optionen.find(o => o.key === f.fokus).label;
+
+    const wrap = treffer
+      ? 'bg-green-50 border-green-200'
+      : 'bg-amber-50 border-amber-200';
+    const kopfCls = treffer ? 'text-green-800' : 'text-amber-800';
+    const subCls = treffer ? 'text-green-700' : 'text-amber-700';
+    const icon = treffer ? '✓' : '✗';
+    const kopf = treffer ? 'Fokuspunkt getroffen!' : 'Kein Fokuspunkt';
+
+    container.innerHTML =
+      '<div class="' + wrap + ' border rounded-2xl p-6">'
+      + '<div class="flex items-start gap-3 mb-3">'
+      + '<span class="text-2xl">' + icon + '</span>'
+      + '<div>'
+      + '<p class="font-bold ' + kopfCls + '">' + kopf + '</p>'
+      + '<p class="text-sm ' + subCls + ' mt-1">Du: <strong>' + chosenLabel + '</strong>' + (treffer ? '' : ' · Fokuspunkt: <strong>' + fokusLabel + '</strong>') + '</p>'
+      + '</div>'
+      + '</div>'
+      + '<div class="bg-white/70 rounded-xl p-3 text-xs text-gray-700 mb-3">'
+      + '<p><strong>' + f.prozent + '%</strong> aller Befragten wählten „' + fokusLabel + '".</p>'
+      + '<p class="text-gray-500 mt-1">' + f.quelle + '</p>'
+      + '</div>'
+      + '<button id="next-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors">'
+      + (idx + 1 >= fragen.length ? 'Ergebnis ansehen →' : 'Weiter →')
+      + '</button>'
+      + '</div>';
+
+    document.getElementById('next-btn').addEventListener('click', () => {
+      idx += 1;
+      render();
+    });
+  }
+
+  function renderEnd() {
+    const treffer = antworten.filter(a => a.treffer).length;
+    const total = fragen.length;
+    const pct = Math.round(treffer / total * 100);
+
+    let bewertung, headerCls, zahlCls;
+    if (pct >= 85)      {
+      bewertung = 'Fokuspunkt-Meisterin. Du liest den kollektiven Konsens intuitiv.';
+      headerCls = 'text-emerald-500'; zahlCls = 'text-emerald-700';
+    } else if (pct >= 60) {
+      bewertung = 'Starker Koordinator. Du triffst die salienten Lösungen zuverlässig.';
+      headerCls = 'text-indigo-500'; zahlCls = 'text-indigo-700';
+    } else if (pct >= 40) {
+      bewertung = 'Mittelmäßig. Manche Fokuspunkte sind kulturell erlernt – Schelling würde sagen: kein Zufall.';
+      headerCls = 'text-amber-500'; zahlCls = 'text-amber-700';
+    } else {
+      bewertung = 'Du gehst gegen den Strom. In Verhandlungen kann das teuer werden – oder ein Wettbewerbsvorteil sein.';
+      headerCls = 'text-rose-500'; zahlCls = 'text-rose-700';
+    }
+
+    container.innerHTML =
+      '<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center">'
+      + '<p class="text-xs font-semibold uppercase ' + headerCls + ' mb-2">Ergebnis</p>'
+      + '<p class="text-5xl font-bold ' + zahlCls + ' mb-1">' + treffer + ' / ' + total + '</p>'
+      + '<p class="text-lg text-gray-600 mb-4">Fokuspunkte getroffen (' + pct + '%)</p>'
+      + '<p class="text-sm text-gray-700 mb-6 max-w-md mx-auto leading-relaxed">' + bewertung + '</p>'
+      + '<button id="restart" class="text-sm text-indigo-600 hover:text-indigo-800 underline">Noch einmal spielen</button>'
+      + '</div>';
+
+    progressFill.style.width = '100%';
+    scoreText.textContent = treffer + ' / ' + total;
+    document.getElementById('ende-erklaerung').classList.remove('hidden');
+    document.getElementById('ende-anwendungen').classList.remove('hidden');
+    document.getElementById('ende-nav').classList.remove('hidden');
+
+    document.getElementById('restart').addEventListener('click', () => {
+      antworten.length = 0;
+      idx = 0;
+      scoreText.textContent = '0 Treffer';
+      document.getElementById('ende-erklaerung').classList.add('hidden');
+      document.getElementById('ende-anwendungen').classList.add('hidden');
+      document.getElementById('ende-nav').classList.add('hidden');
+      render();
+    });
+  }
+
+  render();
+})();
+</script>
+{% endblock %}
