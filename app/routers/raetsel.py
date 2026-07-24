@@ -631,6 +631,10 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Bayes & Wahrscheinlichkeit (neu) ─────────────────────────────────────
+    {"id":"zwei-kinder","name":"Das Zwei-Kinder-Paradoxon","icon":"👦","beschreibung":"Ein Nachbar hat zwei Kinder. Er erwähnt beiläufig, dass mindestens eines ein Junge ist. Wie groß ist die Wahrscheinlichkeit, dass beide Jungen sind? Die intuitive Antwort ist fast immer falsch.","typ":"Bedingte Wahrscheinlichkeit","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
+    {"id":"bertrand-schachtel","name":"Bertrands Schachtelparadoxon","icon":"📦","beschreibung":"Drei Schachteln: eine mit 2 Goldmünzen, eine mit 2 Silbermünzen, eine gemischt. Du greifst blind in eine Schachtel und ziehst Gold. Wie hoch ist die Chance, dass die zweite Münze in derselben Schachtel auch Gold ist? Nicht ½ – die Antwort überrascht.","typ":"Bedingte Wahrscheinlichkeit","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
+    {"id":"zwei-generaele","name":"Das Zwei-Generäle-Problem","icon":"⚔️","beschreibung":"Zwei Armeen auf zwei Hügeln müssen gleichzeitig angreifen, sonst verlieren beide. Boten können abgefangen werden. Gibt es ein Nachrichtenprotokoll, das gemeinsames Wissen garantiert? Ein Klassiker der verteilten Systeme.","typ":"Koordinations-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Spieltheorie"},
 ]
 
 
@@ -4063,6 +4067,60 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "zwei-kinder": {
+        "id": "zwei-kinder", "name": "Das Zwei-Kinder-Paradoxon", "icon": "👦",
+        "farbe": "indigo", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Das Szenario:",
+        "setup": "Du triffst einen Nachbarn, den du kaum kennst. Er sagt beiläufig: <em>„Ich habe zwei Kinder. Mindestens eines davon ist ein Junge.“</em><br><br>Du weißt sonst nichts über die Kinder. Nimm der Einfachheit halber an: Jedes Kind ist unabhängig voneinander mit Wahrscheinlichkeit ½ ein Junge oder ein Mädchen.",
+        "frage": "Wie groß ist die Wahrscheinlichkeit, dass <strong>beide</strong> Kinder Jungen sind?",
+        "optionen": [
+            {"text": "½", "hinweis": "„Das eine ist ein Junge, das andere ist zufällig.“"},
+            {"text": "⅓", "hinweis": "Vier gleich wahrscheinliche Fälle – einer fällt weg"},
+            {"text": "¼", "hinweis": "Nur einer von vier Startfällen"},
+            {"text": "⅔", "hinweis": "Verwandt mit Monty Hall"},
+        ],
+        "loesung_text": "⅓ – nicht ½",
+        "erklaerung": "<p>Vor der Information gibt es vier gleich wahrscheinliche Kombinationen (nach Reihenfolge älter/jünger): <strong>JJ, JM, MJ, MM</strong> – je 25 %.</p><p>Die Aussage „mindestens ein Junge“ schließt nur MM aus. Es bleiben JJ, JM und MJ – drei Fälle, alle gleich wahrscheinlich. Nur einer davon (JJ) erfüllt „beide Jungen“.</p><p><strong>P(beide Jungen | mindestens ein Junge) = 1 / 3.</strong></p>",
+        "kontext": "<p><strong>Warum fühlt sich ½ so richtig an?</strong> Weil unser Gehirn heimlich die Frage ersetzt: „Ich sehe einen konkreten Jungen – wie wahrscheinlich ist es, dass sein Geschwister auch ein Junge ist?“ Dann wäre die Antwort tatsächlich ½.</p><p><strong>Die Formulierung entscheidet alles.</strong> Vergleiche:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>„Mindestens eines ist ein Junge.“ → P = ⅓</li><li>„Mein ältestes Kind ist ein Junge.“ → P = ½ (nur JJ, JM bleiben)</li><li>„Mindestens eines ist ein Junge, geboren an einem Dienstag.“ → P ≈ 13/27 (Gary Foshees Variante, 2010)</li></ul><p>Alle drei Aussagen scheinen dasselbe zu sagen – tun es aber nicht. Der <em>Beobachtungsprozess</em>, wie die Information zu dir gelangt, verändert die bedingte Wahrscheinlichkeit.</p><p>Das ist derselbe Mechanismus wie bei Monty Hall: Was der Moderator zeigen <em>durfte</em>, unterscheidet sich von dem, was er zufällig gezeigt <em>hat</em>.</p>",
+        "erkenntnis": "Bedingte Wahrscheinlichkeit hängt davon ab, wie eine Information gewonnen wurde – nicht nur davon, was gesagt wird. Ohne Präzision im Sprachgebrauch verrechnet sich sogar unsere Intuition um 33 Prozentpunkte.",
+    },
+    "bertrand-schachtel": {
+        "id": "bertrand-schachtel", "name": "Bertrands Schachtelparadoxon", "icon": "📦",
+        "farbe": "amber", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Das Experiment:",
+        "setup": "Drei ununterscheidbare Schachteln stehen vor dir:<br>📦 Schachtel A enthält <strong>2 Goldmünzen</strong>.<br>📦 Schachtel B enthält <strong>2 Silbermünzen</strong>.<br>📦 Schachtel C enthält <strong>1 Gold + 1 Silber</strong>.<br><br>Du wählst blind eine Schachtel, greifst hinein und ziehst eine <strong>Goldmünze</strong>.",
+        "frage": "Wie hoch ist die Wahrscheinlichkeit, dass die <strong>zweite</strong> Münze in derselben Schachtel auch Gold ist?",
+        "optionen": [
+            {"text": "½", "hinweis": "„Es kann nur A oder C sein – Gleichverteilung.“"},
+            {"text": "⅔", "hinweis": "Zähle die Münzen, nicht die Schachteln"},
+            {"text": "⅓", "hinweis": "Ein Drittel der Startschachteln"},
+            {"text": "¾", "hinweis": "Zu hoch"},
+        ],
+        "loesung_text": "⅔ – nicht ½",
+        "erklaerung": "<p>Die intuitive Falle: „Die Münze kam entweder aus A (zwei Gold) oder C (Gold + Silber). Also ½ zu ½.“ Falsch – A und C sind nach der Ziehung <em>nicht</em> gleich wahrscheinlich.</p><p>Zähle die drei goldenen Münzen einzeln:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Gold #1 aus Schachtel A → Partnerin ist Gold #2 (A) ✓</li><li>Gold #2 aus Schachtel A → Partnerin ist Gold #1 (A) ✓</li><li>Gold aus Schachtel C → Partnerin ist Silber (C) ✗</li></ul><p>Zwei von drei Goldmünzen haben eine goldene Partnerin. <strong>P = 2/3.</strong></p><p>Über Bayes: P(A|Gold) = P(Gold|A)·P(A) / P(Gold) = 1·(⅓) / (½) = <strong>2/3</strong>.</p>",
+        "kontext": "<p>Joseph Bertrand formulierte das Paradoxon 1889 in seinem <em>Calcul des probabilités</em> – als Warnung vor dem naiven Prinzip der Indifferenz. Dieselbe Struktur steckt in vielen Alltagsfehlschlüssen:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Krebs-Screening:</strong> Ein positiver Test aus einer seltenen Krankheit ist meist ein Falschpositiv – siehe „Falsch-positiv-Paradoxon“.</li><li><strong>Monty Hall:</strong> Nach dem Öffnen einer Tür sind die verbleibenden zwei Türen nicht gleich wahrscheinlich.</li><li><strong>Zwei-Kinder-Paradoxon:</strong> „Ich habe ein Kind, das ein Junge ist“ liefert weniger Information, als es scheint.</li></ul><p>Die gemeinsame Lektion: Nach Beobachtung eines Ereignisses <em>ändern</em> sich die Gewichte der Ausgangshypothesen – proportional dazu, wie wahrscheinlich jede Hypothese diese Beobachtung erzeugt hätte.</p>",
+        "erkenntnis": "Nicht die Schachteln sind gleich wahrscheinlich, sondern die Münzen. Zähle immer die Elementarereignisse, die zu deiner Beobachtung passen – nicht die groben Kategorien.",
+    },
+    "zwei-generaele": {
+        "id": "zwei-generaele", "name": "Das Zwei-Generäle-Problem", "icon": "⚔️",
+        "farbe": "rose", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Die Ausgangslage:",
+        "setup": "Zwei alliierte Generäle liegen auf verschiedenen Hügeln, die feindliche Stadt dazwischen. Sie können den Feind <strong>nur besiegen, wenn sie gleichzeitig angreifen</strong>. Greift nur einer an, verliert er und wird vernichtet.<br><br>Kommunizieren geht nur per Bote – und jeder Bote kann vom Feind abgefangen werden. Beide Generäle müssen also nicht nur die Angriffszeit vereinbaren, sondern auch <em>sicher wissen</em>, dass der andere sie kennt und dass der andere weiß, dass sie sie kennt – und so weiter.",
+        "frage": "Gibt es ein Nachrichtenprotokoll, das garantiert gemeinsames Wissen (<em>common knowledge</em>) erzeugt?",
+        "optionen": [
+            {"text": "Ja – wenn genug Boten hin- und hergeschickt werden", "hinweis": "Wie viele wären genug?"},
+            {"text": "Ja – mit einer Bestätigung der Bestätigung", "hinweis": "Und die Bestätigung der Bestätigung?"},
+            {"text": "Nein – gemeinsames Wissen ist unerreichbar", "hinweis": "Beweisbar unentscheidbar über unzuverlässigen Kanal"},
+            {"text": "Ja – mit kryptographischer Signatur", "hinweis": "Der Bote kann trotzdem verloren gehen"},
+        ],
+        "loesung_text": "Nein – über einen unzuverlässigen Kanal ist gemeinsames Wissen prinzipiell unerreichbar.",
+        "erklaerung": "<p>General A schickt Bote 1: „Wir greifen um 6:00 an.“ Kommt er an, ist A trotzdem unsicher, ob B ihn erhalten hat. B sendet Bote 2 zur Bestätigung – aber nun ist B unsicher, ob A die Bestätigung bekommen hat. A schickt Bote 3 zur Bestätigung der Bestätigung – aber ist A jetzt sicher, dass B <em>weiß</em>, dass A weiß, dass B weiß …?</p><p>Bei jedem Schritt bleibt der letzte Sender unsicher, ob seine Nachricht ankam. Egal wie viele Boten, es entsteht ein <strong>unendlicher Regress</strong> von „ich weiß, dass du weißt, dass ich weiß …“. Kein endliches Protokoll produziert echte gemeinsame Sicherheit.</p><p>Formal bewiesen: Über einen Kanal, der Nachrichten mit positiver Wahrscheinlichkeit verlieren kann, gibt es <strong>keine deterministische Lösung</strong> für koordiniertes Handeln, das gemeinsames Wissen erfordert (Halpern & Moses, 1990).</p>",
+        "kontext": "<p>Das Problem stammt aus der Kryptographie/Informatik (Gray, 1978), hat aber tiefe spieltheoretische Wurzeln bei David Lewis und Robert Aumann.</p><p><strong>Praktische Konsequenzen überall:</strong></p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>TCP-Handshake:</strong> Internet-Verbindungen brauchen einen Drei-Wege-Handshake – aber selbst der garantiert kein gemeinsames Wissen, nur eine praktisch ausreichende Näherung.</li><li><strong>Blockchain-Konsens:</strong> Verteilte Ledger arbeiten mit probabilistischen Garantien (Bitcoin) oder Byzantine-Fault-Tolerance-Protokollen – nie mit vollständiger Gewissheit.</li><li><strong>Verhandlungen:</strong> Auch mündliche Zusagen leiden am gleichen Problem. Deshalb gibt es schriftliche Verträge, notarielle Beglaubigungen und Zeugen – institutionelle Ersatzmittel für gemeinsames Wissen.</li><li><strong>Bank Runs & Panik:</strong> Ob eine Bank stürzt, hängt davon ab, ob jeder glaubt, dass jeder glaubt … dass die Bank stürzt. Selbst-erfüllende Prophezeiungen durch fehlende Common Knowledge.</li></ul>",
+        "erkenntnis": "Kooperation braucht mehr als geteilte Information – sie braucht geteiltes Vertrauen in eine <em>Institution</em>, die Kommunikation absichert. Deshalb bauen Menschen seit 5000 Jahren Verträge, Gesetze und Rituale, nicht nur bessere Kanäle.",
     },
 }
 
