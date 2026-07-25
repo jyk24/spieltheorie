@@ -82,6 +82,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Wahrscheinlichkeit",
     },
+    {
+        "id": "ergodizitaet",
+        "name": "Peters' Münzwurf – das Ergodizitäts-Paradoxon",
+        "icon": "🪙",
+        "beschreibung": "Wirf eine faire Münze. Kopf: dein Vermögen wächst um 50 %. Zahl: es schrumpft um 40 %. Erwartungswert pro Wurf: +5 %. Trotzdem geht fast jeder Spieler langfristig pleite. Ole Peters (2011) erklärt den Grund – und schreibt damit einen Teil der Ökonomie neu.",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "5 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
     # ── Statistik & Kognition ──────────────────────────────────────────────────
     {
         "id": "simpson",
@@ -4063,6 +4073,24 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    # ── Wahrscheinlichkeit — Ergodizität ─────────────────────────────────
+    "ergodizitaet": {
+        "id": "ergodizitaet", "name": "Peters' Münzwurf – das Ergodizitäts-Paradoxon", "icon": "🪙",
+        "farbe": "teal", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": "Du startest mit <strong>100 €</strong>. Eine faire Münze wird wiederholt geworfen. Bei <strong>Kopf</strong> wächst dein Vermögen um <strong>+50 %</strong>. Bei <strong>Zahl</strong> schrumpft es um <strong>−40 %</strong>.<br><br>Erwartungswert pro Wurf: 0,5·1,5 + 0,5·0,6 = <strong>1,05</strong>. Also im Schnitt <strong>+5 %</strong> je Wurf. Ein klassisch 'gutes' Spiel – nach jedem Lehrbuch.<br><br>Du spielst es 100-mal, 1 000-mal, unendlich oft. Der Ökonom Ole Peters (Santa Fe Institute, 2011) simulierte das Experiment.",
+        "frage": "Wie entwickelt sich das Vermögen eines <em>einzelnen</em> Spielers auf lange Sicht?",
+        "optionen": [
+            {"text": "Es wächst exponentiell mit ~5 % pro Wurf – der Erwartungswert setzt sich durch.", "hinweis": "Klingt richtig aus Lehrbuch-Sicht"},
+            {"text": "Es pendelt zufällig um den Startwert – Kopf und Zahl heben sich auf.", "hinweis": "Symmetrie-Intuition"},
+            {"text": "Es geht mit Wahrscheinlichkeit 1 gegen null – der einzelne Spieler geht pleite.", "hinweis": "Peters' überraschender Befund"},
+            {"text": "Es divergiert je nach Startkapital – wer viel hat, gewinnt, wer wenig hat, verliert.", "hinweis": "Skaleninvarianz?"},
+        ],
+        "loesung_text": "Das Vermögen geht mit Wahrscheinlichkeit 1 gegen null – trotz positivem Erwartungswert.",
+        "erklaerung": "<p>Der Schlüssel ist der Unterschied zwischen <strong>Ensemble-Mittel</strong> (viele parallele Spieler, gemittelt) und <strong>Zeit-Mittel</strong> (ein Spieler, viele Runden).</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Ensemble-Mittel:</strong> arithmetisches Mittel der Multiplikatoren = 1,05. Ja, +5 % je Wurf – <em>über parallele Universen gemittelt</em>.</li><li><strong>Zeit-Mittel:</strong> geometrisches Mittel = √(1,5·0,6) = √0,9 ≈ <strong>0,9487</strong>. Also –5,1 % je Wurf – <em>für den einzelnen Spieler über die Zeit</em>.</li></ul><p>Nach 100 Würfen erwartet der einzelne Spieler ein Restvermögen von 100 · 0,9487¹⁰⁰ ≈ <strong>0,53 €</strong>. Nach 1 000 Würfen: praktisch null.</p><p>Beweis in einer Zeile: log(Vermögen) macht bei jedem Wurf im Erwartungswert 0,5·log(1,5) + 0,5·log(0,6) = <strong>−0,053</strong>. Da die log-Renditen normal verteilt sind (Zentraler Grenzwertsatz), driftet log(Vermögen) fast sicher gegen −∞.</p><p>Die 5-%-Gewinnerwartung entsteht nur, weil ein winziger Bruchteil astronomisch reicher Spieler den Durchschnitt hochzieht. Der <em>Median</em>-Spieler geht pleite.</p>",
+        "kontext": "<p><strong>Ergodizitätsökonomik (Ole Peters, seit ~2011)</strong></p><p>Peters argumentiert: Der klassische Erwartungsnutzen-Ansatz seit Bernoulli und von Neumann/Morgenstern verwechselt systematisch Ensemble- mit Zeit-Mitteln. Ein Prozess heißt <em>ergodisch</em>, wenn beide zusammenfallen – Vermögenswachstum ist es nicht.</p><p>Das erklärt ohne Rückgriff auf 'Risikoaversion' oder 'Verlustaversion':</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Warum reale Menschen viele Spiele mit positivem Erwartungswert ablehnen (St. Petersburg lässt grüßen).</li><li>Warum Diversifikation den Zeit-Mittel-Wachstumsrate erhöht, selbst wenn der Erwartungswert gleich bleibt.</li><li>Warum das <strong>Kelly-Kriterium</strong> (John Kelly, 1956) den optimalen Einsatzanteil liefert: es maximiert genau den geometrischen Erwartungswert.</li><li>Warum Ungleichheit sich in unregulierten Multiplikations-Ökonomien fast zwangsläufig aufbaut – Peters &amp; Adamou (2018) leiten daraus ein Modell reichtumsverteilender Dynamik ab.</li></ul><p>Verwandt: das <strong>Gambler's Ruin</strong>-Theorem und Nassim Talebs Kritik in <em>Skin in the Game</em>: 'Wer die Zeit nicht überlebt, hat auch keinen Erwartungswert.'</p>",
+        "erkenntnis": "Der Erwartungswert misst, was viele parallele Kopien im Mittel erleben – nicht, was du selbst im Lauf der Zeit erlebst. Bei multiplikativen Prozessen zählt der geometrische, nicht der arithmetische Mittelwert. Und ein einzelner Bankrott macht alle vorherigen Gewinne wertlos.",
     },
 }
 
