@@ -613,6 +613,7 @@ RAETSEL_META = [
     {"id":"flow-analyse","name":"Flow – der optimale Zustand","icon":"🌊","beschreibung":"Zwischen Langeweile und Überforderung liegt ein schmaler Kanal: Flow. Csikszentmihalyi (1990) beschreibt, wann Menschen völlig aufgehen in einer Tätigkeit.","typ":"Motivationspsychologie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"milgram-gehorsam","name":"Das Milgram-Experiment","icon":"⚡","beschreibung":"65% der Versuchspersonen verabreichten tödliche Elektroschocks – weil eine Autoritätsperson es verlangte. Was sagt das über moralischen Mut?","typ":"Sozialpsychologie","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Psychologie"},
     {"id":"pawlow-hund","name":"Pawlows Hund","icon":"🐕","beschreibung":"Pavlov entdeckte zufällig: Ein Hund speichelt nicht nur beim Fressen – sondern schon beim Klang der Glocke. Wie lernt das Gehirn Verknüpfungen, die eigentlich nicht existieren?","typ":"Verhaltenspsychologie","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Psychologie"},
+    {"id":"asch-konformitaet","name":"Asch-Konformitätsexperiment","icon":"📏","beschreibung":"Solomon Asch (1951): Sieben andere Teilnehmer wählen offensichtlich die falsche Linie. Passt du dich an – oder widersprichst du der Gruppe? 75 % gaben mindestens einmal nach.","typ":"Sozialpsychologie","schwierigkeit":"Einsteiger","dauer":"5 min","kategorie":"Psychologie"},
     # ── Verhaltensökonomie & Entscheidung (neu) ──────────────────────────────
     {"id":"sunk-cost","name":"Der Sunk-Cost-Fehlschluss","icon":"🎟️","beschreibung":"Du sitzt im Theater, das Stück ist furchtbar. Du hast 80€ bezahlt. Bleibst du – oder gehst du? Der häufigste Denkfehler bei Investitionsentscheidungen.","typ":"Entscheidungsfehler","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"verlustaversion","name":"Verlustaversion","icon":"⚖️","beschreibung":"Verliere 50€ oder gewinne 50€ – welches Ereignis fühlt sich intensiver an? Kahneman & Tversky (1979): Verluste wiegen psychologisch doppelt so schwer wie gleich große Gewinne.","typ":"Prospect Theory","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
@@ -4113,6 +4114,91 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         request,
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
+    )
+
+
+# Solomon Asch conformity experiment (1951). Fixed trials so results are
+# reproducible and comparable to the historical baseline.
+ASCH_TRIALS = [
+    # Each trial: reference line length, three comparison line lengths,
+    # index of the (wrong) answer the 7 confederates give, index of the truly correct one.
+    {"ref": 180, "opts": [180, 145, 220], "group": 1, "correct": 0},
+    {"ref": 160, "opts": [130, 195, 160], "group": 0, "correct": 2},
+    {"ref": 200, "opts": [235, 200, 165], "group": 2, "correct": 1},
+    {"ref": 145, "opts": [145, 180, 115], "group": 1, "correct": 0},
+    {"ref": 175, "opts": [140, 210, 175], "group": 0, "correct": 2},
+]
+
+_ASCH_LETTERS = ["A", "B", "C"]
+
+
+@router.get("/asch-konformitaet", response_class=HTMLResponse)
+def asch_konformitaet_page(request: Request):
+    trials = []
+    for i, t in enumerate(ASCH_TRIALS, start=1):
+        trials.append({
+            "nr": i,
+            "ref": t["ref"],
+            "opts": list(zip(_ASCH_LETTERS, t["opts"])),
+            "group_letter": _ASCH_LETTERS[t["group"]],
+        })
+    return templates.TemplateResponse(
+        request,
+        "raetsel/asch_konformitaet.html",
+        {"active_page": "raetsel", "trials": trials},
+    )
+
+
+@router.post("/asch-konformitaet/auswertung", response_class=HTMLResponse)
+def asch_konformitaet_auswertung(
+    request: Request,
+    t1: str = Form(""),
+    t2: str = Form(""),
+    t3: str = Form(""),
+    t4: str = Form(""),
+    t5: str = Form(""),
+):
+    answers = [t1, t2, t3, t4, t5]
+    details = []
+    conformed = 0
+    correct_count = 0
+    unanswered = 0
+    for i, (t, a) in enumerate(zip(ASCH_TRIALS, answers), start=1):
+        group_letter = _ASCH_LETTERS[t["group"]]
+        correct_letter = _ASCH_LETTERS[t["correct"]]
+        if a not in _ASCH_LETTERS:
+            unanswered += 1
+            status = "keine Antwort"
+        elif a == group_letter and a != correct_letter:
+            conformed += 1
+            status = "Angepasst"
+        elif a == correct_letter:
+            correct_count += 1
+            status = "Widerstanden"
+        else:
+            status = "Andere falsche Antwort"
+        details.append({
+            "nr": i,
+            "answer": a or "-",
+            "group": group_letter,
+            "correct": correct_letter,
+            "status": status,
+        })
+
+    total_critical = len(ASCH_TRIALS)
+    conformity_rate = round(100 * conformed / total_critical) if total_critical else 0
+    return templates.TemplateResponse(
+        request,
+        "raetsel/asch_konformitaet_result.html",
+        {
+            "active_page": "raetsel",
+            "details": details,
+            "conformed": conformed,
+            "correct_count": correct_count,
+            "unanswered": unanswered,
+            "total": total_critical,
+            "conformity_rate": conformity_rate,
+        },
     )
 
 

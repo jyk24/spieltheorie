@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}Auswertung – Asch-Konformitätsexperiment{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+
+  <div class="mb-6">
+    <a href="/raetsel/asch-konformitaet" class="text-sm text-gray-500 hover:text-gray-700">← Nochmal versuchen</a>
+  </div>
+
+  <div class="flex items-center gap-3 mb-2">
+    <span class="text-4xl">📏</span>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-widest text-indigo-500">Auswertung</p>
+      <h1 class="text-2xl font-bold text-gray-900">Deine Konformitätsrate</h1>
+    </div>
+  </div>
+  <p class="text-gray-500 text-sm mb-8">{{ total }} kritische Durchgänge · alle mit einstimmig falscher Gruppe</p>
+
+  <!-- Main result card -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <div class="grid grid-cols-3 gap-3 mb-6">
+      <div class="bg-emerald-50 rounded-xl p-4 text-center">
+        <p class="text-3xl font-bold text-emerald-700">{{ correct_count }}</p>
+        <p class="text-xs text-gray-600 mt-1">richtig gegen die Gruppe</p>
+      </div>
+      <div class="bg-rose-50 rounded-xl p-4 text-center">
+        <p class="text-3xl font-bold text-rose-700">{{ conformed }}</p>
+        <p class="text-xs text-gray-600 mt-1">mit der Gruppe (falsch)</p>
+      </div>
+      <div class="bg-gray-50 rounded-xl p-4 text-center">
+        <p class="text-3xl font-bold text-gray-700">{{ conformity_rate }}%</p>
+        <p class="text-xs text-gray-600 mt-1">Konformitätsrate</p>
+      </div>
+    </div>
+
+    <!-- Comparison bar -->
+    <p class="text-xs font-semibold text-gray-500 uppercase mb-2">Im historischen Vergleich</p>
+    <div class="space-y-3">
+      <div>
+        <div class="flex justify-between text-xs text-gray-600 mb-1">
+          <span>Du</span>
+          <span>{{ conformity_rate }} %</span>
+        </div>
+        <div class="w-full bg-gray-100 rounded-full h-3">
+          <div class="bg-indigo-600 h-3 rounded-full" style="width: {{ conformity_rate }}%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="flex justify-between text-xs text-gray-600 mb-1">
+          <span>Asch 1951 (Durchschnitt aller Teilnehmer)</span>
+          <span>37 %</span>
+        </div>
+        <div class="w-full bg-gray-100 rounded-full h-3">
+          <div class="bg-gray-400 h-3 rounded-full" style="width: 37%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="flex justify-between text-xs text-gray-600 mb-1">
+          <span>Kontrollgruppe ohne Gruppendruck</span>
+          <span>&lt;1 %</span>
+        </div>
+        <div class="w-full bg-gray-100 rounded-full h-3">
+          <div class="bg-gray-400 h-3 rounded-full" style="width: 1%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trial-by-trial breakdown -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-4">Durchgang für Durchgang</h2>
+    <div class="space-y-2">
+      {% for d in details %}
+      <div class="flex items-center gap-3 p-3 rounded-xl {% if d.status == 'Widerstanden' %}bg-emerald-50{% elif d.status == 'Angepasst' %}bg-rose-50{% else %}bg-gray-50{% endif %}">
+        <span class="text-xs font-bold text-gray-500 w-16">Runde {{ d.nr }}</span>
+        <span class="text-xs text-gray-600 flex-1">Du: <strong>{{ d.answer }}</strong> · Gruppe: {{ d.group }} · Richtig: {{ d.correct }}</span>
+        <span class="text-xs font-semibold {% if d.status == 'Widerstanden' %}text-emerald-700{% elif d.status == 'Angepasst' %}text-rose-700{% else %}text-gray-600{% endif %}">{{ d.status }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Interpretation -->
+  <div class="bg-indigo-50 rounded-2xl p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Was dein Ergebnis bedeutet</h2>
+    {% if unanswered > 0 %}
+    <p class="text-sm text-gray-700 leading-relaxed">
+      Du hast {{ unanswered }} Durchgang/-gänge nicht beantwortet – schwer zu interpretieren.
+      Der Test wirkt am besten, wenn du intuitiv reagierst.
+    </p>
+    {% elif conformity_rate == 0 %}
+    <p class="text-sm text-gray-700 leading-relaxed">
+      Perfekter Widerstand. Du gehörst zum knappen Viertel, das in Aschs Originalstudie <em>nie</em> nachgab.
+      <strong>Aber Achtung:</strong> Am Bildschirm allein zu klicken ist deutlich einfacher als in einem Raum mit
+      sieben Fremden, die dich direkt anschauen. Die soziale Kraft der echten Situation lässt sich schwer simulieren.
+    </p>
+    {% elif conformity_rate <= 37 %}
+    <p class="text-sm text-gray-700 leading-relaxed">
+      Deine Rate liegt bei oder unter dem historischen Durchschnitt von 37 %.
+      Das bedeutet: Auch mit reduziertem Gruppendruck (kein echter Raum, keine Blickkontakte) hast du dich anpassen lassen –
+      Konformität wirkt selbst, wenn wir sie kennen.
+    </p>
+    {% else %}
+    <p class="text-sm text-gray-700 leading-relaxed">
+      Deine Rate liegt über dem historischen Durchschnitt. Bedenke: Die Online-Version hier ist ein "Härtetest" –
+      normalerweise reduziert die Distanz zum Bildschirm den sozialen Druck. Vielleicht hast du absichtlich
+      "die Gruppe" gewählt, um das Experiment zu explorieren – auch das ist ein Ergebnis.
+    </p>
+    {% endif %}
+  </div>
+
+  <!-- Deep dive -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+    <h2 class="font-bold text-gray-800 mb-3">Was dahinter steckt</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      Deutsch & Gerard (1955) unterschieden zwei Gründe für Konformität:
+    </p>
+    <div class="space-y-3">
+      <div class="border-l-4 border-indigo-500 pl-3">
+        <p class="text-sm font-semibold text-gray-800">Normativer Einfluss</p>
+        <p class="text-sm text-gray-600">Ich passe mich an, um dazuzugehören und nicht ausgeschlossen zu werden. Die Wahrheit ist mir bewusst, aber der soziale Preis zu hoch. Aschs Teilnehmer berichteten hinterher genau das.</p>
+      </div>
+      <div class="border-l-4 border-emerald-500 pl-3">
+        <p class="text-sm font-semibold text-gray-800">Informationeller Einfluss</p>
+        <p class="text-sm text-gray-600">Ich passe mich an, weil ich glaube, die anderen wissen etwas, das ich nicht weiß. Bei ambiguen Fragen dominiert dieser – bei den eindeutigen Asch-Linien war es klar der normative.</p>
+      </div>
+    </div>
+    <p class="text-sm text-gray-600 leading-relaxed mt-4">
+      Praktische Konsequenz: Anonyme Umfragen, geheime Abstimmungen und Round-Robin-Meetings mildern normativen Druck.
+      Ein sichtbar gemachter Devil's Advocate liefert den einen Verbündeten, der die Konformität um 85 % senkt.
+    </p>
+  </div>
+
+  <div class="flex justify-between">
+    <a href="/raetsel/asch-konformitaet" class="text-sm text-gray-500 hover:text-gray-700">← Nochmal versuchen</a>
+    <a href="/raetsel/milgram-gehorsam" class="text-sm text-indigo-600 hover:text-indigo-800">Milgram-Experiment →</a>
+  </div>
+
+</div>
+{% endblock %}
