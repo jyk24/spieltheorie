@@ -1,0 +1,26 @@
+<div class="bg-white rounded-xl border border-indigo-100 p-4">
+  <p class="text-sm text-gray-600 mb-3">
+    <strong>{{ n }}</strong> Blauäugige · Bemerkung des Fremden: „Es gibt mindestens einen Blauäugigen."
+  </p>
+  <ol class="space-y-2">
+    {% for t in tage %}
+    <li class="flex gap-3 items-start
+               {% if loop.last %}bg-green-50 border border-green-200{% else %}bg-slate-50{% endif %}
+               rounded-lg p-3">
+      <span class="flex-shrink-0 w-8 h-8 rounded-full
+                   {% if loop.last %}bg-green-600 text-white{% else %}bg-slate-200 text-slate-700{% endif %}
+                   font-bold text-sm flex items-center justify-center">
+        {{ t.tag }}
+      </span>
+      <div class="text-sm">
+        <p class="text-gray-800"><strong>Tag {{ t.tag }}:</strong> {{ t.beobachtung }}</p>
+        <p class="text-gray-600 mt-1">{{ t.schluss }}</p>
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
+  <p class="text-xs text-slate-500 mt-3 italic">
+    Muster: Bei <strong>n</strong> Blauäugigen verlassen am Tag <strong>n</strong> alle <strong>n</strong>
+    gemeinsam die Insel. Das Ausbleiben der Abreise ist selbst Information.
+  </p>
+</div>

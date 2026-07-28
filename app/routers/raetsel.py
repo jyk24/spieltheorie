@@ -305,6 +305,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Logik",
     },
+    {
+        "id": "blaue-augen",
+        "name": "Das Blaue-Augen-Rätsel",
+        "icon": "👁️",
+        "beschreibung": "100 Inselbewohner. Wer die eigene Augenfarbe herausfindet, muss um Mitternacht die Insel verlassen. Ein Fremder sagt eine offensichtliche Wahrheit – und 100 Tage später verlassen alle Blauäugigen die Insel. Wie kann eine bekannte Information alles verändern?",
+        "typ": "Common-Knowledge-Paradox",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "6 min",
+        "kategorie": "Logik",
+    },
     # ── Spieltheorie & Entscheidung ────────────────────────────────────────────
     {
         "id": "allais",
@@ -4113,6 +4123,51 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         request,
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
+    )
+
+
+@router.get("/blaue-augen", response_class=HTMLResponse)
+def blaue_augen_page(request: Request):
+    ctx = {"active_page": "raetsel", **_nav_context("blaue-augen")}
+    return templates.TemplateResponse(request, "raetsel/blaue_augen.html", ctx)
+
+
+@router.post("/blaue-augen/simulieren", response_class=HTMLResponse)
+def blaue_augen_simulieren(request: Request, blau: str = Form(...)):
+    """Simuliert die Induktion Tag für Tag: bei N Blauäugigen verlassen alle N am Tag N."""
+    try:
+        n = int(blau)
+    except (TypeError, ValueError):
+        n = 2
+    n = max(2, min(10, n))
+    tage = []
+    for tag in range(1, n + 1):
+        if tag == 1:
+            beobachtung = f"Jeder Blauäugige sieht {n - 1} andere Blauäugige."
+            schluss = (
+                "Basisfall: Gäbe es nur einen einzigen Blauäugigen, so wüsste dieser sofort – "
+                "er sieht ja niemanden mit blauen Augen und weiß, dass es mindestens einen gibt. "
+                "Er würde heute Nacht abreisen."
+            )
+        elif tag < n:
+            schluss = (
+                f"Hätten es genau {tag} Blauäugige gegeben, wären diese {tag} gestern gegangen "
+                "(nach der Logik des Vortages). Sie sind aber noch da – also gibt es mehr."
+            )
+            beobachtung = f"Am Ende von Tag {tag - 1} hat niemand die Insel verlassen."
+        else:  # tag == n
+            beobachtung = f"Am Ende von Tag {n - 1} ist immer noch niemand gegangen."
+            schluss = (
+                f"Ich sehe {n - 1} Blauäugige. Wenn ich braune Augen hätte, wären es insgesamt "
+                f"nur {n - 1} – und die hätten gestern die Insel verlassen. Sie sind noch hier. "
+                f"Also habe ich blaue Augen! Alle {n} Blauäugigen ziehen dieselbe Schlussfolgerung "
+                "und verlassen heute Nacht gemeinsam die Insel."
+            )
+        tage.append({"tag": tag, "beobachtung": beobachtung, "schluss": schluss})
+    return templates.TemplateResponse(
+        request,
+        "partials/blaue_augen_result.html",
+        {"n": n, "tage": tage},
     )
 
 

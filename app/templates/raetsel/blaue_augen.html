@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block title %}Das Blaue-Augen-Rätsel – Common Knowledge{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+
+  <!-- Header -->
+  <div class="mb-6">
+    <a href="/raetsel" class="text-sm text-gray-500 hover:text-gray-700">← Alle Rätsel</a>
+  </div>
+  <div class="flex items-center gap-3 mb-2">
+    <span class="text-4xl">👁️</span>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-widest text-indigo-500">Epistemische Logik</p>
+      <h1 class="text-2xl font-bold text-gray-900">Das Blaue-Augen-Rätsel</h1>
+    </div>
+  </div>
+  <p class="text-gray-500 text-sm mb-8">Ein Puzzle über <em>Common Knowledge</em> · Fortgeschritten · ~6 min</p>
+
+  <!-- Die Geschichte -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Die Insel der 200 Logiker</h2>
+    <div class="space-y-3 text-sm text-gray-700 leading-relaxed">
+      <p>Auf einer abgelegenen Insel leben 200 perfekt logische Menschen: <strong>100 mit blauen Augen</strong>
+        und <strong>100 mit braunen Augen</strong>. Ihre Religion verlangt:</p>
+      <ul class="list-disc ml-6 space-y-1 text-gray-600">
+        <li>Es gibt keine Spiegel, keine Reflexionen, keinerlei Möglichkeit, die eigene Augenfarbe zu erkennen.</li>
+        <li>Niemand darf jemals über Augenfarben sprechen.</li>
+        <li>Wer <em>sicher</em> weiß, welche Farbe seine eigenen Augen haben, muss die Insel am folgenden Mitternachtsschiff verlassen.</li>
+      </ul>
+      <p>Jeder sieht die Augen aller anderen 199. Jahrhundertelang lebt niemand die Insel – niemand kann die
+        eigene Farbe schlussfolgern.</p>
+      <p>Eines Tages besucht ein Fremder die Insel. Vor der versammelten Gemeinschaft sagt er nur einen Satz:</p>
+      <blockquote class="bg-indigo-50 border-l-4 border-indigo-400 p-3 italic text-indigo-900">
+        „Wie schön, endlich einen blauäugigen Menschen wiederzusehen."
+      </blockquote>
+      <p>Was der Fremde sagt, weiß eigentlich <em>jeder</em> Inselbewohner bereits – jeder sieht ja mindestens
+        99 andere Blauäugige. Trotzdem: <strong>Am 100. Tag nach dieser Bemerkung verlassen alle 100
+        Blauäugigen gemeinsam die Insel.</strong></p>
+      <p class="font-semibold text-gray-800">Wie kann eine offensichtliche Wahrheit alles verändern?</p>
+    </div>
+  </div>
+
+  <!-- Interaktiver Simulator -->
+  <div class="bg-indigo-50 rounded-2xl p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-2">Simulator – Induktion Schritt für Schritt</h2>
+    <p class="text-sm text-gray-600 mb-4">Wähle die Anzahl der Blauäugigen (2–10) und beobachte, wie die
+      Induktion Tag für Tag greift.</p>
+    <form hx-post="/raetsel/blaue-augen/simulieren"
+          hx-target="#blaue-augen-result"
+          hx-swap="innerHTML"
+          class="flex flex-wrap items-end gap-3">
+      <label class="flex-1 min-w-[140px]">
+        <span class="block text-xs font-semibold text-gray-600 mb-1">Anzahl Blauäugiger</span>
+        <input type="number" name="blau" min="2" max="10" value="3"
+               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none">
+      </label>
+      <button type="submit"
+              class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-5 rounded-lg text-sm transition-colors">
+        Tag für Tag simulieren
+      </button>
+    </form>
+    <div id="blaue-augen-result" class="mt-4"></div>
+  </div>
+
+  <!-- Warum ändert die Aussage etwas? -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Der Trick: Common Knowledge</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      Vor der Bemerkung des Fremden war <em>„Es gibt mindestens einen Blauäugigen"</em> zwar allen bekannt –
+      aber nicht <strong>allgemein bekannt</strong>. Die Bemerkung erzeugt eine unendliche Kette:
+    </p>
+    <div class="bg-slate-50 rounded-xl p-4 text-xs text-slate-700 space-y-2 font-mono leading-relaxed">
+      <p>Ich weiß, dass es einen Blauäugigen gibt.</p>
+      <p>Ich weiß, dass <em>du</em> weißt, dass es einen Blauäugigen gibt.</p>
+      <p>Ich weiß, dass du weißt, dass <em>ich</em> weiß, dass es einen Blauäugigen gibt.</p>
+      <p class="text-slate-400">… (bis in beliebige Tiefe) …</p>
+    </div>
+    <p class="text-sm text-gray-600 leading-relaxed mt-3">
+      Erst diese unendliche Rekursion – <em>Common Knowledge</em> – ermöglicht die Induktion.
+      Mathematisch: Bei <strong>n</strong> Blauäugigen zünden am Tag <strong>n</strong> alle <strong>n</strong>
+      gleichzeitig – weil das Ausbleiben von Handlungen an den Tagen 1 bis n − 1 selbst neue Information ist.
+    </p>
+  </div>
+
+  <!-- Historischer Kontext -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Herkunft & Bedeutung</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      Die früheste bekannte Form des Rätsels erschien 1953 in einem Aufsatz des ungarischen Mathematikers
+      <strong>George Gamow</strong> und <strong>Marvin Stern</strong>. Berühmtheit erlangte es durch
+      <strong>Terry Tao</strong> auf seinem Mathematik-Blog (2008) und wird heute in Vorlesungen zur
+      <em>epistemischen Logik</em>, zu <em>verteilten Systemen</em> und zu Robert Aumanns Arbeit über
+      <em>Common Knowledge</em> (Nobelpreis 2005) verwendet.
+    </p>
+    <p class="text-sm text-gray-600 leading-relaxed">
+      In der Informatik erklärt derselbe Mechanismus, warum in verteilten Systemen keine Nachrichtenkette
+      jemals „gemeinsame Sicherheit" erzeugen kann (Two-Generals-Problem) – und warum trotzdem koordinierte
+      Handlungen möglich sind, wenn Teilnehmer öffentlich das Gleiche <em>sehen</em>.
+    </p>
+  </div>
+
+  <!-- Praxis -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+    <h2 class="font-bold text-gray-800 mb-3">Wo begegnet dir Common Knowledge im Alltag?</h2>
+    <div class="space-y-3">
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">📢</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Öffentliche Ankündigungen</p>
+          <p class="text-sm text-gray-600">Ein Notenbanker sagt öffentlich, was Analysten längst wissen –
+            und die Märkte reagieren trotzdem. Erst die öffentliche Aussage macht die Information
+            zur gemeinsamen Grundlage aller Reaktionen.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">🏛️</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Revolutionen & Proteste</p>
+          <p class="text-sm text-gray-600">Ein Regime ist unbeliebt – jeder weiß es. Aber niemand handelt,
+            solange nicht sichtbar wird, <em>dass alle es wissen</em>. Ein einzelner symbolischer Akt kann
+            plötzlich Massenbewegungen entfesseln.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">🤝</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Verhandlungen</p>
+          <p class="text-sm text-gray-600">Eine Drohung wirkt nur, wenn beide Seiten wissen, dass die andere
+            weiß, dass sie glaubwürdig ist. Schellings <em>Focal Points</em> beruhen auf demselben Mechanismus.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="flex gap-3 mb-4">
+    <a href="/raetsel"
+       class="flex-1 text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors text-sm">
+      ← Alle Rätsel
+    </a>
+    {% if next_puzzle %}
+    <a href="/raetsel/{{ next_puzzle.id }}"
+       class="flex-1 text-center bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium transition-colors text-sm">
+      {{ next_puzzle.icon }} {{ next_puzzle.name }} →
+    </a>
+    {% endif %}
+  </div>
+
+  <!-- Ähnliche Rätsel -->
+  {% if related_puzzles %}
+  <div class="mt-2">
+    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Ähnliche Rätsel</p>
+    <div class="space-y-2">
+      {% for r in related_puzzles %}
+      <a href="/raetsel/{{ r.id }}"
+         class="flex items-start gap-3 p-3 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 hover:shadow-sm transition-all">
+        <span class="text-xl">{{ r.icon }}</span>
+        <div>
+          <p class="font-semibold text-slate-800 text-sm">{{ r.name }}</p>
+          {% if r.beschreibung %}
+          <p class="text-xs text-slate-500 mt-0.5 line-clamp-2">{{ r.beschreibung }}</p>
+          {% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
