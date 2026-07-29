@@ -234,6 +234,16 @@ RAETSEL_META = [
         "dauer": "4 min",
         "kategorie": "Mathematik",
     },
+    {
+        "id": "parrondo",
+        "name": "Parrondos Paradoxon",
+        "icon": "🎰",
+        "beschreibung": "Zwei Glücksspiele – beide auf lange Sicht Verlust. Kombinierst du sie abwechselnd, wirst du zum Gewinner. Juan Parrondo bewies 1996: In zustandsabhängigen Systemen kann Diversifikation echten Wert aus dem Nichts erzeugen.",
+        "typ": "Mathematik-Paradox",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "6 min",
+        "kategorie": "Mathematik",
+    },
     # ── Logik & Rätsel ─────────────────────────────────────────────────────────
     {
         "id": "piraten",
@@ -4103,6 +4113,13 @@ def _nav_context(current_id: str) -> dict:
 def pawlow_hund_page(request: Request):
     return templates.TemplateResponse(
         request, "raetsel/pawlow_hund.html", {"active_page": "raetsel"}
+    )
+
+
+@router.get("/parrondo", response_class=HTMLResponse)
+def parrondo_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/parrondo.html", {"active_page": "raetsel"}
     )
 
 

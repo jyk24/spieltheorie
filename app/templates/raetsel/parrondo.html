@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+{% block title %}Parrondos Paradoxon – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🎰 Parrondos Paradoxon</h1>
+        <p class="text-slate-500 mt-1">Zwei Verlust-Spiele – abwechselnd gespielt ergeben sie ein Gewinn-Spiel. Juan Parrondo bewies das 1996.</p>
+    </div>
+
+    <!-- Die zwei Spiele -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div class="bg-rose-50 border border-rose-200 rounded-xl p-5">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="text-2xl">🅰️</span>
+                <span class="font-bold text-rose-800">Spiel A</span>
+                <span class="ml-auto text-xs bg-rose-200 text-rose-800 px-2 py-0.5 rounded-full">Verlust</span>
+            </div>
+            <p class="text-sm text-rose-900 mb-2">Werfe eine leicht gezinkte Münze:</p>
+            <ul class="text-xs text-rose-800 space-y-1">
+                <li>• Gewinn (+1 €): <strong>49,5 %</strong></li>
+                <li>• Verlust (−1 €): 50,5 %</li>
+            </ul>
+            <p class="text-xs text-rose-700 mt-2 italic">Erwartungswert: −0,01 € pro Runde</p>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-5">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="text-2xl">🅱️</span>
+                <span class="font-bold text-amber-800">Spiel B</span>
+                <span class="ml-auto text-xs bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full">Verlust</span>
+            </div>
+            <p class="text-sm text-amber-900 mb-2">Zwei Münzen – je nach Kapital:</p>
+            <ul class="text-xs text-amber-800 space-y-1">
+                <li>• <strong>Kapital ÷ 3 = 0</strong>: Gewinn 9,5 %</li>
+                <li>• sonst: Gewinn 74,5 %</li>
+            </ul>
+            <p class="text-xs text-amber-700 mt-2 italic">Erwartungswert: −0,009 € pro Runde</p>
+        </div>
+    </div>
+
+    <div class="bg-gradient-to-br from-indigo-50 to-violet-50 border-2 border-indigo-300 rounded-xl p-5 mb-6">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="text-2xl">✨</span>
+            <span class="font-bold text-indigo-800">Die paradoxe Kombination</span>
+            <span class="ml-auto text-xs bg-indigo-200 text-indigo-800 px-2 py-0.5 rounded-full">Gewinn</span>
+        </div>
+        <p class="text-sm text-indigo-900">Spielst du A und B abwechselnd (z. B. ABABAB oder zufällig), wird aus zwei Verlust-Spielen ein <strong>Gewinn-Spiel</strong>. Erwartungswert: ca. <strong>+0,016 € pro Runde</strong>.</p>
+    </div>
+
+    <!-- Simulator -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-6">
+        <p class="font-semibold text-slate-800 mb-1">Live-Simulator</p>
+        <p class="text-sm text-slate-500 mb-4">Wähle eine Strategie – simuliere 500 Runden und beobachte, wie sich dein Kapital entwickelt.</p>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+            <button onclick="runSim('A', 500)" class="bg-rose-100 text-rose-800 border border-rose-200 py-2.5 rounded-xl font-medium hover:bg-rose-200 transition-colors text-sm">Nur A</button>
+            <button onclick="runSim('B', 500)" class="bg-amber-100 text-amber-800 border border-amber-200 py-2.5 rounded-xl font-medium hover:bg-amber-200 transition-colors text-sm">Nur B</button>
+            <button onclick="runSim('ABAB', 500)" class="bg-indigo-600 text-white py-2.5 rounded-xl font-medium hover:bg-indigo-700 transition-colors text-sm">ABAB</button>
+            <button onclick="runSim('RANDOM', 500)" class="bg-violet-600 text-white py-2.5 rounded-xl font-medium hover:bg-violet-700 transition-colors text-sm">Zufall 50/50</button>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 mb-4">
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center">
+                <div id="stat-strategy" class="text-lg font-black text-slate-700">—</div>
+                <div class="text-xs text-slate-500">Strategie</div>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center">
+                <div id="stat-capital" class="text-lg font-black text-slate-700">0 €</div>
+                <div class="text-xs text-slate-500">End-Kapital</div>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center">
+                <div id="stat-avg" class="text-lg font-black text-slate-700">—</div>
+                <div class="text-xs text-slate-500">Ø pro Runde</div>
+            </div>
+        </div>
+
+        <canvas id="parrondo-canvas" height="180" class="w-full rounded-xl bg-slate-50 border border-slate-200"></canvas>
+        <p class="text-xs text-slate-400 mt-2 text-center">Kapitalverlauf über 500 Runden (Start: 0 €)</p>
+
+        <div class="mt-4">
+            <p class="text-sm font-semibold text-slate-700 mb-2">Vergleich aller Strategien (10.000 Runden Mittelwert):</p>
+            <button onclick="runComparison()" class="w-full bg-slate-100 text-slate-700 border border-slate-200 py-2 rounded-xl font-medium hover:bg-slate-200 transition-colors text-sm">
+                Groß-Simulation starten
+            </button>
+            <div id="comparison-result" class="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2 text-center"></div>
+        </div>
+    </div>
+
+    <!-- Warum funktioniert das? -->
+    <div class="space-y-4">
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 text-sm text-blue-900">
+            <p class="font-semibold mb-2">Warum wird aus 2× Verlust ein Gewinn?</p>
+            <p class="mb-2">Der Schlüssel liegt in <strong>Spiel B</strong>: Es enthält eine gute Münze (74,5 %) und eine schlechte (9,5 %). Wenn du nur B spielst, landest du zu oft im „schlechten" Zustand (Kapital ÷ 3 = 0) – dort verlierst du fast immer.</p>
+            <p class="mb-2"><strong>Spiel A</strong> ist selbst ein Verlust, aber es zerstört das schlechte Muster: A verschiebt dein Kapital zufällig um ±1, sodass du seltener auf einem Vielfachen von 3 landest, wenn du B spielst.</p>
+            <p>Die Kombination bringt dich häufiger in den „guten" Zustand von B – und der Gewinn dort dominiert die kleinen Verluste in A.</p>
+        </div>
+
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5 text-sm text-emerald-900">
+            <p class="font-semibold mb-2">Wo begegnet uns das im echten Leben?</p>
+            <ul class="space-y-1.5 text-xs">
+                <li class="flex gap-2"><span>🧬</span><span><strong>Evolution:</strong> Zwei einzeln nachteilige Mutationen können in Kombination Fitness erhöhen (Sherrington-Kirkpatrick-Modelle).</span></li>
+                <li class="flex gap-2"><span>📈</span><span><strong>Finanzmarkt:</strong> Portfoliostrategien, bei denen zwei Verlust-Assets abwechselnd gehalten positive Rendite ergeben (Rebalancing-Premium).</span></li>
+                <li class="flex gap-2"><span>🧠</span><span><strong>Verhaltensökonomie:</strong> Zwei suboptimale Regeln (z. B. Sparen + Konsum) können abwechselnd angewendet zu besseren Ergebnissen führen als jede allein.</span></li>
+                <li class="flex gap-2"><span>⚛️</span><span><strong>Physik:</strong> Ursprünglich aus dem „Brownian Ratchet"-Modell – gerichteter Transport aus reinem Rauschen.</span></li>
+            </ul>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 text-sm text-slate-700">
+            <p class="font-semibold mb-2">Was das Rätsel bedeutet</p>
+            <p class="mb-2">Wenn du eine Verlust-Strategie mit einer anderen Verlust-Strategie kombinierst, wirst du in <em>fast allen</em> Fällen erst recht verlieren. Parrondos Paradoxon ist genau <em>deshalb</em> überraschend: Es zeigt, dass in gekoppelten, zustandsabhängigen Systemen die üblichen Intuitionen nicht mehr gelten.</p>
+            <p>Das ist keine bloße Kuriosität – es ist ein Beweis, dass Diversifikation und Regelwechsel in nichtlinearen Systemen mehr sein können als Risikoausgleich. Manchmal erzeugen sie <strong>echten Wert aus dem Nichts</strong>.</p>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-xl p-4 text-xs text-slate-500">
+            <p><strong>Quelle:</strong> Juan M. R. Parrondo, „How to cheat a bad mathematician" (1996). Weiterentwicklung durch Harmer &amp; Abbott, „Losing strategies can win by Parrondo's paradox", <em>Nature</em> 402 (1999), 864.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+const P_A_WIN = 0.495;
+const P_B_BAD_WIN = 0.095;
+const P_B_GOOD_WIN = 0.745;
+
+function playA(capital) {
+    return capital + (Math.random() < P_A_WIN ? 1 : -1);
+}
+
+function playB(capital) {
+    const isBad = ((capital % 3) + 3) % 3 === 0;
+    const p = isBad ? P_B_BAD_WIN : P_B_GOOD_WIN;
+    return capital + (Math.random() < p ? 1 : -1);
+}
+
+function simulate(strategy, rounds) {
+    const history = [0];
+    let capital = 0;
+    for (let i = 0; i < rounds; i++) {
+        let choice;
+        if (strategy === 'A') choice = 'A';
+        else if (strategy === 'B') choice = 'B';
+        else if (strategy === 'ABAB') choice = i % 2 === 0 ? 'A' : 'B';
+        else choice = Math.random() < 0.5 ? 'A' : 'B';
+        capital = choice === 'A' ? playA(capital) : playB(capital);
+        history.push(capital);
+    }
+    return history;
+}
+
+function drawHistory(history, color) {
+    const canvas = document.getElementById('parrondo-canvas');
+    canvas.width = canvas.offsetWidth;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = 180;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(0, 0, W, H);
+
+    const minV = Math.min(0, ...history);
+    const maxV = Math.max(0, ...history);
+    const range = Math.max(1, maxV - minV);
+    const zeroY = H - ((0 - minV) / range) * (H - 20) - 10;
+
+    ctx.strokeStyle = '#cbd5e1';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(0, zeroY);
+    ctx.lineTo(W, zeroY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '10px system-ui';
+    ctx.fillText('0 €', 4, zeroY - 3);
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    const xStep = W / (history.length - 1);
+    history.forEach((v, i) => {
+        const y = H - ((v - minV) / range) * (H - 20) - 10;
+        if (i === 0) ctx.moveTo(0, y); else ctx.lineTo(i * xStep, y);
+    });
+    ctx.stroke();
+}
+
+const COLORS = { 'A': '#e11d48', 'B': '#d97706', 'ABAB': '#4f46e5', 'RANDOM': '#7c3aed' };
+const LABELS = { 'A': 'Nur A', 'B': 'Nur B', 'ABAB': 'ABAB', 'RANDOM': 'Zufall' };
+
+function runSim(strategy, rounds) {
+    const history = simulate(strategy, rounds);
+    const final = history[history.length - 1];
+    const avg = (final / rounds).toFixed(4);
+    document.getElementById('stat-strategy').textContent = LABELS[strategy];
+    document.getElementById('stat-capital').textContent = (final >= 0 ? '+' : '') + final + ' €';
+    document.getElementById('stat-capital').style.color = final >= 0 ? '#059669' : '#dc2626';
+    document.getElementById('stat-avg').textContent = (avg >= 0 ? '+' : '') + avg + ' €';
+    document.getElementById('stat-avg').style.color = avg >= 0 ? '#059669' : '#dc2626';
+    drawHistory(history, COLORS[strategy]);
+}
+
+function runComparison() {
+    const container = document.getElementById('comparison-result');
+    container.innerHTML = '<div class="col-span-4 text-xs text-slate-500 py-2">Läuft …</div>';
+    setTimeout(() => {
+        const strategies = ['A', 'B', 'ABAB', 'RANDOM'];
+        const results = strategies.map(s => {
+            let total = 0;
+            const runs = 20;
+            for (let r = 0; r < runs; r++) {
+                const h = simulate(s, 10000);
+                total += h[h.length - 1];
+            }
+            return { s, avg: total / runs };
+        });
+        container.innerHTML = results.map(r => {
+            const color = r.avg >= 0 ? '#059669' : '#dc2626';
+            const sign = r.avg >= 0 ? '+' : '';
+            return `<div class="bg-slate-50 border border-slate-200 rounded-xl p-2">
+                <div class="text-xs text-slate-500">${LABELS[r.s]}</div>
+                <div class="text-sm font-black" style="color:${color}">${sign}${r.avg.toFixed(0)} €</div>
+            </div>`;
+        }).join('');
+    }, 30);
+}
+
+runSim('ABAB', 500);
+window.addEventListener('resize', () => {
+    const s = document.getElementById('stat-strategy').textContent;
+    const key = Object.keys(LABELS).find(k => LABELS[k] === s);
+    if (key) runSim(key, 500);
+});
+</script>
+
+{% endblock %}
