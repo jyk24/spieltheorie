@@ -134,7 +134,7 @@ GLOSSAR = [
             "Das ist keine Frage der Technologie - es ist ein fundamentales Prinzip der Quantenwelt."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "bounded-rationality",
@@ -534,7 +534,7 @@ GLOSSAR = [
             "Grundlage fuer Laser, Transistoren, MRT und Quantencomputer."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "regression-zur-mitte",
@@ -667,7 +667,7 @@ GLOSSAR = [
             "wenn dieses Prinzip auf makroskopische Objekte zutreffen wuerde."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "survivorship-bias",
@@ -763,7 +763,7 @@ GLOSSAR = [
             "Bei einer Messung 'kollabiert' die Wellenfunktion auf einen einzigen Wert."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "winner-fluch",
@@ -976,6 +976,46 @@ GLOSSAR = [
         ),
         "kategorie": "Psychologie",
         "link": "/raetsel/verfuegbarkeitsheuristik",
+    },
+    {
+        "id": "endowment-effekt",
+        "titel": "Endowment-Effekt",
+        "definition": (
+            "Kahneman, Knetsch & Thaler (1990): Bereits der Besitz eines Objekts erhoeht dessen empfundenen Wert. "
+            "In der klassischen Tassen-Studie verlangten zufaellig ausgewaehlte Besitzer etwa doppelt so viel wie "
+            "Kaeufer bereit waren zu zahlen. Erklaerung: Verlustaversion nach Prospect Theory - Verluste werden "
+            "etwa doppelt so stark gewichtet wie gleich grosse Gewinne. In Verhandlungen bedeutet das: bestehende "
+            "Vertraege, Positionen und Beziehungen werden systematisch ueberbewertet."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/endowment-effekt",
+    },
+    {
+        "id": "ikea-effekt",
+        "titel": "IKEA-Effekt",
+        "definition": (
+            "Norton, Mochon & Ariely (2012): Selbst erschaffene oder mitgestaltete Objekte werden hoeher bewertet "
+            "als identische, fertig gelieferte. In Origami-Experimenten zahlten Selbstfalter das Fuenffache fuer "
+            "ihre eigenen (schiefen) Kraniche im Vergleich zu Beobachtern - fast so viel wie fuer perfekte "
+            "Experten-Faltungen. Der Effekt tritt nur bei erfolgreichem Abschluss auf. Anwendungen: Meal-Kits, "
+            "Konfigurator-Websites, Co-Creation-Marketing, aber auch Vorschlaege, an denen die Gegenseite "
+            "mitschreiben durfte."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/ikea-effekt",
+    },
+    {
+        "id": "peak-end-regel",
+        "titel": "Peak-End-Regel",
+        "definition": (
+            "Kahneman & Kollegen (1993): Das Gedaechtnis bewertet ein Erlebnis nicht als Summe oder Durchschnitt, "
+            "sondern anhand des emotionalen Hoehepunkts (peak) und des Endes (end). Eine laengere Prozedur mit "
+            "milderem Ende wird als angenehmer erinnert als eine kuerzere mit schmerzhaftem Abschluss - obwohl "
+            "die Gesamtbelastung groesser war. Fuer Entscheidungen zaehlt das Erinnerungs-Ich, nicht das Erlebnis-Ich. "
+            "Verhandlungsrelevanz: Der letzte Eindruck praegt die Erinnerung staerker als die Mitte."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/peak-end-regel",
     },
 ]
 

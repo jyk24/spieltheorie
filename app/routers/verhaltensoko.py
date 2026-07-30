@@ -53,6 +53,27 @@ THEMEN = [
         "url": "/raetsel/goodharts-gesetz",
         "farbe": "sky",
     },
+    {
+        "titel": "Endowment-Effekt",
+        "icon": "☕",
+        "beschreibung": "Wer eine Tasse besitzt, verlangt beim Verkauf das Doppelte des Kaufpreises. Besitz verändert Bewertung – die klassische Cornell-Studie von Kahneman, Knetsch & Thaler (1990).",
+        "url": "/raetsel/endowment-effekt",
+        "farbe": "amber",
+    },
+    {
+        "titel": "IKEA-Effekt",
+        "icon": "🪑",
+        "beschreibung": "Selbst gebastelte Origami-Kraniche kosten das Fünffache. Investierte Anstrengung wird zum Teil des empfundenen Werts – Norton, Mochon & Ariely (2012).",
+        "url": "/raetsel/ikea-effekt",
+        "farbe": "orange",
+    },
+    {
+        "titel": "Peak-End-Regel",
+        "icon": "🌡️",
+        "beschreibung": "Nicht die Summe des Erlebnisses zählt, sondern der Höhepunkt und das Ende. Warum Menschen die längere Prozedur wählen – Kahneman & Kollegen (1993).",
+        "url": "/raetsel/peak-end-regel",
+        "farbe": "teal",
+    },
 ]
 
 

@@ -26,7 +26,7 @@ TED_TALKS = [
         "schluessel_erkenntnis": "Irrationales Verhalten folgt erkennbaren Mustern - wer sie kennt, kann Entscheidungen gezielt gestalten.",
         "anwendung": "In Verhandlungen praegt der erste genannte Preis (Anker) alle weiteren Einschaetzungen - nutze diesen Effekt bewusst.",
         "ted_url": "https://www.ted.com/talks/dan_ariely_are_we_in_control_of_our_own_decisions",
-        "verwandte_raetsel": ["anker-experiment", "framing", "allais"],
+        "verwandte_raetsel": ["anker-experiment", "framing", "allais", "endowment-effekt", "ikea-effekt"],
         "quiz": [
             {
                 "frage": "Was versteht Ariely unter 'Predictable Irrationality'?",
@@ -97,7 +97,7 @@ TED_TALKS = [
         "schluessel_erkenntnis": "Was wir erinnern, ist nicht was wir erlebt haben - der Peak und das Ende praegenunser Urteil.",
         "anwendung": "Verhandlungen sollten mit einem starken positiven Abschluss enden - das ist es, was die andere Seite im Gedaechtnis behalten wird.",
         "ted_url": "https://www.ted.com/talks/daniel_kahneman_the_riddle_of_experience_vs_memory",
-        "verwandte_raetsel": ["kognitive-dissonanz", "dunning-kruger", "framing"],
+        "verwandte_raetsel": ["peak-end-regel", "kognitive-dissonanz", "dunning-kruger", "framing"],
         "quiz": [
             {
                 "frage": "Was unterscheidet das 'erlebende Selbst' vom 'erinnernden Selbst'?",
