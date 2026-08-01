@@ -613,6 +613,7 @@ RAETSEL_META = [
     {"id":"flow-analyse","name":"Flow – der optimale Zustand","icon":"🌊","beschreibung":"Zwischen Langeweile und Überforderung liegt ein schmaler Kanal: Flow. Csikszentmihalyi (1990) beschreibt, wann Menschen völlig aufgehen in einer Tätigkeit.","typ":"Motivationspsychologie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"milgram-gehorsam","name":"Das Milgram-Experiment","icon":"⚡","beschreibung":"65% der Versuchspersonen verabreichten tödliche Elektroschocks – weil eine Autoritätsperson es verlangte. Was sagt das über moralischen Mut?","typ":"Sozialpsychologie","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Psychologie"},
     {"id":"pawlow-hund","name":"Pawlows Hund","icon":"🐕","beschreibung":"Pavlov entdeckte zufällig: Ein Hund speichelt nicht nur beim Fressen – sondern schon beim Klang der Glocke. Wie lernt das Gehirn Verknüpfungen, die eigentlich nicht existieren?","typ":"Verhaltenspsychologie","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Psychologie"},
+    {"id":"asch-konformitaet","name":"Das Asch-Konformitätsexperiment","icon":"👁️","beschreibung":"Acht Fremde nennen dieselbe – offensichtlich falsche – Linie. Jetzt bist du dran. Widerstehst du dem Gruppendruck? Solomon Asch, 1951 – und die verstörende Antwort: 37 % geben nach.","typ":"Sozialpsychologie","schwierigkeit":"Einsteiger","dauer":"5 min","kategorie":"Psychologie"},
     # ── Verhaltensökonomie & Entscheidung (neu) ──────────────────────────────
     {"id":"sunk-cost","name":"Der Sunk-Cost-Fehlschluss","icon":"🎟️","beschreibung":"Du sitzt im Theater, das Stück ist furchtbar. Du hast 80€ bezahlt. Bleibst du – oder gehst du? Der häufigste Denkfehler bei Investitionsentscheidungen.","typ":"Entscheidungsfehler","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"verlustaversion","name":"Verlustaversion","icon":"⚖️","beschreibung":"Verliere 50€ oder gewinne 50€ – welches Ereignis fühlt sich intensiver an? Kahneman & Tversky (1979): Verluste wiegen psychologisch doppelt so schwer wie gleich große Gewinne.","typ":"Prospect Theory","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
@@ -4103,6 +4104,14 @@ def _nav_context(current_id: str) -> dict:
 def pawlow_hund_page(request: Request):
     return templates.TemplateResponse(
         request, "raetsel/pawlow_hund.html", {"active_page": "raetsel"}
+    )
+
+
+@router.get("/asch-konformitaet", response_class=HTMLResponse)
+def asch_konformitaet_page(request: Request):
+    ctx = {"active_page": "raetsel", **_nav_context("asch-konformitaet")}
+    return templates.TemplateResponse(
+        request, "raetsel/asch_konformitaet.html", ctx
     )
 
 
