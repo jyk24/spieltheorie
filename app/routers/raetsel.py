@@ -631,6 +631,7 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"freundschaftsparadoxon","name":"Das Freundschaftsparadoxon","icon":"👥","beschreibung":"Deine Freunde haben im Schnitt mehr Freunde als du. Das ist keine Selbstwahrnehmung – sondern ein mathematischer Fakt, den Scott Feld 1991 bewies. Wieso wirkt Instagram deshalb immer wie ein Feed voller Party-Menschen?","typ":"Netzwerk-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Statistik"},
 ]
 
 
@@ -4046,6 +4047,90 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Der <strong>Fundamentale Attributionsfehler</strong> (FAE, Ross 1977): Wir überschätzen den Einfluss von Persönlichkeitseigenschaften und unterschätzen den Einfluss der Situation auf das Verhalten anderer.</p><p>Das Verhalten (Castro-Aufsatz) wurde der Disposition zugeschrieben (<em>er ist pro-Castro</em>) – obwohl die Situation (zufällige Zuweisung) das Verhalten vollständig erklärte.</p>",
         "kontext": "<p>Der FAE ist kulturell variabel: Westliche (individualistische) Kulturen zeigen ihn stärker als östliche (kollektivistische). Im Alltag: Wer uns auf der Autobahn schneidet, ist ein Idiot – nicht jemand mit einem Notfall.</p><p>In Verhandlungen: Wenn die Gegenseite hart verhandelt, schließen wir auf Gier oder Feindseligkeit – statt auf externen Druck, Vorgaben des Vorstands oder Zeitdruck. Das verzerrt unsere Strategie erheblich.</p>",
         "erkenntnis": "Wir sind natürliche Biographen, keine Situationsanalysten. Wenn jemand sich 'falsch' verhält, zuerst fragen: Welche situativen Kräfte könnten dieses Verhalten erklären? Das gibt ein realistischeres Bild – und bessere Verhandlungsstrategien.",
+    },
+    "freundschaftsparadoxon": {
+        "id": "freundschaftsparadoxon", "name": "Das Freundschaftsparadoxon", "icon": "👥",
+        "farbe": "teal", "kategorie": "Statistik", "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Das Netzwerk:",
+        "setup": (
+            "<p class=\"mb-3\">Sieh dir das Freundschaftsnetz dieser <strong>7 Personen</strong> an. "
+            "Eine Linie bedeutet: die beiden sind befreundet. Die Zahl unter jedem Namen zeigt, wie viele Freunde die Person hat.</p>"
+            "<div class=\"my-4 flex justify-center\">"
+            "<svg viewBox=\"0 0 500 300\" width=\"100%\" style=\"max-width:460px;height:auto;\" role=\"img\" aria-label=\"Freundschaftsgraph mit 7 Personen\">"
+            # edges
+            "<g stroke=\"#94a3b8\" stroke-width=\"2\">"
+            "<line x1=\"100\" y1=\"60\"  x2=\"250\" y2=\"150\"/>"   # A-B
+            "<line x1=\"100\" y1=\"60\"  x2=\"100\" y2=\"240\"/>"   # A-C
+            "<line x1=\"250\" y1=\"150\" x2=\"100\" y2=\"240\"/>"   # B-C
+            "<line x1=\"250\" y1=\"150\" x2=\"400\" y2=\"60\"/>"    # B-D
+            "<line x1=\"250\" y1=\"150\" x2=\"400\" y2=\"240\"/>"   # B-E
+            "<line x1=\"250\" y1=\"150\" x2=\"250\" y2=\"40\"/>"    # B-F
+            "<line x1=\"250\" y1=\"150\" x2=\"250\" y2=\"270\"/>"   # B-G
+            "<line x1=\"400\" y1=\"60\"  x2=\"400\" y2=\"240\"/>"   # D-E
+            "</g>"
+            # nodes: (cx, cy, label, degree, is_hub)
+            # A
+            "<g><circle cx=\"100\" cy=\"60\"  r=\"22\" fill=\"#ecfeff\" stroke=\"#0891b2\" stroke-width=\"2\"/>"
+            "<text x=\"100\" y=\"66\"  text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#0e7490\">A</text>"
+            "<text x=\"55\"  y=\"64\"  text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"11\" fill=\"#334155\">2 Freunde</text></g>"
+            # B (Hub)
+            "<g><circle cx=\"250\" cy=\"150\" r=\"28\" fill=\"#fef3c7\" stroke=\"#d97706\" stroke-width=\"3\"/>"
+            "<text x=\"250\" y=\"157\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"18\" font-weight=\"700\" fill=\"#78350f\">B</text>"
+            "<text x=\"320\" y=\"142\" text-anchor=\"start\" font-family=\"sans-serif\" font-size=\"11\" fill=\"#334155\">6 Freunde</text></g>"
+            # C
+            "<g><circle cx=\"100\" cy=\"240\" r=\"22\" fill=\"#ecfeff\" stroke=\"#0891b2\" stroke-width=\"2\"/>"
+            "<text x=\"100\" y=\"246\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#0e7490\">C</text>"
+            "<text x=\"55\"  y=\"244\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"11\" fill=\"#334155\">2 Freunde</text></g>"
+            # D
+            "<g><circle cx=\"400\" cy=\"60\"  r=\"22\" fill=\"#ecfeff\" stroke=\"#0891b2\" stroke-width=\"2\"/>"
+            "<text x=\"400\" y=\"66\"  text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#0e7490\">D</text>"
+            "<text x=\"445\" y=\"64\"  text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"11\" fill=\"#334155\">2 Freunde</text></g>"
+            # E
+            "<g><circle cx=\"400\" cy=\"240\" r=\"22\" fill=\"#ecfeff\" stroke=\"#0891b2\" stroke-width=\"2\"/>"
+            "<text x=\"400\" y=\"246\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"16\" font-weight=\"700\" fill=\"#0e7490\">E</text>"
+            "<text x=\"445\" y=\"244\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"11\" fill=\"#334155\">2 Freunde</text></g>"
+            # F
+            "<g><circle cx=\"250\" cy=\"40\"  r=\"20\" fill=\"#f1f5f9\" stroke=\"#64748b\" stroke-width=\"2\"/>"
+            "<text x=\"250\" y=\"46\"  text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#334155\">F</text>"
+            "<text x=\"250\" y=\"17\"  text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"11\" fill=\"#334155\">1 Freund</text></g>"
+            # G
+            "<g><circle cx=\"250\" cy=\"270\" r=\"20\" fill=\"#f1f5f9\" stroke=\"#64748b\" stroke-width=\"2\"/>"
+            "<text x=\"250\" y=\"276\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"15\" font-weight=\"700\" fill=\"#334155\">G</text>"
+            "<text x=\"250\" y=\"297\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"11\" fill=\"#334155\">1 Freund</text></g>"
+            "</svg></div>"
+            "<p class=\"mt-3\">Der Durchschnitt: Jede Person hat im Mittel <strong>(2+6+2+2+2+1+1)/7 ≈ 2,3 Freunde</strong>.</p>"
+            "<p class=\"mt-2\">Jetzt spielst du folgendes Spiel: Wähle <strong>zufällig eine Person</strong>. Dann wähle <strong>zufällig eine ihrer Freundinnen</strong>. Zähle deren Freunde.</p>"
+        ),
+        "frage": "Wenn du dieses Zufallsspiel <em>sehr oft</em> spielst – wer hat im Schnitt mehr Freunde: die zufällige Person, oder die zufällig gewählte Freundin?",
+        "optionen": [
+            {"text": "Die Person selbst hat im Schnitt mehr Freunde", "hinweis": "Klingt intuitiv – aber die Mathematik sagt etwas anderes"},
+            {"text": "Beide haben im Schnitt gleich viele Freunde", "hinweis": "Wenn alles symmetrisch wäre, ja – ist es hier aber nicht"},
+            {"text": "Die zufällig gewählte Freundin hat im Schnitt mehr Freunde", "hinweis": "Feld nannte das 1991 das Friendship Paradox"},
+            {"text": "Das ist reiner Zufall – man kann es nicht vorhersagen", "hinweis": "Doch, man kann. Die Richtung ist mathematisch garantiert"},
+        ],
+        "loesung_text": "Die zufällig gewählte Freundin hat im Schnitt fast doppelt so viele Freunde.",
+        "erklaerung": (
+            "<p>Rechnen wir es aus. Für jede Person mitteln wir die Freundeszahl <em>ihrer Freunde</em>:</p>"
+            "<ul class=\"list-disc ml-5 space-y-1 my-2\">"
+            "<li>A ist mit B(6) und C(2) befreundet → Durchschnitt der Freunde: <strong>4,0</strong></li>"
+            "<li>B ist mit A(2), C(2), D(2), E(2), F(1), G(1) befreundet → <strong>1,67</strong></li>"
+            "<li>C ist mit A(2), B(6) befreundet → <strong>4,0</strong></li>"
+            "<li>D ist mit B(6), E(2) befreundet → <strong>4,0</strong></li>"
+            "<li>E ist mit B(6), D(2) befreundet → <strong>4,0</strong></li>"
+            "<li>F ist mit B(6) befreundet → <strong>6,0</strong></li>"
+            "<li>G ist mit B(6) befreundet → <strong>6,0</strong></li>"
+            "</ul>"
+            "<p>Über alle Personen gemittelt: (4 + 1,67 + 4 + 4 + 4 + 6 + 6) / 7 = <strong>4,24 Freunde</strong>.</p>"
+            "<p>Vergleich: der durchschnittliche Mensch im Netz hat <strong>2,29 Freunde</strong>, die zufällige Freundin hat <strong>4,24 Freunde</strong> – also fast doppelt so viele.</p>"
+        ),
+        "kontext": (
+            "<p><strong>Warum ist das so?</strong> Wenn du eine zufällige Person wählst, hat jede exakt Gewicht 1/7. Wenn du dann eine ihrer Freundinnen wählst, tauchen <em>gut vernetzte Menschen wie B</em> öfter auf – weil sie in vielen Freundeslisten stehen. B ist zwar nur eine Person, wird aber von A, C, D, E, F und G als 'Freund' genannt. Populäre Menschen werden systematisch überabgetastet.</p>"
+            "<p>Formal: Feld (1991) zeigte, dass der Erwartungswert der Freundeszahl einer zufälligen Freundin <em>immer</em> größer oder gleich dem Durchschnitt in der Gesamtbevölkerung ist – mit Gleichheit nur dann, wenn alle Menschen exakt gleich viele Freunde haben. Über die Varianz der Freundeszahlen: E[Freunde eines Freundes] − E[Freunde] = Var(d) / E[d] ≥ 0.</p>"
+            "<p><strong>Wirkung im Alltag:</strong> Auf Instagram, Twitter, TikTok siehst du überproportional viele Beiträge von Menschen mit vielen Followern – weil sie in vielen Feeds landen. Sie wirken 'normaler', als sie sind. Das erzeugt den Eindruck, alle seien beliebter, glücklicher, aktiver, reicher als du – und ist ein zentraler Treiber von Social-Media-Neid.</p>"
+            "<p><strong>Praktische Anwendung – Impfstrategien:</strong> Wenn man in einem Netz Grippe ausbrechen sieht und man will schnell Frühwarnungen bekommen, sollte man nicht zufällige Menschen impfen und beobachten – sondern deren <em>Freunde</em>. Diese 'Sensor-Gruppe' erkrankt Wochen früher, weil sie im Schnitt zentraler im Netz sitzt (Christakis & Fowler, 2010).</p>"
+            "<p><strong>Quellen:</strong> Feld, S.L. (1991), 'Why your friends have more friends than you do', American Journal of Sociology, 96(6). Christakis, N. & Fowler, J. (2010), PLoS ONE 5(9): e12948.</p>"
+        ),
+        "erkenntnis": "Deine Freunde sind kein zufälliger Ausschnitt der Bevölkerung – sie sind stichprobenverzerrt zugunsten gut vernetzter Menschen. Wenn dein Freundeskreis alle beliebter, reicher, glücklicher wirken lässt, ist das nicht Pech, sondern Mathematik.",
     },
     "schlaeger-ball": {
         "id": "schlaeger-ball", "name": "Schläger und Ball", "icon": "⚾",
