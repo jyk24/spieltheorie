@@ -12,17 +12,26 @@ GAME_TYPES = ["gefangenendilemma", "ultimatum", "vertrauen", "verhandlung", "chi
 
 
 def seed_lessons(db: Session) -> None:
-    """Lektionen aus lektionen.json laden – fehlende Einträge werden ergänzt."""
+    """Lektionen aus lektionen.json laden – fehlende Einträge werden ergänzt,
+    `related_game` bestehender Einträge wird aus dem JSON synchronisiert
+    (damit umbenannte Spiel-Slugs auch auf bestehenden DBs greifen)."""
     with open(DATA_DIR / "lektionen.json", encoding="utf-8") as f:
         lessons = json.load(f)
 
-    existing_slugs = {slug for (slug,) in db.query(Lesson.slug).all()}
-    added = 0
+    existing = {l.slug: l for l in db.query(Lesson).all()}
+    changed = False
     for item in lessons:
-        if item["slug"] in existing_slugs:
+        slug = item["slug"]
+        if slug in existing:
+            # Content-Felder aus JSON auf existierende Zeilen synchen
+            lesson = existing[slug]
+            new_related = item.get("related_game")
+            if lesson.related_game != new_related:
+                lesson.related_game = new_related
+                changed = True
             continue
-        lesson = Lesson(
-            slug=item["slug"],
+        db.add(Lesson(
+            slug=slug,
             title=item["title"],
             category=item["category"],
             difficulty=item["difficulty"],
@@ -30,11 +39,10 @@ def seed_lessons(db: Session) -> None:
             sources_json=json.dumps(item["sources"], ensure_ascii=False),
             related_game=item.get("related_game"),
             order_index=item["order_index"],
-        )
-        db.add(lesson)
-        added += 1
+        ))
+        changed = True
 
-    if added:
+    if changed:
         db.commit()
 
 

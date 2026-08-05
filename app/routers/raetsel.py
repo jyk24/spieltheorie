@@ -478,6 +478,26 @@ RAETSEL_META = [
         "kategorie": "Logik",
     },
     {
+        "id": "blaue-augen",
+        "name": "Die Blauäugigen der Insel",
+        "icon": "👁️",
+        "beschreibung": "100 blauäugige Menschen, ein Tabu, und ein einziger öffentlicher Satz. Warum verlassen nach genau 100 Nächten alle die Insel? Das schönste Beispiel für gemeinsames Wissen.",
+        "typ": "Epistemische Logik",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "6 min",
+        "kategorie": "Logik",
+    },
+    {
+        "id": "rabenparadoxon",
+        "name": "Hempels Rabenparadoxon",
+        "icon": "🐦‍⬛",
+        "beschreibung": "\"Alle Raben sind schwarz\" – bestätigt jeder grüne Apfel diese Aussage? Logisch: ja. Intuitiv: nein. Carl Hempel (1945) legte den Finger auf eine Wunde der Induktion.",
+        "typ": "Wissenschaftstheorie",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Logik",
+    },
+    {
         "id": "informationskaskade",
         "name": "Informationskaskade",
         "icon": "🫧",
@@ -585,6 +605,7 @@ RAETSEL_META = [
     {"id":"nonverbale-mimikry","name":"Nonverbale Mimikry","icon":"🪞","beschreibung":"Spiegelst du unbewusst die Körpersprache deines Gegenübers, steigt die Sympathie deutlich. Warum – und wie setzt man das gezielt ein?","typ":"Körpersprache","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kommunikation"},
     {"id":"feedback-sandwich","name":"Das Feedback-Sandwich","icon":"🥪","beschreibung":"Positiv-Kritik-Positiv: Die beliebteste Feedback-Technik. Doch Studien zeigen: Sie verfehlt häufig ihr Ziel. Was ist das Problem?","typ":"Führungskommunikation","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kommunikation"},
     {"id":"empathie-mapping","name":"Empathie-Mapping","icon":"🗺️","beschreibung":"Was denkt, fühlt, sieht und hört dein Gegenüber? Die Design-Thinking-Methode für tieferes Verständnis des Verhandlungspartners.","typ":"Perspektivwechsel","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Kommunikation"},
+    {"id":"zwei-generaele","name":"Das Zwei-Generäle-Problem","icon":"⚔️","beschreibung":"Zwei Armeen umzingeln eine Stadt. Sie müssen gleichzeitig angreifen – doch jeder Bote kann abgefangen werden. Wie viele Bestätigungen reichen für Sicherheit? Antwort: nie.","typ":"Kommunikationsparadox","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Kommunikation"},
     # ── Rhetorik (neu) ───────────────────────────────────────────────────────
     {"id":"sokratische-methode","name":"Die Sokratische Methode","icon":"🏛️","beschreibung":"Sokrates stellte Fragen, statt Antworten zu geben – und brachte sein Gegenüber dazu, Widersprüche selbst zu erkennen. Wie funktioniert das?","typ":"Dialektik","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Rhetorik"},
     {"id":"ethos-pathos-logos","name":"Ethos, Pathos, Logos","icon":"⚖️","beschreibung":"Aristoteles identifizierte drei Grundformen der Überzeugung: Glaubwürdigkeit, Emotion, Logik. Welche ist am wirkungsvollsten – und wann?","typ":"Rhetorik-Analyse","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Rhetorik"},
@@ -4063,6 +4084,142 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    # ── Logik: Gemeinsames Wissen ─────────────────────────────────────────
+    "blaue-augen": {
+        "id": "blaue-augen", "name": "Die Blauäugigen der Insel", "icon": "👁️",
+        "farbe": "sky", "kategorie": "Logik",
+        "schwierigkeit": "Fortgeschritten", "dauer": "6 min",
+        "setup": (
+            "Auf einer Insel leben 200 perfekt logische Menschen: 100 mit <strong>blauen</strong> Augen, 100 mit <strong>braunen</strong>. "
+            "Es gibt keine Spiegel, niemand darf über Augenfarben sprechen, und die eigene Augenfarbe zu erfahren ist tabu. "
+            "Wer weiß, dass seine Augen blau sind, muss die Insel am nächsten Morgen mit der 8-Uhr-Fähre verlassen. "
+            "Alle sehen die Augen aller anderen, und jeder weiß, dass alle anderen ebenfalls perfekt logisch denken. "
+            "Eines Tages besucht ein Reisender die Insel und sagt öffentlich vor allen Bewohnern einen einzigen Satz: "
+            "<em>&bdquo;Ich sehe hier mindestens eine Person mit blauen Augen.&ldquo;</em>"
+        ),
+        "frage": "Was passiert – und wann?",
+        "optionen": [
+            {"text": "Nichts. Der Satz ist offensichtlich, jeder wusste es schon.", "hinweis": "Wirklich neu ist die Information nicht … oder doch?"},
+            {"text": "Am nächsten Morgen verlässt genau eine Person die Insel.", "hinweis": "Zu schnell – wer wüsste als Erster Bescheid?"},
+            {"text": "Nach genau 100 Nächten verlassen alle 100 Blauäugigen gemeinsam die Insel.", "hinweis": "Induktion über die Anzahl blauäugiger Bewohner."},
+            {"text": "Die Information reicht nie – niemand kann seine Farbe je ableiten.", "hinweis": "Der Satz enthält doch etwas Neues."},
+        ],
+        "loesung_text": "Nach genau 100 Nächten verlassen alle 100 Blauäugigen gemeinsam die Insel.",
+        "erklaerung": (
+            "<p>Der scheinbar triviale Satz verwandelt privates Wissen in <strong>gemeinsames Wissen</strong> "
+            "(common knowledge): Nun weiß jeder, dass jeder weiß, dass jeder weiß … dass es mindestens einen Blauäugigen gibt.</p>"
+            "<p><strong>Induktion:</strong> Gäbe es nur <em>einen</em> Blauäugigen, sähe er lauter braune Augen und wüsste sofort: "
+            "&bdquo;Der Reisende meint mich.&ldquo; Er verließe die Insel in Nacht 1. Gäbe es <em>zwei</em>, sähe jeder Blauäugige "
+            "einen anderen Blauäugigen. Beide warten Nacht 1 ab – wenn der andere <em>nicht</em> geht, weiß jeder: "
+            "&bdquo;Ich muss auch blau sein.&ldquo; Beide gehen in Nacht 2.</p>"
+            "<p>Allgemein: Bei <strong>n</strong> Blauäugigen verlassen alle die Insel gemeinsam in Nacht <strong>n</strong>. "
+            "Für n = 100 also nach 100 Nächten.</p>"
+        ),
+        "kontext": (
+            "<p><strong>Terence Tao</strong> nennt dieses Rätsel &bdquo;das schönste Beispiel dafür, wie schwer <em>common knowledge</em> "
+            "zu greifen ist&ldquo;. Der Reisende sagt scheinbar nichts Neues – jeder sah ja bereits mindestens 99 blaue Augenpaare. "
+            "Trotzdem verändert sein öffentlicher Satz alles: Er hebt eine Aussage von privatem auf öffentliches Wissen.</p>"
+            "<p>Der Unterschied ist subtil aber fundamental:</p>"
+            "<ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\">"
+            "<li><strong>Privates Wissen:</strong> Ich weiß X.</li>"
+            "<li><strong>Wechselseitiges Wissen:</strong> Ich weiß, dass du X weißt (und umgekehrt).</li>"
+            "<li><strong>Gemeinsames Wissen:</strong> Der Turm &bdquo;ich weiß, dass du weißt, dass ich weiß …&ldquo; hört nie auf.</li>"
+            "</ul>"
+            "<p>Dieselbe Struktur steckt hinter dem <em>Muddy-Children-Puzzle</em> und dem <em>Bit-Commitment</em>-Problem in der Kryptographie. "
+            "Erst David Lewis (1969) und Robert Aumann (1976) formalisierten den Begriff mathematisch.</p>"
+        ),
+        "erkenntnis": "Öffentlich ausgesprochen zu sein ist keine Redundanz. Ein Satz, den alle bereits kannten, kann Verhalten schlagartig verändern – sobald alle wissen, dass alle ihn kennen.",
+    },
+    "rabenparadoxon": {
+        "id": "rabenparadoxon", "name": "Hempels Rabenparadoxon", "icon": "🐦‍⬛",
+        "farbe": "violet", "kategorie": "Logik",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": (
+            "Wir wollen die Hypothese testen: <strong>&bdquo;Alle Raben sind schwarz.&ldquo;</strong> "
+            "Logisch ist diese Aussage äquivalent zu ihrer Kontraposition: "
+            "<strong>&bdquo;Alles, was nicht schwarz ist, ist kein Rabe.&ldquo;</strong> "
+            "Wir schauen also in unserem Garten nach – und finden einen <em>grünen Apfel</em>. "
+            "Er ist nicht schwarz und kein Rabe – erfüllt die Kontraposition also perfekt."
+        ),
+        "frage": "Bestätigt der grüne Apfel die Hypothese &bdquo;Alle Raben sind schwarz&ldquo;?",
+        "optionen": [
+            {"text": "Ja, in vollem Umfang – eine Bestätigung wie ein schwarzer Rabe.", "hinweis": "Klingt logisch – aber wirkt das plausibel?"},
+            {"text": "Nein, denn Beobachtungen jenseits von Raben zählen prinzipiell nicht.", "hinweis": "Widerspräche das nicht der Logik der Kontraposition?"},
+            {"text": "Formal-logisch ja, in der Praxis nur mit verschwindend geringem Gewicht.", "hinweis": "Bayes hilft weiter."},
+            {"text": "Nur wenn der Apfel unter Millionen zufällig ausgewählten Objekten gefunden wurde.", "hinweis": "Teilweise korrekt – aber welcher Effekt bleibt?"},
+        ],
+        "loesung_text": "Formal-logisch ja, in der Praxis nur mit verschwindend geringem Gewicht.",
+        "erklaerung": (
+            "<p>Carl Hempel (1945) zeigte: Ein Satz und seine Kontraposition sind <em>logisch äquivalent</em>. "
+            "Wer &bdquo;Alle X sind Y&ldquo; bestätigt sehen will, kann äquivalent &bdquo;Alles Nicht-Y ist Nicht-X&ldquo; testen. "
+            "Beobachtet man ein Nicht-Y, das Nicht-X ist, hat man einen Bestätigungsfall – auch für die Ausgangshypothese.</p>"
+            "<p><strong>Warum die Intuition trotzdem stimmt:</strong> Die bayesianische Analyse liefert die Auflösung. "
+            "Ein grüner Apfel bestätigt die Hypothese wirklich – aber mit einer Evidenz, die im Verhältnis "
+            "&bdquo;Anzahl aller Raben / Anzahl aller Nicht-Raben&ldquo; skaliert. Da Nicht-Raben um viele Größenordnungen "
+            "häufiger sind als Raben, liegt der Bayesfaktor pro Apfel bei etwa 1,000000001. Ein einziger beobachteter "
+            "schwarzer Rabe wiegt Milliarden von grünen Äpfeln auf.</p>"
+        ),
+        "kontext": (
+            "<p><strong>Bedeutung für die Wissenschaftstheorie</strong></p>"
+            "<p>Hempels Paradoxon war einer der Auslöser der modernen Induktionsdebatte:</p>"
+            "<ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\">"
+            "<li><strong>Popper</strong> (1935): Man sollte gar nicht bestätigen wollen, sondern <em>falsifizieren</em>. "
+            "Nur ein weißer Rabe zählt wirklich – und der widerlegt die Hypothese sofort.</li>"
+            "<li><strong>Goodman</strong> (1955): Verschärfte das Problem mit dem &bdquo;grue&ldquo;-Paradox – "
+            "welche Prädikate darf man überhaupt induktiv verwenden?</li>"
+            "<li><strong>Bayes</strong> (moderne Auflösung): Beobachtungen bestätigen Hypothesen proportional zu ihrer "
+            "Informationsdichte. Selten liefert viel, häufig liefert wenig.</li>"
+            "</ul>"
+            "<p>Praktisch relevant beim Testen von Software (kein Absturz ≠ starker Beweis für Korrektheit), "
+            "in klinischen Studien und beim Verhalten von Machine-Learning-Modellen auf unauffälligen Datenpunkten.</p>"
+        ),
+        "erkenntnis": "Logische Äquivalenz und intuitive Beweiskraft sind zwei verschiedene Dinge. Wer die Welt verstehen will, sollte Evidenz nach Seltenheit gewichten – nicht bloß zählen.",
+    },
+    # ── Kommunikation: verteilte Koordination ─────────────────────────────
+    "zwei-generaele": {
+        "id": "zwei-generaele", "name": "Das Zwei-Generäle-Problem", "icon": "⚔️",
+        "farbe": "rose", "kategorie": "Kommunikation",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": (
+            "Zwei Armeen belagern eine Stadt – die Roten im Norden, die Blauen im Süden. "
+            "Jede Armee allein ist zu schwach; nur ein <strong>gleichzeitiger</strong> Angriff bringt den Sieg. "
+            "Die einzige Möglichkeit, sich abzustimmen, sind Boten, die durch feindliches Gebiet reiten. "
+            "Jeder Bote kann abgefangen werden. General Rot schickt: &bdquo;Morgen früh 6 Uhr angreifen.&ldquo;"
+        ),
+        "frage": "Wie viele Bestätigungen sind nötig, damit beide Seiten <em>sicher</em> gleichzeitig angreifen?",
+        "optionen": [
+            {"text": "Eine – Blau bestätigt, dann greifen beide an.", "hinweis": "Woher weiß Blau, dass die Bestätigung ankommt?"},
+            {"text": "Zwei – Rot bestätigt Blaus Bestätigung, dann ist es klar.", "hinweis": "Und was, wenn Blau diese zweite Nachricht nicht erhält?"},
+            {"text": "Fünf – ab hier ist die Wahrscheinlichkeit hinreichend hoch.", "hinweis": "Es geht um Sicherheit, nicht um Wahrscheinlichkeit."},
+            {"text": "Nie – kein endlicher Nachrichtenaustausch garantiert Gewissheit.", "hinweis": "Der letzte Bote ist immer unsicher."},
+        ],
+        "loesung_text": "Kein endlicher Nachrichtenaustausch garantiert beiden Seiten Gewissheit.",
+        "erklaerung": (
+            "<p>Egal, wie viele Boten hin- und hergeschickt werden – der jeweils <em>letzte</em> Bote weiß nicht, "
+            "ob seine Nachricht angekommen ist. Er könnte abgefangen worden sein. Also ist der Absender des letzten Bots unsicher. "
+            "Doch dann ist auch der Empfänger unsicher, ob der Absender losschlägt. Diese Unsicherheit lässt sich rekursiv "
+            "unendlich fortpflanzen.</p>"
+            "<p>Formal: Gemeinsames Wissen (jeder weiß, dass jeder weiß, …) über einen <em>unzuverlässigen</em> Kanal "
+            "ist prinzipiell unerreichbar – bewiesen von Gray und Halpern in den 1970ern und 80ern.</p>"
+        ),
+        "kontext": (
+            "<p><strong>Warum das ein Klassiker der Informatik ist</strong></p>"
+            "<p>Das Zwei-Generäle-Problem war 1975 das erste bewiesene Unmöglichkeitsresultat für verteilte Systeme – "
+            "und legte die Grundlage für zentrale Themen moderner Software:</p>"
+            "<ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\">"
+            "<li><strong>TCP-Handshakes:</strong> Der Drei-Wege-Handshake versucht praktisch, das Problem <em>hinreichend gut</em> zu lösen. "
+            "Vollständige Sicherheit gibt es nicht – nur akzeptable Wahrscheinlichkeit.</li>"
+            "<li><strong>Datenbank-Commits (2-Phase-Commit):</strong> Das gleiche Problem, andere Kleidung.</li>"
+            "<li><strong>Blockchain-Konsens:</strong> Byzantine Fault Tolerance verallgemeinert das Problem auf n Teilnehmer, "
+            "von denen einige böswillig sein können.</li>"
+            "<li><strong>Verhandlungen:</strong> Selbst zwei Vertragspartner, die einander vertrauen, brauchen einen "
+            "gemeinsamen sichtbaren Vertragsabschluss – rein privater Nachrichtenaustausch reicht nicht.</li>"
+            "</ul>"
+            "<p>Ausweg in der Praxis: <em>Öffentliche Beobachtbarkeit</em> (Notar, Blockchain, öffentlicher Vertrag) "
+            "ersetzt den unzuverlässigen Nachrichtenaustausch durch gemeinsam beobachtbare Ereignisse.</p>"
+        ),
+        "erkenntnis": "Perfekte Koordination über unsichere Kanäle ist unmöglich. Wer verlässlich zusammenarbeiten will, braucht einen öffentlich sichtbaren Ankerpunkt – nicht mehr Nachrichten.",
     },
 }
 
