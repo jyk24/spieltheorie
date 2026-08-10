@@ -631,6 +631,7 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"zwei-kinder","name":"Das Zwei-Kinder-Problem","icon":"👶","beschreibung":"Eine Familie hat zwei Kinder. Mindestens eines ist ein Junge. Wie hoch ist die Wahrscheinlichkeit, dass beide Jungen sind? Fast alle sagen 1/2 – die richtige Antwort ist 1/3. Und die 'Dienstag-Variante' überrascht selbst Mathematiker.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
 ]
 
 
@@ -4046,6 +4047,23 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Der <strong>Fundamentale Attributionsfehler</strong> (FAE, Ross 1977): Wir überschätzen den Einfluss von Persönlichkeitseigenschaften und unterschätzen den Einfluss der Situation auf das Verhalten anderer.</p><p>Das Verhalten (Castro-Aufsatz) wurde der Disposition zugeschrieben (<em>er ist pro-Castro</em>) – obwohl die Situation (zufällige Zuweisung) das Verhalten vollständig erklärte.</p>",
         "kontext": "<p>Der FAE ist kulturell variabel: Westliche (individualistische) Kulturen zeigen ihn stärker als östliche (kollektivistische). Im Alltag: Wer uns auf der Autobahn schneidet, ist ein Idiot – nicht jemand mit einem Notfall.</p><p>In Verhandlungen: Wenn die Gegenseite hart verhandelt, schließen wir auf Gier oder Feindseligkeit – statt auf externen Druck, Vorgaben des Vorstands oder Zeitdruck. Das verzerrt unsere Strategie erheblich.</p>",
         "erkenntnis": "Wir sind natürliche Biographen, keine Situationsanalysten. Wenn jemand sich 'falsch' verhält, zuerst fragen: Welche situativen Kräfte könnten dieses Verhalten erklären? Das gibt ein realistischeres Bild – und bessere Verhandlungsstrategien.",
+    },
+    "zwei-kinder": {
+        "id": "zwei-kinder", "name": "Das Zwei-Kinder-Problem", "icon": "👶",
+        "farbe": "emerald", "kategorie": "Wahrscheinlichkeit", "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Das Problem:",
+        "setup": "Eine Familie hat <strong>zwei Kinder</strong>. Du erfährst nur einen einzigen Hinweis:<br><br><em>„Mindestens eines der beiden Kinder ist ein Junge.“</em><br><br>Nimm an, dass Junge und Mädchen jeweils gleich wahrscheinlich sind und die Geschlechter der beiden Kinder unabhängig voneinander.",
+        "frage": "Wie hoch ist die Wahrscheinlichkeit, dass <strong>beide</strong> Kinder Jungen sind?",
+        "optionen": [
+            {"text": "1/2 (50 %)", "hinweis": "Die intuitive Antwort – aber falsch, sobald man alle Fälle sauber aufzählt"},
+            {"text": "1/3 (ca. 33 %)", "hinweis": "Die überraschende, mathematisch korrekte Antwort"},
+            {"text": "1/4 (25 %)", "hinweis": "Das wäre die A-priori-Wahrscheinlichkeit ohne den Hinweis"},
+            {"text": "2/3 (ca. 67 %)", "hinweis": "Das ist gerade die Gegenwahrscheinlichkeit"},
+        ],
+        "loesung_text": "Die Wahrscheinlichkeit beträgt 1/3 – nicht 1/2.",
+        "erklaerung": "<p>Ohne Zusatzinformation gibt es vier gleich wahrscheinliche Kombinationen (ältestes/jüngstes Kind):</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Junge / Junge</li><li>Junge / Mädchen</li><li>Mädchen / Junge</li><li>Mädchen / Mädchen</li></ul><p class=\"mt-3\">Die Aussage „mindestens ein Junge“ schließt nur den letzten Fall aus. Es bleiben <strong>drei</strong> gleich wahrscheinliche Möglichkeiten – und nur in <strong>einer</strong> davon sind beide Kinder Jungen.</p><p>→ P(beide Jungen | mind. ein Junge) = <strong>1/3</strong></p><p class=\"mt-3\">Die falsche Intuition „1/2\" entsteht, weil wir gedanklich <em>ein bestimmtes</em> Kind fixieren und nach dem anderen fragen. Dann wäre die Antwort tatsächlich 1/2. Der Hinweis „mindestens ein Junge\" fixiert aber kein Kind – er entfernt nur eine Kombination aus dem Ereignisraum.</p>",
+        "kontext": "<p><strong>Martin Gardner</strong> stellte dieses Problem 1959 in seiner <em>Scientific American</em>-Kolumne vor und löste eine der berühmtesten Debatten der Popmathematik aus. Selbst nach seiner sauberen Lösung stritten Leser jahrzehntelang – und Gardner selbst räumte später ein, dass die Aufgabe je nach Formulierung tatsächlich zwei verschiedene richtige Antworten hat.</p><p><strong>Die „Dienstag\"-Variante (Gary Foshee, 2010):</strong></p><p>„Ich habe zwei Kinder. Eines ist ein Junge, geboren an einem Dienstag. Wie hoch ist die Wahrscheinlichkeit, dass beide Jungen sind?\"</p><p>Verblüffende Antwort: <strong>13/27</strong> ≈ 48,1 %. Die scheinbar irrelevante Info „Dienstag\" verändert das Ergebnis dramatisch, weil sie ein Kind stärker identifiziert – je spezifischer der Hinweis, desto näher rutscht die Wahrscheinlichkeit an 1/2.</p><p>Das Rätsel ist ein Paradebeispiel dafür, wie Wahrscheinlichkeiten davon abhängen, <strong>welchen Auswahlprozess</strong> die Information beschreibt – nicht nur davon, welche Fakten wahr sind.</p>",
+        "erkenntnis": "Bedingte Wahrscheinlichkeiten hängen davon ab, WIE eine Information zustande kam, nicht nur, WAS sie besagt. Wer im Kopf ein bestimmtes Kind fixiert, rechnet ein anderes Problem als es dasteht – ein Fehler, der auch in medizinischen Tests, in Gerichtsprozessen und beim Interpretieren von Umfragen auftaucht.",
     },
     "schlaeger-ball": {
         "id": "schlaeger-ball", "name": "Schläger und Ball", "icon": "⚾",
