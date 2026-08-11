@@ -631,6 +631,10 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neue Rätsel (2026-08) ───────────────────────────────────────────────
+    {"id":"blaue-augen","name":"Das Blaue-Augen-Rätsel","icon":"👁️","beschreibung":"100 Menschen leben auf einer Insel, alle mit blauen Augen – doch niemand weiß es. Eines Tages sagt ein Fremder: „Ich sehe hier jemanden mit blauen Augen.“ Nichts Neues, oder? Trotzdem ändert dieser Satz alles. Was passiert nach 100 Tagen?","typ":"Logik-Paradox","schwierigkeit":"Fortgeschritten","dauer":"6 min","kategorie":"Logik"},
+    {"id":"zwei-kinder","name":"Das Zwei-Kinder-Paradoxon","icon":"👨‍👧","beschreibung":"„Ich habe zwei Kinder. Mindestens eines ist ein Mädchen.“ Wie wahrscheinlich ist es, dass beide Mädchen sind? Fast alle sagen 1/2 – die richtige Antwort ist 1/3. Und mit einem Zusatz („geboren an einem Dienstag“) wird es noch verrückter.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Wahrscheinlichkeit"},
+    {"id":"banach-tarski","name":"Das Banach-Tarski-Paradoxon","icon":"🔮","beschreibung":"1924 bewiesen Banach und Tarski: Eine massive Kugel lässt sich in endlich viele Stücke zerlegen und durch bloßes Bewegen und Zusammensetzen zu zwei identischen Kugeln umformen. Ohne Dehnen. Ohne Löcher. Wie kann das sein?","typ":"Mathematik-Paradox","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Mathematik"},
 ]
 
 
@@ -4063,6 +4067,61 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    # ── Neue Rätsel (2026-08) ──────────────────────────────────────────────
+    "blaue-augen": {
+        "id": "blaue-augen", "name": "Das Blaue-Augen-Rätsel", "icon": "👁️",
+        "farbe": "sky", "kategorie": "Logik",
+        "schwierigkeit": "Fortgeschritten", "dauer": "6 min",
+        "setup_label": "Die Situation:",
+        "setup": "Auf einer Insel leben 100 perfekte Logiker. <strong>Alle haben blaue Augen.</strong> Niemand kennt seine eigene Augenfarbe – es gibt keine Spiegel, keine Wasseroberflächen, und die Bewohner dürfen sich niemals darüber austauschen.<br><br>Ein Gesetz besagt: Wer seine eigene Augenfarbe herausfindet, muss die Insel bei Sonnenaufgang am folgenden Tag verlassen.<br><br>Alle sehen sich täglich, und jeder weiß: jeder weiß, dass jeder weiß, dass jeder weiß … dass alle anderen mindestens 99 Blauäugige sehen.<br><br>Eines Tages besucht ein Fremder die Insel und sagt öffentlich vor allen: <em>„Ich sehe hier jemanden mit blauen Augen.“</em>",
+        "frage": "Was passiert danach – und warum?",
+        "optionen": [
+            {"text": "Nichts. Die Aussage ist trivial – jeder wusste das schon.", "hinweis": "Aber ist „ich weiß“ dasselbe wie „ich weiß, dass alle es wissen“?"},
+            {"text": "Am nächsten Morgen verlassen alle 100 Bewohner die Insel.", "hinweis": "Zu schnell – wann genau erhalten sie neue Information?"},
+            {"text": "Am 100. Tag verlassen alle 100 gleichzeitig die Insel.", "hinweis": "Induktion über die Anzahl der Blauäugigen"},
+            {"text": "Niemand verlässt jemals die Insel – die Aussage war logisch redundant.", "hinweis": "Common Knowledge vs. Mutual Knowledge"},
+        ],
+        "loesung_text": "Am 100. Tag verlassen alle 100 Bewohner gleichzeitig die Insel.",
+        "erklaerung": "<p><strong>Induktion:</strong> Bei nur 1 Blauäugigen würde dieser sofort erkennen: „Der Fremde meint mich“ – und Tag 1 abreisen. Bei 2 Blauäugigen sehen beide je einen anderen und denken: „Wenn nur er blau wäre, ginge er morgen.“ Als er Tag 1 <em>nicht</em> geht, wissen beide Tag 2: es muss noch einen zweiten geben – nämlich sich selbst. Sie gehen Tag 2 gemeinsam. Allgemein: Bei n Blauäugigen gehen alle am Tag n.</p><p>Bei 100 Blauäugigen wartet jeder 99 Tage und beobachtet: alle anderen bleiben. Am 100. Tag ist die Konsequenz zwingend – und alle verlassen die Insel gleichzeitig.</p>",
+        "kontext": "<p><strong>Common Knowledge vs. Mutual Knowledge</strong> – David Lewis (1969), Robert Aumann (1976)</p><p>Der Fremde sagt scheinbar nichts Neues – jeder <em>sah</em> ja bereits 99 Blauäugige. Aber Wissen und <em>gemeinsames</em> Wissen sind nicht dasselbe. Vor der Ankündigung wusste zwar jeder, dass es Blauäugige gibt, aber niemand wusste, dass alle anderen es <em>wissen, dass sie wissen, dass sie wissen …</em></p><p>Die öffentliche Aussage etabliert <strong>Common Knowledge</strong>: ein unendlich verschachteltes „ich weiß, dass du weißt, dass ich weiß …“. Das ist die Voraussetzung für die Induktion.</p><p>Common Knowledge ist zentral für Spieltheorie, Kryptografie (Byzantinische Generäle), Auktionsdesign und die Analyse von Bank-Runs. Aumanns Agreement Theorem baut darauf auf: Zwei rationale Akteure mit gleichem Prior können nie „agree to disagree“, wenn ihre Meinungen Common Knowledge sind.</p>",
+        "erkenntnis": "Öffentliche Aussagen verändern das Wissen einer Gruppe selbst dann, wenn jeder den Inhalt schon kannte. „Ich weiß“ und „wir wissen, dass wir wissen“ sind zwei fundamental verschiedene Zustände.",
+    },
+    "zwei-kinder": {
+        "id": "zwei-kinder", "name": "Das Zwei-Kinder-Paradoxon", "icon": "👨‍👧",
+        "farbe": "rose", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup_label": "Das Szenario:",
+        "setup": "Herr Müller sagt dir: <em>„Ich habe zwei Kinder. Mindestens eines von beiden ist ein Mädchen.“</em><br><br>Angenommen, jedes Kind ist unabhängig mit Wahrscheinlichkeit ½ ein Mädchen oder ein Junge.",
+        "frage": "Wie hoch ist die Wahrscheinlichkeit, dass <em>beide</em> Kinder Mädchen sind?",
+        "optionen": [
+            {"text": "1/2 – das andere Kind ist entweder Junge oder Mädchen.", "hinweis": "Klingt intuitiv, ist aber falsch."},
+            {"text": "1/3 – nur ein Ergebnis von dreien passt.", "hinweis": "Bedingte Wahrscheinlichkeit über den gesamten Ereignisraum"},
+            {"text": "1/4 – Junge-Junge, Junge-Mädchen, Mädchen-Junge, Mädchen-Mädchen sind gleich wahrscheinlich.", "hinweis": "Das ist die a-priori-Verteilung – nicht die bedingte."},
+            {"text": "2/3 – ein Mädchen ist doch schon bestätigt.", "hinweis": "Umkehrung der richtigen Antwort"},
+        ],
+        "loesung_text": "1/3 – nicht 1/2.",
+        "erklaerung": "<p>Vor jeder Information gibt es 4 gleich wahrscheinliche Möglichkeiten: <strong>JJ, JM, MJ, MM</strong> (in Geburtsreihenfolge). Die Aussage „mindestens ein Mädchen“ schließt nur <strong>JJ</strong> aus – es bleiben also drei gleich wahrscheinliche Fälle: JM, MJ, MM. Nur einer davon (MM) hat zwei Mädchen. Also: <strong>P(MM | mind. ein M) = 1/3.</strong></p><p>Die intuitive Antwort ½ funktioniert nur, wenn man <em>ein spezifisches</em> Kind identifiziert („mein älteres Kind ist ein Mädchen“ → dann JJ und MJ raus, es bleiben JM ausgeschlossen, MM übrig neben MJ… nein, exakter: JM und MM übrig, P=1/2).</p>",
+        "kontext": "<p><strong>Der Dienstags-Twist</strong> – Gary Foshee, 2010</p><p>Gary Foshee erweiterte das Rätsel spektakulär: „Ich habe zwei Kinder. Mindestens eines ist ein Junge, geboren an einem Dienstag.“ Wie wahrscheinlich sind zwei Jungen?</p><p>Naive Antwort: 1/3 – der Wochentag scheint irrelevant. Die richtige Antwort ist aber <strong>13/27 ≈ 48%</strong>. Zählt man alle Wochentag-Geschlecht-Kombinationen für zwei Kinder auf (14 × 14 = 196 Möglichkeiten), passen 27 zur Bedingung „mindestens ein Dienstag-Junge“, und in 13 davon sind beide Jungen.</p><p>Je spezifischer die Information über das erwähnte Kind, desto näher rückt die Wahrscheinlichkeit an ½ heran. Das zeigt: nicht der <em>Inhalt</em>, sondern die <em>Auswahlprozedur</em> bestimmt die Wahrscheinlichkeit – ein Kernprinzip der bayesianischen Statistik.</p><p>Das Rätsel wurde in Martin Gardners <em>Scientific American</em>-Kolumne (1959) berühmt und ist eng verwandt mit dem Monty-Hall-Problem.</p>",
+        "erkenntnis": "Bedingte Wahrscheinlichkeiten hängen davon ab, <em>wie</em> die Information selektiert wurde – nicht nur davon, was sie inhaltlich sagt. Wer über den Auswahlprozess nachdenkt, denkt bayesianisch.",
+    },
+    "banach-tarski": {
+        "id": "banach-tarski", "name": "Das Banach-Tarski-Paradoxon", "icon": "🔮",
+        "farbe": "violet", "kategorie": "Mathematik",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup_label": "Das Theorem:",
+        "setup": "Stefan Banach und Alfred Tarski bewiesen 1924: Man kann eine massive Kugel (etwa eine Erbse) in <strong>endlich viele</strong> Stücke zerlegen. Ordnet man diese Stücke – nur durch Verschieben und Drehen, ohne Dehnen oder Verzerren – neu an, erhält man <strong>zwei</strong> vollständige Kugeln, jede so groß wie das Original.<br><br>Aus einer Erbse werden zwei. Aus zwei werden vier. Aus einer könnte man theoretisch die Sonne zusammensetzen.",
+        "frage": "Wie ist das mathematisch möglich – und warum passiert es in der Realität nicht?",
+        "optionen": [
+            {"text": "Der Beweis ist fehlerhaft – so etwas kann es nicht geben.", "hinweis": "Der Beweis ist seit 100 Jahren unbestritten korrekt."},
+            {"text": "Die Stücke sind nicht messbar – ihnen kann kein Volumen zugeordnet werden.", "hinweis": "Zentral: das Auswahlaxiom und nicht-messbare Mengen"},
+            {"text": "Es funktioniert nur im 4-dimensionalen Raum.", "hinweis": "Nein – schon im 3D-Raum bewiesen"},
+            {"text": "Die Kugeln haben nach dem Zerlegen jeweils die halbe Dichte.", "hinweis": "Dichte spielt in der reinen Mengenlehre keine Rolle."},
+        ],
+        "loesung_text": "Die Zerlegungsstücke sind nicht-messbare Mengen – Objekte, die kein wohldefiniertes Volumen besitzen.",
+        "erklaerung": "<p>Der Beweis nutzt das <strong>Auswahlaxiom</strong> (Zermelo, 1904), um eine Zerlegung der Kugel in ~5 „Stücke“ zu konstruieren. Diese Stücke sind aber keine gewöhnlichen Formen: sie sind unendlich verstreute Punktwolken, deren Volumen nicht definiert werden kann. Sie sind <strong>nicht Lebesgue-messbar</strong>.</p><p>Volumen als additive Größe (2 Kugeln = 2× das Volumen einer Kugel) gilt nur für messbare Mengen. Wenn die Bausteine kein Volumen haben, geht die Volumen-Erhaltung schlicht verloren – ohne dass ein Widerspruch entsteht.</p><p>In der physischen Welt gibt es diese Zerlegung nicht: Materie besteht aus endlich vielen Atomen, und jede echte physische Zerlegung erzeugt messbare Teile.</p>",
+        "kontext": "<p><strong>Auswahlaxiom & die Grenzen der Anschauung</strong></p><p>Das Banach-Tarski-Paradoxon ist kein Widerspruch, sondern ein <em>Existenzresultat</em>: Es zeigt, dass das Auswahlaxiom Objekte konstruieren kann, die jeder Alltagsintuition widersprechen. Kritiker (u.a. Émile Borel) sahen darin ein Argument gegen das Axiom; die meisten Mathematiker akzeptieren es dennoch, weil es an anderen Stellen unentbehrlich ist (z.B. Hahn-Banach-Satz, Tychonoff-Theorem).</p><p>Im 1D- und 2D-Raum funktioniert das Paradoxon nicht: Dort erzwingen die Symmetriegruppen (nur Translationen und Rotationen), dass jede endliche Zerlegung volumen-erhaltend bleibt. Erst ab drei Dimensionen enthält die Rotationsgruppe eine <em>freie Untergruppe</em> auf zwei Generatoren – der Schlüssel des Beweises.</p><p>Konsequenz: Ein „gerechtes Verteilen von Volumen“ ist nur unter Zusatzannahmen (Messbarkeit) möglich. Der Beweis inspirierte Arbeiten zu Maßtheorie, ergodischer Theorie und mathematischer Physik.</p>",
+        "erkenntnis": "Anschauung endet dort, wo Konstruktionen des Auswahlaxioms beginnen. „Volumen“ ist keine Eigenschaft von Punktmengen, sondern von <em>messbaren</em> Punktmengen – und die sind längst nicht alle.",
     },
 }
 
