@@ -1380,7 +1380,7 @@ TED_TALKS = [
         "schluessel_erkenntnis": "Nicht schlechte Menschen tun boese Dinge – schlechte Situationen bringen normale Menschen dazu. Das System traegt Verantwortung.",
         "anwendung": "In Fuehrung und Teams: Systemdesign ist Verhaltensdesign. Schlechte Ergebnisse nicht auf Individuen, sondern auf Situationen und Strukturen zurueckfuehren.",
         "ted_url": "https://www.ted.com/talks/philip_zimbardo_on_the_psychology_of_evil",
-        "verwandte_raetsel": ["milgram-gehorsam", "bystander-effekt", "attributionsfehler"],
+        "verwandte_raetsel": ["milgram-gehorsam", "bystander-effekt", "attributionsfehler", "asch-konformitaet", "rosenhan"],
         "quiz": [
             {
                 "frage": "Was ist der 'Luzifer-Effekt' nach Zimbardo?",
@@ -1452,7 +1452,7 @@ TED_TALKS = [
         "schluessel_erkenntnis": "Erinnerungen sind keine Videos – sie werden bei jedem Abruf neu konstruiert und koennen durch externe Suggestion veraendert werden.",
         "anwendung": "In Verhandlungen und Verhoeren: Wie Fragen gestellt werden, beeinflusst die Erinnerungen des Befragten. Suggestive Formulierungen koennen falsche 'Fakten' erzeugen.",
         "ted_url": "https://www.ted.com/talks/elizabeth_loftus_how_reliable_is_your_memory",
-        "verwandte_raetsel": ["priming", "anker-experiment", "konfirmationsfehler"],
+        "verwandte_raetsel": ["loftus-erinnerung", "priming", "anker-experiment", "konfirmationsfehler"],
         "quiz": [
             {
                 "frage": "Was zeigte Loftus' klassisches 'Auto-Crash'-Experiment?",

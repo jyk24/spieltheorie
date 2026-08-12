@@ -631,6 +631,10 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Klassiker der Sozialpsychologie (neu) ────────────────────────────────
+    {"id":"asch-konformitaet","name":"Asch-Konformitätsexperiment","icon":"📏","beschreibung":"Sieben Personen im Raum urteilen über Linienlängen. Sechs sind Schauspieler und geben absichtlich die falsche Antwort. Wie oft geht die Versuchsperson mit – gegen die eigenen Augen? Solomon Asch (1951).","typ":"Sozialpsychologie","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Psychologie"},
+    {"id":"rosenhan","name":"Das Rosenhan-Experiment","icon":"🏥","beschreibung":"Acht gesunde Menschen geben sich als Patienten aus und behaupten, Stimmen zu hören. Alle werden in Psychiatrien aufgenommen – und niemand entdeckt den Etikettenschwindel. Was sagt das über psychiatrische Diagnostik? (Rosenhan 1973)","typ":"Sozialpsychologie","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Psychologie"},
+    {"id":"loftus-erinnerung","name":"Loftus & die Auto-Frage","icon":"🚗","beschreibung":"Zeugen sehen denselben Autounfall – aber die Frage 'Wie schnell fuhr das Auto, als es das andere <em>rammte</em>?' liefert höhere Geschwindigkeiten als '… <em>berührte</em>?' Wie zuverlässig sind unsere Erinnerungen? (Loftus & Palmer 1974)","typ":"Kognitionspsychologie","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Psychologie"},
 ]
 
 
@@ -4046,6 +4050,57 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Der <strong>Fundamentale Attributionsfehler</strong> (FAE, Ross 1977): Wir überschätzen den Einfluss von Persönlichkeitseigenschaften und unterschätzen den Einfluss der Situation auf das Verhalten anderer.</p><p>Das Verhalten (Castro-Aufsatz) wurde der Disposition zugeschrieben (<em>er ist pro-Castro</em>) – obwohl die Situation (zufällige Zuweisung) das Verhalten vollständig erklärte.</p>",
         "kontext": "<p>Der FAE ist kulturell variabel: Westliche (individualistische) Kulturen zeigen ihn stärker als östliche (kollektivistische). Im Alltag: Wer uns auf der Autobahn schneidet, ist ein Idiot – nicht jemand mit einem Notfall.</p><p>In Verhandlungen: Wenn die Gegenseite hart verhandelt, schließen wir auf Gier oder Feindseligkeit – statt auf externen Druck, Vorgaben des Vorstands oder Zeitdruck. Das verzerrt unsere Strategie erheblich.</p>",
         "erkenntnis": "Wir sind natürliche Biographen, keine Situationsanalysten. Wenn jemand sich 'falsch' verhält, zuerst fragen: Welche situativen Kräfte könnten dieses Verhalten erklären? Das gibt ein realistischeres Bild – und bessere Verhandlungsstrategien.",
+    },
+    "asch-konformitaet": {
+        "id": "asch-konformitaet", "name": "Asch-Konformitätsexperiment", "icon": "📏",
+        "farbe": "indigo", "kategorie": "Psychologie",
+        "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup": "Solomon Asch (1951) zeigt sieben Personen eine Referenzlinie und drei Vergleichslinien. Aufgabe: Welche Vergleichslinie ist gleich lang wie die Referenz? Die Antwort ist trivial – der Unterschied liegt bei mehreren Zentimetern. Doch sechs der sieben Personen sind Schauspieler und geben laut vor allen anderen absichtlich <em>dieselbe falsche</em> Antwort. Nur die siebte Person ist die echte Versuchsperson und antwortet zuletzt.",
+        "frage": "Wie oft schließt sich eine typische Versuchsperson der offensichtlich falschen Gruppenmeinung an – gegen die eigenen Augen?",
+        "optionen": [
+            {"text": "Fast nie – Menschen vertrauen ihren Sinnen bei so klaren Wahrnehmungen", "hinweis": "Optimistisch – aber empirisch widerlegt"},
+            {"text": "Etwa 5 % – nur sehr unsichere Personen geben nach", "hinweis": "Deutlich zu niedrig"},
+            {"text": "Etwa 37 % aller Antworten waren konform mit der falschen Mehrheit; 75 % gaben mindestens einmal nach", "hinweis": "Klassische Asch-Ergebnisse"},
+            {"text": "Praktisch immer – der Gruppendruck ist zu stark", "hinweis": "Übertreibt – ein Drittel blieb standhaft"},
+        ],
+        "loesung_text": "37 % der Antworten waren falsch-konform; 75 % gaben mindestens einmal dem Gruppendruck nach.",
+        "erklaerung": "<p>Asch bat Versuchspersonen 18-mal, die längste Vergleichslinie zu benennen. In 12 kritischen Durchgängen gaben die 6 Konföderierten einstimmig eine offensichtlich falsche Antwort. Ergebnis: <strong>36,8 %</strong> aller kritischen Antworten waren konform mit der falschen Mehrheit. <strong>75 %</strong> der Teilnehmer gingen mindestens einmal mit. In der Kontrollgruppe (ohne Konföderierte) lag die Fehlerquote unter <strong>1 %</strong>.</p><p>Wichtig: Konformität war nicht Überzeugung. Nachbefragungen zeigten drei Motivtypen: <em>Verzerrung der Wahrnehmung</em> (selten), <em>Verzerrung des Urteils</em> ('vielleicht sehen die was, was ich übersehe'), und <em>Verzerrung der Antwort</em> (bewusstes Nachgeben, um nicht aufzufallen — häufigster Grund).</p>",
+        "kontext": "<p>Bereits ein <strong>einziger Verbündeter</strong>, der die korrekte Antwort gibt, reduziert die Konformität um etwa zwei Drittel. Anonyme Antworten (Zettel statt laut sprechen) senken den Effekt fast auf null. Das zeigt: Konformität ist stark durch <em>öffentliche Sichtbarkeit</em> getrieben.</p><p>Asch legte den Grundstein für das Milgram-Experiment (1963) und die spätere Forschung zu Gruppenpolarisation, Bystander-Effekt und Whistleblowing. In der Verhandlung: Wer als Einziger widerspricht, trägt eine reale kognitive Last — ein zweiter Widerspruch verändert das Gruppenklima überproportional.</p>",
+        "erkenntnis": "Auch bei glasklarer Faktenlage geben drei Viertel der Menschen mindestens einmal dem Gruppendruck nach. Wer eine abweichende Meinung vertritt, verändert das Klima allein durch seine Präsenz — auch wenn er die Mehrheit nicht überzeugt.",
+    },
+    "rosenhan": {
+        "id": "rosenhan", "name": "Das Rosenhan-Experiment", "icon": "🏥",
+        "farbe": "rose", "kategorie": "Psychologie",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "David Rosenhan (Stanford, 1973): Acht psychisch gesunde Menschen — darunter Rosenhan selbst, drei Psychologen, ein Kinderarzt und eine Hausfrau — melden sich in zwölf verschiedenen Psychiatrien mit einer einzigen erfundenen Beschwerde an: Sie hörten eine dumpfe Stimme, die Wörter wie 'leer' oder 'hohl' flüstere. Sonst antworten alle wahrheitsgemäß. Sobald sie aufgenommen sind, geben sie an, die Stimme sei verschwunden, und verhalten sich völlig normal.",
+        "frage": "Was geschah mit den 'Pseudopatienten' nach der Aufnahme?",
+        "optionen": [
+            {"text": "Innerhalb weniger Stunden wurden alle als gesund entlarvt und entlassen", "hinweis": "Genau das Gegenteil"},
+            {"text": "Alle acht wurden aufgenommen (7× 'Schizophrenie'), blieben 7–52 Tage stationär und wurden mit der Diagnose 'Schizophrenie in Remission' entlassen — nie als gesund erkannt", "hinweis": "Kernbefund der Studie"},
+            {"text": "Die Ärzte bemerkten die Täuschung sofort, aber die Mitpatienten nicht", "hinweis": "Umgekehrt – Mitpatienten erkannten sie oft"},
+            {"text": "Die Studie konnte nicht durchgeführt werden, weil das Personal ihre Notizen kontrollierte", "hinweis": "Das Notizenmachen wurde als 'obsessives Schreibverhalten' interpretiert"},
+        ],
+        "loesung_text": "Alle acht wurden aufgenommen und als 'Schizophrenie in Remission' entlassen – nie als gesund erkannt.",
+        "erklaerung": "<p>Nach der Aufnahme verhielten sich alle Pseudopatienten normal. Trotzdem wurde jede Handlung durch die Diagnose <em>gefärbt</em>: Notizenmachen erschien als 'schreibendes Verhalten', normale Biografie als Beleg für 'ambivalente Beziehungen'. Aufenthaltsdauer: durchschnittlich <strong>19 Tage</strong>. Interessant: Die Mitpatienten durchschauten die Täuschung oft binnen weniger Tage ('Du bist kein Verrückter — du bist Journalist oder Professor').</p><p>Rosenhan folgerte: In der Psychiatrie färbt die einmal gestellte Diagnose die gesamte Wahrnehmung. Das Etikett wird zur Realität — Diagnostic Overshadowing.</p>",
+        "kontext": "<p>Nachfolge-Experiment: Rosenhan kündigte einer Klinik an, dass in den nächsten drei Monaten weitere Pseudopatienten auftauchen würden. Von 193 aufgenommenen Patienten identifizierte das Personal 41 als vermeintliche Betrüger. Rosenhan hatte in Wirklichkeit <em>niemanden</em> geschickt.</p><p>Die Studie erschütterte das DSM (Diagnostisches Manual) und trieb die spätere Entwicklung strengerer, operationalisierter Diagnosekriterien (DSM-III, 1980). Kritik: Susannah Cahalan warf Rosenhan 2019 vor, Fälle geschönt und Zitate erfunden zu haben — die Grundbeobachtung des <em>Labeling-Bias</em> ist aber vielfach repliziert.</p>",
+        "erkenntnis": "Ein einmal vergebenes Etikett verformt die Interpretation aller nachfolgenden Beobachtungen. Weder Ärzte, Lehrer noch Personaler sehen den Menschen selbst — sie sehen ihre Diagnose. Wer bewerten will, muss das eigene Vorurteil zuerst kennen.",
+    },
+    "loftus-erinnerung": {
+        "id": "loftus-erinnerung", "name": "Loftus & die Auto-Frage", "icon": "🚗",
+        "farbe": "amber", "kategorie": "Psychologie",
+        "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup": "Elizabeth Loftus & John Palmer (1974): 45 Studierende sehen denselben Film von einem Autounfall. Anschließend werden sie zur Geschwindigkeit befragt — aber mit unterschiedlichen Verben. Fünf Gruppen bekommen die Frage: 'Wie schnell fuhren die Autos, als sie sich <em>berührten / trafen / zusammenstießen / knallten / krachten</em>?'",
+        "frage": "Welchen Effekt hat die Wahl des Verbs auf die genannten Geschwindigkeiten?",
+        "optionen": [
+            {"text": "Keinen Effekt – die Zeugen berichten, was sie objektiv gesehen haben", "hinweis": "Wäre schön – aber empirisch widerlegt"},
+            {"text": "Nur einen minimalen Effekt (< 2 km/h Unterschied)", "hinweis": "Deutlich zu niedrig"},
+            {"text": "Die Schätzungen stiegen von 31,8 mph ('berührten') auf 40,8 mph ('krachten') – rund 30 % Unterschied allein durch das Verb", "hinweis": "Loftus & Palmer 1974"},
+            {"text": "Erwachsene sind immun gegen solche Framing-Effekte – nur Kinder", "hinweis": "Der Effekt gilt für alle Altersgruppen"},
+        ],
+        "loesung_text": "Die geschätzten Geschwindigkeiten stiegen von ~32 mph auf ~41 mph – allein durch das Verb.",
+        "erklaerung": "<p>Ergebnisse (in mph):<br>• 'berührten' (contacted): 31,8<br>• 'trafen' (hit): 34,0<br>• 'zusammenstießen' (bumped): 38,1<br>• 'knallten' (collided): 39,3<br>• 'krachten' (smashed): 40,8</p><p>Eine Woche später wurden dieselben Personen erneut befragt: 'Haben Sie zerbrochenes Glas gesehen?' Zerbrochenes Glas war im Film <em>nicht</em> zu sehen. Aber die 'krachten'-Gruppe bejahte doppelt so oft (32 %) wie die 'trafen'-Gruppe (14 %). Die Frage hatte die Erinnerung verändert.</p>",
+        "kontext": "<p>Loftus zeigte in Folgestudien: Erinnerung ist <em>rekonstruktiv</em>, nicht reproduktiv. Wir speichern keine Videokassette — wir bauen die Erinnerung bei jedem Abruf neu zusammen und mischen Post-Event-Information ein (<strong>Misinformation Effect</strong>). Berühmt: Ihre 'Lost in the Mall'-Studie (1995) implantierte bei 25 % der Teilnehmer eine falsche Kindheitserinnerung, sich als Kind in einem Einkaufszentrum verlaufen zu haben.</p><p>Konsequenzen: Über 375 US-Verurteilungen wurden per DNA aufgehoben — in <strong>70 %</strong> der Fälle stützte sich das ursprüngliche Urteil auf Augenzeugenaussagen. Loftus revolutionierte die forensische Psychologie und die Vernehmungsmethodik.</p>",
+        "erkenntnis": "Wörter formen Erinnerungen. Die 'objektive Zeugenaussage' ist eine Illusion — jede Nachfrage überschreibt das Gedächtnis. Wer nach der Wahrheit sucht, muss Fragen neutral formulieren — und Erinnerung mit Skepsis behandeln.",
     },
     "schlaeger-ball": {
         "id": "schlaeger-ball", "name": "Schläger und Ball", "icon": "⚾",
