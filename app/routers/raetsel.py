@@ -82,6 +82,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Wahrscheinlichkeit",
     },
+    {
+        "id": "nichttransitive-wuerfel",
+        "name": "Nichttransitive Würfel",
+        "icon": "🎲",
+        "beschreibung": "Drei Würfel: Rot schlägt Grün, Grün schlägt Blau, Blau schlägt Rot – jeweils mit 5/9 Wahrscheinlichkeit. Warren Buffett bot Bill Gates diese Wette an. Der Clou: Egal welchen du wählst, ich wähle den, der deinen schlägt.",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
     # ── Statistik & Kognition ──────────────────────────────────────────────────
     {
         "id": "simpson",
@@ -4113,6 +4123,71 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         request,
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
+    )
+
+
+_NICHTTRANSITIVE_DICE = {
+    "rot":   {"name": "Rot",  "farbe": "red",   "emoji": "🟥", "faces": [2, 2, 4, 4, 9, 9]},
+    "gruen": {"name": "Grün", "farbe": "green", "emoji": "🟩", "faces": [1, 1, 6, 6, 8, 8]},
+    "blau":  {"name": "Blau", "farbe": "blue",  "emoji": "🟦", "faces": [3, 3, 5, 5, 7, 7]},
+}
+# Zyklus: Rot > Grün > Blau > Rot (jeweils mit 5/9).
+# Für jeden Würfel der Würfel, der ihn mit 5/9 schlägt:
+_COUNTER_DIE = {"rot": "blau", "gruen": "rot", "blau": "gruen"}
+
+
+@router.get("/nichttransitive-wuerfel", response_class=HTMLResponse)
+def nichttransitive_wuerfel_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "raetsel/nichttransitive_wuerfel.html",
+        {"active_page": "raetsel", "dice": _NICHTTRANSITIVE_DICE, **_nav_context("nichttransitive-wuerfel")},
+    )
+
+
+@router.post("/nichttransitive-wuerfel/duell", response_class=HTMLResponse)
+def nichttransitive_wuerfel_duell(request: Request, wahl: str = Form(...), runden: int = Form(default=100)):
+    if wahl not in _NICHTTRANSITIVE_DICE:
+        raise HTTPException(status_code=400, detail="Unbekannter Würfel")
+    runden = max(1, min(runden, 1000))
+    gegner_id = _COUNTER_DIE[wahl]
+    spieler_die = _NICHTTRANSITIVE_DICE[wahl]
+    gegner_die = _NICHTTRANSITIVE_DICE[gegner_id]
+
+    spieler_siege = 0
+    gegner_siege = 0
+    unentschieden = 0
+    beispiel_wuerfe = []
+    for i in range(runden):
+        s = _random.choice(spieler_die["faces"])
+        g = _random.choice(gegner_die["faces"])
+        if s > g:
+            spieler_siege += 1
+            ergebnis = "spieler"
+        elif g > s:
+            gegner_siege += 1
+            ergebnis = "gegner"
+        else:
+            unentschieden += 1
+            ergebnis = "unentschieden"
+        if i < 8:
+            beispiel_wuerfe.append({"spieler": s, "gegner": g, "ergebnis": ergebnis})
+
+    quote = round(gegner_siege / runden * 100)
+    return templates.TemplateResponse(
+        request,
+        "partials/nichttransitive_wuerfel_result.html",
+        {
+            "spieler_die": spieler_die,
+            "gegner_die": gegner_die,
+            "gegner_id": gegner_id,
+            "spieler_siege": spieler_siege,
+            "gegner_siege": gegner_siege,
+            "unentschieden": unentschieden,
+            "runden": runden,
+            "quote": quote,
+            "beispiel_wuerfe": beispiel_wuerfe,
+        },
     )
 
 

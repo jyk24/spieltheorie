@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% block title %}Nichttransitive Würfel – Warum du gegen Warren Buffett verlierst{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+
+  <!-- Header -->
+  <div class="mb-6">
+    <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+    <h1 class="text-3xl font-bold text-slate-800 mt-2">🎲 Nichttransitive Würfel</h1>
+    <p class="text-slate-500 mt-1">Bradley Efron · Warren Buffett & Bill Gates · Wenn A schlägt B und B schlägt C, dann schlägt A auch C – oder?</p>
+    <div class="flex items-center gap-3 mt-2 flex-wrap">
+      <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium">Wahrscheinlichkeit</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium">Mittel</span>
+      <span class="text-xs text-slate-400">⏱ 5 min</span>
+    </div>
+  </div>
+
+  <!-- Die Geschichte -->
+  <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-6">
+    <p class="text-sm text-amber-800 leading-relaxed">
+      Warren Buffett soll Bill Gates einmal drei Würfel angeboten haben und ihn gebeten, den besten
+      auszuwählen. Buffett würde dann einen der übrigen nehmen – wer die höhere Zahl würfelt, gewinnt.
+      Gates untersuchte die Würfel genau und antwortete: <em>„Nein, wähl du zuerst."</em> Er hatte den Trick erkannt.
+    </p>
+  </div>
+
+  <!-- Die drei Würfel -->
+  <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-6">
+    <p class="font-semibold text-slate-800 mb-3">Die drei Würfel:</p>
+    <div class="grid grid-cols-3 gap-3">
+      <div class="bg-red-50 border-2 border-red-200 rounded-xl p-3 text-center">
+        <p class="text-2xl mb-1">🟥</p>
+        <p class="font-bold text-red-700 mb-1">Rot</p>
+        <p class="text-xs text-red-600 font-mono">2, 2, 4, 4, 9, 9</p>
+      </div>
+      <div class="bg-green-50 border-2 border-green-200 rounded-xl p-3 text-center">
+        <p class="text-2xl mb-1">🟩</p>
+        <p class="font-bold text-green-700 mb-1">Grün</p>
+        <p class="text-xs text-green-600 font-mono">1, 1, 6, 6, 8, 8</p>
+      </div>
+      <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-3 text-center">
+        <p class="text-2xl mb-1">🟦</p>
+        <p class="font-bold text-blue-700 mb-1">Blau</p>
+        <p class="text-xs text-blue-600 font-mono">3, 3, 5, 5, 7, 7</p>
+      </div>
+    </div>
+    <p class="text-xs text-slate-400 mt-3 text-center">Alle drei haben denselben Durchschnitt: <strong>5,0</strong>. Der Trick liegt nicht im Mittelwert.</p>
+  </div>
+
+  <!-- Interaktives Duell -->
+  <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-6 mb-6">
+    <p class="font-bold text-slate-800 mb-1">Das Duell</p>
+    <p class="text-sm text-slate-600 mb-4">Wähle einen Würfel. Ich lasse dir den Vortritt – und wähle danach den Würfel, der deinen schlägt. Dann würfeln wir 100 Mal gegeneinander.</p>
+
+    <form hx-post="/raetsel/nichttransitive-wuerfel/duell" hx-target="#duell-result" hx-swap="innerHTML">
+      <input type="hidden" name="runden" value="100">
+      <div class="grid grid-cols-3 gap-3 mb-4">
+        <button type="submit" name="wahl" value="rot"
+                class="bg-white hover:bg-red-50 border-2 border-red-300 hover:border-red-500 rounded-xl p-4 transition-all">
+          <div class="text-3xl mb-1">🟥</div>
+          <div class="font-bold text-red-700">Rot wählen</div>
+        </button>
+        <button type="submit" name="wahl" value="gruen"
+                class="bg-white hover:bg-green-50 border-2 border-green-300 hover:border-green-500 rounded-xl p-4 transition-all">
+          <div class="text-3xl mb-1">🟩</div>
+          <div class="font-bold text-green-700">Grün wählen</div>
+        </button>
+        <button type="submit" name="wahl" value="blau"
+                class="bg-white hover:bg-blue-50 border-2 border-blue-300 hover:border-blue-500 rounded-xl p-4 transition-all">
+          <div class="text-3xl mb-1">🟦</div>
+          <div class="font-bold text-blue-700">Blau wählen</div>
+        </button>
+      </div>
+    </form>
+
+    <div id="duell-result"></div>
+  </div>
+
+  <!-- Der Zyklus -->
+  <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-6">
+    <p class="font-bold text-slate-800 mb-4">Warum das funktioniert – der Zyklus</p>
+    <div class="flex items-center justify-around text-center text-sm mb-4">
+      <div>
+        <div class="text-3xl">🟥</div>
+        <div class="font-bold text-red-700">Rot</div>
+      </div>
+      <div class="text-slate-400 font-bold">→ 5/9<br><span class="text-xs">schlägt</span></div>
+      <div>
+        <div class="text-3xl">🟩</div>
+        <div class="font-bold text-green-700">Grün</div>
+      </div>
+      <div class="text-slate-400 font-bold">→ 5/9<br><span class="text-xs">schlägt</span></div>
+      <div>
+        <div class="text-3xl">🟦</div>
+        <div class="font-bold text-blue-700">Blau</div>
+      </div>
+    </div>
+    <p class="text-center text-sm text-slate-500 mb-4">…und <strong class="text-blue-700">Blau</strong> schlägt wieder <strong class="text-red-700">Rot</strong> mit 5/9. Der Kreis schließt sich.</p>
+
+    <details class="bg-slate-50 rounded-lg p-3">
+      <summary class="cursor-pointer text-sm font-semibold text-slate-700">Rechnung nachprüfen: Rot vs. Grün</summary>
+      <div class="text-xs text-slate-600 mt-3 leading-relaxed">
+        <p class="mb-2">Rot hat {2, 2, 4, 4, 9, 9}. Grün hat {1, 1, 6, 6, 8, 8}. Für jede Kombination (36 gleich wahrscheinliche Paare) prüfen wir, ob Rot &gt; Grün:</p>
+        <ul class="space-y-0.5 font-mono pl-4">
+          <li>Rot = 2 → schlägt Grün-1,1 (2 von 6 Fällen) · zweimal, also 4 Siege</li>
+          <li>Rot = 4 → schlägt Grün-1,1 (2 von 6 Fällen) · zweimal, also 4 Siege</li>
+          <li>Rot = 9 → schlägt <em>alle</em> Grün-Werte (6 von 6) · zweimal, also 12 Siege</li>
+        </ul>
+        <p class="mt-2">Summe: 4 + 4 + 12 = <strong>20 Siege von 36 = 5/9 ≈ 55,6 %</strong>.</p>
+        <p class="mt-2">Analog für Grün vs. Blau und Blau vs. Rot – jeweils 20/36.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- Erkenntnis -->
+  <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+    <p class="font-semibold text-amber-800 mb-1 text-sm">💡 Erkenntnis</p>
+    <p class="text-sm text-amber-700">Unsere Intuition erwartet <em>Transitivität</em>: Wenn A besser als B und B besser als C ist, muss A auch besser als C sein.
+    Bei Zufallsvariablen gilt das nicht. Der Zweite, der wählt, hat immer den Vorteil – wie bei Schere-Stein-Papier gegen einen Gedankenleser.</p>
+  </div>
+
+  <!-- Kontext -->
+  <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden mb-6">
+    <button onclick="toggleKontext()"
+            class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-slate-50 transition-colors">
+      <span class="font-semibold text-slate-700 text-sm">📚 Tiefer eintauchen</span>
+      <span id="kontext-arrow" class="text-slate-400 text-sm transition-transform">▼</span>
+    </button>
+    <div id="kontext-body" class="hidden px-5 pb-5 text-sm text-slate-700 leading-relaxed space-y-3 border-t border-slate-100 pt-4">
+      <p><strong>Bradley Efron</strong>, ein Statistiker der Stanford University, entwarf 1970 die ursprünglichen vier
+      „nichttransitiven Würfel". Die drei Würfel oben sind die einfachste geschlossene Variante:
+      jeder Würfel schlägt einen anderen mit derselben Quote (5/9).</p>
+      <p><strong>Wo taucht Nichttransitivität sonst auf?</strong></p>
+      <ul class="list-disc pl-5 space-y-1">
+        <li><strong>Schere–Stein–Papier:</strong> das Musterbeispiel eines Nullsummenspiels ohne dominierende Strategie.</li>
+        <li><strong>Condorcet-Paradoxon:</strong> Mehrheitswahlen können zyklisch werden – Kandidat A schlägt B, B schlägt C, C schlägt A.</li>
+        <li><strong>Ökosysteme:</strong> Bei manchen Eidechsen wechseln sich drei Paarungsstrategien in einem Rot-Grün-Blau-Zyklus ab.</li>
+        <li><strong>Sportvergleiche:</strong> „Team X hat Y geschlagen, Y hat Z geschlagen, also gewinnt X gegen Z" – ein häufiger Trugschluss.</li>
+      </ul>
+      <p><strong>Der Spieltheorie-Kern:</strong> In Spielen mit sequentieller Zugreihenfolge kann die zweite Partei
+      ein <em>dominantes</em> Antwort­verhalten haben, obwohl <em>keine</em> Strategie global dominiert. Wer zuerst wählen
+      muss, gibt Information preis, die der Gegner ausnutzen kann.</p>
+      <p class="italic text-slate-500">Fun Fact: Buffett bot dieses Spiel angeblich mehreren berühmten Gästen an – die meisten fielen darauf herein.</p>
+    </div>
+  </div>
+
+  <!-- TED Talks -->
+  {% if ted_links %}
+  <div class="bg-red-50 border border-red-100 rounded-xl p-4 mb-6">
+    <p class="text-xs font-semibold text-red-400 uppercase tracking-wide mb-3">🎤 Passende TED Talks</p>
+    <div class="space-y-2">
+      {% for t in ted_links %}
+      <a href="{{ t.ted_url }}" target="_blank" rel="noopener"
+         class="flex items-center gap-3 p-2.5 bg-white border border-red-100 rounded-lg hover:border-red-300 hover:shadow-sm transition-all">
+        <span class="text-lg">▶️</span>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-slate-800 text-sm truncate">{{ t.sprecher }}: {{ t.titel_de }}</p>
+          <p class="text-xs text-slate-400">TED {{ t.jahr }}</p>
+        </div>
+        <span class="text-xs text-red-400 shrink-0">↗</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Navigation -->
+  <div class="flex gap-3 mb-6">
+    <a href="/raetsel"
+       class="flex-1 text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors text-sm">
+      ← Alle Rätsel
+    </a>
+    {% if next_puzzle %}
+    <a href="/raetsel/{{ next_puzzle.id }}"
+       class="flex-1 text-center bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium transition-colors text-sm">
+      {{ next_puzzle.icon }} {{ next_puzzle.name }} →
+    </a>
+    {% endif %}
+  </div>
+
+  <!-- Ähnliche Rätsel -->
+  {% if related_puzzles %}
+  <div>
+    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Ähnliche Rätsel</p>
+    <div class="space-y-2">
+      {% for r in related_puzzles %}
+      <a href="/raetsel/{{ r.id }}"
+         class="flex items-start gap-3 p-3 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 hover:shadow-sm transition-all">
+        <span class="text-xl">{{ r.icon }}</span>
+        <div>
+          <p class="font-semibold text-slate-800 text-sm">{{ r.name }}</p>
+          {% if r.beschreibung %}
+          <p class="text-xs text-slate-500 mt-0.5 line-clamp-2">{{ r.beschreibung }}</p>
+          {% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+<script>
+function toggleKontext() {
+  const body = document.getElementById('kontext-body');
+  const arrow = document.getElementById('kontext-arrow');
+  const open = !body.classList.contains('hidden');
+  body.classList.toggle('hidden', open);
+  arrow.style.transform = open ? '' : 'rotate(180deg)';
+}
+</script>
+
+{% endblock %}
