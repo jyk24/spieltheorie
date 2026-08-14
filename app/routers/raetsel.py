@@ -631,6 +631,10 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neu ────────────────────────────────────────────────────────────────
+    {"id":"arrow-theorem","name":"Arrows Unmöglichkeitstheorem","icon":"🗳️","beschreibung":"Kann es ein perfektes Wahlsystem geben – fair, transparent und ohne Diktator? Kenneth Arrow bewies 1951: Nein. Bei mindestens drei Optionen kollidieren die vier natürlichsten Fairness-Kriterien systematisch.","typ":"Sozialwahltheorie","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Spieltheorie"},
+    {"id":"fermi-paradoxon","name":"Das Fermi-Paradoxon","icon":"👽","beschreibung":"100 Milliarden Sterne allein in unserer Galaxie, viele mit erdähnlichen Planeten. Statistisch müssten Zivilisationen überall sein. Enrico Fermi fragte 1950 beim Mittagessen: „Wo sind sie alle?“","typ":"Kosmologisches Paradox","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Physik"},
+    {"id":"buridans-esel","name":"Buridans Esel","icon":"🫏","beschreibung":"Ein hungriger und durstiger Esel steht exakt in der Mitte zwischen einem Heuhaufen und einem Wassereimer. Beide sind gleich weit weg, gleich attraktiv. Was passiert – und was sagt das über perfekt rationale Entscheider?","typ":"Entscheidungs-Paradox","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Kognition"},
 ]
 
 
@@ -4063,6 +4067,58 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    # ── Neu ────────────────────────────────────────────────────────────────
+    "arrow-theorem": {
+        "id": "arrow-theorem", "name": "Arrows Unmöglichkeitstheorem", "icon": "🗳️",
+        "farbe": "indigo", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": "Eine Gruppe stimmt über drei oder mehr Optionen ab (z. B. drei Kandidat*innen). Jede Person hat eine vollständige Rangfolge. Gesucht ist ein Wahlverfahren, das aus allen individuellen Rangfolgen eine „gesellschaftliche“ Rangfolge macht – und dabei vier plausible Fairness-Bedingungen einhält: <em>Universalität</em> (jede denkbare Präferenzkombination erlaubt), <em>Pareto-Effizienz</em> (bevorzugen alle A gegenüber B, gewinnt A), <em>Unabhängigkeit irrelevanter Alternativen</em> (die Rangfolge A vs. B hängt nur von A und B ab) und <em>Nicht-Diktatur</em> (niemand allein entscheidet).",
+        "frage": "Wie viele Wahlsysteme erfüllen alle vier Bedingungen gleichzeitig – bei drei oder mehr Optionen?",
+        "optionen": [
+            {"text": "Genau eines: die Mehrheitswahl (Condorcet-Sieger)", "hinweis": "Ist Condorcet immer eindeutig?"},
+            {"text": "Genau eines: die Bordawahl mit Punkten", "hinweis": "Verletzt Borda die Unabhängigkeit?"},
+            {"text": "Keines – jede Regel muss mindestens eine Bedingung brechen", "hinweis": "Arrows Ergebnis von 1951"},
+            {"text": "Alle gerechten Systeme – man muss nur klug wählen", "hinweis": "Wäre das Theorem dann trivial?"},
+        ],
+        "loesung_text": "Keines – bei ≥ 3 Optionen ist es mathematisch unmöglich",
+        "erklaerung": "<p>Kenneth Arrow bewies 1951 in <em>Social Choice and Individual Values</em>: Kein Wahlsystem, das aus individuellen Rangfolgen eine gesellschaftliche Rangfolge macht, kann bei drei oder mehr Optionen alle vier Bedingungen gleichzeitig erfüllen. Die einzige Ausnahme, die alle mathematischen Bedingungen erfüllt, ist die Diktatur einer einzelnen Person – und die scheitert an <em>Nicht-Diktatur</em>.</p><p>Der Beweis nutzt einen 'pivotalen Wähler': Man zeigt konstruktiv, dass irgendjemand am Ende immer alleine über das Ergebnis entscheiden muss.</p>",
+        "kontext": "<p><strong>Arrow (1972 Nobelpreis)</strong> begründete damit die moderne Sozialwahltheorie. Sein Ergebnis erklärt, warum jedes reale Wahlsystem – Mehrheit, Borda, Condorcet, Instant-Runoff – irgendein 'Paradoxon' produziert (z. B. wechselnde Mehrheiten wie im Condorcet-Paradox).</p><p><strong>Amartya Sen</strong> und andere haben Arrows Rahmen erweitert: Wenn man Präferenzen um Intensitätsangaben (Kardinal-Utilities) ergänzt, gibt es einen Ausweg – aber der ist praktisch schwer messbar. Deshalb bleibt Arrows Theorem der wichtigste Baustein der Public-Choice-Ökonomik.</p>",
+        "erkenntnis": "„Fair“ ist keine einzelne Eigenschaft, sondern ein Bündel widersprüchlicher Ansprüche. Jedes reale Wahlsystem ist ein Kompromiss – und die Frage ist nicht 'welches ist perfekt', sondern 'welchen Fehler akzeptieren wir'.",
+    },
+    "fermi-paradoxon": {
+        "id": "fermi-paradoxon", "name": "Das Fermi-Paradoxon", "icon": "👽",
+        "farbe": "violet", "kategorie": "Physik",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Die Milchstraße enthält rund 100 Milliarden Sterne. Selbst konservative Schätzungen der Drake-Gleichung ergeben Millionen potenzieller Zivilisationen. Die Galaxie ist ~13 Milliarden Jahre alt – genug Zeit, sie ein Dutzendmal zu durchreisen, selbst mit Unterlicht-Sonden (Bracewell-von-Neumann-Probes). Wir sehen aber: <em>nichts</em>. Kein Signal, keine Sonde, kein Artefakt. Enrico Fermi fragte 1950 in Los Alamos beim Mittagessen: „Wo sind sie alle?“",
+        "frage": "Welche Lösung ist am schwierigsten empirisch zu widerlegen?",
+        "optionen": [
+            {"text": "Wir sind allein – Leben ist extrem unwahrscheinlich (Rare Earth)", "hinweis": "Warum aber gerade wir?"},
+            {"text": "Der Great Filter liegt vor uns – Zivilisationen zerstören sich vor dem Sternflug", "hinweis": "Wir wären dann selbst gefährdet"},
+            {"text": "Zoo-Hypothese: Sie beobachten uns, greifen aber nicht ein", "hinweis": "Was widerlegt sie?"},
+            {"text": "Interstellare Reisen sind physikalisch unmöglich", "hinweis": "Unterlicht wäre theoretisch machbar"},
+        ],
+        "loesung_text": "Alle vier sind konsistent – der „Great Filter“ ist die beunruhigendste",
+        "erklaerung": "<p>Das Fermi-Paradoxon hat keine akzeptierte Lösung. Robin Hansons <em>Great-Filter</em>-Argument (1998) ist besonders wichtig: Irgendwo zwischen 'unbelebter Materie' und 'sternfliegender Zivilisation' liegt ein extrem unwahrscheinlicher Schritt (der Filter). Zwei Möglichkeiten: Der Filter liegt <em>hinter</em> uns (etwa der Übergang von Prokaryonten zu komplexen Zellen) – dann sind wir außergewöhnlich. Oder er liegt <em>vor</em> uns – dann sterben Zivilisationen typischerweise, bevor sie interstellar werden. Je mehr belebte Planeten wir finden, desto wahrscheinlicher wird die zweite, düstere Variante.</p>",
+        "kontext": "<p><strong>Drake-Gleichung (1961):</strong> N = R* × fp × ne × fl × fi × fc × L. Schon minimale Änderungen der Faktoren produzieren N zwischen 1 und Millionen. Die Gleichung strukturiert unser Unwissen – sie löst nichts.</p><p>Neuere Beobachtungen (Kepler, TESS, JWST) zeigen: erdähnliche Planeten sind häufig. Damit verschärft sich das Paradoxon.</p><p>Verwandte Ideen: <em>Dark-Forest-Hypothese</em> (Liu Cixin) – jede Zivilisation schweigt aus Selbstschutz; <em>Simulationshypothese</em> – die Stille ist eine Rendering-Entscheidung.</p>",
+        "erkenntnis": "Ein einziger fehlender Beobachtungsbefund kann tiefer sein als tausend Bestätigungen. Wo Modelle unbegrenzt viele Fremdzivilisationen vorhersagen und die Realität keine zeigt, muss eines der Modelle falsch sein – meist unser eigenes über uns selbst.",
+    },
+    "buridans-esel": {
+        "id": "buridans-esel", "name": "Buridans Esel", "icon": "🫏",
+        "farbe": "amber", "kategorie": "Kognition",
+        "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup": "Ein hungriger und gleichzeitig durstiger Esel steht exakt in der Mitte zwischen einem Heuhaufen und einem Wassereimer. Beide sind für ihn <em>vollständig gleich</em> attraktiv, gleich weit weg, in jeder Hinsicht identisch bewertbar. Der Esel ist ein perfekter Nutzenmaximierer – er wählt immer das Beste.",
+        "frage": "Was tut der Esel, wenn er streng rational nach dem höheren Nutzen entscheidet?",
+        "optionen": [
+            {"text": "Er verhungert und verdurstet – keine Option dominiert", "hinweis": "Klassische Lesart"},
+            {"text": "Er wählt zufällig – Rationalität erlaubt Losentscheide", "hinweis": "Reine Rationalität kennt keinen Zufall"},
+            {"text": "Er wählt Wasser: Durst wirkt schneller", "hinweis": "Damit wären die Optionen nicht gleich"},
+            {"text": "Die Situation kann in der Realität nicht auftreten", "hinweis": "Warum nicht?"},
+        ],
+        "loesung_text": "Er müsste verhungern – ein rein rationaler Entscheider kollabiert bei perfekter Gleichheit",
+        "erklaerung": "<p>Das Paradoxon (dem mittelalterlichen Logiker Jean Buridan zugeschrieben, aber schon bei Aristoteles angedeutet) entlarvt eine Schwäche in Modellen 'reiner Rationalität': Wer immer die dominante Option wählt, hat kein Verfahren, um zwischen exakt gleichwertigen Optionen zu wählen. Reale Menschen und Tiere lösen es trivial – sie würfeln, folgen einer Willkür-Heuristik oder brechen die Symmetrie durch Bewegung, Aufmerksamkeit oder Zufall.</p>",
+        "kontext": "<p>Das Buridan-Problem ist mehr als eine Kuriosität. In der <strong>Entscheidungstheorie</strong> zeigt es, warum <em>Tie-Breaker-Regeln</em> (Zufall, Ranglisten, Präferenz über Präferenzen) formal notwendig sind. In der <strong>Regelungstechnik</strong> heißt das analoge Problem <em>Metastabilität</em>: ein Flip-Flop, der einen exakt schwellwertigen Eingang bekommt, kann prinzipiell beliebig lange schwanken.</p><p>Auch in <strong>KI-Systemen</strong> taucht das Muster auf: Bei gleicher Bewertung mehrerer Aktionen brauchen LLMs und Reinforcement-Learning-Agenten Zufall (Temperature, ε-Greedy), sonst blockieren sie.</p>",
+        "erkenntnis": "Perfekte Rationalität ist nicht die stärkste, sondern die zerbrechlichste Entscheidungsregel: Sie braucht einen kleinen Rest Zufall, um überhaupt handeln zu können. In der Praxis ist eine 'gut genug'-Heuristik oft rationaler als reine Optimierung.",
     },
 }
 
