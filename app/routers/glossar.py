@@ -134,7 +134,7 @@ GLOSSAR = [
             "Das ist keine Frage der Technologie - es ist ein fundamentales Prinzip der Quantenwelt."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "bounded-rationality",
@@ -534,7 +534,7 @@ GLOSSAR = [
             "Grundlage fuer Laser, Transistoren, MRT und Quantencomputer."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "regression-zur-mitte",
@@ -667,7 +667,7 @@ GLOSSAR = [
             "wenn dieses Prinzip auf makroskopische Objekte zutreffen wuerde."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "survivorship-bias",
@@ -763,7 +763,7 @@ GLOSSAR = [
             "Bei einer Messung 'kollabiert' die Wellenfunktion auf einen einzigen Wert."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "winner-fluch",
@@ -976,6 +976,54 @@ GLOSSAR = [
         ),
         "kategorie": "Psychologie",
         "link": "/raetsel/verfuegbarkeitsheuristik",
+    },
+    {
+        "id": "streisand-effekt",
+        "titel": "Streisand-Effekt",
+        "definition": (
+            "Wenn der Versuch, Information zu unterdruecken, ihre Verbreitung erst richtig ausloest. "
+            "Benannt nach Barbra Streisands Klage von 2003, die ein Kuestenfoto ihres Hauses aus dem Netz "
+            "entfernen sollte - und die Zugriffe von 6 auf ueber 420.000 hochtrieb. "
+            "Erklaerungen: psychologische Reaktanz, Signalwirkung des Verbots, Netzwerkeffekte."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/streisand-effekt",
+    },
+    {
+        "id": "theseus-schiff",
+        "titel": "Schiff des Theseus",
+        "definition": (
+            "Identitaetsparadox von Plutarch: Wenn im Laufe der Zeit jede Planke eines Schiffs ersetzt wird, "
+            "ist es dann noch dasselbe Schiff? Und was, wenn jemand aus den alten Planken ein zweites baut? "
+            "Zeigt, dass unser Identitaetsbegriff aus mehreren Kriterien besteht (Materie, Form, Funktion, "
+            "raum-zeitliche Kontinuitaet), die im Alltag zusammenfallen, aber getrennt werden koennen."
+        ),
+        "kategorie": "Logik",
+        "link": "/raetsel/theseus-schiff",
+    },
+    {
+        "id": "sorites-paradoxon",
+        "titel": "Sorites-Paradoxon",
+        "definition": (
+            "Haufen-Paradox (Eubulides, 4. Jh. v. Chr.): 1 Million Sandkoerner sind ein Haufen. Ein Korn "
+            "weniger auch. Wiederholt bis zu 1 Korn - wo verlaeuft die Grenze? Zeigt, dass viele Alltagsbegriffe "
+            "(gross, alt, kahl, reich) vage sind und in klassischer Logik nicht praezise gefasst werden koennen. "
+            "Loesungen: epistemischer Ansatz, Supervaluationismus, Fuzzy Logic."
+        ),
+        "kategorie": "Logik",
+        "link": "/raetsel/sorites",
+    },
+    {
+        "id": "reaktanz",
+        "titel": "Reaktanz",
+        "definition": (
+            "Psychologische Gegenreaktion (Brehm, 1966): Wird eine Handlungsfreiheit eingeschraenkt "
+            "oder eine Meinung vorgeschrieben, steigt der Wunsch, genau das Gegenteil zu tun. "
+            "Erklaert den Streisand-Effekt, warum Verbote den Konsum von Suchtmitteln oft nicht senken "
+            "und warum Teenager gegen elterliche Empfehlungen rebellieren."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/streisand-effekt",
     },
 ]
 

@@ -631,6 +631,10 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Philosophische Paradoxa (neu) ────────────────────────────────────────
+    {"id":"theseus-schiff","name":"Das Schiff des Theseus","icon":"⛵","beschreibung":"Über die Jahre wird jede Planke des Schiffs ersetzt. Ist es am Ende noch dasselbe Schiff? Und was, wenn jemand aus den alten Planken ein zweites baut?","typ":"Identitäts-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Logik"},
+    {"id":"sorites","name":"Das Sorites-Paradoxon","icon":"🏔️","beschreibung":"1 Million Sandkörner sind ein Haufen. Nimmt man eins weg, bleibt es ein Haufen. Wiederholt bis 1 Korn – ist das noch ein Haufen? Wo verläuft die Grenze?","typ":"Vagheits-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Logik"},
+    {"id":"streisand-effekt","name":"Der Streisand-Effekt","icon":"🔇","beschreibung":"2003 verklagte Barbra Streisand einen Fotografen, um ein Luftbild ihres Hauses löschen zu lassen. Vor der Klage: 6 Downloads. Nach der Klage: 420.000. Warum?","typ":"Meta-Psychologie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
 ]
 
 
@@ -4046,6 +4050,58 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Der <strong>Fundamentale Attributionsfehler</strong> (FAE, Ross 1977): Wir überschätzen den Einfluss von Persönlichkeitseigenschaften und unterschätzen den Einfluss der Situation auf das Verhalten anderer.</p><p>Das Verhalten (Castro-Aufsatz) wurde der Disposition zugeschrieben (<em>er ist pro-Castro</em>) – obwohl die Situation (zufällige Zuweisung) das Verhalten vollständig erklärte.</p>",
         "kontext": "<p>Der FAE ist kulturell variabel: Westliche (individualistische) Kulturen zeigen ihn stärker als östliche (kollektivistische). Im Alltag: Wer uns auf der Autobahn schneidet, ist ein Idiot – nicht jemand mit einem Notfall.</p><p>In Verhandlungen: Wenn die Gegenseite hart verhandelt, schließen wir auf Gier oder Feindseligkeit – statt auf externen Druck, Vorgaben des Vorstands oder Zeitdruck. Das verzerrt unsere Strategie erheblich.</p>",
         "erkenntnis": "Wir sind natürliche Biographen, keine Situationsanalysten. Wenn jemand sich 'falsch' verhält, zuerst fragen: Welche situativen Kräfte könnten dieses Verhalten erklären? Das gibt ein realistischeres Bild – und bessere Verhandlungsstrategien.",
+    },
+    # ── Philosophische Paradoxa ──────────────────────────────────────────
+    "theseus-schiff": {
+        "id": "theseus-schiff", "name": "Das Schiff des Theseus", "icon": "⛵",
+        "farbe": "sky", "kategorie": "Logik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Plutarch berichtet: Die Athener bewahrten das Schiff des Theseus über Jahrhunderte. Sobald eine Planke morsch wurde, ersetzten sie sie durch eine neue. Nach 200 Jahren war <strong>keine einzige Originalplanke</strong> mehr an Bord. Ein cleverer Sammler baute derweil aus den alten, weggeworfenen Planken ein zweites Schiff.",
+        "frage": "Welches ist das echte Schiff des Theseus?",
+        "optionen": [
+            {"text": "Das restaurierte Schiff — Kontinuität der Form und Nutzung entscheidet", "hinweis": "Numerische Identität durch Kontinuität"},
+            {"text": "Das aus den Originalplanken zusammengesetzte Schiff — die Materie ist entscheidend", "hinweis": "Identität durch Materie"},
+            {"text": "Beide sind das Schiff des Theseus — Identität ist mehrfach realisierbar", "hinweis": "Pluralistischer Ansatz"},
+            {"text": "Keines von beiden — das ursprüngliche Schiff existiert nicht mehr", "hinweis": "Strenger Materialismus"},
+        ],
+        "loesung_text": "Es gibt keine „richtige“ Antwort — jede Antwort offenbart einen Identitätsbegriff",
+        "erklaerung": "<p>Das Paradox zeigt, dass unser Alltagsbegriff von <strong>Identität</strong> unscharf ist. Er stützt sich auf mindestens vier Kriterien, die im Alltag zusammenfallen, hier aber auseinandertreiben:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Materielle Identität</strong> — dieselben Atome/Teile</li><li><strong>Formale Identität</strong> — dieselbe Struktur, dieselbe Anordnung</li><li><strong>Funktionale Identität</strong> — dieselbe Rolle, derselbe Zweck</li><li><strong>Raum-zeitliche Kontinuität</strong> — ununterbrochene Existenz an einem Ort</li></ul><p>Sobald zwei Objekte konkurrieren, muss man sich entscheiden, welches Kriterium <em>zählt</em>. Das ist keine Faktenfrage — es ist eine begriffliche.</p>",
+        "kontext": "<p><strong>Anwendungen jenseits der Antike:</strong></p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Biologie</strong> — In 7 Jahren tauscht der menschliche Körper (fast) alle Zellen aus. Bist du noch dieselbe Person?</li><li><strong>Software</strong> — Wenn ein Team jede Datei eines Legacy-Systems ersetzt, ist es dann dasselbe System oder ein neues?</li><li><strong>Unternehmen</strong> — Wenn eine Firma über Jahrzehnte alle Mitarbeiter, Produkte und den Standort wechselt — ist es noch dieselbe Marke?</li><li><strong>Personale Identität</strong> — Derek Parfit (<em>Reasons and Persons</em>, 1984) argumentiert: Personale Identität durch Zeit ist eine <em>Illusion</em>. Es gibt nur graduelle psychologische Kontinuität.</li></ul><p>Thomas Hobbes verschärfte das Paradox 1655 mit der Zweit-Schiff-Variante. John Locke unterschied zwischen Identität von Materie, Lebewesen und Person — jede folgt anderen Regeln.</p>",
+        "erkenntnis": "Identität ist kein einfaches Faktum, sondern ein Bündel von Kriterien, das wir situativ gewichten. Wer nach „dem echten“ Schiff sucht, sucht nach einer Präzision, die die Sprache nie hatte.",
+    },
+    "sorites": {
+        "id": "sorites", "name": "Das Sorites-Paradoxon", "icon": "🏔️",
+        "farbe": "amber", "kategorie": "Logik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "1.000.000 Sandkörner bilden zweifelsfrei einen <strong>Haufen</strong>. Prämisse: Wenn n Körner ein Haufen sind, dann sind auch n−1 Körner ein Haufen (ein einzelnes Korn ändert nichts). Wendet man die Prämisse 999.999-mal an, folgt: <strong>1 Sandkorn ist ein Haufen</strong>. Und sogar 0 Körner.",
+        "frage": "Wo steckt der Denkfehler?",
+        "optionen": [
+            {"text": "In der Ausgangsprämisse — 1 Million ist gar kein Haufen", "hinweis": "Die Prämisse ist offensichtlich wahr"},
+            {"text": "In der Induktionsprämisse — irgendwann macht ein einzelnes Korn doch den Unterschied", "hinweis": "Aber wo genau? Jeder Übergang wirkt willkürlich"},
+            {"text": "Im Begriff „Haufen“ selbst — er ist vage, kein scharfer Prädikat", "hinweis": "Vagheit als sprachliches Phänomen"},
+            {"text": "In der klassischen Logik — für vage Prädikate braucht es Fuzzy Logic", "hinweis": "Mehrwertige Logik statt zweiwertiger"},
+        ],
+        "loesung_text": "Beides ist plausibel: Der Begriff „Haufen“ ist vage — und das erfordert Fuzzy Logic",
+        "erklaerung": "<p>Das Paradox (griech. <em>soros</em> = Haufen) zeigt: Viele Alltagsbegriffe (<em>groß, alt, reich, kahl, Haufen</em>) haben <strong>keine scharfen Grenzen</strong>. Klassische zweiwertige Logik (wahr/falsch) versagt bei ihnen.</p><p>Lösungsansätze:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Epistemischer Ansatz</strong> (Williamson) — Es <em>gibt</em> eine scharfe Grenze, wir kennen sie nur nicht.</li><li><strong>Supervaluationismus</strong> (Fine) — Es gibt keine <em>eine</em> Grenze; jede plausible Grenzziehung ist zulässig.</li><li><strong>Fuzzy Logic</strong> (Zadeh) — Ein Objekt kann zu 0,7 ein Haufen sein. Wahrheit ist ein Kontinuum.</li><li><strong>Nihilistischer Ansatz</strong> — Vage Begriffe bezeichnen gar nichts; sie sind nützliche Illusionen.</li></ul>",
+        "kontext": "<p><strong>Praktische Relevanz</strong> — Vagheit ist überall:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Recht</strong> — Ab welchem Alter ist jemand „erwachsen“? Deutsche Rechtsordnung: 18. Ist das nicht willkürlich?</li><li><strong>Medizin</strong> — Ab welchem BMI beginnt „Übergewicht“? Ab welchem Blutdruck „Hypertonie“?</li><li><strong>Politik</strong> — Ab wann ist eine Regierung „autoritär“? Ab wann ein Waldbrand eine „Katastrophe“?</li><li><strong>KI-Klassifikation</strong> — Wo verläuft die Grenze zwischen „Hund“ und „Wolf“ im Bilderkennungsmodell?</li></ul><p>Eubulides von Milet formulierte das Paradox um 400 v. Chr. Es beschäftigt Philosophen und Logiker bis heute.</p>",
+        "erkenntnis": "Präzision ist eine Konvention, keine Naturkonstante. Wo Sprache vage ist, muss die Grenzziehung entscheiden — nicht die Logik allein.",
+    },
+    "streisand-effekt": {
+        "id": "streisand-effekt", "name": "Der Streisand-Effekt", "icon": "🔇",
+        "farbe": "rose", "kategorie": "Psychologie",
+        "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup": "2003 fotografierte Kenneth Adelman rund 12.000 Küstenabschnitte Kaliforniens für ein Umweltschutz-Projekt und stellte sie ins Netz. Auf Foto Nr. 3850 war das Haus der Sängerin <strong>Barbra Streisand</strong> zu sehen. Sie verklagte den Fotografen auf 50 Mio. US-Dollar — mit dem Ziel, das Bild aus dem Netz zu bekommen.<br><br>Vor der Klage: <strong>6 Downloads</strong> (2 davon von ihren Anwälten).<br>Nach der Klage: <strong>über 420.000 Downloads</strong> im ersten Monat.",
+        "frage": "Warum kehrt sich der Zensurversuch systematisch ins Gegenteil?",
+        "optionen": [
+            {"text": "Weil das Verbot die Information erst interessant macht (psychologische Reaktanz)", "hinweis": "Verbotenes hat höheren Wert"},
+            {"text": "Weil Gerichtsdokumente selbst zur Verbreitung beitragen", "hinweis": "Meta-Berichterstattung"},
+            {"text": "Weil das Internet Kopien vervielfältigt schneller, als sie gelöscht werden können", "hinweis": "Redundanz von Netzwerken"},
+            {"text": "Alle drei Faktoren wirken zusammen", "hinweis": "Verstärkende Mechanismen"},
+        ],
+        "loesung_text": "Alle drei Faktoren wirken zusammen — deshalb ist der Effekt so verlässlich",
+        "erklaerung": "<p>Der Streisand-Effekt (Begriff von Mike Masnick, 2005) ist ein Paradebeispiel für <strong>unbeabsichtigte Konsequenzen</strong>:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Reaktanz</strong> (Brehm, 1966) — Wird eine Freiheit eingeschränkt, steigt der Wunsch, sie auszuüben.</li><li><strong>Signalwirkung</strong> — Der Zensurversuch signalisiert, dass die Information <em>wichtig</em> ist. Sonst würde sich niemand darum bemühen.</li><li><strong>Netzwerkeffekt</strong> — Jede Berichterstattung über die Klage enthält die Information erneut. Streisands Klage wurde in tausenden Medien zitiert — samt Foto.</li><li><strong>Anti-Fragilität</strong> (Taleb) — Manche Systeme werden durch Angriffe <em>stärker</em>. Das Internet als dezentrales Kopiernetz ist eines davon.</li></ul>",
+        "kontext": "<p><strong>Weitere Fälle:</strong></p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Beyoncé (2013)</strong> — Ihr Publizistenteam bat, unvorteilhafte Super-Bowl-Fotos zu entfernen. Ergebnis: das Bild wurde zum Meme.</li><li><strong>Trafigura (2009)</strong> — Der Rohstoffkonzern erwirkte eine „Superinjunction“ gegen The Guardian. Twitter machte den Fall über Nacht global bekannt.</li><li><strong>DMCA-Takedowns</strong> — Jede Löschanfrage bei YouTube/Google wird archiviert (Chilling Effects/Lumen). Öffentliche Sichtbarkeit für den, der löschen wollte.</li></ul><p>Streisand verlor den Prozess und musste die Anwaltskosten des Fotografen tragen. Das Foto ist heute leichter zu finden als je zuvor.</p>",
+        "erkenntnis": "Wer eine Information vergraben will, sollte still bleiben. Öffentlicher Widerstand ist das stärkste Verbreitungssignal, das es gibt — besonders in Netzwerken, die Kopien billig machen.",
     },
     "schlaeger-ball": {
         "id": "schlaeger-ball", "name": "Schläger und Ball", "icon": "⚾",
