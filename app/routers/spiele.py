@@ -619,6 +619,15 @@ GAME_META = [
         "runden": 6,
         "konzept": "Cournot-Gleichgewicht, Oligopol, Kollusion vs. Wettbewerb",
     },
+    {
+        "id": "monty-hall",
+        "name": "Ziegenproblem-Simulator",
+        "icon": "🚪",
+        "beschreibung": "Drei Türen, ein Auto, zwei Ziegen. Bleibst du oder wechselst du? Der berühmteste Probability-Twist der Welt – interaktiv erfahren und über 1000 Runden empirisch nachrechnen.",
+        "schwierigkeit": "Einsteiger",
+        "runden": "unbegrenzt",
+        "konzept": "Bedingte Wahrscheinlichkeit, Bayes-Update, kontraintuitive Statistik",
+    },
 ]
 
 
@@ -2910,4 +2919,17 @@ def cournot_zug(
             "strategy_info": strategy_info,
             "new_achievements": new_achievements,
         },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Ziegenproblem-Simulator (Monty Hall)
+# ---------------------------------------------------------------------------
+
+@router.get("/monty-hall", response_class=HTMLResponse)
+def monty_hall_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "games/monty_hall.html",
+        {"active_page": "spiele"},
     )
