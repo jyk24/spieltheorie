@@ -631,6 +631,10 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neu ──────────────────────────────────────────────────────────────────
+    {"id":"zwei-kinder-problem","name":"Das Zwei-Kinder-Problem","icon":"👶","beschreibung":"Eine Familie hat zwei Kinder. Mindestens eines ist ein Junge. Wie hoch ist die Wahrscheinlichkeit, dass beide Jungen sind? Die Antwort spaltet Mathematiker seit 1959.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
+    {"id":"buridans-esel","name":"Buridans Esel","icon":"🫏","beschreibung":"Ein Esel steht genau zwischen zwei identischen Heuhaufen – gleich weit, gleich groß, gleich frisch. Kann er sich entscheiden – oder verhungert er?","typ":"Entscheidungs-Paradox","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
+    {"id":"kruskal-prinzip","name":"Das Kruskal-Prinzip","icon":"🃏","beschreibung":"Ein Kartentrick, der (fast) immer klappt: Du wählst geheim eine Startkarte, ich folge einer eigenen – und wir landen mit hoher Wahrscheinlichkeit bei derselben. Warum konvergieren zufällige Ketten?","typ":"Mathematisches Kunststück","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Mathematik"},
 ]
 
 
@@ -4063,6 +4067,63 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    # ── Zwei-Kinder-Problem ──────────────────────────────────────────────────
+    "zwei-kinder-problem": {
+        "id": "zwei-kinder-problem", "name": "Das Zwei-Kinder-Problem", "icon": "👶",
+        "farbe": "cyan", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Das Rätsel:",
+        "setup": "Eine Familie hat <strong>zwei Kinder</strong>. Nimm an, jedes Kind ist unabhängig und gleich wahrscheinlich Junge oder Mädchen.<br><br>Du erfährst: <em>„Mindestens eines der beiden Kinder ist ein Junge.\"</em>",
+        "frage": "Wie hoch ist die Wahrscheinlichkeit, dass <strong>beide</strong> Kinder Jungen sind?",
+        "optionen": [
+            {"text": "1/2", "hinweis": "Das zweite Kind ist doch unabhängig?"},
+            {"text": "1/3", "hinweis": "Denke an alle möglichen Kombinationen"},
+            {"text": "2/3", "hinweis": "Sicher, dass du nicht die Umkehrfrage beantwortest?"},
+            {"text": "1/4", "hinweis": "Ohne Zusatzinfo wäre das richtig"},
+        ],
+        "loesung_text": "Die Wahrscheinlichkeit beträgt 1/3.",
+        "erklaerung": "<p>Vor der Zusatzinfo gibt es vier gleich wahrscheinliche Kombinationen: <strong>JJ, JM, MJ, MM</strong>.</p><p>Die Aussage „mindestens ein Junge\" schließt nur <strong>MM</strong> aus. Es bleiben drei Fälle: <strong>JJ, JM, MJ</strong>. Nur einer davon ist „beide Jungen\" → <strong>1/3</strong>.</p><p>Die intuitive Antwort 1/2 stimmt nur, wenn man von einem <em>bestimmten</em> Kind spricht (z.B. „das älteste ist ein Junge\"). Dann fallen zwei Fälle weg, und es bleiben JJ und JM – zwei gleich wahrscheinliche Optionen.</p>",
+        "kontext": "<p>Das Paradoxon wurde 1959 von Martin Gardner in <em>Scientific American</em> veröffentlicht – und löste sofort Streit aus. Gardner selbst gab später zu, dass die Formulierung mehrdeutig ist. Denn wie hast du die Information erhalten?</p><ul class=\"list-disc ml-4 space-y-1\"><li>Frage-Version: „Ist mindestens eines Junge?\" → 1/3</li><li>Beobachtungs-Version: Du siehst zufällig eines und es ist ein Junge → 1/2</li></ul><p>Das Problem zeigt, wie stark bedingte Wahrscheinlichkeiten davon abhängen, <strong>wie</strong> Information gewonnen wurde – nicht nur, was gesagt wird. Eine schärfere Variante (das „Dienstag-Junge\"-Problem, 2010) verstärkt den Effekt ins Absurde.</p>",
+        "erkenntnis": "Bedingte Wahrscheinlichkeit ist kein Bauchgefühl. Das Bayes-Theorem verlangt nicht nur zu fragen „was ist wahr?\" – sondern „welcher Prozess hat mir diese Information geliefert?\". Ein winziger Unterschied in der Fragestellung verdoppelt hier das Ergebnis.",
+    },
+    # ── Buridans Esel ────────────────────────────────────────────────────────
+    "buridans-esel": {
+        "id": "buridans-esel", "name": "Buridans Esel", "icon": "🫏",
+        "farbe": "amber", "kategorie": "Kognition",
+        "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup_label": "Das Gedankenexperiment:",
+        "setup": "Ein hungriger und durstiger Esel steht genau in der Mitte zwischen zwei völlig gleichen Heuhaufen. Beide sind gleich weit entfernt, gleich groß, gleich frisch, gleich duftend.<br><br>Ein rein rationales Wesen müsste alle Argumente für Haufen A gegen alle Argumente für Haufen B abwägen – und käme zum Ergebnis: <strong>Unentscheidbar</strong>.",
+        "frage": "Was passiert – theoretisch – mit dem Esel?",
+        "optionen": [
+            {"text": "Er wählt zufällig eine Seite", "hinweis": "Woher käme dieser Zufall bei rein rationalem Handeln?"},
+            {"text": "Er verhungert zwischen den Haufen", "hinweis": "Die klassische Buridan-Konsequenz"},
+            {"text": "Er wechselt zwischen den Haufen ab", "hinweis": "Hin und her ohne Ende?"},
+            {"text": "Er wählt den näheren – aber beide sind ja gleich weit weg", "hinweis": "Genau das ist das Problem"},
+        ],
+        "loesung_text": "Bei strikter Rationalität ohne Zusatzkriterium verhungert er.",
+        "erklaerung": "<p>Das Paradoxon zeigt einen Grenzfall reiner Entscheidungstheorie: Wenn zwei Alternativen <em>exakt</em> gleichwertig sind und die Entscheidungsregel nur „wähle die bessere\" lautet, gibt es keine Handlungsanweisung. Das Ergebnis ist Handlungslähmung.</p><p>In der Realität passiert das nie – weil kein Zustand jemals wirklich identisch ist, unser Nervensystem Rauschen hat und wir Meta-Regeln kennen wie „wenn unentschieden: würfle\" oder „nimm die Option auf der Wurfseite deiner Hand\".</p>",
+        "kontext": "<p>Das Bild geht auf den Philosophen <strong>Jean Buridan</strong> (14. Jhd.) zurück – obwohl er selbst es nie so formulierte. Aristoteles nutzte eine ähnliche Konstruktion.</p><p>In moderner Form lebt Buridans Esel als <strong>Analyseparalyse</strong> weiter: Manager, die zwischen zwei fast gleich guten Angeboten monatelang zögern; Software mit Konflikten zwischen zwei Ressourcen (Livelock); Ethik-Dilemmata, in denen zwei Handlungen gleich schwer wiegen.</p><p><em>Nutzentheoretiker</em> lösen es pragmatisch: Sobald zwei Optionen gleichwertig sind, ist die Wahl selbst nutzenneutral – also darf man würfeln, und der Erwartungsnutzen bleibt derselbe. Der Esel „darf\" also zufällig wählen, ohne dass ein Idealsystem verletzt wird.</p>",
+        "erkenntnis": "Perfekte Rationalität ohne Randbedingungen ist gefährlich: Sie kann in vollkommener Untätigkeit enden. Gute Entscheider haben Meta-Regeln, wie sie mit Gleichständen umgehen – und akzeptieren, dass Handeln oft wichtiger ist als das perfekte Argument.",
+    },
+    # ── Kruskal-Prinzip ──────────────────────────────────────────────────────
+    "kruskal-prinzip": {
+        "id": "kruskal-prinzip", "name": "Das Kruskal-Prinzip", "icon": "🃏",
+        "farbe": "violet", "kategorie": "Mathematik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Der Kartentrick:",
+        "setup": "Ein Skatspiel mit 52 Karten liegt gemischt auf dem Tisch. Zähler: <em>Bube = Dame = König = 5</em>, alle Zahlkarten zählen ihren Wert, Ass = 1.<br><br>Zuschauer wählt geheim eine der ersten 10 Karten als <strong>Startkarte</strong>. Von dort aus zählt er den Wert der Karte ab und springt so oft weiter, bis er das Ende erreicht.<br><br>Der Magier tut dasselbe, aber mit <em>seiner eigenen</em> Startkarte weit vorne (z.B. Karte 1).",
+        "frage": "Wie hoch ist die Wahrscheinlichkeit, dass beide Ketten auf derselben Endkarte landen?",
+        "optionen": [
+            {"text": "Etwa 10 % – reiner Zufall bei 52 Karten", "hinweis": "1/52 wäre reiner Zufall – aber die Ketten hüpfen ja"},
+            {"text": "Etwa 50 % – Kopf oder Zahl", "hinweis": "Zu wenig"},
+            {"text": "Etwa 85 % – Ketten verschmelzen fast immer", "hinweis": "Das ist die verblüffende Antwort"},
+            {"text": "100 % – deterministisch bei gleichen Regeln", "hinweis": "Bei verschiedenen Startpunkten sicher nicht"},
+        ],
+        "loesung_text": "Die Ketten verschmelzen mit ~85 % Wahrscheinlichkeit.",
+        "erklaerung": "<p>Sobald zwei Sprung-Ketten <em>auf derselben Karte</em> stehen, laufen sie ab dann identisch weiter – sie „verschmelzen\". Bei 52 Karten und mittleren Sprungweiten von ~5–6 ist die Wahrscheinlichkeit, dass zwei zufällige Startpunkte irgendwann auf dieselbe Karte treffen, überraschend hoch: rund 85 %.</p><p>Faustregel (Kruskal): Bei mittlerer Sprungweite <em>s</em> und Deckgröße <em>N</em> verschmelzen zwei Ketten mit Wahrscheinlichkeit etwa 1 − e<sup>−N/s²</sup>. Für N=52, s≈5,5 ergibt das ≈ 82 %.</p>",
+        "kontext": "<p>Das Prinzip wurde vom Physiker <strong>Martin Kruskal</strong> in den 1970ern beschrieben und ist heute ein Standard-Trick in mathematischen Zaubershows („Kruskal Count\"). Es demonstriert ein tiefes Phänomen: <strong>zufällige Markov-Ketten koaleszieren</strong>.</p><p>Dasselbe Prinzip steckt in:</p><ul class=\"list-disc ml-4 space-y-1\"><li><strong>Kryptographie:</strong> Kollisionen in Hash-Funktionen (Pollards Rho-Algorithmus)</li><li><strong>Genetik:</strong> Rückverfolgung von Vorfahren – alle Menschen haben einen gemeinsamen Vorfahren (Mitochondriale Eva)</li><li><strong>Netzwerke:</strong> Random Walks in großen Graphen finden dieselben Knoten immer wieder</li></ul><p>Es ist auch ein Warnhinweis für Pseudo-Zufallsgeneratoren: Zwei „unabhängige\" Zufallsströme kollidieren schneller, als die naive Rechnung vermuten lässt.</p>",
+        "erkenntnis": "Zwei unabhängig gestartete Zufallsprozesse konvergieren oft – nicht immer, aber überraschend häufig. Wenn du glaubst, „unser Weg ist einzigartig, weil er zufällig begann\": Prüf lieber nach. In komplexen Systemen laufen Wege gerne zusammen.",
     },
 }
 
