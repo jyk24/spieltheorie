@@ -574,6 +574,7 @@ RAETSEL_META = [
     {"id":"infinite-monkey","name":"Infinite Monkey Theorem","icon":"🐒","beschreibung":"Ein Affe tippt zufällig. Bei unendlich viel Zeit – tippt er Hamlet? Die Antwort ist theoretisch ja. Aber wie unendlich lang ist \"unendlich\"?","typ":"Unendlichkeit","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
     {"id":"drunkards-walk","name":"Der Drunkard's Walk","icon":"🚶","beschreibung":"Ein Betrunkener macht zufällig einen Schritt vor oder zurück. Wie weit ist er nach 100 Schritten vom Start entfernt? Die Antwort ist √100 = 10.","typ":"Zufallspfade","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
     {"id":"littlewoods-law","name":"Littlewoods Gesetz der Wunder","icon":"✨","beschreibung":"Littlewood: Ein \"Wunder\" ist ein Ereignis mit Wahrscheinlichkeit 1 zu einer Million. Wie oft erleben wir solche Wunder – und warum sind sie gar nicht überraschend?","typ":"Koinzidenz","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Wahrscheinlichkeit"},
+    {"id":"junge-maedchen","name":"Das Junge-Mädchen-Paradoxon","icon":"👦","beschreibung":"Familie Müller hat zwei Kinder. Mindestens eines ist ein Junge. Wie groß ist die Wahrscheinlichkeit, dass beide Jungen sind? Die intuitive Antwort ist ½ – falsch.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
     # ── Kommunikation (neu) ──────────────────────────────────────────────────
     {"id":"johari-fenster","name":"Das Johari-Fenster","icon":"🪟","beschreibung":"Vier Felder beschreiben, was dir und anderen über dich bekannt ist. Welches Feld nennt man den \"Blinden Fleck\" – und wie verkleinert man ihn?","typ":"Selbstreflexion","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Kommunikation"},
     {"id":"vier-ohren-modell","name":"Das Vier-Ohren-Modell","icon":"👂","beschreibung":"\"Das Essen ist fertig\" – vier Botschaften in einem Satz. Schulz von Thun zeigt: Sprecher und Hörer verwenden selten dieselbe Ebene.","typ":"Kommunikationsmodell","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Kommunikation"},
@@ -3255,6 +3256,24 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>8 Stunden × 3600 Sekunden × 30 Tage ≈ 864.000 ≈ 10⁶. Bei 10⁶ Ereignissen pro Monat und 'Wunder'-Wahrscheinlichkeit 1/10⁶ erwartet man im Schnitt <em>ein Wunder pro Monat</em>. Das Staunen über Koinzidenzen ist also fehlplatziert — wir sollten mehr überrascht sein, wenn keine auftreten.</p>",
         "kontext": "<p>Littlewood erklärt damit Erscheinungen wie 'Ich habe gerade an jemanden gedacht und er ruft an' oder 'Ich sah dasselbe Auto dreimal heute'. Diese Ereignisse erscheinen bedeutsam — sind aber statistisch erwartbar.</p>",
         "erkenntnis": "Was selten erscheint, passiert sicher — wenn man nur genug Gelegenheiten betrachtet. Wunder sind nicht Beweis für Übernatürliches, sondern für die Stärke großer Zahlen.",
+    },
+    "junge-maedchen": {
+        "id": "junge-maedchen", "name": "Das Junge-Mädchen-Paradoxon", "icon": "👦",
+        "farbe": "sky", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Das Szenario:",
+        "setup": "Familie Müller hat <strong>genau zwei Kinder</strong>. Jedes Kind ist unabhängig und mit gleicher Wahrscheinlichkeit ein Junge oder ein Mädchen. Du erfährst nun eine zusätzliche Information: <strong>Mindestens eines der Kinder ist ein Junge</strong>.",
+        "frage": "Wie groß ist die Wahrscheinlichkeit, dass <strong>beide Kinder Jungen</strong> sind?",
+        "optionen": [
+            {"text": "½ (50 %)", "hinweis": "Klingt intuitiv – das andere Kind ist ja Junge oder Mädchen"},
+            {"text": "⅓ (≈ 33 %)", "hinweis": "Denk an alle Möglichkeiten – welche schließt die Info aus?"},
+            {"text": "¼ (25 %)", "hinweis": "Das wäre ohne Zusatzinfo (JJ von JJ/JM/MJ/MM)"},
+            {"text": "¾ (75 %)", "hinweis": "Zu hoch – Mädchen als Zweitkind bleibt möglich"},
+        ],
+        "loesung_text": "⅓ – nicht ½",
+        "erklaerung": "<p>Vor der Zusatzinfo gibt es vier gleich wahrscheinliche Kombinationen, geordnet nach Geburtenreihenfolge:</p><p><strong>JJ · JM · MJ · MM</strong>, jede mit Wahrscheinlichkeit ¼.</p><p>Die Aussage \"mindestens ein Junge\" schließt nur <em>MM</em> aus. Übrig bleiben <strong>JJ, JM, MJ</strong> – drei gleich wahrscheinliche Fälle. In genau einem davon (JJ) sind beide Kinder Jungen.</p><p>→ P(JJ | mindestens 1 Junge) = 1/3.</p>",
+        "kontext": "<p>Das Paradoxon zeigt, wie stark die genaue Formulierung einer Information die Wahrscheinlichkeit verändert. Vergleiche die Variante <em>\"Das ältere Kind ist ein Junge\"</em>: Hier bleiben nur <strong>JJ und JM</strong> – die Wahrscheinlichkeit ist ½. Erst durch die Ordnung wird die Antwort intuitiv.</p><p><strong>Der Dienstags-Junge</strong> — Gary Foshee, 2010: <em>\"Ich habe zwei Kinder. Einer ist ein Junge, geboren an einem Dienstag. Wie viele beide Jungen?\"</em> Antwort: 13/27 ≈ 48,1 %. Ein scheinbar irrelevantes Detail (der Wochentag) verschiebt die Wahrscheinlichkeit dramatisch – weil es die Zählweise der günstigen Fälle verändert.</p><p>Der Effekt heißt <strong>Boy-or-Girl-Paradoxon</strong> (Martin Gardner, <em>Scientific American</em>, 1959) und ist eng verwandt mit dem <a href=\"/raetsel/monty-hall\" class=\"underline text-sky-700\">Monty-Hall-Problem</a>: Bedingte Wahrscheinlichkeit hängt nicht nur von der Information ab, sondern auch davon, <em>wie</em> sie generiert wurde.</p>",
+        "erkenntnis": "Bedingte Wahrscheinlichkeit ist heikel. Die Frage \"Was weiß ich schon?\" ist entscheidend – und die Antwort ändert sich mit jeder Zusatzinformation, selbst wenn diese scheinbar trivial ist.",
     },
     # ── Kommunikation ─────────────────────────────────────────────────────
     "johari-fenster": {

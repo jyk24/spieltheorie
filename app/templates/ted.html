@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}TED Insights – Wissen aus den wichtigsten TED Talks – VerhandlungsTrainer{% endblock %}
-{% block meta_description %}<meta name="description" content="18 der einflussreichsten TED Talks – Kernkonzepte zu Entscheidung, Kommunikation, Verhandlung und Kognition. Mit interaktivem Quiz.">{% endblock %}
+{% block meta_description %}<meta name="description" content="{{ talks|length }} der einflussreichsten TED Talks – Kernkonzepte zu Entscheidung, Kommunikation, Verhandlung und Kognition. Mit interaktivem Quiz.">{% endblock %}
 {% block og_title %}TED Insights – VerhandlungsTrainer{% endblock %}
 {% block og_description %}Die wichtigsten TED Talks zu Entscheidung, Kommunikation und Verhandlung – kompakt erklärt und interaktiv abgefragt.{% endblock %}
 {% block content %}

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}TED-Quiz – 10 Fragen aus den wichtigsten TED Talks – VerhandlungsTrainer{% endblock %}
-{% block meta_description %}<meta name="description" content="10 zufällige Fragen aus 18 TED Talks – teste dein Wissen zu Entscheidung, Kommunikation und Verhandlung.">{% endblock %}
+{% block meta_description %}<meta name="description" content="10 zufällige Fragen aus {{ talks_count }} TED Talks – teste dein Wissen zu Entscheidung, Kommunikation und Verhandlung.">{% endblock %}
 {% block content %}
 
 <div class="max-w-2xl mx-auto">
@@ -45,7 +45,7 @@
     <div id="state-idle" class="flex flex-col items-center justify-center p-12 text-center">
       <div class="text-5xl mb-4">🎤</div>
       <h2 class="text-xl font-bold text-slate-800 mb-2">TED-Quiz</h2>
-      <p class="text-slate-500 text-sm mb-6 max-w-sm">10 zufällige Fragen aus 18 TED Talks – Kernkonzepte zu Entscheidung, Kommunikation, Verhandlung und Kognition.</p>
+      <p class="text-slate-500 text-sm mb-6 max-w-sm">10 zufällige Fragen aus {{ talks_count }} TED Talks – Kernkonzepte zu Entscheidung, Kommunikation, Verhandlung und Kognition.</p>
       {% if kategorie %}
       <div class="text-xs bg-red-100 text-red-700 px-3 py-1 rounded-full mb-4 font-medium">Filter: {{ kategorie }}</div>
       {% endif %}

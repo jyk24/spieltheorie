@@ -144,6 +144,7 @@ LERNPFADE = [
             {"typ": "raetsel", "id": "geburtstag",          "titel": "Geburtstagsparadoxon",          "icon": "🎂",  "dauer": "3 min", "schwierigkeit": "Einstieg",       "beschreibung": ""},
             {"typ": "raetsel", "id": "spielerfehlschluss",  "titel": "Der Spielerfehlschluss",         "icon": "🎰",  "dauer": "3 min", "schwierigkeit": "Einstieg",       "beschreibung": ""},
             {"typ": "raetsel", "id": "monty-hall",          "titel": "Monty Hall Problem",             "icon": "🚪",  "dauer": "3 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
+            {"typ": "raetsel", "id": "junge-maedchen",      "titel": "Junge-Mädchen-Paradoxon",        "icon": "👦",  "dauer": "4 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
             {"typ": "raetsel", "id": "hundert-gefangene",   "titel": "100-Gefangenen-Problem",         "icon": "📦",  "dauer": "5 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
             {"typ": "raetsel", "id": "coupon-sammler",      "titel": "Coupon-Sammler-Problem",         "icon": "🎟️", "dauer": "4 min", "schwierigkeit": "Mittel",         "beschreibung": ""},
             {"typ": "raetsel", "id": "bertrand-paradoxon",  "titel": "Bertrand-Paradoxon",             "icon": "⭕",  "dauer": "5 min", "schwierigkeit": "Fortgeschritten","beschreibung": ""},

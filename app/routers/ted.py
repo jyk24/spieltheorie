@@ -1603,6 +1603,7 @@ def ted_quiz_page(request: Request, kategorie: str = ""):
         "fragen": selected,
         "kategorie": kategorie,
         "kategorien": KATEGORIEN,
+        "talks_count": len(TED_TALKS),
     })
 
 
