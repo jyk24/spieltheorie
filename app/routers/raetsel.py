@@ -82,6 +82,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Wahrscheinlichkeit",
     },
+    {
+        "id": "junge-maedchen",
+        "name": "Das Junge-oder-Mädchen-Paradox",
+        "icon": "👦",
+        "beschreibung": "Eine Familie hat zwei Kinder. Eines davon ist ein Junge. Wie groß ist die Wahrscheinlichkeit, dass beide Kinder Jungen sind? Die naive Antwort ½ ist falsch – und die Tuesday-Variante macht es noch bizarrer.",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
     # ── Statistik & Kognition ──────────────────────────────────────────────────
     {
         "id": "simpson",
@@ -4046,6 +4056,24 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Der <strong>Fundamentale Attributionsfehler</strong> (FAE, Ross 1977): Wir überschätzen den Einfluss von Persönlichkeitseigenschaften und unterschätzen den Einfluss der Situation auf das Verhalten anderer.</p><p>Das Verhalten (Castro-Aufsatz) wurde der Disposition zugeschrieben (<em>er ist pro-Castro</em>) – obwohl die Situation (zufällige Zuweisung) das Verhalten vollständig erklärte.</p>",
         "kontext": "<p>Der FAE ist kulturell variabel: Westliche (individualistische) Kulturen zeigen ihn stärker als östliche (kollektivistische). Im Alltag: Wer uns auf der Autobahn schneidet, ist ein Idiot – nicht jemand mit einem Notfall.</p><p>In Verhandlungen: Wenn die Gegenseite hart verhandelt, schließen wir auf Gier oder Feindseligkeit – statt auf externen Druck, Vorgaben des Vorstands oder Zeitdruck. Das verzerrt unsere Strategie erheblich.</p>",
         "erkenntnis": "Wir sind natürliche Biographen, keine Situationsanalysten. Wenn jemand sich 'falsch' verhält, zuerst fragen: Welche situativen Kräfte könnten dieses Verhalten erklären? Das gibt ein realistischeres Bild – und bessere Verhandlungsstrategien.",
+    },
+    "junge-maedchen": {
+        "id": "junge-maedchen", "name": "Das Junge-oder-Mädchen-Paradox", "icon": "👦",
+        "farbe": "sky", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Das Problem:",
+        "setup": "Eine Familie hat <strong>zwei Kinder</strong>. Du erfährst: <strong>Mindestens eines davon ist ein Junge.</strong><br><br>Nimm an, ein Kind ist mit Wahrscheinlichkeit ½ ein Junge und mit ½ ein Mädchen — und die Geschlechter der beiden Kinder sind unabhängig voneinander.",
+        "frage": "Wie groß ist die Wahrscheinlichkeit, dass <strong>beide</strong> Kinder Jungen sind?",
+        "optionen": [
+            {"text": "½ (50 %)", "hinweis": "Die intuitive Antwort — das andere Kind ist doch unabhängig ein Junge oder Mädchen?"},
+            {"text": "⅓ (ca. 33 %)", "hinweis": "Bedingte Wahrscheinlichkeit unter Berücksichtigung aller passenden Familien"},
+            {"text": "¼ (25 %)", "hinweis": "Das wäre die Wahrscheinlichkeit ohne jede Information"},
+            {"text": "⅔ (ca. 67 %)", "hinweis": "Zu hoch — kein Vorwissen spricht dafür"},
+        ],
+        "loesung_text": "⅓ — nur ein Drittel dieser Familien hat zwei Jungen.",
+        "erklaerung": "<p>Die vier gleich wahrscheinlichen Konstellationen einer 2-Kind-Familie sind (nach Geburtsreihenfolge): <strong>JJ, JM, MJ, MM</strong> — jede mit Wahrscheinlichkeit ¼.</p><p>Die Information „mindestens ein Junge\" schließt nur <strong>MM</strong> aus. Übrig bleiben <strong>JJ, JM, MJ</strong> — drei gleich wahrscheinliche Fälle. In genau einem davon (JJ) sind beide Jungen.</p><p>→ P(beide Jungen | mindestens ein Junge) = <strong>1/3</strong></p><p>Der intuitive Fehler: Man rechnet, als hätte man ein bestimmtes Kind identifiziert (etwa das ältere). Dann wäre die Wahrscheinlichkeit für das andere tatsächlich ½. Aber „mindestens einer\" ist eine <em>ungerichtete</em> Aussage über beide Kinder gleichzeitig — und die verändert die Stichprobe.</p>",
+        "kontext": "<p><strong>Die Tuesday-Variante (Gary Foshee, 2010)</strong></p><p>„Ich habe zwei Kinder. Eines davon ist <em>ein am Dienstag geborener Junge</em>. Wie wahrscheinlich sind beide Jungen?\"</p><p>Zusatzinfo wirkt trivial — sollte 1/3 bleiben. Aber die Antwort ist <strong>13/27 ≈ 48 %</strong>, überraschend nah an ½.</p><p>Warum? Jedes Kind hat 14 mögliche Kategorien (7 Wochentage × 2 Geschlechter). Für eine 2-Kind-Familie gibt es 14 × 14 = 196 gleich wahrscheinliche Kombinationen. Wir zählen jene, in denen mindestens ein Dienstags-Junge (DJ) vorkommt: 27. Davon haben beide Kinder das Geschlecht Junge in 13 Fällen. → 13/27.</p><p>Die scheinbar irrelevante Zusatzinfo („Dienstag\") verändert die Stichprobenmenge und damit das Ergebnis dramatisch. Das illustriert eine tiefere Lektion: <strong>Wahrscheinlichkeit hängt von der Selektionsregel ab</strong>, nicht nur vom beobachteten Ereignis. Wie erfährst du die Information? Fragt jemand systematisch nach Söhnen? Nennt der Elternteil zufällig eines der Kinder? Jede Selektionsregel führt zu einer anderen Antwort.</p><p><strong>Historisch</strong>: Erstmals systematisch analysiert von Martin Gardner (Scientific American, 1959). Gardner selbst gab zunächst die Antwort ½ — musste später einräumen, dass die Formulierung mehrdeutig ist.</p><p><strong>Verwandt</strong>: Monty-Hall-Problem, Bertrand-Boxen-Paradox, Sleeping-Beauty-Paradox. Alle drei drehen sich um die zentrale Frage: <em>Welche Ereignisse gelten als äquivalent für die Berechnung?</em></p>",
+        "erkenntnis": "Bedingte Wahrscheinlichkeit ist keine Frage der Intuition — sie ist eine Frage der genau abgezählten Fälle. Wer den Sample-Space nicht sorgfältig konstruiert, rechnet mit dem falschen Nenner. Und die scheinbar irrelevante Zusatzinfo („Dienstag\") kann alles verändern.",
     },
     "schlaeger-ball": {
         "id": "schlaeger-ball", "name": "Schläger und Ball", "icon": "⚾",
