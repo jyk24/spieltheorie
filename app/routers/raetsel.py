@@ -631,6 +631,11 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neue Rätsel (2026-08) ────────────────────────────────────────────────
+    {"id":"zwei-kinder","name":"Das Zwei-Kinder-Paradoxon","icon":"👧","beschreibung":"Eine Familie hat zwei Kinder. Mindestens eines ist ein Junge. Wie wahrscheinlich sind zwei Jungen? Die Antwort ist nicht ½ – und der Grund ist eine der bekanntesten Fallen der Bayesschen Statistik.","typ":"Wahrscheinlichkeit","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Statistik"},
+    {"id":"sorites","name":"Das Haufen-Paradoxon (Sorites)","icon":"🌾","beschreibung":"Ein Sandhaufen bleibt ein Haufen, wenn du ein Korn entfernst. Wende die Regel 999.999 Mal an – und ein einzelnes Korn ist ein Haufen? Eubulides von Milet (4. Jh. v. Chr.) legte damit die Grundlage aller Vagheit.","typ":"Logik-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Logik"},
+    {"id":"buridans-esel","name":"Buridans Esel","icon":"🫏","beschreibung":"Ein hungriger Esel steht exakt gleich weit von zwei identischen Heuhaufen entfernt. Ohne Grund, den einen dem anderen vorzuziehen, verhungert er. Ein 800 Jahre altes Gedankenspiel über Entscheidungslähmung.","typ":"Entscheidungsparadox","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
+    {"id":"schiff-theseus","name":"Das Schiff des Theseus","icon":"⛵","beschreibung":"Ein Schiff wird über Jahrzehnte Planke für Planke ersetzt. Aus den alten Planken baut jemand ein zweites Schiff. Welches ist das echte? Ein Identitätsrätsel, das seit Plutarch (1. Jh.) ungelöst ist.","typ":"Identitäts-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Logik"},
 ]
 
 
@@ -4063,6 +4068,75 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    # ── Neue Rätsel (2026-08) ────────────────────────────────────────────────
+    "zwei-kinder": {
+        "id": "zwei-kinder", "name": "Das Zwei-Kinder-Paradoxon", "icon": "👧",
+        "farbe": "rose", "kategorie": "Statistik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Eine Familie hat genau zwei Kinder. Du erfährst: <em>Mindestens eines der beiden Kinder ist ein Junge.</em> Du weißt sonst nichts – nicht, welches, nicht das Alter, nichts.",
+        "frage": "Wie wahrscheinlich ist es, dass <strong>beide</strong> Kinder Jungen sind?",
+        "optionen": [
+            {"text": "1/2 (50 %)", "hinweis": "Das zweite Kind ist unabhängig, oder?"},
+            {"text": "1/3 (≈ 33 %)", "hinweis": "Bedingte Wahrscheinlichkeit"},
+            {"text": "1/4 (25 %)", "hinweis": "Nur eine von vier gleichverteilten Kombinationen"},
+            {"text": "2/3 (≈ 67 %)", "hinweis": "Ist Junge häufiger?"},
+        ],
+        "loesung_text": "1/3 – nicht 1/2",
+        "erklaerung": "<p>Ohne Information gibt es 4 gleichwahrscheinliche Möglichkeiten für die zwei Kinder (nach Geburtenreihenfolge):</p><ul class=\"list-disc ml-5 space-y-1\"><li>JJ (Junge, Junge)</li><li>JM (Junge, Mädchen)</li><li>MJ (Mädchen, Junge)</li><li>MM (Mädchen, Mädchen)</li></ul><p>Die Aussage „mindestens ein Junge\" schließt nur <strong>MM</strong> aus. Es bleiben drei gleich­wahrscheinliche Fälle – und nur einer davon ist JJ.</p><p>→ P(JJ | mind. 1 Junge) = <strong>1/3</strong>.</p><p>Die Falle: Intuitiv denkt man an das „andere\" Kind isoliert – aber die Information betrifft <em>beide</em> Kinder gleichzeitig.</p>",
+        "kontext": "<p><strong>Boy-or-Girl-Paradox</strong> – Martin Gardner, <em>Scientific American</em>, 1959.</p><p>Gardner selbst musste seine Antwort später präzisieren: Die Antwort hängt drastisch davon ab, <em>wie</em> die Information zustande kam. Beispiel: „Ich habe zwei Kinder. Der ältere ist ein Junge.\" – hier ist die Antwort <strong>1/2</strong>, weil nur JJ und JM übrig bleiben.</p><p>Noch verrückter wird es beim <em>Tuesday-Boy-Problem</em> (2010): „Mein Sohn wurde an einem Dienstag geboren.\" Die Wahrscheinlichkeit für zwei Jungen springt auf ≈ 13/27 – der scheinbar irrelevante Wochentag verändert die Bedingung.</p><p>Die Lehre: Bedingte Wahrscheinlichkeit ist sensibel dafür, welche Information <em>wie</em> beobachtet wurde – nicht nur, was sie behauptet.</p>",
+        "erkenntnis": "Bedingte Wahrscheinlichkeit ist nicht das Bauchgefühl. Die Frage „welche Möglichkeiten schließt diese Information aus?\" ist mächtiger als das Nachdenken über ein einzelnes Ereignis.",
+    },
+    "sorites": {
+        "id": "sorites", "name": "Das Haufen-Paradoxon (Sorites)", "icon": "🌾",
+        "farbe": "amber", "kategorie": "Logik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Ein Sandhaufen besteht aus 1.000.000 Körnern. Wende folgende Regel an: <em>Ein Haufen mit n Körnern bleibt auch mit n−1 Körnern ein Haufen.</em> Iteriere so lange, bis nur noch ein Korn übrig ist.",
+        "frage": "Ein einzelnes Korn ist ein Haufen – oder wo genau ist der Fehler?",
+        "optionen": [
+            {"text": "Die Ausgangsprämisse ist falsch", "hinweis": "Kein Ausgangshaufen?"},
+            {"text": "Die Regel ist falsch – es gibt eine exakte Schwelle", "hinweis": "Klare Grenze?"},
+            {"text": "Vage Begriffe kennen keine scharfen Grenzen – die Regel gilt näherungsweise, aber nicht beliebig oft", "hinweis": "Unschärfe der Sprache"},
+            {"text": "Beweis durch Widerspruch: Ein Korn ist ein Haufen", "hinweis": "Absurd?"},
+        ],
+        "loesung_text": "Vage Begriffe haben keine scharfen Grenzen – deshalb kann eine „harmlose\" Regel iteriert kollabieren.",
+        "erklaerung": "<p>Der Fehler liegt weder in einem einzelnen Schritt noch in der Prämisse, sondern in der stillschweigenden Annahme, ein Prädikat wie „ist ein Haufen\" sei bivalent (entweder wahr oder falsch). Vage Prädikate haben einen <em>Übergangsbereich</em>, in dem weder klar „ja\" noch klar „nein\" zutrifft.</p><p>Mögliche Auflösungen aus der modernen Logik:</p><ul class=\"list-disc ml-5 space-y-1\"><li><strong>Epistemische Sicht:</strong> Es gibt eine scharfe Grenze – wir kennen sie nur nicht.</li><li><strong>Supervaluationismus:</strong> Für jede plausible Grenzziehung gilt „Haufen oder nicht Haufen\", aber welche Zahl die Grenze ist, ist unbestimmt.</li><li><strong>Fuzzy Logic:</strong> Wahrheitswerte laufen kontinuierlich von 1 (klar Haufen) zu 0 (klar kein Haufen).</li></ul>",
+        "kontext": "<p><strong>Eubulides von Milet</strong> (4. Jh. v. Chr.) formulierte das Paradox neben dem Lügner-Paradox als eines der ältesten Logikpuzzle. Der Name kommt vom griechischen <em>sōrós</em> = „Haufen\".</p><p>Das gleiche Muster steckt in vielen modernen Debatten:</p><ul class=\"list-disc ml-5 space-y-1 text-sm\"><li><strong>Wann ist ein Embryo eine Person?</strong> – Kein Tag markiert die Grenze, und doch gibt es klare Fälle an beiden Enden.</li><li><strong>Wann ist jemand reich?</strong> – 1 € mehr macht niemanden reich, aber iteriert schon.</li><li><strong>Wann ist ein Mensch alt?</strong></li><li><strong>Wann kippt eine Freundschaft?</strong> – Kein einzelner Kommentar zerstört sie, doch Summen tun es.</li></ul><p>Sorites zeigt: Sprache ist evolutionär effizient, aber logisch grobkörnig. Präzision entsteht erst durch Definition – nicht durch Alltagsgebrauch.</p>",
+        "erkenntnis": "Iteration ist ein Vergrößerungsglas für versteckte Vagheit. Jede Regel, die einen unmerklichen Schritt erlaubt, kann über hinreichend viele Schritte in die Absurdität führen.",
+    },
+    "buridans-esel": {
+        "id": "buridans-esel", "name": "Buridans Esel", "icon": "🫏",
+        "farbe": "orange", "kategorie": "Kognition",
+        "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup": "Ein hungriger Esel steht exakt in der Mitte zwischen zwei identischen, gleich weit entfernten Heuhaufen. Er ist völlig rational – aber vollkommen indifferent zwischen den Optionen: Kein Grund spricht für links, keiner für rechts.",
+        "frage": "Was folgt – laut dem Gedankenexperiment – aus reiner Rationalität in dieser Situation?",
+        "optionen": [
+            {"text": "Der Esel wählt links (die erste Option)", "hinweis": "Erst­gefundene Lösung?"},
+            {"text": "Der Esel verhungert – keine Präferenz, keine Bewegung", "hinweis": "Klassische Deutung"},
+            {"text": "Der Esel wählt zufällig", "hinweis": "Zufall statt Wahl?"},
+            {"text": "Der Esel läuft zwischen beiden hin und her, bis er zusammenbricht", "hinweis": "Oszillation?"},
+        ],
+        "loesung_text": "Klassische Auflösung: Reine Rationalität ohne Tiebreaker führt zur Lähmung – der Esel verhungert.",
+        "erklaerung": "<p>Das Paradox illustriert eine Grenze eines rein deterministisch-nutzen­maximierenden Modells: Wenn zwei Optionen identischen erwarteten Nutzen haben, liefert die Optimierung <em>keine</em> Empfehlung. In der Realität lösen Menschen (und Esel) das durch:</p><ul class=\"list-disc ml-5 space-y-1\"><li><strong>Zufalls-Tiebreaker</strong> (Münzwurf, Impuls)</li><li><strong>Irrelevante Merkmale nutzen</strong> („Linker Haufen sieht etwas höher aus\")</li><li><strong>Meta-Regel</strong> („Bei Gleichstand: die näher am Ausgangspunkt liegende Option\")</li></ul><p>Ökonomen und KI-Forscher lösen dasselbe mit expliziten <em>tie-breaking rules</em> oder <em>ε-greedy</em>-Strategien.</p>",
+        "kontext": "<p>Zugeschrieben wird das Paradox <strong>Jean Buridan</strong> (14. Jh.), einem Pariser Scholastiker – tatsächlich taucht der Gedanke schon bei Aristoteles auf. Buridan selbst schrieb die Geschichte nie mit Esel; seine Kritiker illustrierten sie so.</p><p>Moderne Verwandte:</p><ul class=\"list-disc ml-5 space-y-1 text-sm\"><li><strong>Analysis Paralysis:</strong> Zu viele gleich gute Optionen → keine Entscheidung. Barry Schwartz nennt das den <em>Paradox of Choice</em> (2004).</li><li><strong>Marmeladen-Experiment</strong> (Iyengar & Lepper, 2000): 24 Sorten Marmelade zogen mehr Aufmerksamkeit an – aber 6 Sorten führten zu 10× mehr Käufen. Fülle lähmt.</li><li><strong>Reinforcement Learning:</strong> Ohne Explorations-Rauschen bleibt ein Agent bei zwei gleich guten Aktionen stecken.</li></ul>",
+        "erkenntnis": "Wenn zwei Optionen wirklich gleich gut sind, ist Entscheiden wichtiger als Optimieren. Ein zufälliger Tiebreaker schlägt endlose Analyse.",
+    },
+    "schiff-theseus": {
+        "id": "schiff-theseus", "name": "Das Schiff des Theseus", "icon": "⛵",
+        "farbe": "sky", "kategorie": "Logik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Das Schiff des Theseus liegt seit 40 Jahren im Hafen. Jede morsche Planke wird ersetzt – bis nach Jahrzehnten <em>keine einzige Original­planke</em> mehr verbaut ist. Ein Sammler hat alle alten Planken aufbewahrt und baut daraus ein Schiff, exakt nach den alten Bauplänen.",
+        "frage": "Welches ist das <em>echte</em> Schiff des Theseus?",
+        "optionen": [
+            {"text": "Das Schiff im Hafen – dieselbe Kontinuität", "hinweis": "Kontinuitäts-Kriterium"},
+            {"text": "Das rekonstruierte Schiff aus den alten Planken", "hinweis": "Material-Kriterium"},
+            {"text": "Beide – ein und dasselbe Schiff kann nicht existieren", "hinweis": "Widerspruch?"},
+            {"text": "Keines – „Identität\" ist keine Eigenschaft physischer Objekte", "hinweis": "Sprachkritik"},
+        ],
+        "loesung_text": "Die Antwort hängt vom Identitäts­kriterium ab – und das ist die eigentliche Frage.",
+        "erklaerung": "<p>Es gibt keine „richtige\" Antwort ohne eine Entscheidung, was Identität konstituiert:</p><ul class=\"list-disc ml-5 space-y-1\"><li><strong>Raum-zeitliche Kontinuität</strong> (Locke, Hume) → das Schiff im Hafen.</li><li><strong>Materielle Identität</strong> → das rekonstruierte Schiff.</li><li><strong>Funktion und Zweck</strong> (Aristoteles' <em>eidos</em>) → beide, sofern sie Schiff-Sein erfüllen.</li><li><strong>Bündeltheorie</strong> (Hume) → keines: Ein „Schiff\" ist nur eine Zusammenfassung von Wahrnehmungen.</li></ul><p>Der Streit zeigt: Identität ist kein Faktum der Welt, sondern eine <em>Konvention</em>, die wir wählen – und die je nach Kontext (Recht, Buchhaltung, Erinnerung) unterschiedlich sein kann.</p>",
+        "kontext": "<p>Erste bekannte Version: <strong>Plutarch</strong>, <em>Vita Thesei</em> (1. Jh. n. Chr.). Thomas Hobbes verschärfte das Rätsel im 17. Jahrhundert mit der Rekonstruktions-Variante.</p><p>Moderne Ausprägungen:</p><ul class=\"list-disc ml-5 space-y-1 text-sm\"><li><strong>Zellen im Körper:</strong> Fast alle deiner Atome werden binnen 7 Jahren ausgetauscht. Bist du noch dieselbe Person?</li><li><strong>Software-Migrationen:</strong> Wenn jede Zeile eines Programms neu geschrieben wird – ist es „dasselbe\" Programm?</li><li><strong>Unternehmen &amp; Marken:</strong> Nokia produziert heute nichts mehr, was Nokia 2005 gemacht hat. Ist es dieselbe Firma?</li><li><strong>Teleportation (Parfit):</strong> Wenn du zerlegt und atomgenau anderswo neu zusammengesetzt wirst – überlebst du?</li></ul><p>Derek Parfit argumentierte in <em>Reasons and Persons</em> (1984), dass persönliche Identität in Wahrheit <em>keine</em> alles-oder-nichts-Frage ist – sondern eine Sache von Graden psychologischer Kontinuität.</p>",
+        "erkenntnis": "Manche Fragen wirken tief, weil unsere Begriffe unpräzise sind. „Ist es dasselbe Ding?\" ist erst eine Frage, wenn wir festlegen, welche Kriterien zählen sollen.",
     },
 }
 
