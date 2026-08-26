@@ -631,6 +631,9 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"maschinen-widgets","name":"Maschinen und Widgets","icon":"⚙️","beschreibung":"5 Maschinen brauchen 5 Minuten, um 5 Widgets zu bauen. Wie lange brauchen 100 Maschinen für 100 Widgets? Die intuitive Antwort ist falsch – warum?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"seerose","name":"Die Seerosen","icon":"🪷","beschreibung":"In einem See wächst eine Fläche Seerosen. Jeden Tag verdoppelt sie sich. Nach 48 Tagen ist der See voll. Wann war er halb bedeckt? Die schnelle Antwort scheitert an exponentiellem Wachstum.","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"asch-konformitaet","name":"Das Asch-Experiment","icon":"📏","beschreibung":"1951: Ein Proband soll die Länge einer Linie beurteilen. Sieben Mitwirkende geben vorher lautstark eine offensichtlich falsche Antwort. Wie viele Probanden schließen sich an?","typ":"Sozialpsychologie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
 ]
 
 
@@ -4063,6 +4066,57 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "maschinen-widgets": {
+        "id": "maschinen-widgets", "name": "Maschinen und Widgets", "icon": "⚙️",
+        "farbe": "sky", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "1 min",
+        "setup_label": "Das Problem:",
+        "setup": "<strong>5 Maschinen</strong> brauchen <strong>5 Minuten</strong>, um <strong>5 Widgets</strong> zu bauen.",
+        "frage": "Wie lange brauchen 100 Maschinen, um 100 Widgets zu bauen?",
+        "optionen": [
+            {"text": "100 Minuten", "hinweis": "Die intuitive, aber falsche Antwort"},
+            {"text": "20 Minuten", "hinweis": "1 Maschine für 1 Widget in 20 Minuten?"},
+            {"text": "5 Minuten", "hinweis": "So schnell wie bei 5 Maschinen"},
+            {"text": "1 Minute", "hinweis": "100 Maschinen sind 20-mal so viele"},
+        ],
+        "loesung_text": "Die Antwort ist 5 Minuten.",
+        "erklaerung": "<p>Rechne die Rate pro Maschine: 5 Maschinen produzieren 5 Widgets in 5 Minuten – also produziert <strong>1 Maschine 1 Widget in 5 Minuten</strong>.</p><p>Skaliere: 100 Maschinen produzieren 100 Widgets ebenfalls in <strong>5 Minuten</strong> – jede Maschine baut parallel ihr eigenes Widget.</p><p>Die intuitive Antwort «100 Minuten» ergibt sich, wenn man das «5 zu 5»-Muster einfach fortführt, ohne über die zugrundeliegende Rate nachzudenken.</p>",
+        "kontext": "<p><strong>Cognitive Reflection Test – Frage 2</strong> (Shane Frederick, 2005)</p><p>Diese Aufgabe ist die zweite von drei Fragen des CRT. Sie testet, ob wir eine Analogie («100 zu 100 wie 5 zu 5, also 100 Minuten») blind übernehmen oder die eigentliche Größe – die Rate pro Maschine – berechnen.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Frederick fand: Nur ~29 % gaben spontan die richtige Antwort</li><li>Menschen mit hohem CRT-Score sind geduldiger, weniger risikofreudig und lassen sich seltener von Framing-Effekten täuschen</li><li>Kahneman ordnet den Fehler <strong>System 1</strong> zu: die Mustererkennung «5→5, also 100→100» ist zu attraktiv, um sie zu überprüfen</li></ul>",
+        "erkenntnis": "Vor der ersten Rechnung kurz die zugrundeliegende Rate isolieren (hier: 1 Widget pro Maschine pro 5 Min). Analogien ersetzen keine Einheiten-Rechnung.",
+    },
+    "seerose": {
+        "id": "seerose", "name": "Die Seerosen", "icon": "🪷",
+        "farbe": "emerald", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "1 min",
+        "setup_label": "Das Problem:",
+        "setup": "In einem See wächst eine Fläche Seerosen. Jeden Tag <strong>verdoppelt</strong> sich die Fläche.<br><br>Wenn die Seerosen den ganzen See nach <strong>48 Tagen</strong> vollständig bedecken – …",
+        "frage": "Wie viele Tage brauchen sie, um die Hälfte des Sees zu bedecken?",
+        "optionen": [
+            {"text": "24 Tage", "hinweis": "Die intuitive, aber falsche Antwort"},
+            {"text": "36 Tage", "hinweis": "Drei Viertel der Zeit"},
+            {"text": "47 Tage", "hinweis": "Einen Tag weniger als die volle Zeit"},
+            {"text": "12 Tage", "hinweis": "Ein Viertel der Zeit"},
+        ],
+        "loesung_text": "Am 47. Tag ist der See halb bedeckt.",
+        "erklaerung": "<p>Da sich die Fläche jeden Tag <strong>verdoppelt</strong>, ist der See am Tag vor der vollständigen Bedeckung <strong>genau halb voll</strong>.</p><p>Tag 48: 100 %.<br>Tag 47: 50 % (die nächste Verdoppelung ergibt 100 %).<br>Tag 46: 25 %.<br>Tag 24 – die «intuitive» Antwort – wären erst <strong>0,000006 %</strong> bedeckt (2⁻²⁴ des vollen Sees).</p><p>Der Fehler entsteht durch <strong>lineares Denken</strong> in einer <strong>exponentiellen Welt</strong>.</p>",
+        "kontext": "<p><strong>Cognitive Reflection Test – Frage 3</strong> (Shane Frederick, 2005)</p><p>Die dritte CRT-Frage misst, ob wir spontan von linearem auf exponentielles Wachstum umschalten. Genau dieses Umschalten fehlt in vielen Alltagsurteilen – von Zinsen bis zu Pandemieausbrüchen.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Al Bartlett: «Das größte Versagen der Menschheit ist die Unfähigkeit, die Exponentialfunktion zu verstehen.»</li><li>Bei einer Verdoppelungszeit T reicht ein Blick auf den vorletzten Schritt: die Hälfte kommt <strong>immer</strong> einen Zeitschritt vor dem Ende</li><li>In der COVID-19-Pandemie wurden viele Ausbrüche unterschätzt, weil Menschen die letzten Verdoppelungsschritte nicht mental durchspielten</li><li>Kompoundzinsen, Moore's Law und virales Marketing folgen demselben Muster: die letzten Schritte enthalten mehr Volumen als alles davor zusammen</li></ul>",
+        "erkenntnis": "Beim Vergleich «Anfang → Ende» ist ein zusätzlicher Schritt am Ende oft mehr wert als alles Wachstum davor. Bei jeder Verdoppelungsdynamik: von hinten nach vorne rechnen.",
+    },
+    "asch-konformitaet": {
+        "id": "asch-konformitaet", "name": "Das Asch-Experiment", "icon": "📏",
+        "farbe": "violet", "kategorie": "Psychologie", "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup_label": "Das Experiment:",
+        "setup": "Solomon Asch (1951): Ein Proband sitzt mit <strong>sieben anderen Personen</strong> in einem Raum. Sie sehen eine Referenzlinie und drei Vergleichslinien. Aufgabe: Welche Vergleichslinie ist genauso lang wie die Referenzlinie?<br><br>Die richtige Antwort ist offensichtlich – ein Kind könnte sie geben. Doch die sieben anderen Personen sind eingeweihte Konföderierte: Sie geben nacheinander laut eine <strong>klar falsche Antwort</strong>. Der echte Proband ist als letzter dran.",
+        "frage": "Wie viele Probanden schlossen sich mindestens einmal der falschen Mehrheitsmeinung an?",
+        "optionen": [
+            {"text": "Etwa 5 % – die klare Mehrheit widerstand dem sozialen Druck", "hinweis": "Deutlich mehr als das"},
+            {"text": "Etwa 20 %", "hinweis": "Noch immer zu wenig"},
+            {"text": "Etwa 75 %", "hinweis": "Drei von vier Probanden gaben mindestens einmal nach"},
+            {"text": "Etwa 99 %", "hinweis": "Fast alle brachen ein – etwas zu hoch"},
+        ],
+        "loesung_text": "Rund 75 % gaben mindestens einmal nach.",
+        "erklaerung": "<p>Asch (1951, 1955) fand: In etwa <strong>75 %</strong> der Probanden folgten mindestens einmal der falschen Mehrheit – und im Schnitt gaben sie in <strong>etwa 37 %</strong> aller kritischen Durchgänge nach.</p><p>Zum Vergleich: Ohne Gruppendruck lag die Fehlerquote bei weniger als 1 %. Die Aufgabe war also nicht schwer – der soziale Druck war es.</p><p>Interessant: In Kontrollversuchen reichte <strong>ein einziger unterstützender Verbündeter</strong>, um die Konformität drastisch zu senken. Der isolierte Widerspruch ist schwer – der geteilte Widerspruch fast normal.</p>",
+        "kontext": "<p><strong>Solomon Asch, Swarthmore College (1951, 1955)</strong></p><p>Asch wollte zeigen, dass Menschen sich nicht so leicht von der offensichtlichen Wahrheit abbringen lassen. Er fand das Gegenteil: Gruppendruck reicht aus, um öffentliche Aussagen gegen die eigene Wahrnehmung zu verschieben.</p><p>Spätere Studien differenzierten zwei Motive:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Normative Konformität:</strong> «Ich weiß es besser, aber ich will nicht als Sonderling gelten» – der klassische Fall bei Asch</li><li><strong>Informationale Konformität:</strong> «Wenn sieben andere das sehen, sehe ich vielleicht falsch» – Selbstzweifel an der eigenen Wahrnehmung</li><li>Asch verwandelte den öffentlichen in einen schriftlichen Modus: die Konformität sank auf ein Viertel</li><li>Milgrams berühmtes Autoritäts-Experiment (1963) baute direkt auf Aschs Design auf</li></ul><p>Für Verhandlungen und Meetings: Wer als Erster spricht, verschiebt den «Ankerpunkt» der Diskussion – und macht abweichende Meinungen unwahrscheinlicher. Ein einziger Verbündeter ändert die Dynamik grundlegend.</p>",
+        "erkenntnis": "Die Mehrheitsmeinung wird oft mit Wahrheit verwechselt. Wer öffentlich zuerst spricht, definiert den Rahmen – wer einen Verbündeten hat, spricht ehrlicher. Struktur schlägt Willenskraft.",
     },
 }
 
