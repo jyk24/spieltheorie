@@ -82,6 +82,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Wahrscheinlichkeit",
     },
+    {
+        "id": "parrondo",
+        "name": "Parrondos Paradoxon",
+        "icon": "🎲",
+        "beschreibung": "Zwei Glücksspiele – beide sind auf lange Sicht Verlierer. Trotzdem wird aus ihrer Kombination ein Gewinnerspiel. Wie kann das sein? Juan Parrondo (1996) fand die überraschende Antwort.",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "6 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
     # ── Statistik & Kognition ──────────────────────────────────────────────────
     {
         "id": "simpson",
@@ -2583,6 +2593,16 @@ def bertrand_paradoxon_page(request: Request):
     return templates.TemplateResponse(
         request, "raetsel/bertrand_paradoxon.html", {"active_page": "raetsel"}
     )
+
+
+# ---------------------------------------------------------------------------
+# Parrondos Paradoxon
+# ---------------------------------------------------------------------------
+
+@router.get("/parrondo", response_class=HTMLResponse)
+def parrondo_page(request: Request):
+    ctx = {"active_page": "raetsel", **_nav_context("parrondo")}
+    return templates.TemplateResponse(request, "raetsel/parrondo.html", ctx)
 
 
 # ---------------------------------------------------------------------------

@@ -1,0 +1,359 @@
+{% extends "base.html" %}
+{% block title %}Parrondos Paradoxon – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🎲 Parrondos Paradoxon</h1>
+        <p class="text-slate-500 mt-1">Zwei Verlierer werden zusammen zu einem Gewinner.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5 text-sm text-slate-700">
+        <p class="font-semibold mb-2">Die zwei Spiele:</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="bg-white border border-slate-100 rounded-lg p-3">
+                <p class="font-bold text-indigo-700 mb-1">Spiel A</p>
+                <p class="text-xs text-slate-600">Wirf eine leicht unfaire Münze.</p>
+                <ul class="text-xs mt-2 space-y-1">
+                    <li>• +1&nbsp;€ mit <strong>49,5&nbsp;%</strong></li>
+                    <li>• −1&nbsp;€ mit <strong>50,5&nbsp;%</strong></li>
+                </ul>
+                <p class="text-xs text-rose-600 mt-2 font-semibold">Erwartungswert: −0,01 €/Runde</p>
+            </div>
+            <div class="bg-white border border-slate-100 rounded-lg p-3">
+                <p class="font-bold text-amber-700 mb-1">Spiel B</p>
+                <p class="text-xs text-slate-600">Zwei Münzen – abhängig vom Kapital.</p>
+                <ul class="text-xs mt-2 space-y-1">
+                    <li>• Kapital durch 3 teilbar → +1 mit <strong>9,5&nbsp;%</strong></li>
+                    <li>• sonst → +1 mit <strong>74,5&nbsp;%</strong></li>
+                </ul>
+                <p class="text-xs text-rose-600 mt-2 font-semibold">Erwartungswert: −0,009 €/Runde</p>
+            </div>
+        </div>
+        <p class="mt-3 text-xs text-slate-500 italic">Beide Spiele sind für sich betrachtet Verlierer. Was passiert, wenn man sie kombiniert?</p>
+    </div>
+
+    <!-- Intuition -->
+    <div id="quiz-area" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5">
+        <p class="font-semibold text-slate-800 mb-2">Deine Vermutung:</p>
+        <p class="text-sm text-slate-500 mb-4">Du spielst 500 Runden und wechselst dabei zwischen <strong>A</strong> und <strong>B</strong> ab (ABABAB…). Wie entwickelt sich dein Kapital im Durchschnitt?</p>
+        <div class="grid grid-cols-1 gap-3">
+            <button onclick="showLesson('loss')"
+                    class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all text-left">
+                <div class="font-bold text-slate-700">Es geht bergab – beide Spiele verlieren ja</div>
+                <div class="text-xs text-slate-500 mt-0.5">Der Mittelwert zweier Verlierer bleibt ein Verlierer.</div>
+            </button>
+            <button onclick="showLesson('flat')"
+                    class="p-4 rounded-xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all text-left">
+                <div class="font-bold text-slate-700">Ungefähr null – Verluste heben sich auf</div>
+                <div class="text-xs text-slate-500 mt-0.5">Die Erwartungswerte sind beide fast null.</div>
+            </button>
+            <button onclick="showLesson('win')"
+                    class="p-4 rounded-xl border-2 border-indigo-200 bg-indigo-50 hover:border-indigo-400 transition-all text-left">
+                <div class="font-bold text-indigo-700">Es geht bergauf – erstaunlicherweise</div>
+                <div class="text-xs text-indigo-600 mt-0.5">Kombination ändert die Dynamik grundlegend.</div>
+            </button>
+        </div>
+    </div>
+
+    <div id="lesson" class="hidden space-y-5">
+        <div id="lesson-result" class="rounded-xl p-4 border text-sm text-center font-semibold"></div>
+
+        <!-- Simulation -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <p class="font-semibold text-slate-800 mb-3">Live-Simulation: Kapital über 500 Runden</p>
+
+            <canvas id="sim-canvas" width="560" height="220"
+                    class="w-full rounded-lg bg-slate-50 border border-slate-200"></canvas>
+
+            <div class="mt-4">
+                <p class="text-xs font-semibold text-slate-600 mb-2">Strategie wählen:</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    <button onclick="setStrategy('A')"
+                            class="strat-btn bg-white border border-slate-200 hover:border-indigo-400 rounded-lg py-2 px-3 text-xs font-medium text-slate-700"
+                            data-strat="A">Nur A</button>
+                    <button onclick="setStrategy('B')"
+                            class="strat-btn bg-white border border-slate-200 hover:border-indigo-400 rounded-lg py-2 px-3 text-xs font-medium text-slate-700"
+                            data-strat="B">Nur B</button>
+                    <button onclick="setStrategy('ABAB')"
+                            class="strat-btn bg-white border border-slate-200 hover:border-indigo-400 rounded-lg py-2 px-3 text-xs font-medium text-slate-700"
+                            data-strat="ABAB">Wechseln ABAB…</button>
+                    <button onclick="setStrategy('RAND')"
+                            class="strat-btn bg-white border border-slate-200 hover:border-indigo-400 rounded-lg py-2 px-3 text-xs font-medium text-slate-700"
+                            data-strat="RAND">Zufall 50/50</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 mt-4 text-center">
+                <div>
+                    <div id="stat-strat" class="text-lg font-black text-indigo-700">—</div>
+                    <div class="text-xs text-slate-500">Strategie</div>
+                </div>
+                <div>
+                    <div id="stat-capital" class="text-lg font-black text-slate-700">0 €</div>
+                    <div class="text-xs text-slate-500">Kapital nach 500 Runden</div>
+                </div>
+                <div>
+                    <div id="stat-avg" class="text-lg font-black text-amber-600">—</div>
+                    <div class="text-xs text-slate-500">Ø über alle Läufe</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mt-4">
+                <button onclick="runSim(1)" class="bg-indigo-600 text-white py-2 rounded-xl font-medium hover:bg-indigo-700 transition-colors text-sm">1 Lauf (500 Runden)</button>
+                <button onclick="runSim(100)" class="bg-indigo-500 text-white py-2 rounded-xl font-medium hover:bg-indigo-600 transition-colors text-sm">100 Läufe mitteln</button>
+            </div>
+            <button onclick="resetSim()" class="mt-2 w-full bg-slate-100 text-slate-600 py-2 rounded-xl font-medium hover:bg-slate-200 transition-colors text-sm">
+                Reset
+            </button>
+        </div>
+
+        <!-- Erklärung -->
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5 text-sm">
+            <p class="font-semibold text-emerald-800 mb-2">Warum funktioniert die Kombination?</p>
+            <p class="text-emerald-800">In <strong>Spiel B</strong> gibt es einen „schlechten Zustand" (Kapital teilbar durch 3), in dem man fast immer verliert. Wer nur B spielt, bleibt zu oft in diesem Zustand hängen.</p>
+            <p class="text-emerald-800 mt-2"><strong>Spiel A</strong> ist zwar ebenfalls leicht verlierend – aber es <em>randomisiert das Kapital</em> und reißt den Spieler aus dem schlechten Zustand heraus. Zurück in Spiel B trifft er dann öfter den „guten Zustand" mit 74,5&nbsp;%.</p>
+            <p class="text-emerald-800 mt-2">Diese <strong>Zustands-Umschichtung</strong> ist der Kern: Zwei verlierende Prozesse können sich gegenseitig aus ihren Fallen befreien.</p>
+        </div>
+
+        <!-- Kontext -->
+        <div class="bg-white border border-slate-200 rounded-xl p-5 text-sm text-slate-700">
+            <p class="font-semibold mb-2">Wo taucht das auf?</p>
+            <ul class="list-disc ml-5 space-y-1 text-slate-600 text-xs">
+                <li><strong>Biologie:</strong> Molekulare Motoren („Brownsche Ratsche") – Parrondo entwickelte das Paradox 1996 gerade zur Erklärung solcher Systeme.</li>
+                <li><strong>Ökologie:</strong> Zwei ungünstige Umwelten können durch Wechsel zu einer stabilen Population führen.</li>
+                <li><strong>Finanzmarkt:</strong> Portfolio-Rebalancing zwischen zwei fallenden Assets kann positive Renditen erzeugen (Shannons Rebalancing-Bonus).</li>
+                <li><strong>Genetik &amp; Evolution:</strong> Kooperation zweier „ungünstiger" Gene kann Fitnessvorteile bringen.</li>
+            </ul>
+            <p class="text-xs text-slate-500 mt-3 italic">Kernidee: Die Kombination nutzt Korrelationen zwischen den Spielen – etwas, das kein einzelnes Spiel besitzt. Genau wie in der Physik können <em>gekoppelte</em> Prozesse mehr als die Summe ihrer Teile sein.</p>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800">
+            <p class="font-semibold mb-1">Achtung – kein Glücksspiel-Trick!</p>
+            <p>Das Paradox funktioniert nur, weil Spiel B <strong>gedächtnisbehaftet</strong> ist (Regeln hängen vom bisherigen Kapital ab). Reale Roulette- oder Lotteriespiele sind gedächtnislos – dort hilft Kombinieren nichts.</p>
+        </div>
+
+        <div class="flex gap-3 mt-4">
+          <a href="/raetsel"
+             class="flex-1 text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors text-sm">
+            ← Alle Rätsel
+          </a>
+          {% if next_puzzle %}
+          <a href="/raetsel/{{ next_puzzle.id }}"
+             class="flex-1 text-center bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium transition-colors text-sm">
+            {{ next_puzzle.icon }} {{ next_puzzle.name }} →
+          </a>
+          {% endif %}
+        </div>
+
+        {% if related_puzzles %}
+        <div class="mt-2">
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Ähnliche Rätsel</p>
+          <div class="space-y-2">
+            {% for r in related_puzzles %}
+            <a href="/raetsel/{{ r.id }}"
+               class="flex items-start gap-3 p-3 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 hover:shadow-sm transition-all">
+              <span class="text-xl">{{ r.icon }}</span>
+              <div>
+                <p class="font-semibold text-slate-800 text-sm">{{ r.name }}</p>
+                {% if r.beschreibung %}
+                <p class="text-xs text-slate-500 mt-0.5 line-clamp-2">{{ r.beschreibung }}</p>
+                {% endif %}
+              </div>
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+const N_ROUNDS = 500;
+let currentStrat = 'ABAB';
+let runResults = [];
+let displayedRun = null;
+
+const stratLabels = { A: 'Nur A', B: 'Nur B', ABAB: 'ABAB…', RAND: 'Zufall' };
+
+function playA(cap) {
+    return cap + (Math.random() < 0.495 ? 1 : -1);
+}
+function playB(cap) {
+    // Original Parrondo: use modulo of capital
+    if (((cap % 3) + 3) % 3 === 0) {
+        return cap + (Math.random() < 0.095 ? 1 : -1);
+    }
+    return cap + (Math.random() < 0.745 ? 1 : -1);
+}
+function pickGame(strat, round) {
+    if (strat === 'A') return 'A';
+    if (strat === 'B') return 'B';
+    if (strat === 'ABAB') return round % 2 === 0 ? 'A' : 'B';
+    return Math.random() < 0.5 ? 'A' : 'B';
+}
+
+function simulateOnce(strat) {
+    const path = [0];
+    let cap = 0;
+    for (let r = 0; r < N_ROUNDS; r++) {
+        const g = pickGame(strat, r);
+        cap = g === 'A' ? playA(cap) : playB(cap);
+        path.push(cap);
+    }
+    return path;
+}
+
+function showLesson(answer) {
+    const result = document.getElementById('lesson-result');
+    const correct = answer === 'win';
+    result.innerHTML = correct
+        ? '✓ Richtig! Genau darum ist das Paradox so berühmt. Probiere die Strategien unten aus – der Unterschied ist frappierend.'
+        : 'Fast alle tippen auf Verlust – und liegen falsch. Die Kombination gewinnt tatsächlich. Sieh selbst:';
+    result.className = `rounded-xl p-4 border text-sm text-center font-semibold ${correct
+        ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+        : 'bg-amber-50 border-amber-200 text-amber-800'}`;
+    document.getElementById('quiz-area').classList.add('hidden');
+    document.getElementById('lesson').classList.remove('hidden');
+    setStrategy('ABAB');
+}
+
+function setStrategy(s) {
+    currentStrat = s;
+    runResults = [];
+    displayedRun = null;
+    document.querySelectorAll('.strat-btn').forEach(btn => {
+        if (btn.dataset.strat === s) {
+            btn.classList.add('bg-indigo-100', 'border-indigo-400', 'text-indigo-700');
+            btn.classList.remove('bg-white', 'border-slate-200', 'text-slate-700');
+        } else {
+            btn.classList.remove('bg-indigo-100', 'border-indigo-400', 'text-indigo-700');
+            btn.classList.add('bg-white', 'border-slate-200', 'text-slate-700');
+        }
+    });
+    updateStats();
+    drawCanvas();
+}
+
+function runSim(n) {
+    for (let i = 0; i < n; i++) {
+        const path = simulateOnce(currentStrat);
+        runResults.push(path);
+        if (n === 1) displayedRun = path;
+    }
+    if (n > 1) {
+        // Build an average path across all runs so far
+        const avg = new Array(N_ROUNDS + 1).fill(0);
+        for (const p of runResults) {
+            for (let i = 0; i <= N_ROUNDS; i++) avg[i] += p[i];
+        }
+        for (let i = 0; i <= N_ROUNDS; i++) avg[i] /= runResults.length;
+        displayedRun = avg;
+    }
+    updateStats();
+    drawCanvas();
+}
+
+function resetSim() {
+    runResults = [];
+    displayedRun = null;
+    updateStats();
+    drawCanvas();
+}
+
+function updateStats() {
+    document.getElementById('stat-strat').textContent = stratLabels[currentStrat] || '—';
+    if (displayedRun) {
+        const last = displayedRun[displayedRun.length - 1];
+        document.getElementById('stat-capital').textContent = (last >= 0 ? '+' : '') + last.toFixed(1) + ' €';
+        document.getElementById('stat-capital').className = last >= 0
+            ? 'text-lg font-black text-emerald-600'
+            : 'text-lg font-black text-rose-600';
+    } else {
+        document.getElementById('stat-capital').textContent = '0 €';
+        document.getElementById('stat-capital').className = 'text-lg font-black text-slate-700';
+    }
+    if (runResults.length > 0) {
+        const finals = runResults.map(p => p[p.length - 1]);
+        const avg = finals.reduce((s, v) => s + v, 0) / finals.length;
+        document.getElementById('stat-avg').textContent =
+            (avg >= 0 ? '+' : '') + avg.toFixed(2) + ' € (n=' + runResults.length + ')';
+        document.getElementById('stat-avg').className = avg >= 0
+            ? 'text-lg font-black text-emerald-600'
+            : 'text-lg font-black text-rose-600';
+    } else {
+        document.getElementById('stat-avg').textContent = '—';
+        document.getElementById('stat-avg').className = 'text-lg font-black text-amber-600';
+    }
+}
+
+function drawCanvas() {
+    const canvas = document.getElementById('sim-canvas');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+
+    // Determine y-range from data
+    let minY = -20, maxY = 20;
+    if (displayedRun) {
+        for (const v of displayedRun) {
+            if (v < minY) minY = v;
+            if (v > maxY) maxY = v;
+        }
+    }
+    if (maxY - minY < 20) {
+        const mid = (maxY + minY) / 2;
+        minY = mid - 10;
+        maxY = mid + 10;
+    }
+    const pad = (maxY - minY) * 0.1;
+    minY -= pad; maxY += pad;
+
+    const yOf = v => H - ((v - minY) / (maxY - minY)) * H;
+
+    // Grid
+    ctx.strokeStyle = '#e2e8f0';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 4; i++) {
+        const y = H * i / 4;
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+
+    // Zero line
+    if (minY <= 0 && maxY >= 0) {
+        ctx.strokeStyle = '#94a3b8';
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath(); ctx.moveTo(0, yOf(0)); ctx.lineTo(W, yOf(0)); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '11px monospace';
+        ctx.fillText('0 €', 4, yOf(0) - 3);
+    }
+
+    // Y labels
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '11px monospace';
+    ctx.fillText(maxY.toFixed(0), 4, 12);
+    ctx.fillText(minY.toFixed(0), 4, H - 4);
+
+    if (!displayedRun) return;
+
+    // Path
+    const finalV = displayedRun[displayedRun.length - 1];
+    ctx.strokeStyle = finalV >= 0 ? '#10b981' : '#f43f5e';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i < displayedRun.length; i++) {
+        const x = (i / (displayedRun.length - 1)) * W;
+        const y = yOf(displayedRun[i]);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+}
+
+drawCanvas();
+</script>
+
+{% endblock %}
