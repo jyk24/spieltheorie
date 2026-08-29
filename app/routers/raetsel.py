@@ -33,6 +33,16 @@ RAETSEL_META = [
         "kategorie": "Wahrscheinlichkeit",
     },
     {
+        "id": "zwei-kinder",
+        "name": "Zwei-Kinder-Paradoxon",
+        "icon": "👦",
+        "beschreibung": "Eine Familie hat zwei Kinder – mindestens eins ist ein Junge. Wie hoch ist die Wahrscheinlichkeit, dass beide Jungen sind? Martin Gardner (1959) zeigte: Fast alle antworten falsch.",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
+    {
         "id": "spielerfehlschluss",
         "name": "Der Spielerfehlschluss",
         "icon": "🎰",
@@ -4097,6 +4107,23 @@ def _nav_context(current_id: str) -> dict:
     ]
 
     return {"next_puzzle": next_puzzle, "related_puzzles": related, "ted_links": ted_links}
+
+
+@router.get("/zwei-kinder", response_class=HTMLResponse)
+def zwei_kinder_page(request: Request):
+    ctx = {"active_page": "raetsel", **_nav_context("zwei-kinder")}
+    return templates.TemplateResponse(request, "raetsel/zwei_kinder.html", ctx)
+
+
+@router.post("/zwei-kinder/antwort", response_class=HTMLResponse)
+def zwei_kinder_antwort(request: Request, antwort: str = Form(...)):
+    # Klassische Formulierung: "mindestens eins ist ein Junge" -> 1/3
+    correct = antwort == "ein_drittel"
+    return templates.TemplateResponse(
+        request,
+        "partials/zwei_kinder_result.html",
+        {"antwort": antwort, "correct": correct},
+    )
 
 
 @router.get("/pawlow-hund", response_class=HTMLResponse)

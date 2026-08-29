@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% block title %}Zwei-Kinder-Paradoxon – Bayes intuitiv{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+
+  <!-- Header -->
+  <div class="mb-6">
+    <a href="/raetsel" class="text-sm text-gray-500 hover:text-gray-700">← Alle Rätsel</a>
+  </div>
+  <div class="flex items-center gap-3 mb-2">
+    <span class="text-4xl">👦</span>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-widest text-indigo-500">Wahrscheinlichkeits-Paradox</p>
+      <h1 class="text-2xl font-bold text-gray-900">Zwei-Kinder-Paradoxon</h1>
+    </div>
+  </div>
+  <p class="text-gray-500 text-sm mb-8">Martin Gardner · 1959 · Mittel · ~4 min</p>
+
+  <!-- Setup -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Die Frage</h2>
+    <p class="text-gray-700 leading-relaxed">
+      Eine Familie hat <strong>zwei Kinder</strong>. Du erfährst nur eines: <em>mindestens eines der beiden ist ein Junge</em>.
+    </p>
+    <p class="text-gray-700 leading-relaxed mt-3">
+      Wie hoch ist die Wahrscheinlichkeit, dass <strong>beide</strong> Kinder Jungen sind?
+    </p>
+  </div>
+
+  <!-- Interaktive Frage -->
+  <div class="bg-indigo-50 rounded-2xl p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-4">Deine Antwort</h2>
+    <form hx-post="/raetsel/zwei-kinder/antwort" hx-target="#zk-result" hx-swap="innerHTML" class="space-y-2">
+      <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="ein_halb" class="text-indigo-600" required>
+        <span class="text-sm text-gray-700"><strong>1/2</strong> – Das zweite Kind ist einfach mit 50 % ein Junge.</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="ein_drittel" class="text-indigo-600">
+        <span class="text-sm text-gray-700"><strong>1/3</strong> – Weil eine Kombination ausgeschlossen wurde.</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="ein_viertel" class="text-indigo-600">
+        <span class="text-sm text-gray-700"><strong>1/4</strong> – Beide Jungen ist eine von vier Kombinationen.</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="zwei_drittel" class="text-indigo-600">
+        <span class="text-sm text-gray-700"><strong>2/3</strong> – Die meisten Familien haben einen Sohn.</span>
+      </label>
+      <button type="submit" class="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors">
+        Antwort prüfen
+      </button>
+    </form>
+    <div id="zk-result" class="mt-4"></div>
+  </div>
+
+  <!-- Ergebnisraum visualisiert -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-4">Der Ergebnisraum – alle vier Fälle</h2>
+    <p class="text-sm text-gray-600 mb-4">
+      Bevor du irgendetwas weißt, sind für zwei Kinder in Geburtsreihenfolge diese vier Kombinationen
+      gleich wahrscheinlich (je 1/4):
+    </p>
+    <div class="grid grid-cols-4 gap-2 text-center">
+      <div class="bg-blue-50 rounded-xl p-3">
+        <p class="text-2xl">👦👦</p>
+        <p class="text-xs text-gray-500 mt-1">J–J</p>
+      </div>
+      <div class="bg-blue-50 rounded-xl p-3">
+        <p class="text-2xl">👦👧</p>
+        <p class="text-xs text-gray-500 mt-1">J–M</p>
+      </div>
+      <div class="bg-blue-50 rounded-xl p-3">
+        <p class="text-2xl">👧👦</p>
+        <p class="text-xs text-gray-500 mt-1">M–J</p>
+      </div>
+      <div class="bg-gray-100 rounded-xl p-3 opacity-40 line-through">
+        <p class="text-2xl">👧👧</p>
+        <p class="text-xs text-gray-500 mt-1">M–M</p>
+      </div>
+    </div>
+    <p class="text-sm text-gray-600 mt-4 leading-relaxed">
+      Die Information <em>„mindestens ein Junge"</em> streicht nur eine Kombination: M–M.
+      Es bleiben <strong>drei gleich wahrscheinliche Fälle</strong>, und in genau <strong>einem</strong>
+      davon sind beide Jungen. Also: <strong>1/3</strong>.
+    </p>
+  </div>
+
+  <!-- Warum wir 1/2 sagen -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Warum 1/2 sich richtig anfühlt</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      Unser Gehirn übersetzt „mindestens ein Junge" heimlich in
+      <em>„ein bestimmtes Kind ist ein Junge"</em> – etwa das erstgeborene. Dann bleibt nur eine
+      offene Frage („was ist das andere?"), und die Antwort ist tatsächlich 1/2.
+    </p>
+    <p class="text-sm text-gray-600 leading-relaxed">
+      Aber die ursprüngliche Aussage sagt nicht, <em>welches</em> Kind der Junge ist. Sie sortiert
+      nur den einen Fall M–M aus. Das ist ein anderes Update auf einer anderen Information – und
+      liefert deshalb ein anderes Ergebnis.
+    </p>
+  </div>
+
+  <!-- Bayes formal -->
+  <div class="bg-amber-50 rounded-2xl p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Formal mit Bayes</h2>
+    <p class="text-sm text-gray-700 leading-relaxed mb-2">
+      Sei <em>A</em> = „beide Jungen" und <em>B</em> = „mindestens ein Junge".
+    </p>
+    <ul class="text-sm text-gray-700 leading-relaxed space-y-1 ml-4">
+      <li>• P(A) = 1/4</li>
+      <li>• P(B) = 3/4 (nur M–M wird ausgeschlossen)</li>
+      <li>• P(B | A) = 1 (wenn beide Jungen, ist mindestens einer)</li>
+    </ul>
+    <p class="text-sm text-gray-700 leading-relaxed mt-3">
+      P(A | B) = P(B | A) · P(A) / P(B) = 1 · (1/4) / (3/4) = <strong>1/3</strong>.
+    </p>
+  </div>
+
+  <!-- Die Tuesday-Variante -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Die verblüffende Dienstag-Variante</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      Gary Foshee (2010) verschärfte das Rätsel: „Ich habe zwei Kinder, eins ist ein
+      <strong>Junge, an einem Dienstag geboren</strong>. Wie wahrscheinlich sind beide Jungen?"
+    </p>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      Die intuitive Reaktion: „Der Wochentag ist doch egal – bleibt 1/3." Falsch.
+      Die Antwort ist <strong>13/27 ≈ 48,1 %</strong> – fast wieder bei 1/2.
+    </p>
+    <p class="text-sm text-gray-600 leading-relaxed">
+      Grund: Je spezifischer die Zusatzinfo, desto seltener wird der Fall „nur eines der Kinder passt"
+      relativ zum Fall „beide passen". Die Information über den Dienstag macht die
+      Zweijungen-Kombinationen im Verhältnis wahrscheinlicher.
+    </p>
+  </div>
+
+  <!-- Wo das im Alltag auftaucht -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Warum das mehr ist als ein Zahlenspiel</h2>
+    <div class="space-y-3">
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">🧬</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Genetische Beratung</p>
+          <p class="text-sm text-gray-600">„Ein Kind ist Träger einer Erbkrankheit" – die Aussage sortiert Fälle
+            im Familien-Stammbaum anders, als der Bauch vermutet.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">🧪</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Medizinische Tests</p>
+          <p class="text-sm text-gray-600">Wie du eine Aussage formulierst („mindestens einer" vs. „dieser hier"),
+            verändert die Posterior-Wahrscheinlichkeit drastisch.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">⚖️</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Zeugen­aussagen &amp; Gerichte</p>
+          <p class="text-sm text-gray-600">„Der Täter hatte ein rotes Auto" – schließt Fälle aus, ohne
+            eine bestimmte Person zu identifizieren. Genau dieselbe Bayes-Struktur.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Historisch -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+    <h2 class="font-bold text-gray-800 mb-3">Wie das Rätsel berühmt wurde</h2>
+    <p class="text-sm text-gray-600 leading-relaxed">
+      <strong>Martin Gardner</strong> stellte das Problem 1959 in <em>Scientific American</em> – und musste
+      wenige Monate später zurückrudern, weil die Formulierung mehrdeutig war. Der Wert 1/3 gilt nur, wenn
+      die Information wirklich lautet „mindestens ein Junge in dieser Familie". Fragt man dagegen
+      irgendein Familienmitglied nach seinem Geschlecht und erhält „Junge", ist die Antwort 1/2. Die Zahl
+      hängt vom <strong>Beobachtungsprozess</strong> ab – nicht nur vom Ergebnis.
+    </p>
+    <p class="text-sm text-gray-600 leading-relaxed mt-3">
+      Genau diese Sensibilität für den Prozess der Informationsgewinnung ist der Kern jeder
+      Bayes-Analyse – und der Grund, warum Statistik so oft der Intuition widerspricht.
+    </p>
+  </div>
+
+  {% if related_puzzles or next_puzzle %}
+  <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 mb-8">
+    {% if related_puzzles %}
+    <h3 class="font-bold text-gray-800 mb-3">Ähnliche Rätsel</h3>
+    <div class="space-y-2 mb-4">
+      {% for rp in related_puzzles %}
+      <a href="/raetsel/{{ rp.id }}" class="block bg-white rounded-xl p-3 hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">{{ rp.icon }}</span>
+          <span class="text-sm font-semibold text-gray-800">{{ rp.name }}</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if next_puzzle %}
+    <a href="/raetsel/{{ next_puzzle.id }}" class="inline-flex items-center gap-2 text-sm text-indigo-600 hover:text-indigo-800 font-semibold">
+      Weiter zu {{ next_puzzle.icon }} {{ next_puzzle.name }} →
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="flex justify-between">
+    <a href="/raetsel" class="text-sm text-gray-500 hover:text-gray-700">← Alle Rätsel</a>
+    <a href="/raetsel/monty-hall" class="text-sm text-indigo-600 hover:text-indigo-800">Monty Hall Problem →</a>
+  </div>
+
+</div>
+{% endblock %}

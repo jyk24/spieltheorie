@@ -1,0 +1,30 @@
+{% if correct %}
+<div class="bg-green-50 border border-green-200 rounded-xl p-4">
+  <p class="font-semibold text-green-800">✓ Richtig!</p>
+  <p class="text-sm text-green-700 mt-1">
+    Die Antwort ist tatsächlich <strong>1/3</strong>. Von den vier ursprünglich gleich wahrscheinlichen
+    Kombinationen (J–J, J–M, M–J, M–M) schließt „mindestens ein Junge" nur M–M aus.
+    In genau einem der drei verbleibenden Fälle sind beide Jungen.
+  </p>
+</div>
+{% else %}
+<div class="bg-red-50 border border-red-200 rounded-xl p-4">
+  <p class="font-semibold text-red-800">✗ Nicht ganz.</p>
+  <p class="text-sm text-red-700 mt-1">
+    Die richtige Antwort lautet <strong>1/3</strong>.
+    {% if antwort == "ein_halb" %}
+    Der Intuition folgend liest man die Aussage als „ein <em>bestimmtes</em> Kind ist ein Junge" –
+    dann wäre 1/2 korrekt. Die eigentliche Information sortiert aber nur den Fall
+    „zwei Mädchen" aus, ohne festzulegen, welches Kind der Junge ist. Es bleiben drei gleich
+    wahrscheinliche Kombinationen, und nur eine davon ist „beide Jungen".
+    {% elif antwort == "ein_viertel" %}
+    Ohne Zusatzinfo wäre 1/4 richtig (P(beide Jungen) = 1/4). Die Aussage
+    „mindestens ein Junge" schließt aber M–M aus – wir konditionieren also auf 3 von 4 Fällen.
+    Deshalb 1/3, nicht 1/4.
+    {% elif antwort == "zwei_drittel" %}
+    2/3 ist die Wahrscheinlichkeit, dass <em>mindestens</em> ein weiteres Mädchen dabei ist
+    (die Gegenrichtung). Für „beide Jungen" bleibt genau 1/3.
+    {% endif %}
+  </p>
+</div>
+{% endif %}

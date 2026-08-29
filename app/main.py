@@ -90,7 +90,7 @@ app.include_router(verhaltensoko.router)
 BASE_URL = "https://imaginative-fulfillment-production.up.railway.app"
 
 _SITEMAP_URLS = [
-    "/", "/lernpfade", "/spieltheorie", "/denkraetsel", "/soziales", "/verhaltensoko", "/ted", "/ted/quiz", "/tagesraetsel",
+    "/", "/lernpfade", "/spieltheorie", "/denkraetsel", "/soziales", "/verhaltensoko", "/ted", "/ted/quiz", "/tagesraetsel", "/raetsel/zwei-kinder",
     "/grundlagen", "/konzepte", "/spiele", "/raetsel",
     "/skills", "/gedaechtnis", "/fortschritt", "/glossar",
     "/gedaechtnis/theorie", "/gedaechtnis/wortfolge", "/gedaechtnis/zahlen",
