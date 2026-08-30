@@ -82,6 +82,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Wahrscheinlichkeit",
     },
+    {
+        "id": "zwei-kinder",
+        "name": "Das Zwei-Kinder-Paradoxon",
+        "icon": "👧",
+        "beschreibung": "Eine Familie hat zwei Kinder. Mindestens eines davon ist ein Mädchen. Wie wahrscheinlich sind beide Mädchen? Martin Gardner (1959) stellte die Frage – und stritt sich mit halb Amerika über die Antwort.",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
     # ── Statistik & Kognition ──────────────────────────────────────────────────
     {
         "id": "simpson",
@@ -4046,6 +4056,23 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Der <strong>Fundamentale Attributionsfehler</strong> (FAE, Ross 1977): Wir überschätzen den Einfluss von Persönlichkeitseigenschaften und unterschätzen den Einfluss der Situation auf das Verhalten anderer.</p><p>Das Verhalten (Castro-Aufsatz) wurde der Disposition zugeschrieben (<em>er ist pro-Castro</em>) – obwohl die Situation (zufällige Zuweisung) das Verhalten vollständig erklärte.</p>",
         "kontext": "<p>Der FAE ist kulturell variabel: Westliche (individualistische) Kulturen zeigen ihn stärker als östliche (kollektivistische). Im Alltag: Wer uns auf der Autobahn schneidet, ist ein Idiot – nicht jemand mit einem Notfall.</p><p>In Verhandlungen: Wenn die Gegenseite hart verhandelt, schließen wir auf Gier oder Feindseligkeit – statt auf externen Druck, Vorgaben des Vorstands oder Zeitdruck. Das verzerrt unsere Strategie erheblich.</p>",
         "erkenntnis": "Wir sind natürliche Biographen, keine Situationsanalysten. Wenn jemand sich 'falsch' verhält, zuerst fragen: Welche situativen Kräfte könnten dieses Verhalten erklären? Das gibt ein realistischeres Bild – und bessere Verhandlungsstrategien.",
+    },
+    "zwei-kinder": {
+        "id": "zwei-kinder", "name": "Das Zwei-Kinder-Paradoxon", "icon": "👧",
+        "farbe": "pink", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Eine Familie hat <strong>genau zwei Kinder</strong>. Nimm an, jedes Kind ist mit Wahrscheinlichkeit ½ ein Junge oder ein Mädchen, unabhängig voneinander.<br><br>Ein Nachbar erzählt dir: <em>„Mindestens eines der beiden Kinder ist ein Mädchen.“</em>",
+        "frage": "Wie wahrscheinlich ist es, dass <strong>beide</strong> Kinder Mädchen sind?",
+        "optionen": [
+            {"text": "1/2 – das andere Kind ist unabhängig", "hinweis": "Klingt logisch – ist aber falsch"},
+            {"text": "1/3 – nur drei mögliche Kombinationen bleiben", "hinweis": "Der klassische Gardner-Trick"},
+            {"text": "1/4 – Junge und Mädchen sind gleich wahrscheinlich", "hinweis": "Das wäre die Prior-Wahrscheinlichkeit"},
+            {"text": "2/3 – Mädchen sind hier häufiger", "hinweis": "Warum sollten Mädchen bevorzugt sein?"},
+        ],
+        "loesung_text": "Die Wahrscheinlichkeit beträgt 1/3.",
+        "erklaerung": "<p>Vier gleich wahrscheinliche Kombinationen (nach Geburtsreihenfolge): <strong>JJ, JM, MJ, MM</strong>.</p><p>Die Aussage „mindestens ein Mädchen“ schließt nur <em>JJ</em> aus. Es bleiben <strong>JM, MJ, MM</strong> – drei Fälle, jeweils gleich wahrscheinlich.</p><p>In nur einem dieser drei Fälle sind beide Kinder Mädchen. → <strong>P = 1/3</strong>.</p><p>Der intuitive Fehler: Man rechnet, als wäre das andere Kind unabhängig – dann käme 1/2 heraus. Doch die Information „mindestens ein Mädchen“ ist eine Aussage über <em>beide</em> Kinder gemeinsam und verändert die Verteilung.</p>",
+        "kontext": "<p><strong>Martin Gardner</strong> stellte das Problem 1959 in seiner Scientific-American-Kolumne <em>„Mathematical Games“</em>. Die Leserreaktionen füllten Monatelang die Leserbriefspalten – der Streit wurde so heftig, dass Gardner selbst ein Jahr später eine Präzisierung nachschob.</p><p><strong>Der subtile Punkt:</strong> Die Antwort hängt davon ab, <em>wie</em> die Information gewonnen wurde. Vergleiche zwei Szenarien:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><em>„Mindestens ein Kind ist ein Mädchen“</em> → 1/3 (klassische Version, JJ ausgeschlossen)</li><li><em>„Ich habe ein zufälliges Kind getroffen – es war ein Mädchen“</em> → 1/2 (das andere Kind ist unabhängig)</li></ul><p>Dieselbe scheinbare Aussage – unterschiedliche Wahrscheinlichkeiten. Das ist die Kernidee der <strong>bedingten Wahrscheinlichkeit</strong>: Was zählt, ist nicht die Beobachtung selbst, sondern der Prozess, der sie erzeugt hat.</p><p><strong>Erweiterung von Gary Foshee (2010):</strong> „Mindestens eines der zwei Kinder ist ein Junge, geboren an einem Dienstag.“ Die Wahrscheinlichkeit, dass beide Jungen sind, ist überraschenderweise <strong>13/27 ≈ 48%</strong> – nicht 1/3. Auch diese zusätzliche „irrelevante“ Information verändert die Verteilung.</p>",
+        "erkenntnis": "Wahrscheinlichkeit hängt nicht nur davon ab, <em>was</em> du weißt, sondern <em>wie du es erfahren hast</em>. Selbe Aussage, anderer Ursprung – andere Antwort. Deshalb ist Bayessches Denken so unbequem.",
     },
     "schlaeger-ball": {
         "id": "schlaeger-ball", "name": "Schläger und Ball", "icon": "⚾",
