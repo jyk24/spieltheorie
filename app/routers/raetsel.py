@@ -631,6 +631,9 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"seerosen","name":"Die Seerosen im Teich","icon":"🪷","beschreibung":"Ein Seerosen-Feld verdoppelt seine Fläche jeden Tag. Nach 48 Tagen ist der ganze Teich bedeckt. Nach wie vielen Tagen war er zur Hälfte bedeckt?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"widget-fabrik","name":"Widget-Fabrik","icon":"⚙️","beschreibung":"5 Maschinen brauchen 5 Minuten, um 5 Widgets zu produzieren. Wie lange brauchen 100 Maschinen für 100 Widgets? Die dritte Frage aus dem Cognitive Reflection Test von Shane Frederick.","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"zwei-waechter","name":"Die zwei Wächter","icon":"🚪","beschreibung":"Zwei Türen, zwei Wächter. Einer sagt immer die Wahrheit, einer lügt immer. Eine Tür führt in die Freiheit, eine in den Tod. Du darfst genau eine Frage stellen. Wie kommst du heraus?","typ":"Logikrätsel","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Logik"},
 ]
 
 
@@ -4063,6 +4066,57 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "seerosen": {
+        "id": "seerosen", "name": "Die Seerosen im Teich", "icon": "🪷",
+        "farbe": "emerald", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "1 min",
+        "setup_label": "Das Problem:",
+        "setup": "In einem See wächst ein Seerosen-Feld. Jeden Tag verdoppelt sich seine Fläche.<br><br>Nach <strong>48 Tagen</strong> ist der ganze See mit Seerosen bedeckt.",
+        "frage": "An welchem Tag war der See erst zur Hälfte bedeckt?",
+        "optionen": [
+            {"text": "An Tag 24", "hinweis": "Die Hälfte der Gesamtzeit"},
+            {"text": "An Tag 47", "hinweis": "Einen Tag vor der Vollbedeckung"},
+            {"text": "An Tag 32", "hinweis": "Zwei Drittel der Zeit"},
+            {"text": "An Tag 36", "hinweis": "Drei Viertel der Zeit"},
+        ],
+        "loesung_text": "An Tag 47 – nur einen einzigen Tag vor der Vollbedeckung.",
+        "erklaerung": "<p>Wenn sich die Fläche jeden Tag <em>verdoppelt</em>, dann bedeutet die halbe Fläche exakt einen Tag vor der vollen Fläche. An Tag 47 war der See zur Hälfte bedeckt – an Tag 48 war er voll.</p><p>Viele Menschen antworten spontan <em>Tag 24</em> – sie denken linear (<em>die Hälfte der Zeit</em>). Aber exponentielles Wachstum ist nicht linear: Am vorletzten Tag geschieht mehr als in den ersten 40 Tagen zusammen.</p>",
+        "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> – Shane Frederick, 2005</p><p>Diese Aufgabe ist die zweite von drei CRT-Fragen und misst, wie gut wir exponentielles Wachstum intuitiv einschätzen. Das Ergebnis ist verblüffend: <strong>Wir tun es sehr schlecht.</strong></p><p>Al Bartlett, Physiker an der University of Colorado, sagte dazu: <em>Die größte Schwäche der Menschheit ist unsere Unfähigkeit, die Exponentialfunktion zu verstehen.</em></p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Bei einer Verdopplungszeit von einem Jahr wächst etwas in 10 Jahren nicht um Faktor 10, sondern um <strong>Faktor 1.024</strong></li><li>Corona-Fallzahlen im März 2020, Pilzwachstum, Compound Interest, Moore's Law – alle folgen diesem Muster</li><li>Warren Buffett und Charlie Munger führen ihren Erfolg auf das Verständnis exponentieller Effekte über lange Zeiträume zurück</li><li>Der <em>hockey stick</em> in Klimadiagrammen wirkt plötzlich – ist aber in Wahrheit nur der letzte Tag im Teich</li></ul>",
+        "erkenntnis": "Exponentielles Wachstum sieht lange harmlos aus – und wird dann in kürzester Zeit dominant. Wenn dir etwas heute nur halb so groß wie das Problem erscheint, aber sich verdoppelt, hast du genau einen Tag Vorlauf.",
+    },
+    "widget-fabrik": {
+        "id": "widget-fabrik", "name": "Widget-Fabrik", "icon": "⚙️",
+        "farbe": "amber", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "1 min",
+        "setup_label": "Das Problem:",
+        "setup": "In einer Fabrik brauchen <strong>5 Maschinen</strong> genau <strong>5 Minuten</strong>, um <strong>5 Widgets</strong> herzustellen.",
+        "frage": "Wie lange brauchen 100 Maschinen, um 100 Widgets herzustellen?",
+        "optionen": [
+            {"text": "100 Minuten", "hinweis": "Die intuitive Antwort – ist sie richtig?"},
+            {"text": "5 Minuten", "hinweis": "Egal, wie viele Maschinen – jede braucht dieselbe Zeit"},
+            {"text": "20 Minuten", "hinweis": "100 ÷ 5"},
+            {"text": "50 Minuten", "hinweis": "Die Hälfte von 100"},
+        ],
+        "loesung_text": "5 Minuten. Jede Maschine baut ein Widget in 5 Minuten – unabhängig von der Anzahl.",
+        "erklaerung": "<p>Aus dem Setup folgt: 5 Maschinen bauen in 5 Minuten insgesamt 5 Widgets. Das heißt: <strong>Eine Maschine baut ein Widget in 5 Minuten</strong>.</p><p>Wenn 100 Maschinen gleichzeitig arbeiten, baut jede in 5 Minuten ein Widget – zusammen also 100 Widgets in <strong>5 Minuten</strong>.</p><p>Die intuitive Antwort <em>100 Minuten</em> entsteht durch das Muster <em>5-5-5, also 100-100-100</em>. Es ist eine falsche Proportional-Analogie: Der Prozess ist parallel, nicht seriell.</p>",
+        "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> – Shane Frederick, 2005</p><p>Dies ist die dritte CRT-Frage. Frederick fand in mehreren Studien (u. a. mit Studierenden an MIT, Princeton, Harvard und Yale):</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur 33 % beantworten alle drei Fragen richtig</li><li>Höhere CRT-Werte sagen bessere Ergebnisse in Wahrscheinlichkeitsaufgaben, Geduldstests und Verhandlungsspielen vorher</li><li>Der Test korreliert kaum mit IQ oder Bildungsstand – aber stark mit der Bereitschaft, System 2 einzuschalten</li><li>Kahnemans Zwei-Systeme-Theorie (2011) ist eng mit dieser Aufgabe verknüpft: Der Fehler kommt aus <em>System 1</em>, das ungeprüft eine Analogie überträgt</li></ul><p>Interessant: Wer die Aufgabe in <strong>schwer lesbarer Schriftart</strong> präsentiert bekommt, löst sie häufiger korrekt – der Prozess wird bewusster, und System 2 übernimmt.</p>",
+        "erkenntnis": "Wenn ein Problem linear zu skalieren scheint, prüfe die Kernrelation: Was ist die Zeit pro Einheit? Muster wie <em>5-5-5</em> täuschen – der Skalierungsfaktor kann eine andere Dimension betreffen.",
+    },
+    "zwei-waechter": {
+        "id": "zwei-waechter", "name": "Die zwei Wächter", "icon": "🚪",
+        "farbe": "violet", "kategorie": "Logik", "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup_label": "Die Situation:",
+        "setup": "Du stehst vor zwei Türen. Hinter einer wartet die <strong>Freiheit</strong>, hinter der anderen der <strong>sichere Tod</strong>. Vor jeder Tür steht ein Wächter.<br><br>Einer der beiden Wächter <strong>sagt immer die Wahrheit</strong>. Der andere <strong>lügt immer</strong>. Du weißt nicht, wer wer ist.<br><br>Du darfst <strong>genau eine Frage</strong> an <strong>genau einen der beiden Wächter</strong> stellen – dann musst du eine Tür wählen.",
+        "frage": "Welche Frage garantiert dir den Ausgang in die Freiheit?",
+        "optionen": [
+            {"text": "Führt deine Tür in die Freiheit? – an einen Wächter deiner Wahl", "hinweis": "Beide könnten Ja antworten – du weißt nichts"},
+            {"text": "Welche Tür würde der andere Wächter mir als Freiheit empfehlen? – und dann wähle die andere", "hinweis": "Der Klassiker – jetzt genau nachdenken"},
+            {"text": "Bist du der Wahrheitswächter? – Ja bedeutet Freiheit", "hinweis": "Beide antworten Ja – der Lügner lügt über sich selbst"},
+            {"text": "Wie viele Finger halte ich hoch? – wer richtig antwortet, ist ehrlich", "hinweis": "Kostet dich zwar die einzige Frage – aber wähle dann trotzdem eine Tür ins Ungewisse"},
+        ],
+        "loesung_text": "Frage einen beliebigen Wächter: <em>Welche Tür würde der andere Wächter mir als Freiheit empfehlen?</em> – und wähle die andere Tür.",
+        "erklaerung": "<p>Fallunterscheidung – nur zwei Möglichkeiten:</p><p><strong>Fall A – du fragst den Wahrheits­wächter:</strong> Er sagt dir <em>wahrheitsgemäß</em>, was der Lügner sagen würde. Der Lügner würde die Todes­tür zeigen. Also zeigt der Ehrliche auf die Todes­tür.</p><p><strong>Fall B – du fragst den Lügner:</strong> Der Lügner lügt über die Antwort des Ehrlichen. Der Ehrliche würde die Freiheits­tür zeigen. Der Lügner sagt also das Gegenteil: die Todes­tür.</p><p>In <strong>beiden Fällen</strong> zeigt die Antwort auf die Todes­tür. Wähle die andere – und du bist frei.</p><p>Der Trick: Die Frage <em>verkettet</em> Wahrheit und Lüge. Genau eine Lüge ist im System – egal wo – und diese verkehrt das Ergebnis exakt einmal.</p>",
+        "kontext": "<p><strong>Die zwei Wächter</strong> – Raymond Smullyan, <em>What Is the Name of This Book?</em> (1978)</p><p>Der amerikanische Logiker Raymond Smullyan (1919–2017) machte solche <em>Knights-and-Knaves</em>-Rätsel weltberühmt. Sie sind mehr als Denksport: Sie illustrieren eine Grundtechnik der mathematischen Logik – das <strong>Doppel-Negations-Prinzip</strong>. Zwei Fehler heben sich exakt auf.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Das Rätsel taucht 1986 im Film <em>Labyrinth</em> auf (David Bowie / Jim Henson) – Sarah begegnet den Türwächtern</li><li>Verwandte Konstruktionen tauchen in Kryptographie, Fehler­korrektur­codes und Byzantine-Fault-Tolerance-Protokollen auf</li><li>Smullyans schwierigere Variante – das <em>Hardest Logic Puzzle Ever</em> von George Boolos (1996) – hat drei Götter (wahrhaftig, lügend, zufällig) und erlaubt nur Ja/Nein-Fragen</li><li>Die Kern­idee (frage nach der Antwort des anderen) funktioniert überall, wo genau eine der beiden Quellen zuverlässig ist – auch in Verhandlungen mit zwei widersprüchlichen Aussagen</li></ul>",
+        "erkenntnis": "Wenn du zwischen zwei Quellen wählen musst und nicht weißt, welcher zu trauen ist: Frage, was die eine über die andere sagen würde. Widersprüche heben sich auf – die Struktur zeigt sich, ohne dass du die Wahrheit direkt kennen musst.",
     },
 }
 
