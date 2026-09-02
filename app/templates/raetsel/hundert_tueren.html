@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+{% block title %}Das 100-Türen-Problem – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🚪 Das 100-Türen-Problem</h1>
+        <p class="text-slate-500 mt-1">Ein Klassiker der Zahlentheorie – verkleidet als Kinderrätsel.</p>
+    </div>
+
+    <!-- Aufgabe -->
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6">
+        <p class="font-semibold text-slate-800 mb-3">Die Aufgabe:</p>
+        <div class="space-y-2 text-sm text-slate-700">
+            <p>Ein Flur mit <strong>100 nummerierten Türen</strong> (1 bis 100). Am Anfang sind alle geschlossen.</p>
+            <p>100 Personen laufen der Reihe nach am Flur entlang:</p>
+            <ul class="pl-4 space-y-1 text-slate-600">
+                <li>• <strong>Person 1</strong> schaltet jede 1. Tür um → also alle (alle sind danach offen).</li>
+                <li>• <strong>Person 2</strong> schaltet jede 2. Tür um → 2, 4, 6, … (alle gerade Türen wieder zu).</li>
+                <li>• <strong>Person 3</strong> schaltet jede 3. Tür um → 3, 6, 9, …</li>
+                <li>• …</li>
+                <li>• <strong>Person <em>k</em></strong> schaltet jede <em>k</em>-te Tür um.</li>
+                <li>• <strong>Person 100</strong> schaltet nur Tür 100 um.</li>
+            </ul>
+            <p class="pt-2 font-semibold text-slate-800">Welche Türen sind am Ende offen?</p>
+        </div>
+    </div>
+
+    <!-- Deine Vermutung -->
+    <div id="guess-box" class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-5">
+        <p class="font-semibold text-slate-800 mb-3">Deine Vermutung – wie viele Türen bleiben offen?</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
+            <button data-guess="50" class="guess-btn p-3 rounded-xl border-2 border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all font-semibold">50</button>
+            <button data-guess="25" class="guess-btn p-3 rounded-xl border-2 border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all font-semibold">25</button>
+            <button data-guess="10" class="guess-btn p-3 rounded-xl border-2 border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all font-semibold">10</button>
+            <button data-guess="0" class="guess-btn p-3 rounded-xl border-2 border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all font-semibold">Keine</button>
+        </div>
+        <p id="guess-feedback" class="text-sm text-slate-500 min-h-[1.25rem]"></p>
+    </div>
+
+    <!-- Simulation -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-5">
+        <div class="flex items-center justify-between mb-3">
+            <div>
+                <p class="font-semibold text-slate-800">Simulation</p>
+                <p class="text-xs text-slate-500">Person <span id="person-num" class="font-bold text-indigo-700">0</span> von 100 · <span id="offen-count" class="font-bold text-emerald-700">0</span> offen</p>
+            </div>
+            <div class="flex gap-2">
+                <button id="btn-step" class="bg-indigo-600 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors">1 Schritt</button>
+                <button id="btn-play" class="bg-violet-600 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-violet-700 transition-colors">Auto</button>
+                <button id="btn-reset" class="bg-slate-200 text-slate-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-slate-300 transition-colors">↺</button>
+            </div>
+        </div>
+
+        <div id="doors-grid" class="grid grid-cols-10 gap-1 select-none"></div>
+
+        <p class="mt-3 text-xs text-slate-500">
+            <span class="inline-block w-3 h-3 bg-slate-200 border border-slate-300 rounded-sm align-middle mr-1"></span> geschlossen
+            <span class="inline-block w-3 h-3 bg-emerald-400 border border-emerald-500 rounded-sm align-middle ml-3 mr-1"></span> offen
+            <span class="inline-block w-3 h-3 bg-amber-300 border border-amber-500 rounded-sm align-middle ml-3 mr-1"></span> gerade umgeschaltet
+        </p>
+    </div>
+
+    <!-- Enthüllung -->
+    <div id="reveal-box" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-5 mb-5">
+        <p class="font-semibold text-emerald-900 mb-2">🎯 Am Ende sind genau 10 Türen offen:</p>
+        <p class="font-mono text-sm text-emerald-800 mb-3">1, 4, 9, 16, 25, 36, 49, 64, 81, 100</p>
+        <p class="text-sm text-emerald-900">Das sind exakt die <strong>Quadratzahlen</strong> 1², 2², 3², …, 10².</p>
+    </div>
+
+    <!-- Erklärung -->
+    <div class="space-y-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-5">
+            <p class="font-semibold text-slate-800 mb-2">Warum genau die Quadratzahlen?</p>
+            <div class="space-y-2 text-sm text-slate-700">
+                <p>Tür <em>n</em> wird von Person <em>k</em> berührt <strong>genau dann</strong>, wenn <em>k</em> ein Teiler von <em>n</em> ist. Also wird Tür <em>n</em> insgesamt so oft umgeschaltet, wie <em>n</em> Teiler hat – <em>d(n)</em> mal.</p>
+                <p>Am Ende ist die Tür offen ⇔ sie wurde ungerade oft geschaltet ⇔ <em>d(n)</em> ist ungerade.</p>
+                <p><strong>Und nun der Trick:</strong> Teiler treten fast immer in Paaren auf (mit <em>k</em> ist auch <em>n/k</em> Teiler). Nur wenn <em>n</em> eine Quadratzahl ist, fällt ein Teiler mit sich selbst zusammen (√<em>n</em> · √<em>n</em> = <em>n</em>) – und die Teileranzahl wird ungerade.</p>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+            <p class="font-semibold text-slate-800 mb-2 text-sm">Beispiel: Tür 12 vs. Tür 16</p>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                    <p class="font-mono text-slate-700"><strong>12</strong> = 1·12 = 2·6 = 3·4</p>
+                    <p class="text-xs text-slate-500 mt-1">6 Teiler {1,2,3,4,6,12} → gerade → geschlossen</p>
+                </div>
+                <div>
+                    <p class="font-mono text-slate-700"><strong>16</strong> = 1·16 = 2·8 = 4·4</p>
+                    <p class="text-xs text-slate-500 mt-1">5 Teiler {1,2,4,8,16} → ungerade → offen</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 text-sm text-indigo-900">
+            <p class="font-semibold mb-1">Historie</p>
+            <p class="text-xs">Das Rätsel ist ein Klassiker aus Zahlentheorie-Kursen (bekannt seit spätestens dem 19. Jahrhundert, populär durch <em>Martin Gardner</em>s Kolumnen im <em>Scientific American</em>). Es ist eines der wenigen Rätsel, deren Lösung ein tiefes Ergebnis der Zahlentheorie – die Struktur der Teilerfunktion <em>d(n)</em> – in einem konkreten Bild sichtbar macht.</p>
+        </div>
+    </div>
+
+    <!-- TED Talks zum Thema -->
+    {% if ted_links %}
+    <div class="bg-red-50 border border-red-100 rounded-xl p-4 mt-5">
+      <p class="text-xs font-semibold text-red-400 uppercase tracking-wide mb-3">🎤 Passende TED Talks</p>
+      <div class="space-y-2">
+        {% for t in ted_links %}
+        <a href="{{ t.ted_url }}" target="_blank" rel="noopener"
+           class="flex items-center gap-3 p-2.5 bg-white border border-red-100 rounded-lg hover:border-red-300 hover:shadow-sm transition-all">
+          <span class="text-lg">▶️</span>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-slate-800 text-sm truncate">{{ t.sprecher }}: {{ t.titel_de }}</p>
+            <p class="text-xs text-slate-400">TED {{ t.jahr }}</p>
+          </div>
+          <span class="text-xs text-red-400 shrink-0">↗</span>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Navigation -->
+    <div class="flex gap-3 mt-5">
+      <a href="/raetsel"
+         class="flex-1 text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors text-sm">
+        ← Alle Rätsel
+      </a>
+      {% if next_puzzle %}
+      <a href="/raetsel/{{ next_puzzle.id }}"
+         class="flex-1 text-center bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium transition-colors text-sm">
+        {{ next_puzzle.icon }} {{ next_puzzle.name }} →
+      </a>
+      {% endif %}
+    </div>
+
+    {% if related_puzzles %}
+    <div class="mt-4">
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Ähnliche Rätsel</p>
+      <div class="space-y-2">
+        {% for r in related_puzzles %}
+        <a href="/raetsel/{{ r.id }}"
+           class="flex items-start gap-3 p-3 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 hover:shadow-sm transition-all">
+          <span class="text-xl">{{ r.icon }}</span>
+          <div>
+            <p class="font-semibold text-slate-800 text-sm">{{ r.name }}</p>
+            {% if r.beschreibung %}
+            <p class="text-xs text-slate-500 mt-0.5 line-clamp-2">{{ r.beschreibung }}</p>
+            {% endif %}
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+const TOTAL = 100;
+const doors = new Array(TOTAL + 1).fill(false); // index 0 unused
+let person = 0;
+let autoTimer = null;
+
+const gridEl = document.getElementById('doors-grid');
+const personEl = document.getElementById('person-num');
+const offenEl = document.getElementById('offen-count');
+const revealEl = document.getElementById('reveal-box');
+const btnStep = document.getElementById('btn-step');
+const btnPlay = document.getElementById('btn-play');
+const btnReset = document.getElementById('btn-reset');
+const feedbackEl = document.getElementById('guess-feedback');
+
+function buildGrid() {
+    gridEl.innerHTML = '';
+    for (let i = 1; i <= TOTAL; i++) {
+        const cell = document.createElement('div');
+        cell.dataset.n = i;
+        cell.className = 'aspect-square flex items-center justify-center text-[10px] sm:text-xs font-semibold rounded-sm border transition-colors';
+        cell.textContent = i;
+        gridEl.appendChild(cell);
+        paintCell(cell, false);
+    }
+}
+
+function paintCell(cell, justToggled) {
+    const n = parseInt(cell.dataset.n);
+    if (justToggled) {
+        cell.className = 'aspect-square flex items-center justify-center text-[10px] sm:text-xs font-semibold rounded-sm border transition-colors bg-amber-300 border-amber-500 text-amber-900';
+    } else if (doors[n]) {
+        cell.className = 'aspect-square flex items-center justify-center text-[10px] sm:text-xs font-semibold rounded-sm border transition-colors bg-emerald-400 border-emerald-500 text-emerald-900';
+    } else {
+        cell.className = 'aspect-square flex items-center justify-center text-[10px] sm:text-xs font-semibold rounded-sm border transition-colors bg-slate-200 border-slate-300 text-slate-500';
+    }
+}
+
+function repaintAll() {
+    gridEl.querySelectorAll('[data-n]').forEach(c => paintCell(c, false));
+    offenEl.textContent = doors.filter(Boolean).length;
+    personEl.textContent = person;
+}
+
+function step() {
+    if (person >= TOTAL) return;
+    person += 1;
+    const toggled = [];
+    for (let n = person; n <= TOTAL; n += person) {
+        doors[n] = !doors[n];
+        toggled.push(n);
+    }
+    gridEl.querySelectorAll('[data-n]').forEach(c => paintCell(c, false));
+    toggled.forEach(n => {
+        const c = gridEl.querySelector(`[data-n="${n}"]`);
+        if (c) paintCell(c, true);
+    });
+    personEl.textContent = person;
+    offenEl.textContent = doors.filter(Boolean).length;
+
+    if (person === TOTAL) {
+        stopAuto();
+        revealEl.classList.remove('hidden');
+    }
+}
+
+function reset() {
+    stopAuto();
+    for (let i = 0; i <= TOTAL; i++) doors[i] = false;
+    person = 0;
+    repaintAll();
+    revealEl.classList.add('hidden');
+}
+
+function startAuto() {
+    if (autoTimer) return;
+    btnPlay.textContent = '⏸';
+    autoTimer = setInterval(() => {
+        step();
+        if (person >= TOTAL) stopAuto();
+    }, 120);
+}
+
+function stopAuto() {
+    if (!autoTimer) return;
+    clearInterval(autoTimer);
+    autoTimer = null;
+    btnPlay.textContent = 'Auto';
+}
+
+btnStep.addEventListener('click', step);
+btnPlay.addEventListener('click', () => (autoTimer ? stopAuto() : startAuto()));
+btnReset.addEventListener('click', reset);
+
+document.querySelectorAll('.guess-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const g = parseInt(btn.dataset.guess);
+        document.querySelectorAll('.guess-btn').forEach(b => b.classList.remove('border-indigo-500', 'bg-indigo-100'));
+        btn.classList.add('border-indigo-500', 'bg-indigo-100');
+        if (g === 10) {
+            feedbackEl.innerHTML = '<span class="text-emerald-700 font-semibold">Richtig!</span> Spiel die Simulation ab und schau, welche Türen es sind.';
+        } else if (g === 50) {
+            feedbackEl.innerHTML = '<span class="text-rose-700 font-semibold">Naheliegend, aber falsch.</span> Zwar schaltet Person 1 alle Türen auf und Person 2 die geraden zu – doch dann geht das Umschalten weiter.';
+        } else if (g === 25) {
+            feedbackEl.innerHTML = '<span class="text-rose-700 font-semibold">Nicht ganz.</span> Es ist keine glatte Aufteilung – die Antwort hängt von der Teileranzahl jeder Tür ab.';
+        } else {
+            feedbackEl.innerHTML = '<span class="text-rose-700 font-semibold">Ein paar bleiben offen.</span> Genau die, deren Nummer eine Besonderheit hat.';
+        }
+    });
+});
+
+buildGrid();
+</script>
+
+{% endblock %}

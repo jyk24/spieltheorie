@@ -234,6 +234,16 @@ RAETSEL_META = [
         "dauer": "4 min",
         "kategorie": "Mathematik",
     },
+    {
+        "id": "hundert-tueren",
+        "name": "Das 100-Türen-Problem",
+        "icon": "🚪",
+        "beschreibung": "100 geschlossene Türen. 100 Personen laufen der Reihe nach vorbei und schalten jede k-te Tür um. Welche Türen sind am Ende offen? Die Antwort verrät ein tiefes Muster der Zahlentheorie.",
+        "typ": "Mathematik-Puzzle",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+        "kategorie": "Mathematik",
+    },
     # ── Logik & Rätsel ─────────────────────────────────────────────────────────
     {
         "id": "piraten",
@@ -1890,6 +1900,16 @@ def josephus_result(request: Request, position: int = Form(...)):
         "partials/josephus_result.html",
         {"position": position, "survivor": survivor, "order": order, "n": n, "is_correct": position == survivor},
     )
+
+
+# ---------------------------------------------------------------------------
+# 100-Türen-Problem
+# ---------------------------------------------------------------------------
+
+@router.get("/hundert-tueren", response_class=HTMLResponse)
+def hundert_tueren_page(request: Request):
+    ctx = {"active_page": "raetsel", **_nav_context("hundert-tueren")}
+    return templates.TemplateResponse(request, "raetsel/hundert_tueren.html", ctx)
 
 
 # ---------------------------------------------------------------------------
