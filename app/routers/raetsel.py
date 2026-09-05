@@ -631,6 +631,7 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"parrondo-paradoxon","name":"Das Parrondo-Paradoxon","icon":"🎲","beschreibung":"Zwei Glücksspiele – beide sind einzeln Verlustgeschäfte. Kombiniert man sie zufällig, gewinnt man auf Dauer. Ein spektakuläres Ergebnis von Juan Parrondo (1996), inspiriert von der Brownschen Ratsche.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Mathematik"},
 ]
 
 
@@ -4063,6 +4064,40 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "parrondo-paradoxon": {
+        "id": "parrondo-paradoxon", "name": "Das Parrondo-Paradoxon", "icon": "🎲",
+        "farbe": "teal", "kategorie": "Mathematik",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": (
+            "Zwei Glücksspiele – jedes einzeln ein Verlustgeschäft:"
+            "<br><br><strong>Spiel A:</strong> Werfe eine leicht unfaire Münze. Mit 49,5&nbsp;% gewinnst du 1&nbsp;€, sonst verlierst du 1&nbsp;€. Auf Dauer verlierst du langsam."
+            "<br><br><strong>Spiel B:</strong> Zwei Münzen. Ist dein Kapital durch 3 teilbar, nimmst du die <em>böse</em> Münze (nur 9,5&nbsp;% Gewinnchance). Sonst die <em>gute</em> Münze (74,5&nbsp;% Gewinnchance). Auch Spiel B ist im Schnitt ein Minusgeschäft."
+        ),
+        "frage": "Was passiert, wenn du zufällig zwischen Spiel A und Spiel B <strong>abwechselst</strong>?",
+        "optionen": [
+            {"text": "Doppelter Verlust – zwei Verlustspiele bleiben Verlustspiele", "hinweis": "Naheliegende Intuition"},
+            {"text": "Genau Break-even – die Wechsel gleichen sich aus", "hinweis": "Symmetrie-Argument"},
+            {"text": "Immer noch Verlust, aber deutlich langsamer", "hinweis": "Dämpfung durch Rauschen"},
+            {"text": "Positive Erwartung – die Mischung gewinnt langfristig", "hinweis": "Der Parrondo-Effekt"},
+        ],
+        "loesung_text": "Die Mischung gewinnt – zwei Verlustspiele werden zusammen zum Gewinnspiel.",
+        "erklaerung": (
+            "<p>Spiel B ist <strong>zustandsabhängig</strong>. Spielt man nur B, klebt das Kapital überdurchschnittlich oft bei Vielfachen von 3 – "
+            "genau dort, wo die böse Münze greift. Spiel A ist zwar leicht verlustbehaftet, wirkt aber als <em>Rauschgenerator</em>: "
+            "Es bricht die Fixierung auf den schlechten Zustand auf und schiebt das Kapital häufiger in die guten B-Zustände.</p>"
+            "<p>Simulationen zeigen: Bei zufälliger Auswahl (50 % A, 50 % B) oder beim Muster A-A-B-B-A-A-B-B… wächst das Kapital "
+            "im Erwartungswert um rund <strong>+0,015 € pro Runde</strong> – obwohl jedes Spiel einzeln verliert.</p>"
+        ),
+        "kontext": (
+            "<p><strong>Juan Parrondo (1996)</strong>, spanischer Physiker, konstruierte das Beispiel aus Analogien zur <em>Brownschen Ratsche</em> "
+            "(Feynman-Vorlesungen). Die Grundidee: Ein Zufallsrauschen kann Energie aus einer asymmetrischen Struktur „ernten“, ohne den zweiten Hauptsatz zu verletzen.</p>"
+            "<p>Anwendungen und Analogien finden sich in der Molekularbiologie (Motorproteine wie Kinesin), in Populationsdynamik-Modellen, "
+            "in Portfolio-Rebalancing und in evolutionären Nischenwechseln. Verwandt ist das Simpson-Paradoxon: "
+            "Auch dort kann eine Aggregation das Vorzeichen einer Wirkung umdrehen.</p>"
+            "<p>Der Effekt tritt <em>nicht</em> auf, wenn Spiel B unabhängig vom eigenen Kapital ist – die Kopplung zwischen den Spielen ist entscheidend.</p>"
+        ),
+        "erkenntnis": "Zwei einzeln schlechte Optionen können zusammen eine gute ergeben, wenn sie sich systematisch ergänzen. Aggregation kann Vorzeichen umdrehen – das gilt für Spiele, für Statistik und für Strategien.",
     },
 }
 
