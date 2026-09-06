@@ -102,6 +102,8 @@ _SITEMAP_URLS = [
     "/gedaechtnis/technik/elaborative-enkodierung", "/gedaechtnis/technik/zeigarnik",
     "/gedaechtnis/reaktionszeit", "/gedaechtnis/chimp", "/gedaechtnis/verbal",
     "/gedaechtnis/bestenliste",
+    "/raetsel/trolley-problem", "/raetsel/chinesisches-zimmer",
+    "/raetsel/occams-rasiermesser", "/raetsel/rabenparadoxon",
 ]
 
 
