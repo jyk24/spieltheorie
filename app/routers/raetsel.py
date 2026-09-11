@@ -631,6 +631,8 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"junge-maedchen-paradoxon","name":"Junge oder Mädchen?","icon":"👶","beschreibung":"Ein Vater hat zwei Kinder. Mindestens eines davon ist ein Junge. Wie wahrscheinlich ist es, dass beide Jungen sind? Martin Gardner (1959) trickst die Intuition aus.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Mathematik"},
+    {"id":"zeigarnik-effekt","name":"Der Zeigarnik-Effekt","icon":"📋","beschreibung":"Bluma Zeigarnik saß 1927 in einem Wiener Café und bemerkte etwas Merkwürdiges: Kellner erinnerten sich perfekt an offene Bestellungen – aber Sekunden nach dem Bezahlen war die Bestellung vergessen. Warum merkt sich das Gehirn Unfertiges besser?","typ":"Gedächtnispsychologie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
 ]
 
 
@@ -4046,6 +4048,40 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Der <strong>Fundamentale Attributionsfehler</strong> (FAE, Ross 1977): Wir überschätzen den Einfluss von Persönlichkeitseigenschaften und unterschätzen den Einfluss der Situation auf das Verhalten anderer.</p><p>Das Verhalten (Castro-Aufsatz) wurde der Disposition zugeschrieben (<em>er ist pro-Castro</em>) – obwohl die Situation (zufällige Zuweisung) das Verhalten vollständig erklärte.</p>",
         "kontext": "<p>Der FAE ist kulturell variabel: Westliche (individualistische) Kulturen zeigen ihn stärker als östliche (kollektivistische). Im Alltag: Wer uns auf der Autobahn schneidet, ist ein Idiot – nicht jemand mit einem Notfall.</p><p>In Verhandlungen: Wenn die Gegenseite hart verhandelt, schließen wir auf Gier oder Feindseligkeit – statt auf externen Druck, Vorgaben des Vorstands oder Zeitdruck. Das verzerrt unsere Strategie erheblich.</p>",
         "erkenntnis": "Wir sind natürliche Biographen, keine Situationsanalysten. Wenn jemand sich 'falsch' verhält, zuerst fragen: Welche situativen Kräfte könnten dieses Verhalten erklären? Das gibt ein realistischeres Bild – und bessere Verhandlungsstrategien.",
+    },
+    "junge-maedchen-paradoxon": {
+        "id": "junge-maedchen-paradoxon", "name": "Junge oder Mädchen?", "icon": "👶",
+        "farbe": "violet", "kategorie": "Mathematik", "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Die Aufgabe:",
+        "setup": "Ein Vater hat <strong>zwei Kinder</strong>.<br><br>Er verrät dir: <em>„Mindestens eines davon ist ein Junge.“</em><br><br>Über das andere Kind – Alter, Geschlecht, Reihenfolge – erfährst du nichts.",
+        "frage": "Wie wahrscheinlich ist es, dass <em>beide</em> Kinder Jungen sind?",
+        "optionen": [
+            {"text": "1/2", "hinweis": "50 % – die intuitive Antwort"},
+            {"text": "1/3", "hinweis": "≈ 33 %"},
+            {"text": "1/4", "hinweis": "25 %"},
+            {"text": "2/3", "hinweis": "≈ 67 %"},
+        ],
+        "loesung_text": "Die richtige Antwort ist 1/3.",
+        "erklaerung": "<p>Vor der Zusatzinformation gibt es vier gleich wahrscheinliche Kombinationen (in Geburtsreihenfolge):</p><ul class=\"list-disc ml-4 space-y-1\"><li><strong>JJ</strong> – Junge, Junge</li><li><strong>JM</strong> – Junge, Mädchen</li><li><strong>MJ</strong> – Mädchen, Junge</li><li><strong>MM</strong> – Mädchen, Mädchen</li></ul><p>Die Aussage <em>„mindestens ein Junge“</em> streicht nur <strong>MM</strong>. Übrig bleiben drei gleich wahrscheinliche Fälle – und nur einer davon (JJ) ist <em>„beide Jungen“</em>.</p><p>→ Wahrscheinlichkeit: <strong>1/3</strong>, nicht 1/2.</p>",
+        "kontext": "<p><strong>Boy or Girl Paradox</strong> – Martin Gardner, <em>Scientific American</em>, 1959.</p><p>Der Trick liegt darin, dass die Frage <em>nicht</em> lautet: <em>„Ein Kind ist ein Junge – wie wahrscheinlich ist das zweite auch ein Junge?“</em> Das wäre 1/2. Sondern: <em>„In dieser Familie kommt mindestens ein Junge vor“</em> – eine Bedingung, die drei der vier möglichen Familien einschließt.</p><p>Gardner zeigte später eine noch heikelere Variante: <em>„Ich habe zwei Kinder. Eins ist ein Junge, geboren an einem Dienstag.“</em> Die Wahrscheinlichkeit, dass beide Jungen sind, springt plötzlich auf <strong>13/27</strong>. Der Wochentag – scheinbar irrelevant – verändert die bedingte Wahrscheinlichkeit. Das ist kein Zufall, sondern ein Fingerzeig, wie sensibel Bayes'sche Statistik auf die genaue Formulierung von Beobachtungen reagiert.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Selbst Statistiker verwechseln oft <em>„es existiert“</em> mit <em>„das erste ist“</em></li><li>Die genaue Auswahl-Regel (wer sagt was warum?) verändert das Ergebnis</li><li>Bayesianer nennen das das <em>Selektionsproblem</em>: Wie wurde die Information ausgewählt?</li></ul>",
+        "erkenntnis": "In der Wahrscheinlichkeit ist die Frage <em>wie</em> du etwas erfährst wichtiger als <em>was</em> du erfährst. „Mindestens einer ist X“ und „Der Erste ist X“ sind zwei völlig verschiedene Aussagen – auch wenn sie sprachlich fast gleich klingen.",
+    },
+    "zeigarnik-effekt": {
+        "id": "zeigarnik-effekt", "name": "Der Zeigarnik-Effekt", "icon": "📋",
+        "farbe": "amber", "kategorie": "Psychologie", "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup_label": "Das Experiment:",
+        "setup": "Wien, 1927. Die Psychologin <strong>Bluma Zeigarnik</strong> beobachtet Kellner im Café: Sie merken sich lange, komplizierte Bestellungen tadellos – bis sie serviert und bezahlt sind. <em>Sekunden</em> nach dem Bezahlen können dieselben Kellner die Bestellung nicht mehr rekonstruieren.<br><br>Zeigarnik testet das im Labor: 138 Probanden sollen 20 kleine Aufgaben lösen (Rätsel, Basteln, Rechnen). Bei der Hälfte unterbricht sie die Probanden mitten in der Aufgabe.",
+        "frage": "An welche Aufgaben erinnern sich die Probanden später besser?",
+        "optionen": [
+            {"text": "Beide gleich gut", "hinweis": "Die intuitive Erwartung"},
+            {"text": "An die abgeschlossenen Aufgaben", "hinweis": "Weil sie „fertig gedacht“ wurden"},
+            {"text": "An die unterbrochenen Aufgaben", "hinweis": "Rund 2× so oft"},
+            {"text": "An die letzten Aufgaben (Recency)", "hinweis": "Nur der Reihenfolge nach"},
+        ],
+        "loesung_text": "An die unterbrochenen Aufgaben – fast doppelt so oft.",
+        "erklaerung": "<p>Zeigarnik fand: Unterbrochene Aufgaben wurden im Schnitt <strong>1,9-mal häufiger</strong> spontan erinnert als abgeschlossene. Ihre Erklärung stützt sich auf Kurt Lewins Feldtheorie: Eine begonnene Handlung erzeugt eine <em>quasi-Bedürfnisspannung</em>, die erst mit dem Abschluss abgebaut wird. Solange diese Spannung besteht, hält das Gedächtnis den Inhalt bereit – „für den Fall, dass“.</p><p>Sobald das Kind seine Bastelei fertig hat, fällt die Spannung – und mit ihr die Erinnerung. Der Kellner, der bezahlt hat, hat die Bestellung „mental geschlossen“.</p>",
+        "kontext": "<p><strong>Bluma Zeigarnik, 1927</strong> – Dissertation bei Kurt Lewin, Berlin. Der Effekt ist bis heute robust replizierbar und einer der best-belegten Befunde der Kognitionspsychologie.</p><p>Anwendungen im Alltag:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Cliffhanger</strong> in Serien nutzen ihn systematisch: Die offene Frage <em>„Wer erschoss J.R.?“</em> bleibt monatelang präsent.</li><li><strong>Werbung</strong> unterbricht Sätze („Nichts ist unmöglich – …“) und triggert dieselbe Erinnerungsspannung.</li><li>Studien empfehlen, Lernphasen gezielt <em>vor</em> dem Abschluss zu unterbrechen – das Material sitzt am nächsten Morgen besser.</li><li>Die Umkehrseite: Unerledigtes raubt Aufmerksamkeit. <em>David Allens Getting-Things-Done</em>-Prinzip („leere den Kopf auf Papier“) ist eine bewusste Zeigarnik-Entlastung.</li><li>Ovsiankina (1928) zeigte den Zwilling: Wer unterbrochen wird, kehrt spontan zur Aufgabe zurück – auch wenn sie ihm nicht wichtig war.</li></ul>",
+        "erkenntnis": "Dein Gedächtnis ist kein neutraler Speicher, sondern ein Aufgabenmanager: Es hält offene Schleifen wach und schließt bezahlte ab. Wer das weiß, kann es doppelt nutzen – zum Lernen (bewusst offene Enden lassen) und zum Ruhen (Unerledigtes aufschreiben, damit das Gehirn abschalten kann).",
     },
     "schlaeger-ball": {
         "id": "schlaeger-ball", "name": "Schläger und Ball", "icon": "⚾",
