@@ -574,6 +574,7 @@ RAETSEL_META = [
     {"id":"infinite-monkey","name":"Infinite Monkey Theorem","icon":"🐒","beschreibung":"Ein Affe tippt zufällig. Bei unendlich viel Zeit – tippt er Hamlet? Die Antwort ist theoretisch ja. Aber wie unendlich lang ist \"unendlich\"?","typ":"Unendlichkeit","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
     {"id":"drunkards-walk","name":"Der Drunkard's Walk","icon":"🚶","beschreibung":"Ein Betrunkener macht zufällig einen Schritt vor oder zurück. Wie weit ist er nach 100 Schritten vom Start entfernt? Die Antwort ist √100 = 10.","typ":"Zufallspfade","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
     {"id":"littlewoods-law","name":"Littlewoods Gesetz der Wunder","icon":"✨","beschreibung":"Littlewood: Ein \"Wunder\" ist ein Ereignis mit Wahrscheinlichkeit 1 zu einer Million. Wie oft erleben wir solche Wunder – und warum sind sie gar nicht überraschend?","typ":"Koinzidenz","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Wahrscheinlichkeit"},
+    {"id":"zwei-kinder","name":"Das Zwei-Kinder-Problem","icon":"👧👦","beschreibung":"Eine Familie hat zwei Kinder. Mindestens eines ist ein Junge. Wie hoch ist die Wahrscheinlichkeit, dass beide Jungen sind? Die intuitive Antwort ist – wie beim Monty Hall – falsch.","typ":"Bayes-Paradox","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Wahrscheinlichkeit"},
     # ── Kommunikation (neu) ──────────────────────────────────────────────────
     {"id":"johari-fenster","name":"Das Johari-Fenster","icon":"🪟","beschreibung":"Vier Felder beschreiben, was dir und anderen über dich bekannt ist. Welches Feld nennt man den \"Blinden Fleck\" – und wie verkleinert man ihn?","typ":"Selbstreflexion","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Kommunikation"},
     {"id":"vier-ohren-modell","name":"Das Vier-Ohren-Modell","icon":"👂","beschreibung":"\"Das Essen ist fertig\" – vier Botschaften in einem Satz. Schulz von Thun zeigt: Sprecher und Hörer verwenden selten dieselbe Ebene.","typ":"Kommunikationsmodell","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Kommunikation"},
@@ -4064,6 +4065,23 @@ GENERIC_PUZZLES: dict = {
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
     },
+    "zwei-kinder": {
+        "id": "zwei-kinder", "name": "Das Zwei-Kinder-Problem", "icon": "👧👦",
+        "farbe": "violet", "kategorie": "Wahrscheinlichkeit", "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup_label": "Das Rätsel:",
+        "setup": "Eine Familie hat <strong>genau zwei Kinder</strong>. Du erfährst nur: <em>Mindestens eines der beiden ist ein Junge.</em><br><br>Beide Geschlechter sind je Kind unabhängig und gleich wahrscheinlich (50 %).",
+        "frage": "Wie hoch ist die Wahrscheinlichkeit, dass <em>beide</em> Kinder Jungen sind?",
+        "optionen": [
+            {"text": "1/2 (50 %)", "hinweis": "Das andere Kind ist doch entweder Junge oder Mädchen – oder?"},
+            {"text": "1/3 (≈ 33 %)", "hinweis": "Bayes: Wir müssen alle Familien mit mindestens einem Jungen zählen."},
+            {"text": "1/4 (25 %)", "hinweis": "Das wäre die Wahrscheinlichkeit ganz ohne jede Information."},
+            {"text": "2/3 (≈ 67 %)", "hinweis": "Zwei Jungen sind seltener, nicht häufiger."},
+        ],
+        "loesung_text": "Die Wahrscheinlichkeit ist 1/3 – nicht 1/2.",
+        "erklaerung": "<p>Vier gleich wahrscheinliche Fälle (älteres/jüngeres Kind): <strong>JJ, JM, MJ, MM</strong>.</p><p>Die Information <em>„mindestens ein Junge\"</em> schließt nur <strong>MM</strong> aus. Es bleiben drei Fälle: JJ, JM, MJ.</p><p>Nur einer davon ist JJ. Also: P(beide Jungen | mindestens ein Junge) = <strong>1/3</strong>.</p><p>Der Trick: Wir haben nicht ein bestimmtes Kind (z. B. das erstgeborene) als Junge identifiziert, sondern nur gesagt, dass <em>irgendeines</em> ein Junge ist. Das ist eine schwächere Information – und liefert deshalb eine niedrigere Restwahrscheinlichkeit für „beide Jungen\".</p>",
+        "kontext": "<p><strong>Martin Gardner</strong> stellte dieses Rätsel 1959 in <em>Scientific American</em>. Es wurde eines der meistdiskutierten Wahrscheinlichkeits-Paradoxa des 20. Jahrhunderts – gerade weil die Intuition (50 %) so hartnäckig ist.</p><p><strong>Der noch verblüffendere Twist:</strong> Wenn du zusätzlich erfährst, dass „mindestens ein Junge <em>an einem Dienstag</em> geboren wurde\", ändert sich die Wahrscheinlichkeit auf <strong>13/27 (≈ 48 %)</strong> – näher an 1/2. Die zusätzliche, scheinbar irrelevante Information verändert den Ereignisraum. Foshee (2010) rechnete das erstmals systematisch durch.</p><p>Verbindung zum <a href=\"/raetsel/monty-hall\" class=\"text-indigo-600 hover:underline\">Monty-Hall-Problem</a>: Beide Rätsel zeigen, dass es entscheidend ist, <em>wie</em> eine Information zustande kam, nicht nur was sie enthält. Bayesianisches Denken heißt: Konditioniere sauber – auf das Ereignis, das tatsächlich beobachtet wurde.</p>",
+        "erkenntnis": "„Mindestens einer\" ≠ „ein bestimmter\". Wer im Kopf konditioniert, muss den ganzen Ereignisraum durchgehen – Bayes ist unerbittlich mit intuitivem Zählen.",
+    },
 }
 
 
@@ -4108,11 +4126,10 @@ def pawlow_hund_page(request: Request):
 
 @router.post("/pawlow-hund/antwort", response_class=HTMLResponse)
 def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
-    correct = antwort in ["glocke", "unkonditioniert_stimulus", "klassisch", "konditionierter_reiz"]
     return templates.TemplateResponse(
         request,
         "partials/pawlow_hund_result.html",
-        {"antwort": antwort, "correct": correct},
+        {"antwort": antwort},
     )
 
 
