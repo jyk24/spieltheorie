@@ -559,6 +559,7 @@ RAETSEL_META = [
     {"id":"tensegrity","name":"Tensegrity-Strukturen","icon":"🏗️","beschreibung":"Stäbe, die in der Luft schweben – nur gehalten von Seilen. Keine Stäbe berühren sich. Wie hält diese Konstruktion dem Druck stand?","typ":"Statik","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Physik"},
     {"id":"archimedischer-punkt","name":"Der Archimedische Punkt","icon":"⚖️","beschreibung":"\"Gebt mir einen festen Punkt, und ich hebe die Welt aus den Angeln.\" Was sagte Archimedes damit – und wie lang wäre der nötige Hebel wirklich?","typ":"Mechanik","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Physik"},
     {"id":"eimer-experiment","name":"Newtons Eimerversuch","icon":"🪣","beschreibung":"Wasser in einem rotierenden Eimer wölbt sich nach außen. Aber – dreht er sich relativ zu was? Newtons Antwort und Machs Kritik spalten die Physik.","typ":"Mechanik","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Physik"},
+    {"id":"fermi-paradox","name":"Das Fermi-Paradox","icon":"👽","beschreibung":"Milliarden Sterne, unzählige Planeten – und trotzdem: totale Stille. „Wo sind sie alle?“ fragte Enrico Fermi 1950 beim Mittagessen. Die Antwort verändert, wie wir uns selbst betrachten.","typ":"Astrobiologie","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Physik"},
     # ── Spieltheorie (neu) ───────────────────────────────────────────────────
     {"id":"matching-pennies","name":"Matching Pennies","icon":"🪙","beschreibung":"Zwei Spieler legen gleichzeitig eine Münze auf den Tisch. Einer gewinnt bei gleichen Seiten, der andere bei verschiedenen. Gibt es eine optimale Strategie?","typ":"Nullsummenspiel","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Spieltheorie"},
     {"id":"cake-cutting","name":"Cake Cutting","icon":"🎂","beschreibung":"Wie teilt man einen Kuchen zwischen zwei Personen fair auf, ohne eine Instanz als Schiedsrichter? Die Lösung ist so einfach wie elegant.","typ":"Fairness-Algorithmus","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Spieltheorie"},
@@ -3048,6 +3049,23 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Newton: Die Wölbung entsteht bei Rotation relativ zum 'absoluten Raum'. Mach (1883) kritisierte: Es gibt keinen absoluten Raum; Trägheit entsteht durch die Wechselwirkung mit der Gesamtmasse des Universums (Machsches Prinzip). Einstein ließ sich davon bei der Allgemeinen Relativitätstheorie inspirieren.</p>",
         "kontext": "<p>Das Machsche Prinzip ist bis heute nicht vollständig in die Allgemeine Relativitätstheorie integriert. Der einfache rotierende Eimer stellt eine der tiefsten Fragen der Physik: Was ist Beschleunigung relativ zu?</p>",
         "erkenntnis": "Einfache Experimente können tiefste Prinzipien aufdecken. Newton und Mach sahen dasselbe Wasser und zogen grundlegend verschiedene Schlüsse — beide hatten ihre Stärken.",
+    },
+    "fermi-paradox": {
+        "id": "fermi-paradox", "name": "Das Fermi-Paradox", "icon": "👽",
+        "farbe": "indigo", "kategorie": "Physik",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Allein in unserer Milchstraße gibt es rund <strong>100–400 Milliarden Sterne</strong>. Viele haben Planeten, viele davon liegen in der habitablen Zone. Das Universum ist ~13,8 Milliarden Jahre alt — genug Zeit, dass Zivilisationen mehrfach entstehen und die Galaxie in wenigen Millionen Jahren (durch Sonden mit einem Bruchteil der Lichtgeschwindigkeit) besiedeln könnten. Trotzdem: kein Signal, keine Sonde, keine Spur. 1950 fragte Enrico Fermi beim Mittagessen in Los Alamos: „Wo sind sie alle?“",
+        "frage": "Welcher Vorschlag löst das Paradox – ist also mit unseren Beobachtungen konsistent?",
+        "optionen": [
+            {"text": "„Rare Earth“ – die Kette der nötigen Bedingungen für Leben ist so unwahrscheinlich, dass wir praktisch allein sind", "hinweis": "Bottleneck vor der Entstehung"},
+            {"text": "„Great Filter“ – irgendein Schritt (Leben, Intelligenz, Langlebigkeit) ist ein fast unüberwindbares Hindernis", "hinweis": "Vor oder hinter uns?"},
+            {"text": "„Zoo-Hypothese“ – sie beobachten uns, greifen aber bewusst nicht ein", "hinweis": "Kontaktverbot"},
+            {"text": "Alle drei sind logisch konsistente Erklärungen – wir wissen schlicht nicht, welche stimmt", "hinweis": "Erkenntnisdemut"},
+        ],
+        "loesung_text": "Alle drei sind konsistent – das ist gerade der beunruhigende Punkt",
+        "erklaerung": "<p>Die Drake-Gleichung schätzt die Zahl kommunizierender Zivilisationen: N = R★ · fₚ · nₑ · fₗ · fᵢ · f꜀ · L. Für optimistische Werte ergibt sie tausende, für pessimistische praktisch null. Die Formel <em>legt das Paradoxon offen</em> – sie löst es nicht.</p><p>Rare Earth (Ward & Brownlee, 2000), Great Filter (Hanson, 1998) und Zoo-Hypothese (Ball, 1973) sind heute allesamt <strong>ernsthafte Kandidaten</strong>. Keiner ist widerlegt, keiner bewiesen. Zusätzliche Kandidaten: Kardaschow-Skala (Zivilisationen zerstören sich selbst vor Kontakt), Dark Forest (Cixin Liu: Signale sind gefährlich), Simulation (Bostrom, 2003).</p>",
+        "kontext": "<p>Robin Hansons entscheidende Frage: Liegt der Great Filter <em>hinter</em> oder <em>vor</em> uns? Wenn hinter uns (Entstehung des Lebens, Zellkerns, Intelligenz), sind wir Glückspilze. Wenn vor uns, wartet ein Ereignis, das fast jede Zivilisation auslöscht. Deshalb wären Spuren einfachsten außerirdischen Lebens (z. B. auf dem Mars) <strong>schlechte Nachrichten</strong>: Sie würden zeigen, dass das Hindernis nicht die Entstehung war — es liegt also noch vor uns.</p><p>SETI hat seit 1960 den Himmel abgesucht: bisher nur ein einziges auffälliges Signal (Wow!-Signal, 1977 — nie wiederholt). Das ist statistisch aussagekräftig: Bei jeder plausiblen Signaldichte hätten wir längst etwas hören müssen.</p>",
+        "erkenntnis": "Ein Paradoxon ist kein Rätsel mit einer Lösung, sondern ein Zeichen dafür, dass mindestens eine unserer Grundannahmen falsch ist. Beim Fermi-Paradox betrifft das entweder die Häufigkeit von Leben, die Dauer von Zivilisationen oder unsere Fähigkeit, sie zu bemerken – und wir wissen nicht, welche.",
     },
     # ── Spieltheorie ─────────────────────────────────────────────────────
     "matching-pennies": {
