@@ -82,6 +82,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Wahrscheinlichkeit",
     },
+    {
+        "id": "zwei-kinder",
+        "name": "Das Zwei-Kinder-Problem",
+        "icon": "👧",
+        "beschreibung": "Eine Familie hat zwei Kinder. Mindestens eines ist ein Mädchen. Wie hoch ist die Wahrscheinlichkeit, dass beide Mädchen sind? Die Intuition sagt ½ – die Antwort ist ⅓. Und wenn du zusätzlich weißt, das Mädchen wurde an einem Dienstag geboren? Dann kippt alles noch einmal.",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
     # ── Statistik & Kognition ──────────────────────────────────────────────────
     {
         "id": "simpson",
@@ -4097,6 +4107,58 @@ def _nav_context(current_id: str) -> dict:
     ]
 
     return {"next_puzzle": next_puzzle, "related_puzzles": related, "ted_links": ted_links}
+
+
+@router.get("/zwei-kinder", response_class=HTMLResponse)
+def zwei_kinder_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/zwei_kinder.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/zwei-kinder/result", response_class=HTMLResponse)
+def zwei_kinder_result(
+    request: Request,
+    szenario: str = Form(...),
+    antwort: str = Form(...),
+):
+    # Klassisches Szenario: "Mindestens ein Kind ist ein Mädchen." → P(BM|MM) = 1/3
+    # Erweitertes Szenario: "Mindestens ein Kind ist ein Mädchen, geboren am Dienstag." → ≈ 13/27
+    if szenario == "klassisch":
+        correct_key = "ein_drittel"
+        loesung_text = "1/3"
+        loesung_dezimal = "≈ 33,3 %"
+    else:  # dienstag
+        correct_key = "dreizehn_zwanzigsiebtel"
+        loesung_text = "13/27"
+        loesung_dezimal = "≈ 48,1 %"
+
+    correct = antwort == correct_key
+
+    # Sample space klassisch: MM MJ JM JJ (Gleichverteilung).
+    # "Mindestens 1 Mädchen" schließt JJ aus → 3 Fälle, davon 1× MM.
+    faelle_klassisch = [
+        {"kombo": "M M", "beide_maedchen": True,  "passt": True,  "erklaerung": "beide Mädchen"},
+        {"kombo": "M J", "beide_maedchen": False, "passt": True,  "erklaerung": "ältestes Mädchen"},
+        {"kombo": "J M", "beide_maedchen": False, "passt": True,  "erklaerung": "jüngstes Mädchen"},
+        {"kombo": "J J", "beide_maedchen": False, "passt": False, "erklaerung": "kein Mädchen – Fall entfällt"},
+    ]
+
+    # Dienstags-Variante: 14×14 = 196 Kombinationen (Geschlecht × Wochentag).
+    # "≥1 Mädchen an Dienstag" ergibt 27 passende Fälle (14 + 14 − 1 = 27),
+    # davon 13 mit zwei Mädchen (7 + 7 − 1 = 13). → 13/27.
+    return templates.TemplateResponse(
+        request,
+        "partials/zwei_kinder_result.html",
+        {
+            "szenario": szenario,
+            "antwort": antwort,
+            "correct": correct,
+            "loesung_text": loesung_text,
+            "loesung_dezimal": loesung_dezimal,
+            "faelle_klassisch": faelle_klassisch,
+        },
+    )
 
 
 @router.get("/pawlow-hund", response_class=HTMLResponse)

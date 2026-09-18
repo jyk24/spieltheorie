@@ -1,0 +1,91 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    {% if correct %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">Richtig! {{ loesung_text }} ({{ loesung_dezimal }}).</h3>
+        <p class="text-sm text-emerald-700">
+            {% if szenario == "klassisch" %}
+                Bei „mindestens ein Mädchen" bleiben drei gleich wahrscheinliche Reihenfolgen übrig – nur eine davon ist MM.
+            {% else %}
+                Der zusätzliche Wochentag zerlegt den Ereignisraum – und macht das MM-Muster überraschend fast so wahrscheinlich wie MJ+JM.
+            {% endif %}
+        </p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-rose-50 border-2 border-rose-300">
+        <h3 class="text-xl font-bold text-rose-800 mb-1">Nicht ganz. Die richtige Antwort ist {{ loesung_text }} ({{ loesung_dezimal }}).</h3>
+        <p class="text-sm text-rose-700">
+            Die Intuition <em>½</em> ist die häufigste Falle. Sie unterstellt, dass die Information „mindestens ein Mädchen" das andere Kind unberührt lässt – tut sie aber nicht.
+        </p>
+    </div>
+    {% endif %}
+
+    {% if szenario == "klassisch" %}
+    <div class="mb-5">
+        <h4 class="font-bold text-slate-800 mb-3">Der Ereignisraum – so entstehen die 1/3:</h4>
+        <div class="grid grid-cols-4 gap-2">
+            {% for f in faelle_klassisch %}
+            <div class="rounded-lg p-3 text-center text-sm border-2
+                        {% if not f.passt %}bg-slate-100 border-slate-200 text-slate-400 line-through
+                        {% elif f.beide_maedchen %}bg-emerald-50 border-emerald-300 text-emerald-800 font-semibold
+                        {% else %}bg-slate-50 border-slate-200 text-slate-700{% endif %}">
+                <div class="text-lg font-mono">{{ f.kombo }}</div>
+                <div class="text-[10px] mt-1 leading-tight">{{ f.erklaerung }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        <p class="text-xs text-slate-500 mt-3">4 gleich wahrscheinliche Reihenfolgen. „Mindestens ein Mädchen" streicht JJ – 3 Fälle bleiben, 1 davon ist MM. → P = 1/3.</p>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-800">
+        <p class="font-semibold mb-2">Warum ist ½ falsch?</p>
+        <p class="mb-2">Wenn du wüsstest „das <em>ältere</em> Kind ist ein Mädchen", wäre die Antwort tatsächlich ½ – denn dann bleibt nur das jüngere Kind offen. Aber „mindestens eins" gibt keinen bestimmten Slot frei: MJ und JM sind unterschiedliche Fälle, MM ist nur einer.</p>
+        <p class="text-xs font-mono bg-white rounded p-2 mt-2">
+            P(MM | mind. 1 M) = P(MM) / P(mind. 1 M) = ¼ / ¾ = 1/3
+        </p>
+    </div>
+    {% else %}
+    <div class="mb-5">
+        <h4 class="font-bold text-slate-800 mb-3">Woher kommen 13/27?</h4>
+        <p class="text-sm text-slate-700 mb-3">Jedes Kind hat 14 gleich wahrscheinliche Zustände (2 Geschlechter × 7 Wochentage). Für 2 Kinder: <strong>14 × 14 = 196</strong> Paare, alle gleich wahrscheinlich.</p>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+            <div class="rounded-lg border border-violet-200 bg-violet-50 p-3">
+                <p class="font-semibold text-violet-800">Passende Fälle</p>
+                <p class="text-xs text-violet-700 mt-1">Kind 1 = Mädchen am Dienstag (14 Paare) + Kind 2 = Mädchen am Dienstag (14 Paare) − 1× doppelt gezählt = <strong>27</strong></p>
+            </div>
+            <div class="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+                <p class="font-semibold text-emerald-800">Davon: beide Mädchen</p>
+                <p class="text-xs text-emerald-700 mt-1">Kind 1 = M-Di, Kind 2 = M-(irgendein Tag): 7 Paare + andersrum 7 − 1× (beide M-Di) = <strong>13</strong></p>
+            </div>
+        </div>
+        <p class="text-xs font-mono bg-white rounded p-2 mt-3">P(beide M | mind. 1 M am Di) = 13 / 27 ≈ 48,1 %</p>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-800">
+        <p class="font-semibold mb-2">Warum verändert der Wochentag überhaupt etwas?</p>
+        <p class="mb-2">Auf den ersten Blick scheint „Dienstag" irrelevant – der Wochentag hat doch nichts mit dem Geschlecht zu tun. Und doch: Die Info macht MM-Reihenfolgen relativ <em>weniger</em> „einmalig" (zwei mögliche Kandidaten pro Paar), während MJ- und JM-Paare nur einen Dienstagskandidaten haben. Das Verhältnis wandert von 1/3 in Richtung ½.</p>
+        <p class="text-xs">Grenzwert: Wenn die Zusatzinformation immer feiner wird (z. B. „geboren am 3. April um 14:07"), nähert sich die Wahrscheinlichkeit <strong>1/2</strong>. Denn dann wird das Ereignis so speziell, dass praktisch nur noch ein Kind es erfüllen kann – und das ist wie „das ältere ist ein Mädchen".</p>
+    </div>
+    {% endif %}
+
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+        <p class="font-semibold mb-1">Erkenntnis für Entscheidungen unter Unsicherheit:</p>
+        <p class="mb-1">Bedingte Wahrscheinlichkeit ist notorisch kontraintuitiv. Wer sagt „mindestens ein X", denkt oft an einen konkreten Fall – meint aber ein Ereignis, das viele Fälle umfasst. Der Unterschied zwischen <em>„das erste Kind ist ein Mädchen"</em> und <em>„mindestens ein Kind ist ein Mädchen"</em> ist derselbe wie der zwischen einer <strong>ex-ante</strong> und einer <strong>ex-post</strong> Bedingung.</p>
+        <p><strong>Regel:</strong> Vor der Wahrscheinlichkeitsrechnung immer den exakten Ereignisraum aufschreiben – kein Kopfschätzen.</p>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+        <a href="/raetsel/zwei-kinder" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal probieren
+        </a>
+        <a href="/raetsel/monty-hall" class="border border-indigo-200 text-indigo-700 px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50">
+            Verwandt: Monty Hall
+        </a>
+        <a href="/raetsel/bayes-theorem" class="border border-indigo-200 text-indigo-700 px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50">
+            Vertiefen: Bayes-Theorem
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>
