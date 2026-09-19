@@ -82,6 +82,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Wahrscheinlichkeit",
     },
+    {
+        "id": "zwei-kinder",
+        "name": "Das Zwei-Kinder-Problem",
+        "icon": "👧",
+        "beschreibung": "Eine Familie hat zwei Kinder. Mindestens eines ist ein Junge. Wie groß ist die Wahrscheinlichkeit, dass beide Jungen sind? Ist es ½? Oder ⅓? Martin Gardners Klassiker spaltet seit 1959.",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
     # ── Statistik & Kognition ──────────────────────────────────────────────────
     {
         "id": "simpson",
@@ -2474,6 +2484,56 @@ def schlafendes_maedchen_result(request: Request, answer: str = Form(...)):
         request,
         "partials/schlafendes_maedchen_result.html",
         {"answer": answer},
+    )
+
+
+# ---------------------------------------------------------------------------
+# Zwei-Kinder-Problem (Boy or Girl Paradox – Martin Gardner 1959)
+# ---------------------------------------------------------------------------
+
+@router.get("/zwei-kinder", response_class=HTMLResponse)
+def zwei_kinder_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/zwei_kinder.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/zwei-kinder/result", response_class=HTMLResponse)
+def zwei_kinder_result(
+    request: Request,
+    variante: str = Form(...),
+    answer: str = Form(...),
+):
+    # variante: "mindestens" (Gardner) → 1/3
+    # variante: "aeltestes"  (Ältester ist Junge) → 1/2
+    korrekt = "third" if variante == "mindestens" else "half"
+    richtig = answer == korrekt
+
+    # Deterministische Simulation für beide Varianten (analytisch exakt bei fairer Verteilung)
+    sim_n = 12000
+    if variante == "mindestens":
+        # Aus 4 gleichwahrscheinlichen Kombinationen (JJ, JM, MJ, MM) fallen alle
+        # ohne Jungen weg (MM) → 3 verbleibende, 1 davon ist JJ.
+        gefiltert = round(sim_n * 3 / 4)
+        beide_j  = round(sim_n * 1 / 4)
+    else:
+        # Ältester Junge → nur JJ und JM zählen. Von diesen 2 ist 1 = JJ.
+        gefiltert = round(sim_n * 2 / 4)
+        beide_j  = round(sim_n * 1 / 4)
+
+    return templates.TemplateResponse(
+        request,
+        "partials/zwei_kinder_result.html",
+        {
+            "variante": variante,
+            "answer": answer,
+            "korrekt": korrekt,
+            "richtig": richtig,
+            "sim_n": sim_n,
+            "gefiltert": gefiltert,
+            "beide_j": beide_j,
+            "rate_pct": round(beide_j / gefiltert * 100, 1),
+        },
     )
 
 
