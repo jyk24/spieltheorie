@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block title %}Aschs Konformitätsexperiment – Wenn Gruppendruck die Wahrheit biegt{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+
+  <!-- Header -->
+  <div class="mb-6">
+    <a href="/raetsel" class="text-sm text-gray-500 hover:text-gray-700">← Alle Rätsel</a>
+  </div>
+  <div class="flex items-center gap-3 mb-2">
+    <span class="text-4xl">📏</span>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-widest text-indigo-500">Sozialpsychologie</p>
+      <h1 class="text-2xl font-bold text-gray-900">Aschs Konformitätsexperiment</h1>
+    </div>
+  </div>
+  <p class="text-gray-500 text-sm mb-8">Solomon Asch · 1951 · Einsteiger · ~4 min</p>
+
+  <!-- Das Setting -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Die Aufgabe – lächerlich einfach</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-4">
+      Du sitzt mit sieben anderen Teilnehmern in einem Raum. Auf einer Karte siehst du eine Referenzlinie.
+      Auf einer zweiten Karte drei Vergleichslinien: <strong>A</strong>, <strong>B</strong>, <strong>C</strong>.
+      Die Frage: Welche der drei ist gleich lang wie die Referenzlinie?
+    </p>
+
+    <!-- Visuelles Diagramm der Linien -->
+    <div class="grid grid-cols-2 gap-4 my-4">
+      <div class="bg-gray-50 rounded-xl p-4">
+        <p class="text-xs font-bold text-gray-500 mb-3 text-center">Referenz</p>
+        <div class="flex justify-center items-end h-24">
+          <div class="w-2 bg-indigo-600" style="height: 70%;"></div>
+        </div>
+      </div>
+      <div class="bg-gray-50 rounded-xl p-4">
+        <p class="text-xs font-bold text-gray-500 mb-3 text-center">Vergleich</p>
+        <div class="flex justify-around items-end h-24 gap-3">
+          <div class="flex flex-col items-center">
+            <div class="w-2 bg-gray-700" style="height: 55%;"></div>
+            <span class="text-xs text-gray-500 mt-1">A</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="w-2 bg-gray-700" style="height: 90%;"></div>
+            <span class="text-xs text-gray-500 mt-1">B</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="w-2 bg-gray-700" style="height: 70%;"></div>
+            <span class="text-xs text-gray-500 mt-1">C</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-sm text-gray-600 leading-relaxed">
+      Für jeden mit gesunden Augen ist die Antwort offensichtlich: <strong>C</strong>. Kontrollgruppen ohne Gruppendruck
+      antworten in über <strong>99 %</strong> der Fälle richtig.
+    </p>
+  </div>
+
+  <!-- Der Twist -->
+  <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Der versteckte Trick</h2>
+    <p class="text-sm text-gray-700 leading-relaxed mb-3">
+      Was du nicht weißt: Die anderen sieben Teilnehmer sind <strong>Komplizen des Experimentators</strong>.
+      Sie sind instruiert, in bestimmten Runden geschlossen dieselbe <strong>falsche</strong> Antwort zu geben.
+    </p>
+    <p class="text-sm text-gray-700 leading-relaxed">
+      Und sie antworten laut und der Reihe nach – <em>vor</em> dir. Sieben Personen sagen einstimmig: „B".
+      Dann bist du dran. Was tust du?
+    </p>
+  </div>
+
+  <!-- Interaktive Prognose -->
+  <div class="bg-indigo-50 rounded-2xl p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-2">Deine Prognose</h2>
+    <p class="text-sm text-gray-600 mb-4">
+      Wie viel Prozent der Versuchspersonen haben sich in mindestens einer Runde der falschen Mehrheit angeschlossen?
+    </p>
+    <form hx-post="/raetsel/asch-konformitaet/antwort" hx-target="#asch-result" hx-swap="innerHTML" class="space-y-2">
+      <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="unter-10" class="text-indigo-600">
+        <span class="text-sm text-gray-700">Unter 10 % – Menschen sind selbstbewusst</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="ca-25" class="text-indigo-600">
+        <span class="text-sm text-gray-700">Etwa 25 % – gelegentliche Anpassung</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="ca-75" class="text-indigo-600">
+        <span class="text-sm text-gray-700">Etwa 75 % – die Mehrheit knickt ein</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="ueber-95" class="text-indigo-600">
+        <span class="text-sm text-gray-700">Über 95 % – fast alle folgen der Gruppe</span>
+      </label>
+      <button type="submit" class="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors">
+        Prognose prüfen
+      </button>
+    </form>
+    <div id="asch-result" class="mt-4"></div>
+  </div>
+
+  <!-- Warum wir uns anpassen -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Zwei Motive für Konformität</h2>
+    <div class="space-y-3">
+      <div class="bg-purple-50 rounded-xl p-4">
+        <p class="text-xs font-bold uppercase text-purple-700 mb-2">Normativer Einfluss</p>
+        <p class="text-sm text-gray-700 leading-relaxed">
+          Du weißt, dass C richtig ist – aber du möchtest nicht auffallen, nicht als Idiot dastehen, nicht abgelehnt werden.
+          Du sagst „B" gegen dein besseres Wissen. Deshalb geht es <strong>öffentlich</strong>.
+        </p>
+      </div>
+      <div class="bg-blue-50 rounded-xl p-4">
+        <p class="text-xs font-bold uppercase text-blue-700 mb-2">Informationaler Einfluss</p>
+        <p class="text-sm text-gray-700 leading-relaxed">
+          Sieben unabhängige Zeugen sagen dasselbe – vielleicht siehst <em>du</em> nicht richtig? Du beginnst zu zweifeln
+          und übernimmst ihr Urteil. Konformität wird <strong>innerlich</strong>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Was den Effekt reduziert -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Was den Gruppendruck bricht</h2>
+    <ul class="space-y-2 text-sm text-gray-600">
+      <li class="flex gap-3">
+        <span class="text-green-600 font-bold flex-shrink-0">✓</span>
+        <span><strong>Ein einziger Verbündeter</strong> – wenn nur eine weitere Person die richtige Antwort gibt, sinkt die Konformität von 37 % auf unter 6 %.</span>
+      </li>
+      <li class="flex gap-3">
+        <span class="text-green-600 font-bold flex-shrink-0">✓</span>
+        <span><strong>Geheime Abstimmung</strong> – ohne öffentliche Bekundung fällt der Effekt fast vollständig weg.</span>
+      </li>
+      <li class="flex gap-3">
+        <span class="text-green-600 font-bold flex-shrink-0">✓</span>
+        <span><strong>Kleinere Gruppen</strong> – ab 3–4 einstimmigen Personen ist der Effekt maximal; mehr macht kaum einen Unterschied.</span>
+      </li>
+      <li class="flex gap-3">
+        <span class="text-red-600 font-bold flex-shrink-0">✗</span>
+        <span><strong>Größere Gruppe</strong> – überraschenderweise ändert eine Mehrheit von 15 gegenüber 4 kaum etwas.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Wo begegnet dir das heute? -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-4">Wo begegnet dir Asch heute?</h2>
+    <div class="space-y-3">
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">💼</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Meetings</p>
+          <p class="text-sm text-gray-600">Wenn der Chef spricht und drei Kollegen zustimmen, sinkt die Wahrscheinlichkeit, dass du Bedenken äußerst – auch wenn du recht hast.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">⭐</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Online-Bewertungen</p>
+          <p class="text-sm text-gray-600">Ein Restaurant mit 300 5-Sterne-Reviews wirkt objektiv besser – selbst wenn dein eigener Bauch etwas anderes sagt.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">🗳️</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Mitläufereffekte in Wahlen</p>
+          <p class="text-sm text-gray-600">Umfragen, die einen klaren Favoriten zeigen, verstärken sich selbst – Menschen wollen auf der „Gewinnerseite" stehen (Bandwagon-Effekt).</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">📱</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Soziale Medien</p>
+          <p class="text-sm text-gray-600">Ein Tweet mit 50 000 Likes wirkt wahrer als derselbe Text mit 3 Likes. Die Mehrheit fungiert als Wahrheitssignal – auch wenn sie sich irrt.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Historischer Kontext -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Warum das Experiment 1951 durchgeführt wurde</h2>
+    <p class="text-sm text-gray-600 leading-relaxed">
+      Solomon Asch war ein polnisch-jüdischer Emigrant, der die Aufstiegsjahre von Nationalsozialismus und Stalinismus
+      erlebt hatte. Er wollte zeigen, dass Menschen sich – anders als Gustave Le Bon behauptete – <em>nicht</em>
+      blind der Masse anschließen. Er erwartete, dass fast alle Versuchspersonen widersprechen würden.
+    </p>
+    <p class="text-sm text-gray-600 leading-relaxed mt-3">
+      Das Ergebnis war das Gegenteil: 75 % gaben mindestens einmal die falsche Antwort. 37 % aller Antworten in den
+      kritischen Runden folgten der Mehrheit. Asch selbst schrieb später: „Dass vernünftige, wohlmeinende junge Menschen
+      bereit sind, Schwarz Weiß zu nennen, ist alarmierend."
+    </p>
+  </div>
+
+  <!-- Was du selbst tun kannst -->
+  <div class="bg-indigo-50 rounded-2xl p-6 mb-8">
+    <h2 class="font-bold text-gray-800 mb-3">Wie du selbst weniger konform wirst</h2>
+    <ul class="space-y-2 text-sm text-gray-700">
+      <li>🎯 <strong>Position vor Diskussion notieren</strong> – schreib deine Meinung auf, bevor die Gruppe spricht.</li>
+      <li>🤝 <strong>Verbündete suchen</strong> – Widerspruch fällt zu zweit dramatisch leichter.</li>
+      <li>🕰️ <strong>Um Bedenkzeit bitten</strong> – „Ich brauche einen Moment" bricht den Gruppendruck.</li>
+      <li>❓ <strong>Fragen stellen</strong> – „Wie seid ihr auf B gekommen?" zwingt zur Begründung statt zur Wiederholung.</li>
+      <li>📝 <strong>Anonyme Abstimmung fordern</strong> – wenn möglich, ändert das oft das Ergebnis.</li>
+    </ul>
+  </div>
+
+  <!-- Navigation -->
+  <div class="flex justify-between">
+    <a href="/raetsel/bystander-effekt" class="text-sm text-gray-500 hover:text-gray-700">← Bystander-Effekt</a>
+    <a href="/raetsel/milgram-gehorsam" class="text-sm text-indigo-600 hover:text-indigo-800">Milgram-Experiment →</a>
+  </div>
+
+</div>
+{% endblock %}
