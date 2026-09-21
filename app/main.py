@@ -102,6 +102,8 @@ _SITEMAP_URLS = [
     "/gedaechtnis/technik/elaborative-enkodierung", "/gedaechtnis/technik/zeigarnik",
     "/gedaechtnis/reaktionszeit", "/gedaechtnis/chimp", "/gedaechtnis/verbal",
     "/gedaechtnis/bestenliste",
+    "/raetsel/fermi-paradoxon", "/raetsel/ikea-effekt", "/raetsel/schubfachprinzip",
+    "/raetsel/peak-end-regel", "/raetsel/cantors-diagonale",
 ]
 
 
