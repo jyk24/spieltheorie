@@ -631,6 +631,11 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neu (2026-09) ────────────────────────────────────────────────────────
+    {"id":"peak-end-regel","name":"Die Peak-End-Regel","icon":"📈","beschreibung":"Kahnemans Kolonoskopie-Studie (1996): Eine längere Prozedur mit sanftem Ausklang bleibt milder in Erinnerung als eine kurze mit scharfem Schluss. Wie das Gedächtnis Erfahrungen komprimiert – und was das für UX, Medizin und Marketing bedeutet.","typ":"Kognitionspsychologie","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Psychologie"},
+    {"id":"endowment-effekt","name":"Der Endowment-Effekt","icon":"☕","beschreibung":"Thaler & Kahneman (1990): Wer eine Tasse zufällig geschenkt bekommt, will sie für 5 € verkaufen. Wer sie kaufen soll, bietet 2 €. Der Besitz allein verdoppelt den subjektiven Wert. Warum wir ungern loslassen – und was das über Märkte, Rückgaberecht und Statusquo verrät.","typ":"Verhaltensökonomie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
+    {"id":"bertrand-box","name":"Bertrands Schachtelparadox","icon":"🪙","beschreibung":"Drei Schachteln: GG, SS und GS. Du greifst blind in eine – und ziehst eine Goldmünze. Wie wahrscheinlich ist die zweite Münze derselben Schachtel ebenfalls Gold? Der einfachere Bruder von Monty Hall – und das häufigste Missverständnis in bedingter Wahrscheinlichkeit.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Wahrscheinlichkeit"},
+    {"id":"fermi-schaetzung","name":"Fermi-Schätzung","icon":"🎹","beschreibung":"1938 fragte Enrico Fermi seine Studenten: „Wie viele Klavierstimmer gibt es in Chicago?“ Ohne Nachschlagen, nur mit Größenordnungen. Google-Recruiter, Physiker und Strategieberater lieben diese Methode – lerne, wie Zerlegen in Faktoren aus dem Nichts brauchbare Zahlen zaubert.","typ":"Schätzmethode","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Mathematik"},
 ]
 
 
@@ -4063,6 +4068,75 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    # ── Neu (2026-09) ────────────────────────────────────────────────────────
+    "peak-end-regel": {
+        "id": "peak-end-regel", "name": "Die Peak-End-Regel", "icon": "📈",
+        "farbe": "amber", "kategorie": "Psychologie", "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup_label": "Kahnemans Kolonoskopie-Experiment (1996):",
+        "setup": "Zwei Patientengruppen erhalten unterschiedliche Prozeduren, während sie jede Minute ihren Schmerz auf einer Skala melden. <br><br><strong>Patient A</strong> — 8 Minuten Prozedur, scharfer Schmerz-Peak am Ende (Wert 8/10). <br><strong>Patient B</strong> — 24 Minuten Prozedur, exakt derselbe Peak wie bei A, aber am Ende noch 10 Minuten mit niedrigem Restschmerz (Wert 1/10). <br><br>Die Fläche unter der Schmerzkurve — die tatsächlich erlebte Gesamtqual — ist bei B <em>deutlich größer</em>.",
+        "frage": "Welche Prozedur erinnerten die Patienten Wochen später als weniger schmerzhaft?",
+        "optionen": [
+            {"text": "Prozedur A (kürzer)", "hinweis": "Weniger Zeit = weniger Leid?"},
+            {"text": "Prozedur B (mit sanftem Ausklang)", "hinweis": "Das Ende überschreibt die Dauer"},
+            {"text": "Beide gleich – Patienten integrieren richtig", "hinweis": "Das würde ein rationales Gedächtnis leisten"},
+            {"text": "Kommt aufs Alter an", "hinweis": "Der Effekt ist demografisch stabil"},
+        ],
+        "loesung_text": "Prozedur B — obwohl objektiv mehr Schmerz, milder erinnert.",
+        "erklaerung": "<p>Die <strong>Peak-End-Regel</strong> (Kahneman, Fredrickson u. a., 1993) sagt: Das Gedächtnis für Erlebnisse berechnet sich näherungsweise als <em>Mittelwert aus stärkstem Moment (Peak) und Endzustand</em> — die Dauer spielt fast keine Rolle (<em>duration neglect</em>).</p><p>B hat denselben Peak, aber ein milderes Ende — also einen niedrigeren Mittelwert. Genau das sagten die Patienten Wochen später aus, und genau danach wählten sie: mehr B-Patienten kamen zur Nachuntersuchung.</p>",
+        "kontext": "<p>Kahneman unterscheidet <strong>erlebendes Selbst</strong> (was in der Sekunde spürbar ist) und <strong>erinnerndes Selbst</strong> (was später bewertet und Entscheidungen leitet). Beide sind teilweise entkoppelte Systeme.</p><p>Anwendungen: Zahnärzte lassen bewusst milde ausklingen. Disney gestaltet den Schluss einer Warteschlange erlebnisreich. Netflix zeigt vor dem Serienende ein emotionales Peak. Apple stellt beim Auspacken das Ausklingen (Klick der Klappe, sanftes Öffnen) über die Auspackzeit selbst.</p><p>Kritik: Der Effekt ist robust, aber nicht allmächtig — bei traumatischen Erfahrungen können Peak-Erinnerungen alles überschreiben.</p>",
+        "erkenntnis": "Wer entscheidet, wählt nach Erinnerung, nicht nach Erfahrung. Wer den Schluss gestaltet, gestaltet, wie ein Ereignis in Erinnerung bleibt — für Meetings, Präsentationen, Reisen, Medizin und Beziehungen gleichermaßen.",
+    },
+    "endowment-effekt": {
+        "id": "endowment-effekt", "name": "Der Endowment-Effekt", "icon": "☕",
+        "farbe": "rose", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup_label": "Thaler, Kahneman & Knetsch (1990):",
+        "setup": "Studenten werden zufällig in zwei Gruppen geteilt.<br><br><strong>Besitzer</strong> erhalten eine Kaffeetasse (Marktwert ca. 6 US-$) — geschenkt.<br><strong>Käufer</strong> erhalten nichts.<br><br>Anschließend wird ein Markt eröffnet: Besitzer nennen den <em>Mindestpreis, für den sie verkaufen</em> (WTA – Willingness To Accept). Käufer nennen den <em>Höchstpreis, den sie zahlen</em> (WTP – Willingness To Pay).<br><br>Bei rationalem Verhalten sollte etwa die Hälfte der Tassen den Besitzer wechseln, da die zufällige Zuteilung keine Präferenz erzeugt.",
+        "frage": "Was wurde tatsächlich beobachtet?",
+        "optionen": [
+            {"text": "Ca. 50 % der Tassen wechseln — genau wie erwartet", "hinweis": "Das wäre rational"},
+            {"text": "Nur ~10 % wechseln — Besitzer verlangen ca. das Doppelte des Käufer-Angebots", "hinweis": "Verlustaversion in Aktion"},
+            {"text": "Ca. 90 % — die meisten Besitzer wollen die Tasse loswerden", "hinweis": "Wäre kontraintuitiv bei Geschenken"},
+            {"text": "Alle Tassen wechseln — jeder Preis findet einen Käufer", "hinweis": "Nicht bei diesen Zahlen"},
+        ],
+        "loesung_text": "Median-Verkaufspreis 5,25 $, Median-Kaufpreis 2,25 $. Nur ~10 % der Tassen wechselten den Besitzer.",
+        "erklaerung": "<p>Der <strong>Endowment-Effekt</strong>: Der bloße Besitz eines Guts erhöht seinen subjektiven Wert typischerweise um Faktor 2. Das steht im Widerspruch zur Standard-Ökonomie, in der WTA und WTP identisch sein müssten (Coase-Theorem).</p><p>Ursache: <em>Verlustaversion</em>. Aufgabe eines Guts wird als Verlust codiert, Erwerb als Gewinn — und Verluste wiegen psychologisch doppelt so schwer wie gleich große Gewinne (Kahneman & Tversky 1979).</p>",
+        "kontext": "<p>Der Effekt erklärt viele Phänomene:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Immobilienmarkt:</strong> Verkäufer verlangen systematisch 10–20 % zu viel — der jahrelange Besitz erhöht den emotionalen Wert.</li><li><strong>Rückgaberecht als Marketing:</strong> „Testen Sie 30 Tage lang!“ — sobald das Produkt in der Wohnung steht, wird die Rückgabe zum Verlust.</li><li><strong>Ausgleichsforderungen:</strong> Für den Verzicht auf ein Recht (Kündigungsschutz, Rente, Anspruch) verlangen Menschen mehr, als sie zum Kauf desselben Rechts zahlen würden.</li><li><strong>Aktienportfolio:</strong> Anleger halten Verliereraktien zu lange (Aufgabe schmerzt) und verkaufen Gewinneraktien zu früh.</li></ul><p>Der Effekt fehlt bei Händlern, die Güter routinemäßig durchreichen — Besitz muss <em>psychologisch</em> integriert werden.</p>",
+        "erkenntnis": "Der Marktwert ist keine objektive Größe. Bereits die zufällige Zuweisung eines Guts verdoppelt seinen gefühlten Wert. Wer verhandelt, verkauft oder Standardvoreinstellungen setzt, kann diesen Effekt bewusst nutzen — oder Opfer davon werden.",
+    },
+    "bertrand-box": {
+        "id": "bertrand-box", "name": "Bertrands Schachtelparadox", "icon": "🪙",
+        "farbe": "indigo", "kategorie": "Wahrscheinlichkeit", "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup_label": "Bertrand, Calcul des probabilités (1889):",
+        "setup": "Drei identisch aussehende Schachteln stehen vor dir. In jeder liegen zwei Münzen:<br><br><strong>Schachtel A:</strong> zwei Goldmünzen (GG)<br><strong>Schachtel B:</strong> zwei Silbermünzen (SS)<br><strong>Schachtel C:</strong> eine Gold- und eine Silbermünze (GS)<br><br>Du wählst blind eine Schachtel und ziehst blind eine Münze heraus. Sie ist <strong>Gold</strong>.",
+        "frage": "Wie wahrscheinlich ist es, dass die zweite Münze in derselben Schachtel ebenfalls Gold ist?",
+        "optionen": [
+            {"text": "1/2 — es kann nur Schachtel A oder C sein, also 50 : 50", "hinweis": "Symmetrie-Argument"},
+            {"text": "2/3 — die Bayesianische Antwort", "hinweis": "Ungleiche Erfolgsraten"},
+            {"text": "1/3 — nur eine der drei Schachteln hat noch eine Goldmünze übrig", "hinweis": "Falsch gezählt?"},
+            {"text": "3/4 — jede weitere Münze ist zufällig", "hinweis": "Kein sinnvolles Verhältnis"},
+        ],
+        "loesung_text": "2/3 — die Bayesianische Antwort.",
+        "erklaerung": "<p>Insgesamt gibt es <strong>3 Goldmünzen</strong>: G₁, G₂ (in A) und G₃ (in C). Bei zufälliger Wahl der Schachtel und dann zufälliger Münze ziehst du jede der drei Goldmünzen mit gleicher Wahrscheinlichkeit 1/6.</p><p>Beobachtung: „Münze ist Gold“. Bedingte Wahrscheinlichkeit:<br>P(A | Gold) = (2/6) / (3/6) = <strong>2/3</strong><br>P(C | Gold) = (1/6) / (3/6) = 1/3</p><p>Also ist die zweite Münze mit Wahrscheinlichkeit 2/3 ebenfalls Gold. Der Intuitionsfehler: „Es kann nur A oder C sein, also 50 : 50“ ignoriert, dass ein „Gold gezogen“ häufiger aus GG als aus GS kommt — nämlich doppelt so oft.</p>",
+        "kontext": "<p>Bertrands Schachtelparadox (1889) ist der ältere und einfachere Verwandte des <a href='/raetsel/monty-hall' class='underline'>Monty-Hall-Problems</a>: dieselbe bayesianische Grundstruktur, andere Bühne. Beide bestrafen die Intuition „zwei Möglichkeiten, also 50 : 50“.</p><p>Praxisrelevanz: Medizinische Diagnostik, DNA-Beweise vor Gericht („Wahrscheinlichkeit, dass zwei Personen dieses Muster teilen“) und Ausschlussfragen bei Sicherheitsprüfungen folgen exakt derselben Rechnung. Der berühmte <em>„prosecutor's fallacy“</em> ist Bertrands Paradox in Anzug und Krawatte.</p>",
+        "erkenntnis": "Immer fragen: <em>Wie oft führt jede Ursache zu genau dieser Beobachtung?</em> Nicht die Zahl möglicher Ursachen zählt, sondern wie oft jede sie erzeugt. Wer das verinnerlicht, denkt bayesianisch — und liegt in bedingten Wahrscheinlichkeiten systematisch richtiger als der Durchschnitt.",
+    },
+    "fermi-schaetzung": {
+        "id": "fermi-schaetzung", "name": "Fermi-Schätzung", "icon": "🎹",
+        "farbe": "teal", "kategorie": "Mathematik", "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup_label": "Fermis Klassiker (Chicago, 1938):",
+        "setup": "„Wie viele Klavierstimmer arbeiten in Chicago?“ — Enrico Fermi stellte diese Frage Physik-Studenten. Ohne Nachschlagen, ohne Google. Sein Trick: das Unbekannte in bekannte Größenordnungen zerlegen.<br><br>Nimm folgende Schätzungen an (jede plausibel ±Faktor 2):<br><ul class=\"list-disc ml-6 mt-2 space-y-1 text-sm\"><li>Chicago hat etwa <strong>3 Mio. Einwohner</strong></li><li>Durchschnittlich <strong>1,5 Personen pro Haushalt</strong> → ca. 2 Mio. Haushalte</li><li>Etwa <strong>jeder 10. Haushalt</strong> besitzt ein Klavier</li><li>Jedes Klavier wird ca. <strong>alle 5 Jahre</strong> gestimmt</li><li>Ein Stimmer schafft <strong>4 Klaviere pro Tag</strong>, arbeitet ca. <strong>200 Tage/Jahr</strong></li></ul>",
+        "frage": "Wie viele Klavierstimmer braucht Chicago (Größenordnung)?",
+        "optionen": [
+            {"text": "~5 Stimmer", "hinweis": "Zu wenig – rechne den Bedarf durch"},
+            {"text": "~50 Stimmer", "hinweis": "Fermis Antwort"},
+            {"text": "~500 Stimmer", "hinweis": "Zu viel – prüfe die Auslastung"},
+            {"text": "~5000 Stimmer", "hinweis": "Weit über Ziel"},
+        ],
+        "loesung_text": "≈ 50 Klavierstimmer.",
+        "erklaerung": "<p>Rechne die Kette durch:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Klaviere: 2 000 000 Haushalte × 1/10 = <strong>200 000 Klaviere</strong></li><li>Stimmungen/Jahr: 200 000 / 5 = <strong>40 000 Stimmungen</strong></li><li>Kapazität pro Stimmer: 4 × 200 = <strong>800 Stimmungen/Jahr</strong></li><li>Bedarf: 40 000 / 800 ≈ <strong>50 Stimmer</strong></li></ul><p>Die tatsächliche Zahl im Chicagoer Branchenverzeichnis von 1938 lag bei etwa 50. Nicht, weil Fermi jede Zahl exakt traf, sondern weil Über- und Unterschätzungen sich bei unabhängigen Faktoren im Mittel ausgleichen.</p>",
+        "kontext": "<p>Fermi-Schätzungen sind Standard im Physik-Studium, in Strategieberatungen (McKinsey, BCG), bei Google-Job-Interviews und bei Startup-Marktgrößen (TAM/SAM/SOM).</p><p>Weitere klassische Fermi-Fragen:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Wie viele Golfbälle passen in einen Schulbus?</li><li>Wie viel Wasser verbraucht Deutschland pro Tag?</li><li>Wie viele Zeichen werden auf X (Twitter) täglich gepostet?</li><li>Wie viele Atome hat der Mensch?</li></ul><p>Fermi-Methode = 4 Schritte: <strong>(1)</strong> Problem in unabhängige Faktoren zerlegen · <strong>(2)</strong> jede Größe grob schätzen (bevorzugt Zehnerpotenzen) · <strong>(3)</strong> multiplizieren · <strong>(4)</strong> Ergebnis auf Plausibilität prüfen.</p>",
+        "erkenntnis": "Größenordnungen zählen mehr als Kommastellen. Wer ohne Daten strukturiert schätzen kann, denkt operativ — und trifft in der Praxis besser als wer wartet, bis alle Zahlen exakt vorliegen. Die Fermi-Methode ist das Werkzeug, mit dem Physiker die Welt in Zahlen fassen, ohne sie erst zu messen.",
     },
 }
 
