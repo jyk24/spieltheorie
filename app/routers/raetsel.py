@@ -631,6 +631,9 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neu 2026-09-25 ────────────────────────────────────────────────────────
+    {"id":"freundschaftsparadoxon","name":"Das Freundschaftsparadoxon","icon":"👥","beschreibung":"Deine Freunde haben im Schnitt mehr Freunde als du. Und das gilt für fast jeden Menschen gleichzeitig. Wie kann das kein Widerspruch sein? Scott Feld (1991) enthüllt eine Stichprobenverzerrung, die in jedem sozialen Netzwerk wirkt.","typ":"Netzwerk-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Mathematik"},
+    {"id":"buffon-nadel","name":"Buffons Nadelexperiment","icon":"📏","beschreibung":"Zeichne parallele Linien auf ein Blatt. Wirf Nadeln zufällig darauf. Zähle Kreuzungen. Buffon (1733) zeigte: Aus dieser Quote lässt sich π berechnen. Der erste Monte-Carlo-Algorithmus der Geschichte.","typ":"Wahrscheinlichkeits-Experiment","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Mathematik"},
 ]
 
 
@@ -4063,6 +4066,40 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "freundschaftsparadoxon": {
+        "id": "freundschaftsparadoxon", "name": "Das Freundschaftsparadoxon", "icon": "👥",
+        "farbe": "pink", "kategorie": "Mathematik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Frage 1000 zufällige Menschen: 'Hast du mehr oder weniger Freunde als deine Freunde im Durchschnitt?' In fast jeder realen sozialen Struktur — Schulklasse, Firma, Facebook, Instagram — sagen die meisten <strong>weniger</strong>. Deine Freunde haben systematisch mehr Freunde als du. Und das gilt für fast alle gleichzeitig.",
+        "frage": "Warum haben deine Freunde im Schnitt mehr Freunde als du?",
+        "optionen": [
+            {"text": "Weil beliebte Menschen zufällig auch mehr Zeit haben", "hinweis": "Soziologisches Argument"},
+            {"text": "Weil Menschen mit vielen Freunden häufiger in Freundeslisten auftauchen (Stichprobenverzerrung)", "hinweis": "Wer wird öfter ausgewählt?"},
+            {"text": "Weil Menschen ihre eigenen Freunde systematisch unterschätzen", "hinweis": "Kognitive Verzerrung?"},
+            {"text": "Es ist ein logischer Widerspruch — kann nicht für alle gleichzeitig gelten", "hinweis": "Wirklich?"},
+        ],
+        "loesung_text": "Menschen mit vielen Freunden werden häufiger als 'Freund' gezählt — deine Stichprobe überrepräsentiert Vielfreundige.",
+        "erklaerung": "<p>Formal: Wählst du zufällig eine <em>Person</em>, ist der Erwartungswert der Freundschaftszahl der Durchschnitt μ. Wählst du aber zufällig eine <em>Freundschaftskante</em> und schaust ihren Endpunkt an, ist der Erwartungswert höher — proportional zur Freundeszahl dieser Person.</p><p>Mathematisch: E[Freunde eines Freundes] = μ + σ²/μ, wobei σ² die Varianz der Freundschaftsverteilung ist. Nur bei perfekter Gleichverteilung (σ² = 0) sind beide gleich. Sobald es Popularitätsunterschiede gibt — und die gibt es in jeder realen Struktur — greift das Paradoxon.</p><p>Beispiel: In einer Gruppe von 4 Personen A, B, C, D hat A 3 Freunde (B, C, D), B/C/D je 1 Freund (A). Durchschnittliche Freundeszahl: (3+1+1+1)/4 = 1,5. Aber A ist als 'Freund' aller drei anderen gelistet: Der 'Durchschnitt eines Freundes' ist (3+3+3+1)/(4·1,5) · 1,5 = 2,5 — deutlich höher.</p>",
+        "kontext": "<p><strong>Scott L. Feld (1991)</strong>, 'Why Your Friends Have More Friends Than You Do', <em>American Journal of Sociology</em> 96(6): 1464–1477.</p><p><strong>Anwendung Epidemiologie:</strong> Christakis & Fowler (2010) impfen bei Grippewellen nicht zufällige Personen, sondern deren zufällig ausgewählte <em>Freunde</em>. Diese sind netzwerkzentraler und zeigen Ausbrüche 2 Wochen früher — ein Frühwarnsystem aus Graphentheorie.</p><p><strong>Auf Twitter:</strong> Deine Follower haben im Schnitt mehr Follower als du. <strong>In der Wissenschaft:</strong> Die Paper, die du zitierst, werden im Schnitt öfter zitiert. Überall dort, wo Vernetzung ungleich verteilt ist, greift das Paradoxon.</p>",
+        "erkenntnis": "Wer nur die eigene Umgebung anschaut, misst die Welt schief. Zufällige Stichproben aus 'Verbindungen' verzerren systematisch zugunsten der Vernetzten — ob in Freundschaft, Zitation oder Ansteckung.",
+    },
+    "buffon-nadel": {
+        "id": "buffon-nadel", "name": "Buffons Nadelexperiment", "icon": "📏",
+        "farbe": "teal", "kategorie": "Mathematik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Zeichne parallele Linien im Abstand <strong>d</strong> auf ein großes Blatt. Nimm eine Nadel der Länge <strong>L ≤ d</strong>. Wirf die Nadel wieder und wieder zufällig auf das Blatt. Zähle bei N Würfen, wie oft die Nadel eine Linie kreuzt (k Kreuzungen). Buffon (1733) entdeckte: Aus dieser Kreuzungsquote lässt sich π berechnen.",
+        "frage": "Welche Formel verbindet die Kreuzungswahrscheinlichkeit p mit π?",
+        "optionen": [
+            {"text": "p = L / d", "hinweis": "Fehlt da nicht π?"},
+            {"text": "p = 2L / (π · d)", "hinweis": "Buffons Ergebnis"},
+            {"text": "p = π · L / d", "hinweis": "π im Zähler?"},
+            {"text": "p = L² / (π · d²)", "hinweis": "Quadratisch?"},
+        ],
+        "loesung_text": "p = 2L / (π · d)  →  π ≈ 2·L·N / (d·k)",
+        "erklaerung": "<p><strong>Herleitung:</strong> Die Nadelmitte falle in Abstand x ∈ [0, d/2] zur nächsten Linie, mit gleichverteiltem Winkel θ ∈ [0, π/2]. Die Nadel kreuzt die Linie genau dann, wenn (L/2)·sin(θ) ≥ x.</p><p>Kreuzungswahrscheinlichkeit = (2/(π·d)) · ∫₀^(π/2) ∫₀^((L/2)sin θ) dx dθ = (2/(π·d)) · (L/2) · [−cos θ]₀^(π/2) = 2L / (π·d).</p><p><strong>Umkehrformel:</strong> π ≈ 2L·N / (d·k). Bei L = d halbiert sich das zu π ≈ 2N/k. Das ist einer der frühesten <strong>Monte-Carlo-Algorithmen</strong> — π aus reinem Zufall.</p>",
+        "kontext": "<p><strong>Georges-Louis Leclerc, Comte de Buffon</strong> (1733/1777) stellte das Problem als naturphilosophische Frage — lange vor moderner Wahrscheinlichkeitstheorie. Es war das erste Beispiel geometrischer Wahrscheinlichkeit.</p><p><strong>Die verdächtige Präzision von 1901:</strong> Der italienische Mathematiker Mario Lazzarini warf 3408 Nadeln und erhielt π ≈ 3,1415929 — auf 6 Nachkommastellen genau. Statistiker vermuten, er brach das Experiment jeweils dann ab, wenn das Ergebnis nahe an π lag — ein historischer Fall von Confirmation Bias in der Statistik.</p><p><strong>Modern:</strong> Das Buffonsche Experiment ist der Urahn aller Monte-Carlo-Simulationen — heute unverzichtbar in Teilchenphysik, Optionsbewertung und Klimaforschung.</p>",
+        "erkenntnis": "Zufall ist nicht das Gegenteil von Struktur. Ein zufälliger Prozess kann exakte mathematische Konstanten aufdecken — wenn man ihn richtig aufsetzt und lang genug beobachtet.",
     },
 }
 
