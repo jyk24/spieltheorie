@@ -56,7 +56,7 @@
 
 <!-- Nochmal spielen -->
 <div class="mt-6 flex gap-3">
-    <a href="/spiele/{{ session.game_type }}"
+    <a href="/spiele/{{ session.game_type | replace('_', '-') }}"
        class="flex items-center gap-2 bg-indigo-600 text-white px-5 py-3 rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors">
         🔄 Nochmal spielen
     </a>
