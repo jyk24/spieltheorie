@@ -631,6 +631,10 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neue Klassiker: Epistemik, verteilte Systeme, Algorithmen ────────────
+    {"id":"blauaeugige-insel","name":"Die blauäugigen Insulaner","icon":"👁️","beschreibung":"100 perfekte Logiker, 100 mit blauen Augen, keine Spiegel. Eine Besucherin sagt öffentlich einen banalen Satz – und 100 Tage später verlassen alle die Insel. Wie kann eine scheinbar leere Aussage so viel bewirken?","typ":"Erkenntnislogik","schwierigkeit":"Fortgeschritten","dauer":"6 min","kategorie":"Logik"},
+    {"id":"zwei-generaele","name":"Das Zwei-Generäle-Problem","icon":"⚔️","beschreibung":"Zwei Armeen, ein gemeinsamer Angriff, ein unsicherer Bote. Können sich die Generäle jemals sicher sein, dass beide gleichzeitig angreifen? Das älteste Unmöglichkeits-Resultat verteilter Systeme.","typ":"Konsens-Paradox","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Logik"},
+    {"id":"ei-fall-raetsel","name":"Das Ei-Fall-Rätsel","icon":"🥚","beschreibung":"Zwei Eier, 100 Stockwerke. Aus welcher Etage zerbricht ein Ei? Binäre Suche würde funktionieren – aber du hast nur zwei Eier. Die überraschende Antwort: 14 Würfe reichen.","typ":"Algorithmus-Puzzle","schwierigkeit":"Fortgeschritten","dauer":"6 min","kategorie":"Mathematik"},
 ]
 
 
@@ -4063,6 +4067,57 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "blauaeugige-insel": {
+        "id": "blauaeugige-insel", "name": "Die blauäugigen Insulaner", "icon": "👁️",
+        "farbe": "sky", "kategorie": "Logik",
+        "schwierigkeit": "Fortgeschritten", "dauer": "6 min",
+        "setup": "Auf einer Insel leben 100 perfekte Logiker. Genau 100 haben blaue Augen, alle übrigen braune. Es gibt keine Spiegel, niemand redet je über Augenfarbe. Die eiserne Regel: Wer weiß, dass er blaue Augen hat, muss die Insel am nächsten Mittag mit dem einzigen Schiff verlassen. Jeder sieht die Augen aller anderen, aber nicht die eigenen. Eines Tages sagt eine Besucherin öffentlich vor der ganzen Insel: <em>„Mindestens einer von euch hat blaue Augen.“</em>",
+        "frage": "Was passiert – und wann?",
+        "optionen": [
+            {"text": "Nichts. Die Aussage ist trivial – jeder sah ja bereits 99 Blauäugige.", "hinweis": "Ist die Information wirklich neu?"},
+            {"text": "Am nächsten Mittag verlässt genau ein Blauäugiger die Insel.", "hinweis": "Das gilt nur, wenn es genau einen gäbe."},
+            {"text": "Am 100. Mittag verlassen alle 100 Blauäugigen gleichzeitig die Insel.", "hinweis": "Iterierte Anwendung des gemeinsamen Wissens."},
+            {"text": "Nichts passiert – jeder wartet auf die anderen, keiner startet.", "hinweis": "Was passiert nach dem ersten Mittag ohne Abfahrt?"},
+        ],
+        "loesung_text": "Am 100. Mittag verlassen alle 100 Blauäugigen die Insel – gleichzeitig.",
+        "erklaerung": "<p>Induktion über die Anzahl <em>n</em> der Blauäugigen:</p><ul class=\"list-disc ml-4 space-y-1\"><li><strong>n = 1:</strong> Der Einzige sieht keinen Blauäugigen – folgert sofort, dass <em>er</em> gemeint ist – fährt am 1. Mittag.</li><li><strong>n = 2:</strong> Jeder sieht genau einen Blauäugigen. Weil der andere am 1. Mittag <em>nicht</em> fährt, wissen beide: er sah selbst einen Blauäugigen – also gibt es mindestens zwei. Am 2. Mittag fahren beide.</li><li><strong>n = 100:</strong> Analog. Erst nach 99 mittagsstillen Tagen weiß jeder, dass er die 100. blaue Augenpaar-Instanz sein muss.</li></ul><p>Die Besucherin sagt scheinbar nichts Neues – jeder sah ja 99 Blauäugige. Was <em>neu</em> ist: die Aussage wird zu <strong>gemeinsamem Wissen</strong> (common knowledge). Nicht nur weiß jeder es, jeder weiß dass jeder es weiß, und so weiter ad infinitum.</p>",
+        "kontext": "<p>Das Rätsel isoliert einen zentralen Begriff der Spieltheorie und Erkenntnislogik: <strong>Common Knowledge</strong> (Robert Aumann 1976, David Lewis 1969). Ein Fakt <em>p</em> ist gemeinsames Wissen, wenn jeder <em>p</em> weiß, jeder weiß dass jeder <em>p</em> weiß, jeder weiß dass jeder weiß dass jeder <em>p</em> weiß …</p><p>Ohne die Besucherin gäbe es zwar 99-fach verschachteltes Wissen – aber nicht unendlich verschachteltes. Die öffentliche Verkündung bricht dieses Kartenhaus.</p><p>Anwendungen: Verhandlungs­protokolle (Anerkennung öffentlicher Fakten), Bankruns (jeder weiß dass jeder weiß dass die Bank wackelt), Revolutionen (der Kaiser ist nackt – erst wenn es alle laut sagen dürfen).</p>",
+        "erkenntnis": "Zwischen „alle wissen es“ und „es ist gemeinsames Wissen“ liegen 99 unsichtbare Meta-Ebenen. Öffentlichkeit ist keine Verstärkung von Information – sie ist eine kategorial andere Sorte Information.",
+    },
+    "zwei-generaele": {
+        "id": "zwei-generaele", "name": "Das Zwei-Generäle-Problem", "icon": "⚔️",
+        "farbe": "rose", "kategorie": "Logik",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": "Zwei Generäle liegen mit ihren Armeen auf gegenüberliegenden Hügeln, dazwischen die feindliche Stadt im Tal. Nur ein <em>gemeinsamer</em> Angriff im Morgengrauen gewinnt; greift einer allein an, ist er verloren. Kommunizieren können sie nur per Boten – und jeder Bote muss durch das Tal, wo er abgefangen werden kann. General A schickt: „Angriff um 6 Uhr.“ Der Bote kommt an. General B schickt zurück: „Bestätigt.“",
+        "frage": "Können die beiden je sicher sein, dass beide gleichzeitig angreifen?",
+        "optionen": [
+            {"text": "Ja, sobald A die Bestätigung erhält – dann wissen beide Bescheid.", "hinweis": "Aber B weiß nicht, ob seine Bestätigung angekommen ist."},
+            {"text": "Ja, mit genügend Bestätigungen-der-Bestätigung.", "hinweis": "Das Problem geht rekursiv weiter."},
+            {"text": "Nein – ein deterministischer Konsens ist über unsichere Kanäle unmöglich.", "hinweis": "Klassisches Unmöglichkeits-Resultat"},
+            {"text": "Ja, wenn beide Generäle vor der Schlacht denselben Zeitpunkt vereinbart hatten.", "hinweis": "Das setzt schon Konsens voraus."},
+        ],
+        "loesung_text": "Unmöglich. Kein endliches Nachrichtenprotokoll erzeugt sicheren Konsens auf einem unzuverlässigen Kanal.",
+        "erklaerung": "<p>Angenommen es gäbe ein Protokoll aus <em>N</em> Nachrichten, das Konsens garantiert. Betrachte die <em>letzte</em> Nachricht: Ihr Absender kann nicht wissen, ob sie ankommt. Also darf sein Angriffs­entscheidungs­plan nicht von ihr abhängen – sonst würde ein Ausfall gerade dieser Nachricht das Protokoll brechen. Damit lässt sich die letzte Nachricht streichen: das Protokoll hätte auch mit <em>N−1</em> Nachrichten funktioniert. Iterativ verschwinden alle Nachrichten – Widerspruch. Formal bewiesen von Gray (1978); Sinnbild dafür in Akkoyunlu/Ekanadham/Huber (1975).</p>",
+        "kontext": "<p>Das Zwei-Generäle-Problem ist die härteste Version des Konsens-Problems in verteilten Systemen. Praktische Konsequenz: <strong>garantierter</strong> Konsens ist über unzuverlässige Kanäle unmöglich – nur <em>wahrscheinlicher</em> Konsens (TCP-Handshake, Two-Phase-Commit) ist erreichbar.</p><p>Verwandt: das <strong>Byzantinische Generäle-Problem</strong> (Lamport 1982) mit lügenden Boten, das die theoretische Grundlage moderner Blockchains und fehlertoleranter Datenbanken bildet.</p><p>In Verhandlungen: Warum gemeinsame Verpflichtungen oft <em>öffentlich</em> gemacht werden – ein öffentlicher Handshake macht die Bestätigung zum gemeinsamen Wissen (siehe blauäugige Insel).</p>",
+        "erkenntnis": "Perfekte Koordination über unsichere Kanäle ist mathematisch unmöglich. Alle realen Protokolle – von TCP bis zur Vertragsunterschrift beim Notar – sind pragmatische Kompromisse zwischen Latenz, Ausfallwahrscheinlichkeit und Vertrauen.",
+    },
+    "ei-fall-raetsel": {
+        "id": "ei-fall-raetsel", "name": "Das Ei-Fall-Rätsel", "icon": "🥚",
+        "farbe": "amber", "kategorie": "Mathematik",
+        "schwierigkeit": "Fortgeschritten", "dauer": "6 min",
+        "setup": "Ein Hochhaus mit 100 Stockwerken. Es gibt ein kritisches Stockwerk <em>k</em>: aus jedem Stockwerk ≥ <em>k</em> zerbricht ein Ei beim Wurf, aus jedem &lt; <em>k</em> bleibt es heil. Du hast <strong>zwei</strong> Eier. Zerbrochene Eier sind unbrauchbar; heil gebliebene können erneut geworfen werden. Ziel: <em>k</em> im schlechtesten Fall mit möglichst wenigen Würfen bestimmen.",
+        "frage": "Wie viele Würfe genügen im ungünstigsten Fall?",
+        "optionen": [
+            {"text": "50 – binäre Suche startet in Stockwerk 50", "hinweis": "Binäre Suche braucht mehr als zwei Eier"},
+            {"text": "10 – log₂(100) aufgerundet", "hinweis": "Bei einem einzigen Ei geht das nicht"},
+            {"text": "14 – geschickte Kombination von linearer und binärer Suche", "hinweis": "Dreieckszahlen"},
+            {"text": "100 – man muss jedes Stockwerk einzeln testen", "hinweis": "Nur wenn beide Eier sofort brächen"},
+        ],
+        "loesung_text": "14 Würfe im schlechtesten Fall.",
+        "erklaerung": "<p>Strategie: Das erste Ei springt zunächst in <em>abnehmenden</em> Schritten die Etagen hoch – Stockwerk 14, 27, 39, 50, 60, 69, 77, 84, 90, 95, 99. Bricht es dort, sucht das zweite Ei die dazwischen liegende Region linear von unten.</p><p>Warum funktioniert das? Sei <em>n</em> die maximale Anzahl Würfe. Wirf das erste Ei zunächst in Stockwerk <em>n</em>. Bricht es: <em>n−1</em> Würfe für die Stockwerke 1..<em>n−1</em>. Bricht es nicht: nächster Wurf in Stockwerk <em>n</em> + (n−1). Bricht es dort: <em>n−2</em> Restwürfe für die Zwischen­stockwerke. Und so weiter.</p><p>Damit wir 100 Stockwerke abdecken:  <strong>n + (n−1) + (n−2) + … + 1 ≥ 100</strong>, also <em>n·(n+1)/2 ≥ 100</em>. Die kleinste ganze Zahl, die das erfüllt, ist <strong>n = 14</strong> (14·15/2 = 105).</p>",
+        "kontext": "<p>Das Rätsel ist ein klassisches Google/Microsoft-Interview­problem. Die Verallgemeinerung – <em>k</em> Eier, <em>F</em> Stockwerke, minimale Worst-Case-Würfe – hat als Antwort <strong>Binomialkoeffizienten</strong>: mit <em>k</em> Eiern und <em>n</em> Würfen sind bis zu Σᵢ₌₁ⁿ C(n,i) Stockwerke unterscheidbar.</p><p>Bei sehr vielen Eiern degeneriert die Lösung zur binären Suche (⌈log₂ F⌉). Bei einem Ei zur linearen Suche (F). Zwei Eier liegen mit √(2F) genau dazwischen.</p><p>Anwendungen: adaptives Testen von Belastungsgrenzen (Werkstofftests, Server-Kapazitäten), robuste Suchstrategien mit begrenzten „Fehlbudgets“.</p>",
+        "erkenntnis": "Bei begrenzten Fehlversuchen gewinnt keine reine Halbierung – sondern Schritte, die mit jedem verbrauchten „Leben“ kürzer werden. Der Trick liegt in der Dreieckszahl.",
     },
 }
 

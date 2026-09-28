@@ -92,6 +92,7 @@ BASE_URL = "https://imaginative-fulfillment-production.up.railway.app"
 _SITEMAP_URLS = [
     "/", "/lernpfade", "/spieltheorie", "/denkraetsel", "/soziales", "/verhaltensoko", "/ted", "/ted/quiz", "/tagesraetsel",
     "/grundlagen", "/konzepte", "/spiele", "/raetsel",
+    "/raetsel/blauaeugige-insel", "/raetsel/zwei-generaele", "/raetsel/ei-fall-raetsel",
     "/skills", "/gedaechtnis", "/fortschritt", "/glossar",
     "/gedaechtnis/theorie", "/gedaechtnis/wortfolge", "/gedaechtnis/zahlen",
     "/gedaechtnis/corsi", "/gedaechtnis/memory", "/gedaechtnis/namen", "/gedaechtnis/karten",
