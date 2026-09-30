@@ -631,6 +631,8 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Netzwerke & Soziale Mathematik (neu) ─────────────────────────────────
+    {"id":"freundschafts-paradoxon","name":"Das Freundschafts-Paradoxon","icon":"🤝","beschreibung":"Deine Freunde haben im Schnitt mehr Freunde als du. Das gilt für fast jeden Menschen im Netzwerk – gleichzeitig. Wie kann das mathematisch stimmen? Scott Feld (1991) entdeckte einen Effekt, der Instagram, Grippewellen und Wahlprognosen erklärt.","typ":"Netzwerk-Paradox","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Mathematik"},
 ]
 
 
@@ -4047,6 +4049,23 @@ GENERIC_PUZZLES: dict = {
         "kontext": "<p>Der FAE ist kulturell variabel: Westliche (individualistische) Kulturen zeigen ihn stärker als östliche (kollektivistische). Im Alltag: Wer uns auf der Autobahn schneidet, ist ein Idiot – nicht jemand mit einem Notfall.</p><p>In Verhandlungen: Wenn die Gegenseite hart verhandelt, schließen wir auf Gier oder Feindseligkeit – statt auf externen Druck, Vorgaben des Vorstands oder Zeitdruck. Das verzerrt unsere Strategie erheblich.</p>",
         "erkenntnis": "Wir sind natürliche Biographen, keine Situationsanalysten. Wenn jemand sich 'falsch' verhält, zuerst fragen: Welche situativen Kräfte könnten dieses Verhalten erklären? Das gibt ein realistischeres Bild – und bessere Verhandlungsstrategien.",
     },
+    "freundschafts-paradoxon": {
+        "id": "freundschafts-paradoxon", "name": "Das Freundschafts-Paradoxon", "icon": "🤝",
+        "farbe": "teal", "kategorie": "Mathematik",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Stell dir ein kleines Netzwerk aus 5 Personen vor:<br><br>• <strong>Anna</strong> ist mit Bianca, Carlos, Dora und Eric befreundet (4 Freunde)<br>• <strong>Bianca</strong> ist nur mit Anna befreundet (1 Freund)<br>• <strong>Carlos</strong> ist nur mit Anna befreundet (1 Freund)<br>• <strong>Dora</strong> ist nur mit Anna befreundet (1 Freund)<br>• <strong>Eric</strong> ist nur mit Anna befreundet (1 Freund)<br><br>Der Durchschnittsmensch hat also <strong>(4 + 1 + 1 + 1 + 1) / 5 = 1,6 Freunde</strong>.",
+        "frage": "Zählt man alle Freundschaften einzeln – wie viele Freunde hat der 'durchschnittliche Freund' in diesem Netzwerk?",
+        "optionen": [
+            {"text": "Auch 1,6 – der Durchschnitt bleibt gleich, egal wie man zählt", "hinweis": "Klingt fair, ist aber falsch"},
+            {"text": "Weniger als 1,6 – Freunde sind meist eng vernetzte Cliquen mit wenigen Freunden", "hinweis": "Genau das Gegenteil ist der Fall"},
+            {"text": "2,5 – deutlich mehr als 1,6, weil populäre Menschen häufiger als Freunde auftauchen", "hinweis": "Das ist der Freundschafts-Paradox-Effekt"},
+            {"text": "Kommt auf die Person an – manche haben mehr, manche weniger", "hinweis": "Der Effekt ist systematisch, nicht individuell"},
+        ],
+        "loesung_text": "2,5 Freunde – über 50 % mehr als der Personen-Durchschnitt.",
+        "erklaerung": "<p>Der Trick liegt in der <strong>Gewichtung</strong>. Wenn wir 'die Freunde einer zufälligen Person' zählen, taucht Anna in <em>vier</em> Freundeslisten auf (bei Bianca, Carlos, Dora, Eric) – die vier weniger vernetzten Personen tauchen dagegen nur je einmal auf (in Annas Liste).</p><p>Rechnung: Wir summieren über alle Freundschafts-Slots die Anzahl der Freunde des jeweiligen Freundes.<br>Anna-Slots: 4 × Anna hat 4 Freunde = 16.<br>Bianca/Carlos/Dora/Eric-Slots: 4 × je 1 Freund = 4.<br>Summe: 20. Anzahl Slots insgesamt: 8.<br>→ Durchschnittsfreund hat <strong>20 / 8 = 2,5 Freunde</strong> – deutlich mehr als 1,6.</p><p>Allgemein gilt (Feld 1991): E[Freunde eines Freundes] = E[X²] / E[X], wobei X die Freundschaftszahl ist. Dieser Wert ist <em>immer</em> ≥ dem einfachen Mittelwert E[X] – Gleichheit nur, wenn alle exakt gleich viele Freunde haben.</p><p>In echten sozialen Netzen ist der Unterschied meist noch dramatischer (Faktor 3–10), weil Freundschaftszahlen extrem ungleich verteilt sind (Power-Law).</p>",
+        "kontext": "<p><strong>Scott Feld (1991)</strong>: 'Why Your Friends Have More Friends Than You Do.' American Journal of Sociology, 96(6). Der Effekt ist rein mathematisch – nicht psychologisch. Er tritt in <em>jedem</em> Netzwerk mit ungleicher Verteilung auf. Umso ungleicher, desto stärker.</p><p><strong>Anwendungen:</strong></p><ul class='list-disc ml-4 mt-2 space-y-1 text-sm'><li><strong>Grippe-Frühwarnung:</strong> Christakis & Fowler (2010): Überwacht man 'zufällige Freunde von Zufallspersonen' statt Zufallspersonen selbst, erkennt man Grippewellen 2 Wochen früher – weil die vernetzteren Menschen sich früher anstecken.</li><li><strong>Instagram-Depression:</strong> Deine Freunde haben im Schnitt mehr Follower, mehr Reisen und mehr Partys – nicht weil dein Leben schlechter ist, sondern weil du sie <em>über</em> ihre stärker vernetzten Seiten wahrnimmst.</li><li><strong>Impfstrategie:</strong> Statt zufälliger Menschen impft man 'einen Freund von' – erreicht so mit weniger Dosen die 'Super-Spreader' im Netz.</li><li><strong>Wahlprognosen:</strong> Wer Wahltrends messen will, sollte 'Freunde von Zufalls-Personen' befragen – sie sind repräsentativer für den Meinungsstrom.</li></ul>",
+        "erkenntnis": "Dein Netzwerk ist mathematisch gegen dich verzerrt: Populäre Menschen tauchen in vielen Freundeslisten auf und dominieren die Wahrnehmung. Das ist kein Charakterfehler und kein Zufall – es ist Netzwerkgeometrie. Ein einziges Umdenken ('Ich bin nicht das Problem, die Stichprobe ist es') kann Social-Media-Melancholie entschärfen.",
+    },
     "schlaeger-ball": {
         "id": "schlaeger-ball", "name": "Schläger und Ball", "icon": "⚾",
         "farbe": "sky", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "1 min",
@@ -4108,7 +4127,7 @@ def pawlow_hund_page(request: Request):
 
 @router.post("/pawlow-hund/antwort", response_class=HTMLResponse)
 def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
-    correct = antwort in ["glocke", "unkonditioniert_stimulus", "klassisch", "konditionierter_reiz"]
+    correct = antwort == "konditionierter_reiz"
     return templates.TemplateResponse(
         request,
         "partials/pawlow_hund_result.html",
