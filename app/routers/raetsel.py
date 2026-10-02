@@ -631,6 +631,7 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"zwei-generaele","name":"Das Zwei-Generäle-Problem","icon":"⚔️","beschreibung":"Zwei Armeen wollen eine Stadt angreifen – aber nur gleichzeitig siegen sie. Boten reiten durchs Feindesland und können verloren gehen. Lässt sich sicheres Einvernehmen über einen unsicheren Kanal überhaupt erreichen?","typ":"Impossibility-Resultat","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Spieltheorie"},
 ]
 
 
@@ -4063,6 +4064,23 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "zwei-generaele": {
+        "id": "zwei-generaele", "name": "Das Zwei-Generäle-Problem", "icon": "⚔️",
+        "farbe": "slate", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Zwei befreundete Armeen lagern auf gegenüberliegenden Hügeln. Dazwischen liegt die feindliche Stadt. Beide Armeen können gewinnen – aber nur, wenn sie <strong>gleichzeitig</strong> angreifen. Greift nur eine an, wird sie zerschlagen. Die einzige Kommunikation sind Boten, die durch die feindliche Stadt reiten müssen und abgefangen werden können.",
+        "frage": "General A schickt die Botschaft „Wir greifen morgen bei Sonnenaufgang an.“ Kann er — mit beliebig vielen Boten und Bestätigungs-Boten — jemals Sicherheit darüber erlangen, dass General B synchron angreift?",
+        "optionen": [
+            {"text": "Ja, nach genug Bestätigungen (z.B. 3 oder mehr Hin-und-Her-Nachrichten)", "hinweis": "Reicht iterative Rückmeldung?"},
+            {"text": "Ja, wenn jeder Bote verschlüsselt reitet", "hinweis": "Verschlüsselung schützt vor Lesen, nicht vor Verlust"},
+            {"text": "Nein — gemeinsames Wissen ist über einen unsicheren Kanal beweisbar unerreichbar", "hinweis": "Das klassische Impossibility-Resultat"},
+            {"text": "Ja, aber nur bei zwei Generälen — bei drei oder mehr wird es unmöglich", "hinweis": "Verwechslung mit dem Byzantinischen Problem?"},
+        ],
+        "loesung_text": "Nein – sicheres gemeinsames Wissen ist unmöglich.",
+        "erklaerung": "<p>Angenommen, nach <em>n</em> Botenritten wäre die Koordination garantiert. Dann wüsste der <em>letzte</em> Sender, dass seine Nachricht entscheidend ist – doch er weiß nicht, ob sie angekommen ist. Er bräuchte eine Bestätigung. Dieselbe Argumentation gilt für jede Zusatzbestätigung. Die Rekursion endet nie: <strong>Jede endliche Protokoll-Variante lässt sich auf dieselbe Weise widerlegen.</strong></p><p>Formal: Es gibt keinen deterministischen Algorithmus, der über einen unzuverlässigen Kanal <em>common knowledge</em> erzeugt (Gray 1978, Halpern &amp; Moses 1990).</p>",
+        "kontext": "<p><strong>Historischer Hintergrund:</strong> Das Problem wurde 1975 von Akkoyunlu, Ekanadham &amp; Huber formuliert und von Jim Gray 1978 populär gemacht. Es ist das älteste bekannte <em>Impossibility-Resultat</em> der verteilten Systeme.</p><p><strong>Praktische Konsequenz:</strong> Jedes verteilte System – TCP-Handshake, Zahlungsabwicklung, Datenbank-Commits – muss sich mit einer <em>probabilistischen</em> Sicherheit begnügen. TCP löst das Problem pragmatisch mit Timeouts und Retries; absolute Garantie gibt es nicht.</p><p><strong>Verwandt:</strong> Das Byzantinische-Generäle-Problem (Lamport 1982) erweitert dies auf verräterische Generäle – und zeigt: Mit n ≥ 3f+1 Teilnehmern wird Konsens bei bis zu f Verrätern möglich. Die Blockchain-Konsensverfahren (PBFT, Tendermint) sind direkte Antworten darauf.</p>",
+        "erkenntnis": "Perfekte Koordination über unzuverlässige Kanäle ist mathematisch unmöglich. Jedes verteilte Protokoll ist ein Kompromiss zwischen Verlässlichkeit und Latenz – nicht eine Lösung.",
     },
 }
 
