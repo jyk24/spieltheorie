@@ -539,6 +539,7 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Kommunikation",
     },
+    {"id":"streisand-effekt","name":"Der Streisand-Effekt","icon":"📸","beschreibung":"2003 verklagte Barbra Streisand einen Fotografen auf 50 Mio. $, weil er eine Luftaufnahme ihres Hauses hochgeladen hatte – damals 6 Mal abgerufen. Nach der Klage: 420 000 Downloads. Welche drei Mechanismen verwandeln Zensurversuche in virale Explosionen?","typ":"Kommunikations-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Kommunikation"},
     # ── Mathematik (neu) ─────────────────────────────────────────────────────
     {"id":"hanoi","name":"Die Türme von Hanoi","icon":"🗼","beschreibung":"3 Türme, n Scheiben – wie viele Züge braucht man mindestens? Die Antwort steckt in einer eleganten Rekursionsformel.","typ":"Logik-Rätsel","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Mathematik"},
     {"id":"koenigsberger-bruecken","name":"Königsberger Brücken","icon":"🌉","beschreibung":"7 Brücken, 4 Landmassen – kann man alle Brücken genau einmal überqueren? Euler löste das Problem 1736 und begründete die Graphentheorie.","typ":"Graphentheorie","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Mathematik"},
@@ -3324,6 +3325,23 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Das Eisberg-Modell (nach Freud, popularisiert in Kommunikation): Unter jeder Position stecken Interessen — darunter Bedürfnisse (Anerkennung, Autonomie, Sicherheit), Werte (Fairness, Respekt), Gefühle und alte Verletzungen. Konfliktlösung, die nur Positionen adressiert, löst nie wirklich.</p>",
         "kontext": "<p>Harvard-Konzept (Fisher/Ury): 'Separate people from the problem.' Erst wenn man tiefer gräbt und Bedürfnisse versteht, entstehen kreative Lösungen. Beide Kollegen brauchen vielleicht nur Anerkennung — das Zimmer ist nur das Symbol.</p>",
         "erkenntnis": "Konflikte werden selten durch das gelöst, worüber man streitet. Die eigentlichen Themen liegen unter der Oberfläche.",
+    },
+    "streisand-effekt": {
+        "id": "streisand-effekt", "name": "Der Streisand-Effekt", "icon": "📸",
+        "farbe": "rose", "kategorie": "Kommunikation",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Februar 2003: Barbra Streisand verklagt den Fotografen Kenneth Adelman auf 50 Millionen US-Dollar. Sein Vergehen: Er hatte 12 000 Luftaufnahmen der kalifornischen Küste online gestellt – darunter ein unbeschriftetes Foto, das Streisands Villa in Malibu zeigte. Zum Zeitpunkt der Klage hatten das Bild <strong>sechs Personen</strong> aufgerufen – zwei davon waren Streisands eigene Anwälte. Im Monat nach Klageeinreichung: <strong>420 000 Downloads</strong>. Streisand verlor den Prozess, zahlte 177 000 US-Dollar Gerichtskosten – und gab dem Phänomen unfreiwillig ihren Namen.",
+        "frage": "Welcher Mechanismus erklärt die Dynamik am präzisesten?",
+        "optionen": [
+            {"text": "Backfire-Effekt – Widerlegungen verstärken Überzeugungen", "hinweis": "Verwandt, aber über Glaubensinhalte, nicht über Information"},
+            {"text": "Drei verstärkende Kräfte überlagern sich: Suppressionsversuche <em>signalisieren</em> hohe Relevanz, erzeugen klassischen <em>Nachrichtenwert</em> (Konflikt + Prominenz), und aktivieren <em>Reaktanz</em> (Trotz gegen wahrgenommene Zensur)", "hinweis": "Multiplikativ, nicht additiv"},
+            {"text": "Zensur ist in offenen Gesellschaften schlicht technisch unmöglich", "hinweis": "Beschreibt Möglichkeit, nicht den Mechanismus"},
+            {"text": "Je mehr Aufwand jemand treibt, etwas zu verstecken, desto wichtiger ist es tatsächlich", "hinweis": "Signaltheoretisch wahr – aber nur ein Teil der Erklärung"},
+        ],
+        "loesung_text": "Drei Mechanismen zusammen – Signalwert, Nachrichtenwert, Reaktanz",
+        "erklaerung": "<p>Jansen & Martin (2015) sowie frühe Analysen von Mike Masnick (der 2005 den Begriff prägte) identifizieren drei Verstärker, die <em>multiplikativ</em> wirken:</p><ol class='list-decimal pl-5 space-y-1'><li><strong>Signaleffekt</strong>: Wer eine 50-Mio-Klage führt, verrät damit, dass die Information wichtig genug sein muss, um sich den Prozess zu leisten – ein kostspieliges, glaubwürdiges Signal (Spence 1973).</li><li><strong>Nachrichtenwert</strong>: Konflikt + Prominenz + ungewöhnlicher Rechtsstreit erfüllt alle klassischen Nachrichtenfaktoren (Galtung &amp; Ruge). Redaktionen können nicht nicht berichten.</li><li><strong>Reaktanz</strong>: Jack Brehm (1966) zeigte: Wahrgenommene Freiheitseinschränkung erzeugt eine motivationale Gegenkraft – man will genau das, was einem verwehrt wird.</li></ol><p>Jede Kraft allein wäre begrenzt. Zusammen explodieren sie – deshalb die 70 000-fache Aufmerksamkeitssteigerung bei Streisand.</p>",
+        "kontext": "<p><strong>Weitere Fälle:</strong> Trafigura-Giftmüll (2009): Eine britische Super-Injunction sollte Berichterstattung verhindern – Twitter-Erwähnungen stiegen in 24 Stunden um das 1000-Fache. Böhmermann/Erdogan (2016): Das Schmähgedicht erreichte durch den türkischen Strafantrag erst globale Reichweite. HBGary Federal (2011): Anonymous-Hackerangriff wurde vom Opfer selbst durch juristische Drohungen gegen Blogger populär.</p><p><strong>Grenzen:</strong> Der Effekt braucht (a) öffentliches Werden des Suppressionsversuchs, (b) technisch kopierbares Material, (c) ein Publikum mit latentem Interesse. Streng geheime Dokumente in geschlossenen Netzwerken bleiben zensierbar.</p><p><strong>Strategische Konsequenz:</strong> Kommunikationsprofis empfehlen 'starve the attention' – eine kurze, sachliche Richtigstellung ohne Eskalation. Juristische Drohungen sind das wirkungsvollste Werbemittel, das Gegner haben.</p>",
+        "erkenntnis": "Information will frei sein – und sie will besonders dann ausbrechen, wenn man sie einsperrt. Wer Verbreitung minimieren will, reduziert nicht die Information, sondern den Nachrichtenwert: ignorieren, nicht zensieren.",
     },
     "transaktionsanalyse": {
         "id": "transaktionsanalyse", "name": "Transaktionsanalyse", "icon": "🎭",
