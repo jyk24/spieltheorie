@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block title %}Peak-End-Regel – Wie das Gedächtnis Erinnerungen verzerrt{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+
+  <!-- Header -->
+  <div class="mb-6">
+    <a href="/raetsel" class="text-sm text-gray-500 hover:text-gray-700">← Alle Rätsel</a>
+  </div>
+  <div class="flex items-center gap-3 mb-2">
+    <span class="text-4xl">🎢</span>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-widest text-indigo-500">Verhaltensökonomie</p>
+      <h1 class="text-2xl font-bold text-gray-900">Die Peak-End-Regel</h1>
+    </div>
+  </div>
+  <p class="text-gray-500 text-sm mb-8">Daniel Kahneman &amp; Barbara Fredrickson · 1993 · Einsteiger · ~5 min</p>
+
+  <!-- Das Gedankenexperiment -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Das kalte Wasser</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-4">
+      Kahneman und sein Team baten Versuchspersonen 1993, zwei unangenehme Erfahrungen durchzustehen:
+    </p>
+
+    <div class="space-y-3">
+      <div class="bg-blue-50 rounded-xl p-4">
+        <p class="text-xs font-bold uppercase text-blue-700 mb-2">Durchgang A – Kurz</p>
+        <div class="flex items-center gap-3 text-sm">
+          <span class="text-2xl">🥶</span>
+          <span class="text-gray-700"><strong>60 Sekunden</strong> Hand in 14 °C kaltem Wasser</span>
+        </div>
+      </div>
+
+      <div class="bg-indigo-50 rounded-xl p-4">
+        <p class="text-xs font-bold uppercase text-indigo-700 mb-2">Durchgang B – Länger</p>
+        <div class="flex items-center gap-3 text-sm">
+          <span class="text-2xl">🥶</span>
+          <span class="text-gray-700"><strong>60 Sekunden</strong> Hand in 14 °C kaltem Wasser</span>
+        </div>
+        <div class="flex items-center gap-3 text-sm mt-2">
+          <span class="text-2xl">💧</span>
+          <span class="text-gray-700"><strong>+ 30 Sekunden</strong> bei 15 °C (minimal wärmer, immer noch unangenehm)</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-sm text-gray-600 leading-relaxed mt-4">
+      Dann die Entscheidungsfrage: <em>Welchen Durchgang würdest du freiwillig wiederholen?</em>
+    </p>
+  </div>
+
+  <!-- Interaktive Frage -->
+  <div class="bg-indigo-50 rounded-2xl p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-2">Welchen Durchgang wählst du?</h2>
+    <p class="text-sm text-gray-600 mb-4">
+      Beide Hälften waren eindeutig unangenehm. Durchgang B ist objektiv länger. Trotzdem –
+      welchen würdest du dir noch einmal antun?
+    </p>
+    <form hx-post="/raetsel/peak-end-regel/antwort" hx-target="#peak-end-result" hx-swap="innerHTML" class="space-y-2">
+      <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="a" class="text-indigo-600">
+        <span class="text-sm text-gray-700"><strong>Durchgang A</strong> – 60 Sekunden, dann vorbei. Weniger Gesamtleid.</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="b" class="text-indigo-600">
+        <span class="text-sm text-gray-700"><strong>Durchgang B</strong> – 90 Sekunden, aber das Ende war milder.</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="egal" class="text-indigo-600">
+        <span class="text-sm text-gray-700"><strong>Mir egal</strong> – beide sind unangenehm, da gibt's keinen Favoriten.</span>
+      </label>
+      <button type="submit" class="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors">
+        Antwort absenden
+      </button>
+    </form>
+    <div id="peak-end-result" class="mt-4"></div>
+  </div>
+
+  <!-- Die Regel -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Die Peak-End-Regel</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      Das Gedächtnis speichert eine Erfahrung <strong>nicht</strong> als Durchschnitt aller Momente –
+      sondern praktisch nur als Mittel aus zwei Datenpunkten:
+    </p>
+    <div class="grid grid-cols-2 gap-3 mb-4">
+      <div class="bg-amber-50 rounded-xl p-3">
+        <p class="text-xs font-bold text-amber-700 mb-1">PEAK</p>
+        <p class="text-sm text-gray-600">Das intensivste Gefühl – egal ob Höhepunkt oder Tiefpunkt.</p>
+      </div>
+      <div class="bg-rose-50 rounded-xl p-3">
+        <p class="text-xs font-bold text-rose-700 mb-1">END</p>
+        <p class="text-sm text-gray-600">Das Gefühl in den letzten Augenblicken.</p>
+      </div>
+    </div>
+    <p class="text-sm text-gray-600 leading-relaxed">
+      <strong>Dauer wird fast völlig ignoriert.</strong> Dieses Phänomen heißt
+      <em>Duration Neglect</em> – zehn Minuten Zahnarzt und zehn Sekunden Zahnarzt
+      hinterlassen fast dieselbe Erinnerung, wenn Peak und Ende gleich sind.
+    </p>
+  </div>
+
+  <!-- Diagramm: Erlebte vs. erinnerte Erfahrung -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Erleben vs. Erinnern</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-4">
+      Kahneman unterscheidet zwei Selbste: das <strong>erlebende Selbst</strong>, das jeden Moment durchlebt,
+      und das <strong>erinnernde Selbst</strong>, das die Geschichte erzählt. Entscheidungen trifft fast
+      immer das erinnernde Selbst – auch wenn das erlebende Selbst anderer Meinung ist.
+    </p>
+    <div class="bg-gray-50 rounded-xl p-4">
+      <div class="flex items-start gap-3 mb-3">
+        <span class="text-xl">⏱️</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Erlebendes Selbst</p>
+          <p class="text-sm text-gray-600">Summiert die Qualität jeder Sekunde. Bei B leidet man länger.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="text-xl">📖</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Erinnerndes Selbst</p>
+          <p class="text-sm text-gray-600">Erinnert nur Peak + Ende. B endet milder → wird als weniger schlimm erinnert.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Anwendungen -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-4">Wo begegnet dir das heute?</h2>
+    <div class="space-y-3">
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">🏥</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Kolonoskopien</p>
+          <p class="text-sm text-gray-600">Redelmeier &amp; Kahneman (1996): Verlängert man die Untersuchung um ein paar Minuten mit weniger Druck am Ende, erinnern Patienten sie als weniger schmerzhaft – obwohl sie objektiv länger litten. Mehr kommen zur Nachsorge.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">🎢</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Disney, Flughäfen, Hotels</p>
+          <p class="text-sm text-gray-600">Lange Wartezeiten werden toleriert, wenn der Peak (die Fahrt) stark genug ist und das Ende (Souvenirfoto, warme Verabschiedung) positiv bleibt. Hotels investieren in Check-Out – nicht in Check-In.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">🎬</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Filme &amp; Serien</p>
+          <p class="text-sm text-gray-600">Ein mittelmäßiger Film mit grandiosem Finale schlägt einen guten Film mit flachem Ende. Deshalb investieren Drehbuchautoren so viel in die letzten zehn Minuten.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">💼</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Meetings &amp; Verhandlungen</p>
+          <p class="text-sm text-gray-600">Ende freundlich – auch wenn der Verlauf zäh war. Deine Gegenüber speichern den letzten Moment, nicht den Mittelteil. Konkret: Bedanken, Nächster Schritt klar, Handschlag mit Blickkontakt.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">📦</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Unboxing &amp; Apple-Verpackungen</p>
+          <p class="text-sm text-gray-600">Der Peak sitzt beim ersten Öffnen, das Ende beim letzten Blick auf die Verpackung. Hochwertige Innenverpackungen bezahlen sich fast immer – sie prägen die Produkterinnerung.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Die dunkle Seite -->
+  <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-6">
+    <h2 class="font-bold text-amber-800 mb-3">⚠️ Die unbequeme Seite</h2>
+    <p class="text-sm text-amber-900 leading-relaxed mb-3">
+      Die Peak-End-Regel bedeutet auch: <strong>Deine Erinnerung an deine eigenen Erfahrungen ist unzuverlässig.</strong>
+      Ein zweiwöchiger Urlaub, in dem du 13 Tage glücklich und am letzten Tag krank warst,
+      wird als „schwieriger Urlaub" abgespeichert – obwohl das erlebende Selbst 93 % der Zeit glücklich war.
+    </p>
+    <p class="text-sm text-amber-900 leading-relaxed">
+      Entscheidungen für die Zukunft (Reise wiederholen? Beziehung fortsetzen? Diese Operation nochmal?)
+      stützen sich auf das erinnernde Selbst – und können systematisch gegen das eigene erlebende Wohl laufen.
+    </p>
+  </div>
+
+  <!-- Historischer Kontext -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+    <h2 class="font-bold text-gray-800 mb-3">Kahnemans Lebenswerk</h2>
+    <p class="text-sm text-gray-600 leading-relaxed">
+      Daniel Kahneman (1934–2024) erhielt 2002 den Wirtschaftsnobelpreis – gemeinsam mit Vernon Smith und
+      posthum geehrt für Amos Tversky. Die Peak-End-Regel ist Teil seiner umfassenden Theorie, dass Menschen
+      nicht die rationalen Nutzenmaximierer der klassischen Ökonomie sind, sondern von zwei Denksystemen
+      geprägt werden: <strong>System 1</strong> (schnell, intuitiv) und <strong>System 2</strong> (langsam, bewusst).
+      Sein Buch „Schnelles Denken, langsames Denken" (2011) hat die Verhaltensökonomie populär gemacht.
+    </p>
+  </div>
+
+  <!-- Navigation -->
+  <div class="flex justify-between">
+    <a href="/raetsel" class="text-sm text-gray-500 hover:text-gray-700">← Alle Rätsel</a>
+    <a href="/raetsel/verlustaversion" class="text-sm text-indigo-600 hover:text-indigo-800">Verlustaversion →</a>
+  </div>
+
+</div>
+{% endblock %}

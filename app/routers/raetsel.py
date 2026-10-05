@@ -631,6 +631,7 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"peak-end-regel","name":"Die Peak-End-Regel","icon":"🎢","beschreibung":"60 Sekunden kaltes Wasser – oder 90 Sekunden mit einem milderen Ende? Kahneman (1993) zeigte: Fast alle wählen freiwillig mehr Leid. Warum das Gedächtnis Dauer ignoriert und wie das Marketing, Medizin und Verhandlungen prägt.","typ":"Verhaltensökonomie","schwierigkeit":"Einsteiger","dauer":"5 min","kategorie":"Kognition"},
 ]
 
 
@@ -4113,6 +4114,21 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         request,
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
+    )
+
+
+@router.get("/peak-end-regel", response_class=HTMLResponse)
+def peak_end_regel_page(request: Request):
+    ctx = {"active_page": "raetsel", **_nav_context("peak-end-regel")}
+    return templates.TemplateResponse(request, "raetsel/peak_end_regel.html", ctx)
+
+
+@router.post("/peak-end-regel/antwort", response_class=HTMLResponse)
+def peak_end_regel_antwort(request: Request, antwort: str = Form(...)):
+    return templates.TemplateResponse(
+        request,
+        "partials/peak_end_regel_result.html",
+        {"antwort": antwort},
     )
 
 

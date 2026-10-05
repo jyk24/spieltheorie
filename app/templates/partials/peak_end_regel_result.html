@@ -1,0 +1,30 @@
+{% if antwort == "b" %}
+<div class="bg-green-50 border border-green-200 rounded-xl p-4">
+  <p class="font-semibold text-green-800">✓ Genau wie 69 % der Original-Versuchspersonen.</p>
+  <p class="text-sm text-green-700 mt-1">
+    Durchgang B dauert länger und enthält <em>mehr</em> Gesamtleid – aber die zusätzlichen 30 Sekunden
+    bei 15 °C sind spürbar milder. Dein <strong>erinnerndes Selbst</strong> speichert vor allem Peak und Ende:
+    Das Ende war weniger schlimm – also fühlt sich B in der Erinnerung besser an. Rational wäre A,
+    aber Rationalität verliert gegen das Gedächtnis.
+  </p>
+</div>
+{% elif antwort == "a" %}
+<div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+  <p class="font-semibold text-indigo-800">◉ Rational korrekt – aber ungewöhnlich.</p>
+  <p class="text-sm text-indigo-700 mt-1">
+    Du hast dich für weniger Gesamtleid entschieden – das wäre die Antwort des
+    <strong>erlebenden Selbst</strong>. Nur 31 % der Original-Versuchspersonen wählten so;
+    die Mehrheit lässt sich vom milderen Ende des Durchgangs B täuschen und wiederholt freiwillig
+    die längere Prozedur. Du hast das klassische Gedächtnis-Bias umgangen.
+  </p>
+</div>
+{% else %}
+<div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+  <p class="font-semibold text-amber-800">◐ „Egal" ist in der Realität selten.</p>
+  <p class="text-sm text-amber-700 mt-1">
+    Im Original-Experiment hatten 80 % der Versuchspersonen eine klare Präferenz – meist für Durchgang B.
+    Das Verblüffende: Sie wählten freiwillig <strong>mehr</strong> Leid, weil ihre Erinnerung ihnen
+    einflüsterte, es sei weniger schlimm gewesen. Das ist die Peak-End-Regel in Aktion.
+  </p>
+</div>
+{% endif %}
