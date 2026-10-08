@@ -1,0 +1,42 @@
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-4">
+  <div class="flex items-center gap-2 mb-4">
+    <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-full">Szenario 3 von 3</span>
+    <span class="text-xs text-gray-500">Der Transplantations-Chirurg</span>
+  </div>
+
+  <h2 class="font-bold text-gray-900 text-lg mb-3">Fünf Patienten – ein gesunder Besucher</h2>
+
+  <div class="bg-gray-50 rounded-xl p-4 mb-4 text-sm text-gray-700 leading-relaxed">
+    <p>Du bist Chirurgin. In deinem Krankenhaus liegen <strong>fünf Patienten im Sterben</strong>: einer braucht
+    ein Herz, einer eine Lunge, einer eine Niere, einer eine Leber, einer eine Bauchspeicheldrüse. Es gibt
+    keine Spenderorgane – alle fünf sterben heute Nacht.</p>
+    <p class="mt-3">Im Wartezimmer sitzt <strong>ein gesunder, perfekt kompatibler Besucher</strong>, der nur
+    seinen Freund abholen wollte. Niemand würde dich jemals verdächtigen.</p>
+    <p class="mt-3 font-semibold text-gray-900">Operierst du den gesunden Besucher und rettest die fünf?</p>
+  </div>
+
+  <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 text-xs text-amber-800">
+    Zahlen wieder: 1 Tod gegen 5. Deine Antwort hier verrät oft mehr über deine Ethik als die anderen beiden Szenarien.
+  </div>
+
+  <form class="space-y-2">
+    <button type="button"
+            hx-post="/raetsel/trolley/result"
+            hx-target="#trolley-area"
+            hx-swap="innerHTML"
+            hx-vals='{"a1": "{{ a1 }}", "a2": "{{ a2 }}", "a3": "operieren"}'
+            class="w-full text-left bg-white hover:bg-indigo-50 border-2 border-gray-200 hover:border-indigo-400 rounded-xl p-4 transition-colors">
+      <span class="font-semibold text-gray-900">Operieren</span>
+      <span class="block text-sm text-gray-600">Ich tue es – ein Toter rettet fünf Leben.</span>
+    </button>
+    <button type="button"
+            hx-post="/raetsel/trolley/result"
+            hx-target="#trolley-area"
+            hx-swap="innerHTML"
+            hx-vals='{"a1": "{{ a1 }}", "a2": "{{ a2 }}", "a3": "nicht_operieren"}'
+            class="w-full text-left bg-white hover:bg-indigo-50 border-2 border-gray-200 hover:border-indigo-400 rounded-xl p-4 transition-colors">
+      <span class="font-semibold text-gray-900">Nicht operieren</span>
+      <span class="block text-sm text-gray-600">Ich töte niemanden aktiv – auch wenn fünf Patienten sterben.</span>
+    </button>
+  </form>
+</div>

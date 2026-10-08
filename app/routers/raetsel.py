@@ -613,6 +613,7 @@ RAETSEL_META = [
     {"id":"flow-analyse","name":"Flow – der optimale Zustand","icon":"🌊","beschreibung":"Zwischen Langeweile und Überforderung liegt ein schmaler Kanal: Flow. Csikszentmihalyi (1990) beschreibt, wann Menschen völlig aufgehen in einer Tätigkeit.","typ":"Motivationspsychologie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"milgram-gehorsam","name":"Das Milgram-Experiment","icon":"⚡","beschreibung":"65% der Versuchspersonen verabreichten tödliche Elektroschocks – weil eine Autoritätsperson es verlangte. Was sagt das über moralischen Mut?","typ":"Sozialpsychologie","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Psychologie"},
     {"id":"pawlow-hund","name":"Pawlows Hund","icon":"🐕","beschreibung":"Pavlov entdeckte zufällig: Ein Hund speichelt nicht nur beim Fressen – sondern schon beim Klang der Glocke. Wie lernt das Gehirn Verknüpfungen, die eigentlich nicht existieren?","typ":"Verhaltenspsychologie","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Psychologie"},
+    {"id":"trolley","name":"Das Trolley-Problem","icon":"🚃","beschreibung":"Eine Straßenbahn rast auf fünf Arbeiter zu. Eine Weiche – ein Einzelner. Drei Varianten (Foot 1967, Thomson 1976). Warum urteilen 90 % der Menschen bei der Weiche anders als bei der Brücke?","typ":"Moralphilosophie","schwierigkeit":"Mittel","dauer":"6 min","kategorie":"Psychologie"},
     # ── Verhaltensökonomie & Entscheidung (neu) ──────────────────────────────
     {"id":"sunk-cost","name":"Der Sunk-Cost-Fehlschluss","icon":"🎟️","beschreibung":"Du sitzt im Theater, das Stück ist furchtbar. Du hast 80€ bezahlt. Bleibst du – oder gehst du? Der häufigste Denkfehler bei Investitionsentscheidungen.","typ":"Entscheidungsfehler","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"verlustaversion","name":"Verlustaversion","icon":"⚖️","beschreibung":"Verliere 50€ oder gewinne 50€ – welches Ereignis fühlt sich intensiver an? Kahneman & Tversky (1979): Verluste wiegen psychologisch doppelt so schwer wie gleich große Gewinne.","typ":"Prospect Theory","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
@@ -4113,6 +4114,45 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         request,
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
+    )
+
+
+# ---------------------------------------------------------------------------
+# Trolley-Problem (Foot 1967 / Thomson 1976)
+# ---------------------------------------------------------------------------
+
+@router.get("/trolley", response_class=HTMLResponse)
+def trolley_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/trolley.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/trolley/phase2", response_class=HTMLResponse)
+def trolley_phase2(request: Request, a1: str = Form(...)):
+    return templates.TemplateResponse(
+        request, "partials/trolley_phase2.html", {"a1": a1}
+    )
+
+
+@router.post("/trolley/phase3", response_class=HTMLResponse)
+def trolley_phase3(request: Request, a1: str = Form(...), a2: str = Form(...)):
+    return templates.TemplateResponse(
+        request, "partials/trolley_phase3.html", {"a1": a1, "a2": a2}
+    )
+
+
+@router.post("/trolley/result", response_class=HTMLResponse)
+def trolley_result(
+    request: Request,
+    a1: str = Form(...),
+    a2: str = Form(...),
+    a3: str = Form(...),
+):
+    return templates.TemplateResponse(
+        request,
+        "partials/trolley_result.html",
+        {"a1": a1, "a2": a2, "a3": a3},
     )
 
 

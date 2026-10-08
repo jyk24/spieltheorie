@@ -608,6 +608,19 @@ GLOSSAR = [
         "link": "/grundlagen",
     },
     {
+        "id": "trolley-problem",
+        "titel": "Trolley-Problem",
+        "definition": (
+            "Moralphilosophisches Gedankenexperiment: Eine Strassenbahn rast auf 5 Arbeiter zu, "
+            "eine Weiche koennte sie auf ein Nebengleis mit nur 1 Arbeiter umleiten. Philippa Foot (1967). "
+            "Varianten: Weiche (90 % greifen ein), Mann von Bruecke stossen (10 %), gesunden Besucher operieren (<5 %). "
+            "Illustriert Konflikt zwischen Utilitarismus (Zahlen zaehlen), Deontologie (nie als Mittel benutzen) "
+            "und der Doktrin der Doppelwirkung (Thomas von Aquin). Zentrale Frage selbstfahrender Autos (Moral Machine, MIT 2018)."
+        ),
+        "kategorie": "Entscheidung",
+        "link": "/raetsel/trolley",
+    },
+    {
         "id": "simpson-paradoxon",
         "titel": "Simpson-Paradoxon",
         "definition": (
