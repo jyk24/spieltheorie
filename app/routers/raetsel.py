@@ -153,6 +153,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Logik",
     },
+    {
+        "id": "blaue-augen",
+        "name": "Das Blaue-Augen-Rätsel",
+        "icon": "👁️",
+        "beschreibung": "100 Insulaner mit blauen Augen, 100 mit braunen. Niemand darf über Augenfarbe sprechen. Ein Fremder sagt einen einzigen Satz: 'Mindestens einer von euch hat blaue Augen.' Nach genau 100 Tagen verlassen alle Blauäugigen die Insel. Warum sagt eine scheinbar triviale Information plötzlich alles – und wie entsteht gemeinsames Wissen?",
+        "typ": "Common-Knowledge-Paradox",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "7 min",
+        "kategorie": "Logik",
+    },
     # ── Mathematik & Unendlichkeit ─────────────────────────────────────────────
     {
         "id": "achilles",
@@ -4113,6 +4123,22 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         request,
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
+    )
+
+
+@router.get("/blaue-augen", response_class=HTMLResponse)
+def blaue_augen_page(request: Request):
+    ctx = {"active_page": "raetsel", **_nav_context("blaue-augen")}
+    return templates.TemplateResponse(request, "raetsel/blaue_augen.html", ctx)
+
+
+@router.post("/blaue-augen/antwort", response_class=HTMLResponse)
+def blaue_augen_antwort(request: Request, tage: int = Form(...), blaue: int = Form(...)):
+    correct_tag = (tage == blaue)
+    return templates.TemplateResponse(
+        request,
+        "partials/blaue_augen_result.html",
+        {"tage": tage, "blaue": blaue, "correct_tag": correct_tag},
     )
 
 

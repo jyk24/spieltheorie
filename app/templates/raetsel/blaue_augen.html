@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+{% block title %}Das Blaue-Augen-Rätsel – Common Knowledge & Induktion{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+
+  <!-- Header -->
+  <div class="mb-6">
+    <a href="/raetsel" class="text-sm text-gray-500 hover:text-gray-700">← Alle Rätsel</a>
+  </div>
+  <div class="flex items-center gap-3 mb-2">
+    <span class="text-4xl">👁️</span>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-widest text-indigo-500">Common-Knowledge-Paradox</p>
+      <h1 class="text-2xl font-bold text-gray-900">Das Blaue-Augen-Rätsel</h1>
+    </div>
+  </div>
+  <p class="text-gray-500 text-sm mb-8">Hans Freudenthal · 1969 · Fortgeschritten · ~7 min</p>
+
+  <!-- Setup -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-4">Die Insel der perfekten Logiker</h2>
+    <div class="space-y-3 text-sm text-gray-700 leading-relaxed">
+      <p>Auf einer abgelegenen Insel leben <strong>200 Menschen</strong>: 100 mit <span class="text-sky-600 font-semibold">blauen</span> Augen, 100 mit <span class="text-amber-700 font-semibold">braunen</span>.</p>
+      <ul class="list-disc pl-5 space-y-1 text-gray-600">
+        <li>Jeder sieht die Augenfarbe aller anderen – aber niemand kennt die eigene.</li>
+        <li>Es gibt keine Spiegel, keine Pfützen, kein Foto. Niemand darf das Wort „Augenfarbe" aussprechen.</li>
+        <li>Jeder Bewohner ist ein <em>perfekter Logiker</em>, und das weiß auch jeder voneinander.</li>
+        <li>Religion gebietet: Wer seine eigene Augenfarbe deduziert, muss die Insel an diesem Abend mit der Fähre verlassen.</li>
+      </ul>
+      <p class="bg-indigo-50 rounded-lg p-3 text-indigo-800">
+        Eines Tages besucht ein Fremder die Insel. Vor allen 200 Bewohnern sagt er einen einzigen Satz:
+      </p>
+      <p class="text-center text-lg italic font-semibold text-indigo-900 py-3 px-4 bg-indigo-50 rounded-lg border border-indigo-200">
+        „Mindestens einer von euch hat blaue Augen."
+      </p>
+    </div>
+  </div>
+
+  <!-- Das Paradoxe -->
+  <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-6">
+    <h2 class="font-bold text-amber-900 mb-3">Das Paradoxe</h2>
+    <p class="text-sm text-amber-900 leading-relaxed">
+      Jeder Blauäugige sieht bereits <strong>99 andere Blauäugige</strong>. Der Fremde teilt also scheinbar
+      <em>nichts Neues</em> mit – jeder weiß längst, dass mindestens einer blaue Augen hat.
+    </p>
+    <p class="text-sm text-amber-900 leading-relaxed mt-2">
+      Trotzdem verlassen nach genau <strong>100 Tagen</strong> alle 100 Blauäugigen gleichzeitig die Insel.
+      Wie kann eine „triviale" Aussage das auslösen?
+    </p>
+  </div>
+
+  <!-- Interaktive Reduktion -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-4">Spiele den Fall klein durch</h2>
+    <p class="text-sm text-gray-600 mb-4">
+      Wähle, wie viele Blauäugige es gibt. Die Logik läuft identisch – nur die Anzahl der Tage ändert sich.
+    </p>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+      <button type="button" onclick="setN(1)" data-n="1" class="n-btn bg-slate-100 hover:bg-indigo-100 text-slate-700 py-2 rounded-lg text-sm font-medium">1 blauer</button>
+      <button type="button" onclick="setN(2)" data-n="2" class="n-btn bg-slate-100 hover:bg-indigo-100 text-slate-700 py-2 rounded-lg text-sm font-medium">2 blaue</button>
+      <button type="button" onclick="setN(3)" data-n="3" class="n-btn bg-slate-100 hover:bg-indigo-100 text-slate-700 py-2 rounded-lg text-sm font-medium">3 blaue</button>
+      <button type="button" onclick="setN(4)" data-n="4" class="n-btn bg-slate-100 hover:bg-indigo-100 text-slate-700 py-2 rounded-lg text-sm font-medium">4 blaue</button>
+    </div>
+
+    <div id="szenario" class="bg-indigo-50 rounded-xl p-4 text-sm text-indigo-900 leading-relaxed">
+      Wähle oben einen Fall, um die Induktion schrittweise zu sehen.
+    </div>
+  </div>
+
+  <!-- Die Lösung interaktiv -->
+  <div class="bg-indigo-50 rounded-2xl p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-2">Jetzt du: 100 Blauäugige, 100 Braunäugige</h2>
+    <p class="text-sm text-gray-600 mb-4">An welchem Tag verlässt der letzte Blauäugige die Insel – und wie viele?</p>
+    <form hx-post="/raetsel/blaue-augen/antwort" hx-target="#blaue-result" hx-swap="innerHTML" class="space-y-3">
+      <div class="flex gap-3">
+        <div class="flex-1">
+          <label class="text-xs font-semibold text-slate-600 uppercase tracking-wide">Tag</label>
+          <input type="number" name="tage" min="1" max="500" required
+                 class="w-full mt-1 bg-white rounded-xl p-3 border border-slate-200 focus:border-indigo-400 focus:outline-none text-sm">
+        </div>
+        <div class="flex-1">
+          <label class="text-xs font-semibold text-slate-600 uppercase tracking-wide">Wie viele verlassen die Insel?</label>
+          <input type="number" name="blaue" min="1" max="200" required
+                 class="w-full mt-1 bg-white rounded-xl p-3 border border-slate-200 focus:border-indigo-400 focus:outline-none text-sm">
+        </div>
+      </div>
+      <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors">
+        Antwort prüfen
+      </button>
+    </form>
+    <div id="blaue-result" class="mt-4"></div>
+  </div>
+
+  <!-- Die eigentliche Lektion -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Was der Fremde wirklich geliefert hat</h2>
+    <p class="text-sm text-gray-700 leading-relaxed mb-3">
+      Jeder wusste bereits: „Es gibt mindestens einen Blauäugigen." Aber jeder wusste nicht, dass <em>alle</em> es wussten.
+      Nach dem öffentlichen Satz des Fremden gilt plötzlich:
+    </p>
+    <div class="bg-slate-50 rounded-lg p-4 text-sm text-slate-800 space-y-1 font-mono">
+      <p>Ich weiß, dass X.</p>
+      <p>Ich weiß, dass du weißt, dass X.</p>
+      <p>Ich weiß, dass du weißt, dass ich weiß, dass X.</p>
+      <p class="text-slate-500">… ad infinitum.</p>
+    </div>
+    <p class="text-sm text-gray-700 leading-relaxed mt-3">
+      Das ist der Unterschied zwischen <strong>Wissen</strong> und <strong>Common Knowledge</strong>
+      (gemeinsames Wissen). Erst letzteres macht die Induktion stabil – und erst damit kann der Logiker
+      Tag für Tag zählen und am 100. Tag seine eigene Augenfarbe ableiten.
+    </p>
+  </div>
+
+  <!-- Warum das zählt -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-4">Warum Common Knowledge Verhandlungen entscheidet</h2>
+    <div class="space-y-3">
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">📜</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Öffentliche Ankündigungen</p>
+          <p class="text-sm text-gray-600">Zentralbanken wählen ihre Worte sorgsam – nicht wegen des Inhalts, sondern weil ein Statement, das <em>alle sehen</em>, anders wirkt als eine Nachricht an einzelne.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">🤝</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Koordination</p>
+          <p class="text-sm text-gray-600">Zwei Streikende halten durch, wenn beide wissen, dass beide es wissen. Private Zusagen reichen nicht – es braucht gemeinsame Sichtbarkeit.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">💥</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Revolutionen</p>
+          <p class="text-sm text-gray-600">Autokratien zerfallen oft nach einem einzigen öffentlichen Moment – nicht weil Unzufriedenheit neu wäre, sondern weil sie plötzlich gemeinsames Wissen wird (Timur Kuran, „Preference Falsification").</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">💼</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Verträge & Protokolle</p>
+          <p class="text-sm text-gray-600">In verteilten Systemen gilt das Zwei-Generäle-Problem: Ohne gemeinsame Beweisführung bleibt jede Zusage angreifbar. Blockchain ersetzt Common Knowledge mit kryptografischer Verifikation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Historischer Kontext -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Woher kommt das Rätsel?</h2>
+    <p class="text-sm text-gray-600 leading-relaxed">
+      Die früheste veröffentlichte Form stammt von Hans Freudenthal (1969). David Gale machte es 1998 populär in <em>Mathematical Entertainments</em>,
+      Terence Tao 2008 über seinen Blog – seitdem gehört es zum Standardrepertoire epistemischer Logik.
+      Robert Aumann formulierte 1976 die Theorie des Common Knowledge formal und erhielt 2005 den Nobelpreis für Wirtschaftswissenschaften.
+    </p>
+  </div>
+
+  <!-- Post-Puzzle Navigation -->
+  <div class="flex gap-3 mb-4">
+    <a href="/raetsel"
+       class="flex-1 text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors text-sm">
+      ← Alle Rätsel
+    </a>
+    {% if next_puzzle %}
+    <a href="/raetsel/{{ next_puzzle.id }}"
+       class="flex-1 text-center bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium transition-colors text-sm">
+      {{ next_puzzle.icon }} {{ next_puzzle.name }} →
+    </a>
+    {% endif %}
+  </div>
+
+  {% if related_puzzles %}
+  <div class="mt-6">
+    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Ähnliche Rätsel</p>
+    <div class="space-y-2">
+      {% for r in related_puzzles %}
+      <a href="/raetsel/{{ r.id }}"
+         class="flex items-start gap-3 p-3 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 hover:shadow-sm transition-all">
+        <span class="text-xl">{{ r.icon }}</span>
+        <div>
+          <p class="font-semibold text-slate-800 text-sm">{{ r.name }}</p>
+          {% if r.beschreibung %}
+          <p class="text-xs text-slate-500 mt-0.5 line-clamp-2">{{ r.beschreibung }}</p>
+          {% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+<script>
+const SZENARIEN = {
+  1: `<p class="font-semibold mb-1">Fall n = 1 (ein Blauäugiger)</p>
+      <p>Dieser eine sieht <strong>keinen</strong> anderen mit blauen Augen. Der Fremde sagt: „Mindestens einer." Also muss er es selbst sein. Er verlässt die Insel am <strong>Tag 1</strong>.</p>`,
+  2: `<p class="font-semibold mb-1">Fall n = 2 (zwei Blauäugige, A und B)</p>
+      <p>A sieht nur B als Blauäugigen. Hätte A braune Augen, wäre B der einzige – und würde am Tag 1 gehen.</p>
+      <p class="mt-1">B geht aber am Tag 1 nicht. Also war B nicht der einzige. Also hat A ebenfalls blaue Augen.</p>
+      <p class="mt-1">Beide verlassen die Insel am <strong>Tag 2</strong>, gleichzeitig.</p>`,
+  3: `<p class="font-semibold mb-1">Fall n = 3 (drei Blauäugige)</p>
+      <p>Jeder sieht 2 andere. Jeder denkt: „Wenn ich braune Augen hätte, säßen die anderen beiden im Fall n = 2 und gingen am Tag 2."</p>
+      <p class="mt-1">Sie gehen am Tag 2 nicht. Also müssen alle drei blaue Augen haben – und verlassen die Insel am <strong>Tag 3</strong>.</p>`,
+  4: `<p class="font-semibold mb-1">Fall n = 4 (vier Blauäugige)</p>
+      <p>Jeder sieht 3 andere. „Hätte ich braune Augen, säßen die anderen drei im Fall n = 3 und gingen am Tag 3."</p>
+      <p class="mt-1">Da das am Tag 3 ausbleibt, deduzieren alle vier gleichzeitig – und verlassen die Insel am <strong>Tag 4</strong>.</p>
+      <p class="mt-2 text-slate-700">👉 Allgemein: Bei <em>n</em> Blauäugigen passiert am <strong>Tag n</strong> das Verlassen – alle <em>n</em> gemeinsam.</p>`,
+};
+
+function setN(n) {
+  document.querySelectorAll('.n-btn').forEach(b => {
+    if (parseInt(b.dataset.n) === n) {
+      b.classList.add('bg-indigo-600', 'text-white');
+      b.classList.remove('bg-slate-100', 'text-slate-700', 'hover:bg-indigo-100');
+    } else {
+      b.classList.remove('bg-indigo-600', 'text-white');
+      b.classList.add('bg-slate-100', 'text-slate-700', 'hover:bg-indigo-100');
+    }
+  });
+  document.getElementById('szenario').innerHTML = SZENARIEN[n];
+}
+</script>
+
+{% endblock %}

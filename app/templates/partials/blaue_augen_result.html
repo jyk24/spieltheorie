@@ -1,0 +1,26 @@
+{% if correct_tag %}
+<div class="bg-green-50 border border-green-200 rounded-xl p-4">
+  <p class="font-semibold text-green-800">✓ Richtig! Tag {{ tage }}, {{ blaue }} Blauäugige.</p>
+  <p class="text-sm text-green-700 mt-2 leading-relaxed">
+    Bei <em>n</em> Blauäugigen gilt per Induktion: Am Tag <em>n</em> deduzieren alle <em>n</em> gleichzeitig ihre Augenfarbe und verlassen die Insel am selben Abend.
+    Für 100 Blauäugige heißt das: Am <strong>Tag 100</strong> gehen alle 100 Blauäugigen gemeinsam.
+    Die Braunäugigen bleiben – sie wissen nur, dass sie entweder braun oder noch unbekannt gefärbt sind.
+  </p>
+  <p class="text-xs text-green-600 mt-2">
+    Die scheinbar triviale Aussage des Fremden wirkte, weil sie das Wissen zu <em>Common Knowledge</em> machte –
+    jeder weiß, dass jeder weiß, dass jeder weiß … (unendlich viele Ebenen).
+  </p>
+</div>
+{% else %}
+<div class="bg-red-50 border border-red-200 rounded-xl p-4">
+  <p class="font-semibold text-red-800">✗ Noch nicht ganz.</p>
+  <p class="text-sm text-red-700 mt-2 leading-relaxed">
+    Du hast Tag <strong>{{ tage }}</strong> und <strong>{{ blaue }}</strong> Blauäugige eingegeben.
+    Die richtige Antwort: An <strong>Tag 100</strong> verlassen alle <strong>100 Blauäugigen</strong> gemeinsam die Insel.
+  </p>
+  <p class="text-sm text-red-700 mt-2 leading-relaxed">
+    Die Induktion funktioniert so: Bei <em>n</em> Blauäugigen gehen alle <em>n</em> am Tag <em>n</em>.
+    Jeder Blauäugige wartet 99 Tage ab, ob die 99 anderen gehen – wenn nicht, muss er selbst der 100. sein.
+  </p>
+</div>
+{% endif %}
