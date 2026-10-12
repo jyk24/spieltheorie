@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% block title %}Das Zwei-Generäle-Problem – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">⚔️ Das Zwei-Generäle-Problem</h1>
+        <p class="text-slate-500 mt-1">Common Knowledge ist unerreichbar – aber ohne es ist Koordination unmöglich.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="font-semibold mb-3">Die Situation:</p>
+        <div class="space-y-2 mb-4">
+            <div class="flex items-start gap-2">
+                <span class="text-slate-500 mt-0.5">🏔️</span>
+                <span>Zwei Armeen (A und B) liegen auf gegenüberliegenden Hügeln, die feindliche Stadt liegt im Tal dazwischen.</span>
+            </div>
+        </div>
+        <div class="bg-amber-50 border-l-4 border-amber-400 rounded-r-xl p-4 mb-4 italic text-slate-700">
+            Nur ein <strong>gleichzeitiger Angriff</strong> beider Armeen gewinnt die Schlacht.
+            Greift nur eine an, wird sie vernichtet.
+        </div>
+        <div class="space-y-2 text-sm text-slate-600">
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-400 mt-0.5">•</span>
+                <span>General A möchte morgen um 06:00 Uhr angreifen und schickt einen Boten durch das Tal zu B.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-400 mt-0.5">•</span>
+                <span>Der Bote kann im Tal <strong>abgefangen</strong> werden – A weiß dann nicht, ob B die Nachricht erhalten hat.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-400 mt-0.5">•</span>
+                <span>B bekommt die Nachricht und sendet eine Bestätigung zurück – auch dieser Bote kann abgefangen werden.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-400 mt-0.5">•</span>
+                <span>Beide Generäle sind rational und wissen alles bisher Gesagte.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message chain illustration -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5">
+        <p class="font-semibold text-slate-800 mb-1">Die Botschafter-Kette</p>
+        <p class="text-sm text-slate-500 mb-5">
+            Jeder weitere Bote erhöht das gemeinsame Wissen – aber keiner macht es vollständig.
+        </p>
+
+        <div class="space-y-3">
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-indigo-50 border border-indigo-200">
+                <span class="text-xl">1️⃣</span>
+                <div class="text-sm">
+                    <span class="font-bold text-indigo-800">A → B:</span>
+                    „Angriff um 06:00 Uhr."
+                    <span class="text-xs text-indigo-500 block mt-0.5">A weiß nicht, ob B es weiß.</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+                <span class="text-xl">2️⃣</span>
+                <div class="text-sm">
+                    <span class="font-bold text-emerald-800">B → A:</span>
+                    „Bestätigt."
+                    <span class="text-xs text-emerald-600 block mt-0.5">B weiß nicht, ob A die Bestätigung bekam.</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-indigo-50 border border-indigo-200">
+                <span class="text-xl">3️⃣</span>
+                <div class="text-sm">
+                    <span class="font-bold text-indigo-800">A → B:</span>
+                    „Bestätigung erhalten."
+                    <span class="text-xs text-indigo-500 block mt-0.5">A weiß nicht, ob B es weiß, dass A es weiß…</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-slate-200">
+                <span class="text-xl">…</span>
+                <div class="text-sm text-slate-500 italic">
+                    Jeder weitere Bote hat genau das gleiche Problem.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reasoning Prompt -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5">
+        <p class="font-semibold text-slate-800 mb-1">Wie koordinieren sich die Generäle sicher?</p>
+        <p class="text-sm text-slate-500 mb-5">
+            Was ist deine beste Strategie, damit beide am Ende <strong>gleichzeitig</strong> angreifen?
+        </p>
+
+        <form class="space-y-3" id="zg-form">
+
+            <button type="button"
+                    hx-post="/raetsel/zwei-generaele/result"
+                    hx-target="#zg-area"
+                    hx-swap="innerHTML"
+                    hx-include="#zg-form"
+                    hx-vals='{"choice": "ein-bote"}'
+                    class="w-full text-left p-4 rounded-xl border-2 border-blue-200 bg-blue-50 hover:border-blue-400 hover:bg-blue-100 transition-all">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl">📨</span>
+                    <div>
+                        <div class="font-bold text-blue-800">Ein Bote mit klarer Nachricht reicht.</div>
+                        <div class="text-sm text-blue-600 mt-0.5">„Angriff morgen 06:00 Uhr." – wenn B das bekommt, läuft es.</div>
+                    </div>
+                </div>
+            </button>
+
+            <button type="button"
+                    class="w-full text-left p-4 rounded-xl border-2 border-indigo-200 bg-indigo-50 hover:border-indigo-400 hover:bg-indigo-100 transition-all">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl">📬</span>
+                    <div class="w-full">
+                        <div class="font-bold text-indigo-800">Mehrere Bestätigungs-Runden.</div>
+                        <div class="text-sm text-indigo-600 mt-0.5 mb-2">Wie viele Boten braucht es, damit beide sicher sind?</div>
+                        <div class="flex items-center gap-2">
+                            <input type="number" name="anzahl" value="3" min="2" max="20"
+                                   class="w-20 px-2 py-1 rounded border border-indigo-300 text-slate-800 text-sm">
+                            <button type="button"
+                                    hx-post="/raetsel/zwei-generaele/result"
+                                    hx-target="#zg-area"
+                                    hx-swap="innerHTML"
+                                    hx-include="#zg-form"
+                                    hx-vals='{"choice": "mehr-boten"}'
+                                    class="bg-indigo-600 text-white px-3 py-1 rounded text-sm hover:bg-indigo-700">
+                                Mit dieser Anzahl koordinieren
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </button>
+
+            <button type="button"
+                    hx-post="/raetsel/zwei-generaele/result"
+                    hx-target="#zg-area"
+                    hx-swap="innerHTML"
+                    hx-include="#zg-form"
+                    hx-vals='{"choice": "gleichzeitig-starten"}'
+                    class="w-full text-left p-4 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 hover:bg-slate-100 transition-all">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl">⏰</span>
+                    <div>
+                        <div class="font-bold text-slate-700">Zeit vorher festlegen, ohne Bestätigung angreifen.</div>
+                        <div class="text-sm text-slate-500 mt-0.5">Ignorier die Boten – greif einfach zur vereinbarten Zeit an.</div>
+                    </div>
+                </div>
+            </button>
+
+            <button type="button"
+                    hx-post="/raetsel/zwei-generaele/result"
+                    hx-target="#zg-area"
+                    hx-swap="innerHTML"
+                    hx-include="#zg-form"
+                    hx-vals='{"choice": "unmoeglich"}'
+                    class="w-full text-left p-4 rounded-xl border-2 border-red-200 bg-red-50 hover:border-red-400 hover:bg-red-100 transition-all">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl">🚫</span>
+                    <div>
+                        <div class="font-bold text-red-800">Es gibt keine Anzahl, die beide sicher synchronisiert.</div>
+                        <div class="text-sm text-red-600 mt-0.5">Perfekte deterministische Koordination ist über unzuverlässige Kanäle unmöglich.</div>
+                    </div>
+                </div>
+            </button>
+
+        </form>
+
+        <div id="zg-area"></div>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-500">
+        <span class="font-semibold">Hinweis:</span> Das Zwei-Generäle-Problem wurde 1975 von Akkoyunlu, Ekanadham und Huber beschrieben
+        und ist das älteste bekannte Beispiel für die Unmöglichkeit garantierter verteilter Koordination über unzuverlässige Kanäle.
+        Es ist die theoretische Basis für Byzantine Fault Tolerance (Lamport et al., 1982) und TCP's „Handshake"-Design.
+    </div>
+</div>
+
+<script>
+document.body.addEventListener('htmx:afterSwap', function(e) {
+    if (e.detail.target.id === 'zg-area') {
+        document.getElementById('zg-form').style.display = 'none';
+    }
+});
+</script>
+
+{% endblock %}

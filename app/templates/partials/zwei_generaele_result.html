@@ -1,0 +1,155 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    <!-- Reaktion auf Wahl -->
+    {% if is_correct %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">Richtig – perfekte deterministische Koordination ist unmöglich.</h3>
+        <p class="text-sm text-emerald-700">
+            Egal wie viele Bestätigungen über einen unzuverlässigen Kanal laufen:
+            Der jeweils letzte Sender weiß nie, ob seine Nachricht angekommen ist.
+            <strong>Common Knowledge im strengen Sinn ist über unsichere Kanäle unerreichbar.</strong>
+        </p>
+    </div>
+    {% elif choice == "ein-bote" %}
+    <div class="mb-5 p-4 rounded-xl bg-blue-50 border-2 border-blue-300">
+        <h3 class="text-xl font-bold text-blue-800 mb-1">A hat die Nachricht gesendet – aber weiß nicht, ob B sie bekam.</h3>
+        <p class="text-sm text-blue-700">
+            A kann nicht angreifen, ohne zu wissen, dass B kommt. B wird aber ebenfalls nicht ohne Bestätigung angreifen.
+            Beide bleiben stehen – die Nachricht allein garantiert keine Koordination.
+        </p>
+    </div>
+    {% elif choice == "mehr-boten" %}
+    <div class="mb-5 p-4 rounded-xl bg-indigo-50 border-2 border-indigo-300">
+        <h3 class="text-xl font-bold text-indigo-800 mb-1">Auch nach {{ anzahl }} Bestätigungen bleibt ein letzter Zweifel.</h3>
+        <p class="text-sm text-indigo-700">
+            Der jeweils letzte Sender weiß nie, ob seine Nachricht ankam.
+            Jeder zusätzliche Austausch hebt den Zweifel nur eine Ebene höher – aber löst ihn nie auf.
+        </p>
+    </div>
+    {% elif choice == "gleichzeitig-starten" %}
+    <div class="mb-5 p-4 rounded-xl bg-amber-50 border-2 border-amber-300">
+        <h3 class="text-xl font-bold text-amber-800 mb-1">Pragmatisch – aber das Problem war vorher.</h3>
+        <p class="text-sm text-amber-700">
+            Dafür bräuchte es eine <em>vorherige</em> gemeinsame Absprache – also exakt die Koordination,
+            die das Problem zum Problem macht. Das Rätsel beginnt genau in dem Moment, in dem beide Armeen
+            getrennt sind und sich erst synchronisieren müssen.
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Mathematische Analyse: Die rekursive Falle -->
+    <div class="bg-red-50 border-2 border-red-300 rounded-xl p-5 mb-5">
+        <div class="flex items-center gap-3 mb-3">
+            <span class="text-3xl">♾️</span>
+            <div>
+                <p class="font-bold text-red-800 text-lg">Die rekursive Falle</p>
+                <p class="text-sm text-red-700">Jeder Bote fügt eine Wissens-Ebene hinzu – aber nie die letzte.</p>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg p-4 text-xs text-slate-600 border border-red-200 space-y-1.5">
+            <div>• <strong>Ebene 1:</strong> B weiß, wann A angreifen will.</div>
+            <div>• <strong>Ebene 2:</strong> A weiß, dass B es weiß.</div>
+            <div>• <strong>Ebene 3:</strong> B weiß, dass A weiß, dass B es weiß.</div>
+            <div class="italic">… und so weiter bis Ebene ∞.</div>
+            <div class="pt-2 border-t border-red-200 font-semibold text-red-800">
+                Common Knowledge = alle Ebenen gleichzeitig. Über unzuverlässige Kanäle: nie erreichbar.
+            </div>
+        </div>
+    </div>
+
+    <!-- Simulation -->
+    <div class="mb-5">
+        <h4 class="font-bold text-slate-800 mb-1">Wahrscheinlichkeit vollständiger Übertragung</h4>
+        <p class="text-sm text-slate-500 mb-4">
+            Angenommen jeder Bote kommt mit 70 % durch – wie sinkt die Chance, dass alle Boten ankommen?
+        </p>
+
+        <div class="space-y-2">
+            {% for s in simulated %}
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-slate-200">
+                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-indigo-100 border border-indigo-200 flex items-center justify-center font-bold text-indigo-600 text-sm">
+                    {{ s.n }}
+                </div>
+                <div class="flex-grow">
+                    <div class="text-xs text-slate-500 mb-0.5">
+                        {{ s.n }} Bote{% if s.n > 1 %}n{% endif %} → Wissens-Ebene {{ s.wissen }}
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2">
+                        <div class="bg-indigo-500 h-2 rounded-full" style="width: {{ s.p_all }}%"></div>
+                    </div>
+                </div>
+                <div class="text-sm font-mono text-slate-700 w-14 text-right">{{ s.p_all }}%</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-3 p-3 rounded-lg bg-amber-100 border-2 border-amber-300 text-sm text-amber-800 text-center">
+            <strong>Praktischer Punkt:</strong> Mehr Boten → höhere Wissens-Ebene, aber <em>exponentiell sinkende</em> Übertragungswahrscheinlichkeit.
+        </div>
+    </div>
+
+    <!-- Lösungen in der Praxis -->
+    <div class="mb-5">
+        <h4 class="font-bold text-slate-800 mb-3">Wie geht die reale Welt damit um?</h4>
+        <div class="space-y-3 text-sm">
+
+            <div class="p-4 rounded-xl bg-violet-50 border border-violet-200">
+                <p class="font-semibold text-violet-800 mb-1">1. Probabilistische Garantien statt Perfektion</p>
+                <p class="text-violet-700 text-xs">
+                    TCP's „Drei-Wege-Handshake" (SYN, SYN-ACK, ACK) erreicht nie 100 % Sicherheit –
+                    aber macht die Fehlerwahrscheinlichkeit vernachlässigbar klein. „Gut genug" ersetzt „perfekt".
+                </p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-indigo-50 border border-indigo-200">
+                <p class="font-semibold text-indigo-800 mb-1">2. Zeitstempel & vorverhandelte Protokolle</p>
+                <p class="text-indigo-700 text-xs">
+                    Blockchains, Flugverkehrskontrolle, militärische Operationen nutzen vorab synchronisierte Uhren
+                    plus Standard-Protokolle. Keine Koordination <em>während</em> der Aktion – alles vorher festgelegt.
+                </p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-amber-50 border border-amber-200">
+                <p class="font-semibold text-amber-800 mb-1">3. Byzantine Fault Tolerance</p>
+                <p class="text-amber-700 text-xs">
+                    Lamport, Shostak & Pease (1982) bewiesen: Mit 3f+1 Teilnehmern lässt sich Konsens erreichen,
+                    auch wenn bis zu f davon böswillig sind – aber nicht mit nur zwei isolierten Parteien.
+                </p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200">
+                <p class="font-semibold text-emerald-800 mb-1">4. Schelling-Fokuspunkte</p>
+                <p class="text-emerald-700 text-xs">
+                    Thomas Schelling (1960) zeigte: Ohne Kommunikation finden Menschen gemeinsame „natürliche" Lösungen
+                    (z. B. „Mittag am Hauptbahnhof"). Fokuspunkte ersetzen Nachrichten durch kulturelles Common Ground.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verhandlungsrelevanz -->
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-5 text-sm text-violet-700">
+        <p class="font-semibold mb-1">Verhandlungs- und Alltagsrelevanz:</p>
+        <p>
+            Jedes Mal, wenn du nach einem Meeting fragst „Hast du die E-Mail gesehen?" – oder wenn eine Lesebestätigung
+            dich beruhigt – kämpfst du gegen das Zwei-Generäle-Problem. <strong>Common Knowledge ist eine Fiktion;
+            wir arbeiten in der Praxis mit „gut-genug-knowledge".</strong>
+            Wer das versteht, baut lieber vorab klare Protokolle als nachträgliche Bestätigungs-Schleifen.
+        </p>
+    </div>
+
+    <div class="flex gap-3 flex-wrap">
+        <a href="/raetsel/zwei-generaele" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/raetsel/schelling-fokuspunkt" class="border border-emerald-200 text-emerald-700 px-5 py-2 rounded-lg text-sm font-medium hover:bg-emerald-50">
+            Schelling-Fokuspunkte →
+        </a>
+        <a href="/spiele/koordination" class="border border-indigo-200 text-indigo-700 px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-50">
+            Koordinationsspiel →
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>
