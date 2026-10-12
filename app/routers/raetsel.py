@@ -416,6 +416,16 @@ RAETSEL_META = [
         "dauer": "4 min",
         "kategorie": "Spieltheorie",
     },
+    {
+        "id": "zwei-generaele",
+        "name": "Zwei-Generäle-Problem",
+        "icon": "⚔️",
+        "beschreibung": "Zwei Armeen müssen gleichzeitig angreifen, aber jeder Bote kann abgefangen werden. Wie viele Bestätigungen braucht es, damit beide sicher sind? Die überraschende Antwort: keine Zahl reicht.",
+        "typ": "Koordinationsparadox",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "5 min",
+        "kategorie": "Spieltheorie",
+    },
     # ── Kognition & Psychologie ────────────────────────────────────────────────
     {
         "id": "konfirmationsfehler",
@@ -1704,6 +1714,60 @@ HENKER_STEPS = [
         "reasoning": "Da alle anderen Tage ausgeschlossen sind, bleibt nur Montag. Aber dann wäre Montag vorhersehbar → keine Überraschung → auch Montag ausgeschlossen.",
     },
 ]
+
+
+# ---------------------------------------------------------------------------
+# Zwei-Generäle-Problem – Common Knowledge Paradox
+# ---------------------------------------------------------------------------
+
+@router.get("/zwei-generaele", response_class=HTMLResponse)
+def zwei_generaele_page(request: Request):
+    return templates.TemplateResponse(
+        request, "raetsel/zwei_generaele.html", {"active_page": "raetsel"}
+    )
+
+
+@router.post("/zwei-generaele/result", response_class=HTMLResponse)
+def zwei_generaele_result(
+    request: Request,
+    choice: str = Form(...),
+    anzahl: int = Form(0),
+):
+    # choices: "ein-bote" | "mehr-boten" | "unmoeglich" | "gleichzeitig-starten"
+    is_correct = choice == "unmoeglich"
+    choice_labels = {
+        "ein-bote": "Ein Bote mit klarer Nachricht reicht.",
+        "mehr-boten": f"Mit {max(anzahl, 2)} Botschaftern wird es sicher genug.",
+        "unmoeglich": "Es gibt keine Anzahl, die beide Generäle sicher synchronisiert.",
+        "gleichzeitig-starten": "Vorher Zeit festlegen und ohne Bestätigung attackieren.",
+    }
+
+    # Simuliere die Wahrscheinlichkeit, dass beide Generäle einen gemeinsamen
+    # Wissenslevel erreichen bei 70% Botenüberlebenswahrscheinlichkeit:
+    p_success = 0.70  # Wahrscheinlichkeit, dass ein Bote durchkommt.
+    # Nach n Boten erreicht man "n-tes gemeinsames Wissen" nur, wenn alle n Boten
+    # durchkommen – aber selbst dann weiss der letzte Sender nicht, dass die
+    # letzte Bestätigung ankam.
+    simulated = []
+    for n in range(1, 8):
+        p_all_through = p_success ** n
+        simulated.append({
+            "n": n,
+            "p_all": round(p_all_through * 100, 1),
+            "wissen": n,  # „n-ter Grad gemeinsamen Wissens" (nie: Common Knowledge)
+        })
+
+    return templates.TemplateResponse(
+        request,
+        "partials/zwei_generaele_result.html",
+        {
+            "choice": choice,
+            "choice_label": choice_labels.get(choice, ""),
+            "is_correct": is_correct,
+            "simulated": simulated,
+            "anzahl": anzahl,
+        },
+    )
 
 
 @router.get("/henker", response_class=HTMLResponse)
