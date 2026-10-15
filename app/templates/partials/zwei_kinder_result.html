@@ -1,0 +1,42 @@
+{% if antwort == "dreizehn_siebenundzwanzig" %}
+<div class="bg-green-50 border border-green-200 rounded-xl p-4">
+  <p class="font-semibold text-green-800">✓ Richtig!</p>
+  <p class="text-sm text-green-700 mt-1 leading-relaxed">
+    13/27 ≈ 48,1 %. Die Zusatzinformation „an einem Dienstag geboren" ist zwar harmlos aussehend,
+    aber sie bricht die Symmetrie zwischen den Fällen 👦👦 und 👦👧 auf: Bei zwei Jungen ist die
+    Wahrscheinlichkeit, mindestens einen Dienstagsjungen zu enthalten, höher als bei einem Jungen plus Mädchen.
+    Deshalb schiebt sich die bedingte Wahrscheinlichkeit von ⅓ in Richtung ½.
+  </p>
+</div>
+{% elif antwort == "irrelevant" %}
+<div class="bg-red-50 border border-red-200 rounded-xl p-4">
+  <p class="font-semibold text-red-800">✗ Fast jeder denkt das – aber nein.</p>
+  <p class="text-sm text-red-700 mt-1 leading-relaxed">
+    Der Wochentag <em>sieht</em> irrelevant aus, verändert aber die Menge der verträglichen Fälle.
+    Von 196 möglichen Zustandskombinationen bleiben 27 übrig (die mit mindestens einem Dienstagsjungen),
+    davon haben 13 zwei Jungen. Antwort: <strong>13/27</strong>, nicht ⅓.
+  </p>
+</div>
+{% elif antwort == "haelfte" %}
+<div class="bg-red-50 border border-red-200 rounded-xl p-4">
+  <p class="font-semibold text-red-800">✗ Nah dran, aber nicht genau ½.</p>
+  <p class="text-sm text-red-700 mt-1 leading-relaxed">
+    Du hast die Richtung richtig: Der Dienstag schiebt die Wahrscheinlichkeit <em>in Richtung</em> ½.
+    Aber du hast kein bestimmtes Kind identifiziert – du kennst nur eine Eigenschaft, die mindestens eines besitzt.
+    Die genaue Antwort ist <strong>13/27 ≈ 48,1 %</strong>, nicht exakt ½ (= 50 %).
+  </p>
+</div>
+{% elif antwort == "kleiner" %}
+<div class="bg-red-50 border border-red-200 rounded-xl p-4">
+  <p class="font-semibold text-red-800">✗ Umgekehrt.</p>
+  <p class="text-sm text-red-700 mt-1 leading-relaxed">
+    Mehr Bedingungen machen das <em>Ereignis</em> seltener (nur 27 von 196 Fällen passen), aber die
+    bedingte Wahrscheinlichkeit P(beide Jungen | Dienstagsjunge) steigt sogar: von ⅓ auf <strong>13/27</strong>.
+    Das ist der kontraintuitive Kern des Paradoxons.
+  </p>
+</div>
+{% else %}
+<div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+  <p class="font-semibold text-amber-800">Wähle eine Antwort.</p>
+</div>
+{% endif %}

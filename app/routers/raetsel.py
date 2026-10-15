@@ -82,6 +82,16 @@ RAETSEL_META = [
         "dauer": "5 min",
         "kategorie": "Wahrscheinlichkeit",
     },
+    {
+        "id": "zwei-kinder",
+        "name": "Das Zwei-Kinder-Problem",
+        "icon": "👧👦",
+        "beschreibung": "Jemand hat zwei Kinder. Mindestens eines ist ein Junge. Wie wahrscheinlich sind beides Jungen? Die intuitive Antwort ½ ist falsch – es sind ⅓. Und wenn er an einem Dienstag geboren wurde? Dann 13/27. Martin Gardner (1959) zeigte: Information verändert Wahrscheinlichkeit auf überraschende Weise.",
+        "typ": "Wahrscheinlichkeits-Paradox",
+        "schwierigkeit": "Fortgeschritten",
+        "dauer": "6 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
     # ── Statistik & Kognition ──────────────────────────────────────────────────
     {
         "id": "simpson",
@@ -4113,6 +4123,22 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         request,
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
+    )
+
+
+@router.get("/zwei-kinder", response_class=HTMLResponse)
+def zwei_kinder_page(request: Request):
+    ctx = {"active_page": "raetsel", **_nav_context("zwei-kinder")}
+    return templates.TemplateResponse(request, "raetsel/zwei_kinder.html", ctx)
+
+
+@router.post("/zwei-kinder/antwort", response_class=HTMLResponse)
+def zwei_kinder_antwort(request: Request, antwort: str = Form(...)):
+    # Variante „Mindestens einer ist ein am Dienstag geborener Junge" → 13/27
+    return templates.TemplateResponse(
+        request,
+        "partials/zwei_kinder_result.html",
+        {"antwort": antwort},
     )
 
 

@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% block title %}Das Zwei-Kinder-Problem – Boy-or-Girl Paradox{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+
+  <!-- Header -->
+  <div class="mb-6">
+    <a href="/raetsel" class="text-sm text-gray-500 hover:text-gray-700">← Alle Rätsel</a>
+  </div>
+  <div class="flex items-center gap-3 mb-2">
+    <span class="text-4xl">👧👦</span>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-widest text-indigo-500">Wahrscheinlichkeits-Paradox</p>
+      <h1 class="text-2xl font-bold text-gray-900">Das Zwei-Kinder-Problem</h1>
+    </div>
+  </div>
+  <p class="text-gray-500 text-sm mb-8">Martin Gardner · 1959 · Fortgeschritten · ~6 min</p>
+
+  <!-- Die Frage -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <p class="text-xs font-bold uppercase text-indigo-600 mb-2">Variante 1 – klassisch</p>
+    <p class="text-base text-gray-800 leading-relaxed">
+      Herr Meier hat <strong>zwei Kinder</strong>. Du weißt: mindestens eines davon ist ein Junge.
+      Wie wahrscheinlich ist es, dass <em>beide</em> Jungen sind?
+    </p>
+    <p class="text-sm text-gray-500 mt-3">
+      Fast jeder antwortet reflexartig: ½. Die richtige Antwort ist <strong>⅓</strong>.
+    </p>
+  </div>
+
+  <!-- Die vier gleich wahrscheinlichen Fälle -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-4">Alle Fälle vor der Information</h2>
+    <p class="text-sm text-gray-600 mb-4">Für zwei Kinder (älter → jünger) gibt es vier gleich wahrscheinliche Reihenfolgen:</p>
+
+    <div class="grid grid-cols-2 gap-3 text-sm">
+      <div class="bg-blue-50 rounded-xl p-3 flex items-center gap-2">
+        <span class="text-2xl">👦</span><span class="text-xl">→</span><span class="text-2xl">👦</span>
+        <span class="ml-auto text-xs font-mono text-gray-600">¼</span>
+      </div>
+      <div class="bg-blue-50 rounded-xl p-3 flex items-center gap-2">
+        <span class="text-2xl">👦</span><span class="text-xl">→</span><span class="text-2xl">👧</span>
+        <span class="ml-auto text-xs font-mono text-gray-600">¼</span>
+      </div>
+      <div class="bg-blue-50 rounded-xl p-3 flex items-center gap-2">
+        <span class="text-2xl">👧</span><span class="text-xl">→</span><span class="text-2xl">👦</span>
+        <span class="ml-auto text-xs font-mono text-gray-600">¼</span>
+      </div>
+      <div class="bg-rose-50 rounded-xl p-3 flex items-center gap-2 opacity-60">
+        <span class="text-2xl">👧</span><span class="text-xl">→</span><span class="text-2xl">👧</span>
+        <span class="ml-auto text-xs font-mono text-gray-500">½ ausgeschlossen</span>
+      </div>
+    </div>
+
+    <p class="text-sm text-gray-700 mt-4 leading-relaxed">
+      Die Information „mindestens ein Junge" schließt den Fall 👧👧 aus. Es bleiben <strong>drei</strong>
+      gleich wahrscheinliche Fälle – aber nur <strong>einer</strong> davon ist 👦👦. Also P = <strong>⅓</strong>.
+    </p>
+  </div>
+
+  <!-- Variante 2 – das ältere Kind -->
+  <div class="bg-amber-50 rounded-2xl p-6 mb-6">
+    <p class="text-xs font-bold uppercase text-amber-700 mb-2">Variante 2 – mit Reihenfolge</p>
+    <p class="text-base text-gray-800 leading-relaxed mb-3">
+      Herr Meier hat zwei Kinder. Das <em>ältere</em> Kind ist ein Junge. Wie wahrscheinlich sind
+      beide Jungen?
+    </p>
+    <p class="text-sm text-amber-900 bg-white rounded-lg p-3">
+      Jetzt bleiben nur noch zwei Fälle: 👦→👦 und 👦→👧. Antwort: <strong>½</strong>.
+      Die Information „älteres Kind" ist <em>stärker</em> als „mindestens eines" – obwohl beide Aussagen
+      verträglich sind. Das ist der Kern des Paradoxons: Wie du Information bekommst, ändert die Antwort.
+    </p>
+  </div>
+
+  <!-- Variante 3 – Tuesday Boy -->
+  <div class="bg-indigo-50 rounded-2xl p-6 mb-6">
+    <p class="text-xs font-bold uppercase text-indigo-700 mb-2">Variante 3 – Tuesday Boy (Keith Devlin, 2010)</p>
+    <p class="text-base text-gray-800 leading-relaxed mb-3">
+      Herr Meier hat zwei Kinder. Mindestens eines ist <strong>ein an einem Dienstag geborener Junge</strong>.
+      Wie wahrscheinlich sind beide Jungen?
+    </p>
+
+    <div class="bg-white rounded-xl p-4 mb-3">
+      <p class="text-sm text-gray-700 leading-relaxed mb-2">
+        <strong>Kombinatorik:</strong> Jedes Kind hat 2 Geschlechter × 7 Wochentage = 14 Zustände.
+        Alle Paare: 14 × 14 = 196 gleich wahrscheinliche Fälle.
+      </p>
+      <ul class="text-sm text-gray-700 space-y-1 ml-4 list-disc">
+        <li>Fälle mit <em>mindestens</em> einem Dienstags-Jungen: <strong>27</strong></li>
+        <li>Davon mit zwei Jungen: <strong>13</strong></li>
+        <li>→ P(beide Jungen | Dienstagsjunge) = <strong>13 / 27 ≈ 48,1 %</strong></li>
+      </ul>
+    </div>
+
+    <details class="bg-white rounded-xl p-4">
+      <summary class="text-sm font-semibold text-indigo-700 cursor-pointer">Woher kommen die 27 und 13?</summary>
+      <div class="text-sm text-gray-700 mt-3 space-y-2 leading-relaxed">
+        <p>
+          <strong>Zwei Jungen, mindestens einer am Dienstag:</strong>
+          Erster Junge-Dienstag × beliebiger Junge (14 Varianten) + beliebiger Junge × zweiter Junge-Dienstag (14) −
+          beide am Dienstag doppelt gezählt (1) = <strong>13 Fälle</strong>.
+        </p>
+        <p>
+          <strong>Ein Junge (am Dienstag) + ein Mädchen:</strong>
+          Dienstagsjunge älter × Mädchen (7 Wochentage) + Mädchen × Dienstagsjunge jünger (7) = <strong>14 Fälle</strong>.
+        </p>
+        <p>Zusammen: 13 + 14 = <strong>27 relevante Fälle</strong>. Davon haben 13 zwei Jungen → <strong>13/27</strong>.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- Interaktive Frage -->
+  <div class="bg-slate-50 rounded-2xl p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-2">Die Pointe – deine Intuition zählt</h2>
+    <p class="text-sm text-gray-600 mb-4">
+      Was ändert sich, wenn du erfährst, dass der Junge an einem Dienstag geboren wurde,
+      verglichen mit der ursprünglichen Aussage „mindestens einer ist ein Junge"?
+    </p>
+    <form hx-post="/raetsel/zwei-kinder/antwort" hx-target="#zk-result" hx-swap="innerHTML" class="space-y-2">
+      <label class="flex items-start gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="irrelevant" class="text-indigo-600 mt-1">
+        <span class="text-sm text-gray-700">Nichts – der Wochentag ist eine zufällige Zusatzinformation ohne Einfluss. Antwort bleibt ⅓.</span>
+      </label>
+      <label class="flex items-start gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="haelfte" class="text-indigo-600 mt-1">
+        <span class="text-sm text-gray-700">Die Antwort springt auf ½ – ich habe jetzt ein bestimmtes Kind identifiziert.</span>
+      </label>
+      <label class="flex items-start gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="dreizehn_siebenundzwanzig" class="text-indigo-600 mt-1">
+        <span class="text-sm text-gray-700">Die Wahrscheinlichkeit steigt auf 13/27 ≈ 48 % – sehr nah an ½, aber nicht genau dort.</span>
+      </label>
+      <label class="flex items-start gap-3 cursor-pointer bg-white rounded-xl p-3 border border-transparent hover:border-indigo-300 transition-colors">
+        <input type="radio" name="antwort" value="kleiner" class="text-indigo-600 mt-1">
+        <span class="text-sm text-gray-700">Die Wahrscheinlichkeit <em>sinkt</em> – mehr Bedingungen machen das Ereignis seltener.</span>
+      </label>
+      <button type="submit" class="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors">
+        Antwort prüfen
+      </button>
+    </form>
+    <div id="zk-result" class="mt-4"></div>
+  </div>
+
+  <!-- Warum das wichtig ist -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">Warum das kein Zahlenspielerei ist</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      Das Paradoxon zeigt, dass Wahrscheinlichkeit nicht nur von Fakten abhängt, sondern auch davon,
+      <em>wie du sie erfährst</em>. Dieselbe wahre Aussage – „mindestens ein Junge" – kann je nach
+      Erhebungsmethode zu ⅓, ½ oder einem anderen Wert führen (Bar-Hillel &amp; Falk, 1982).
+    </p>
+    <div class="space-y-3">
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">⚕️</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Medizinische Diagnostik</p>
+          <p class="text-sm text-gray-600">„Mindestens einer meiner Tests ist positiv" ist nicht gleich „dieser Test ist positiv". Falsch-positive Raten verändern sich dramatisch.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">⚖️</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Gerichtsurteile</p>
+          <p class="text-sm text-gray-600">Zeugenaussagen „jemand aus der Gruppe hat das getan" sind etwas Anderes als „diese Person hat das getan" – obwohl beide stimmen können.</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span class="text-xl flex-shrink-0">🧬</span>
+        <div>
+          <p class="text-sm font-semibold text-gray-800">Genetik &amp; Screening</p>
+          <p class="text-sm text-gray-600">Erblichkeit und Trägerwahrscheinlichkeiten in Familien werden regelmäßig falsch berechnet, weil nur ein Teil der Information verwendet wird.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Historischer Kontext -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+    <h2 class="font-bold text-gray-800 mb-3">Die Geschichte des Paradoxons</h2>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      Martin Gardner stellte das Rätsel 1959 in seiner Kolumne „Mathematical Games" im
+      <em>Scientific American</em>. Er musste es später korrigieren – weil die ursprüngliche
+      Formulierung mehrdeutig war und je nach Interpretation entweder ⅓ oder ½ ergibt.
+    </p>
+    <p class="text-sm text-gray-600 leading-relaxed mb-3">
+      2010 löste der Mathematiker <strong>Gary Foshee</strong> auf einer Konferenz einen Sturm aus,
+      als er das „Tuesday Boy"-Problem vorstellte. Keith Devlin schrieb daraufhin in
+      der <em>MAA</em> den vielzitierten Essay, der die Lösung 13/27 populär machte.
+    </p>
+    <p class="text-sm text-amber-700 bg-amber-50 rounded-lg p-3">
+      💡 Faustregel: Jede zusätzliche Eigenschaft, die den Jungen weiter spezifiziert
+      (Wochentag, Monat, Name), schiebt die Antwort näher an ½ heran – weil sie den Fall
+      „zwei Jungen" doppelt zählt, aber den Fall „ein Junge" nur einfach.
+    </p>
+  </div>
+
+  <!-- Navigation -->
+  <div class="flex gap-3 mb-6">
+    <a href="/raetsel" class="flex-1 text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors text-sm">
+      ← Alle Rätsel
+    </a>
+    {% if next_puzzle %}
+    <a href="/raetsel/{{ next_puzzle.id }}" class="flex-1 text-center bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium transition-colors text-sm">
+      {{ next_puzzle.icon }} {{ next_puzzle.name }} →
+    </a>
+    {% endif %}
+  </div>
+
+  {% if related_puzzles %}
+  <div class="mt-2">
+    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Ähnliche Rätsel</p>
+    <div class="space-y-2">
+      {% for r in related_puzzles %}
+      <a href="/raetsel/{{ r.id }}" class="flex items-start gap-3 p-3 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 hover:shadow-sm transition-all">
+        <span class="text-xl">{{ r.icon }}</span>
+        <div>
+          <p class="font-semibold text-slate-800 text-sm">{{ r.name }}</p>
+          {% if r.beschreibung %}
+          <p class="text-xs text-slate-500 mt-0.5 line-clamp-2">{{ r.beschreibung }}</p>
+          {% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
