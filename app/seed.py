@@ -4,11 +4,12 @@ from pathlib import Path
 
 from sqlalchemy.orm import Session
 
+from .game_registry import GAMES
 from .models import Lesson, UserProgress
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 
-GAME_TYPES = ["gefangenendilemma", "ultimatum", "vertrauen", "verhandlung", "chicken", "public_goods", "beauty_contest", "stag_hunt", "centipede", "rps", "koordination", "auktion", "diktator", "dollarauktion", "minderheit", "habicht-taube", "geschlechter-kampf", "freiwilligen-dilemma", "gleiche-muenzen", "gewinner-fluch", "hollaendische-auktion", "englische-auktion"]
+GAME_TYPES = [g["game_type"] for g in GAMES]
 
 
 def seed_lessons(db: Session) -> None:
