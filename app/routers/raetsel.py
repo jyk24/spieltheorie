@@ -631,6 +631,8 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"seerosen-see","name":"Seerosen im See","icon":"🪷","beschreibung":"Ein Fleck Seerosen verdoppelt sich täglich und bedeckt den See nach 48 Tagen vollständig. Wie lange braucht er, bis er den See zur Hälfte bedeckt?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"maschinen-widgets","name":"5 Maschinen, 5 Widgets","icon":"⚙️","beschreibung":"Wenn 5 Maschinen in 5 Minuten 5 Widgets herstellen – wie lange brauchen 100 Maschinen für 100 Widgets?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
 ]
 
 
@@ -4063,6 +4065,40 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "seerosen-see": {
+        "id": "seerosen-see", "name": "Seerosen im See", "icon": "🪷",
+        "farbe": "emerald", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "1 min",
+        "setup_label": "Das Problem:",
+        "setup": "In einem See wächst ein Fleck Seerosen. Jeden Tag <strong>verdoppelt</strong> sich seine Fläche.<br><br>Nach <strong>48 Tagen</strong> ist der gesamte See bedeckt.",
+        "frage": "Wie viele Tage dauert es, bis der Fleck den See zur Hälfte bedeckt?",
+        "optionen": [
+            {"text": "24 Tage", "hinweis": "Die Hälfte von 48"},
+            {"text": "47 Tage", "hinweis": "Einen Tag vor dem Ende"},
+            {"text": "46 Tage", "hinweis": "Zwei Tage vor dem Ende"},
+            {"text": "25 Tage", "hinweis": "Mittlere Zahl + 1"},
+        ],
+        "loesung_text": "Nach 47 Tagen ist der See halb bedeckt.",
+        "erklaerung": "<p>Die Fläche verdoppelt sich täglich. Wenn der See an Tag 48 vollständig bedeckt ist, war er an Tag 47 <strong>exakt halb bedeckt</strong> – denn eine Verdopplung von 50 % ergibt 100 %.</p><p>Die intuitive Antwort &bdquo;24 Tage&ldquo; stammt aus linearem Denken (die Hälfte der Zeit → die Hälfte der Fläche). Bei exponentiellem Wachstum stimmt das jedoch nicht: An Tag 24 ist nur ein winziger Bruchteil (1/2²⁴ ≈ 0,000006 %) des Sees bedeckt.</p>",
+        "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> – Shane Frederick, 2005</p><p>Die &bdquo;Seerosen-Frage&ldquo; ist die zweite der drei klassischen CRT-Aufgaben. Sie prüft, ob wir exponentielles Wachstum intuitiv erfassen – oder spontan ins lineare Denken verfallen.</p><p>Al Gore beschrieb dasselbe Prinzip in <em>An Inconvenient Truth</em>: Wenn ein Problem sich exponentiell entwickelt (Pandemie, Zinseszins, Klimaschäden), kommt die Erkenntnis oft erst spät – zwischen &bdquo;unsichtbar klein&ldquo; und &bdquo;zu groß zum Handeln&ldquo; liegen nur wenige Verdopplungen.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur rund 25 % der Probanden lagen in Fredericks Studien sofort richtig</li><li>In Pandemie-Modellen zählt der <em>letzte</em> Verdopplungsschritt mehr als alle vorherigen zusammen</li><li>Zinseszinseffekte überraschen aus demselben Grund: 7 % jährliches Wachstum verdoppelt Kapital alle ~10 Jahre</li></ul>",
+        "erkenntnis": "Exponentielle Prozesse widersprechen der Intuition. Vor der ersten Antwort fragen: Ist das Wachstum additiv (linear) oder multiplikativ (exponentiell)? Bei Verdopplungen liegt die zweite Hälfte immer im allerletzten Schritt.",
+    },
+    "maschinen-widgets": {
+        "id": "maschinen-widgets", "name": "5 Maschinen, 5 Widgets", "icon": "⚙️",
+        "farbe": "amber", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "1 min",
+        "setup_label": "Das Problem:",
+        "setup": "Wenn <strong>5 Maschinen</strong> in <strong>5 Minuten</strong> genau <strong>5 Widgets</strong> herstellen …",
+        "frage": "Wie lange brauchen 100 Maschinen, um 100 Widgets herzustellen?",
+        "optionen": [
+            {"text": "100 Minuten", "hinweis": "Analog zu 5 → 5 → 5"},
+            {"text": "5 Minuten", "hinweis": "Pro Maschine ein Widget in gleicher Zeit"},
+            {"text": "20 Minuten", "hinweis": "100 ÷ 5"},
+            {"text": "1 Minute", "hinweis": "Alle Maschinen gleichzeitig"},
+        ],
+        "loesung_text": "Es dauert 5 Minuten – unabhängig von der Anzahl Maschinen.",
+        "erklaerung": "<p>Zuerst die Rate pro Maschine berechnen: 5 Maschinen → 5 Widgets in 5 Minuten bedeutet, dass <strong>eine Maschine in 5 Minuten ein Widget</strong> herstellt.</p><p>Wenn jetzt 100 Maschinen gleichzeitig laufen, produziert jede davon in 5 Minuten ein Widget – zusammen also <strong>100 Widgets in 5 Minuten</strong>.</p><p>Die intuitive Antwort &bdquo;100 Minuten&ldquo; entsteht durch oberflächliches Mustermatching: &bdquo;5 → 5 → 5, also 100 → 100 → 100&ldquo;. Dabei wird vergessen, dass die zweite Zahl die Zeit ist – und die skaliert nicht mit der Anzahl der Maschinen.</p>",
+        "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> – Shane Frederick, 2005</p><p>Die &bdquo;Widget-Aufgabe&ldquo; ist die dritte und letzte Frage des CRT. Sie testet, ob wir hinter der Oberfläche einer Aufgabe die zugrunde liegende <em>Rate</em> erkennen – oder uns von einem oberflächlichen Zahlenmuster leiten lassen.</p><p>Daniel Kahneman beschreibt diese Falle als klassische Verwechslung zwischen <strong>Durchsatz</strong> (Widgets pro Minute pro Maschine) und <strong>Gesamtzeit</strong>. System 1 sieht das Muster &bdquo;5-5-5&ldquo; und schließt &bdquo;100-100-100&ldquo;; System 2 muss aktiv die Rate pro Maschine isolieren.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>In Fredericks Originalstudien lagen rund 70 % der Probanden hier falsch</li><li>Dieselbe Logik gilt in Projektschätzungen: Mehr Entwickler verkürzen eine Aufgabe nur, wenn sie <em>parallelisierbar</em> ist (Brooks's Law)</li><li>Fermi-Schätzungen funktionieren gut, wenn man die Aufgabe konsequent in Raten (Ding / Zeit / Einheit) zerlegt</li></ul>",
+        "erkenntnis": "Nicht Zahlen mustern, sondern Raten rechnen. Erst die Grundleistung pro Einheit (hier: pro Maschine pro Minute) klären – dann hochskalieren. Dieselbe Disziplin schützt im Berufsalltag vor &bdquo;mehr Köpfe = schneller fertig&ldquo;-Fehlschlüssen.",
     },
 }
 

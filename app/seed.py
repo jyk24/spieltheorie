@@ -16,10 +16,16 @@ def seed_lessons(db: Session) -> None:
     with open(DATA_DIR / "lektionen.json", encoding="utf-8") as f:
         lessons = json.load(f)
 
-    existing_slugs = {slug for (slug,) in db.query(Lesson.slug).all()}
+    existing_by_slug = {l.slug: l for l in db.query(Lesson).all()}
     added = 0
+    updated = 0
     for item in lessons:
-        if item["slug"] in existing_slugs:
+        existing = existing_by_slug.get(item["slug"])
+        if existing is not None:
+            new_related = item.get("related_game")
+            if existing.related_game != new_related:
+                existing.related_game = new_related
+                updated += 1
             continue
         lesson = Lesson(
             slug=item["slug"],
@@ -34,7 +40,7 @@ def seed_lessons(db: Session) -> None:
         db.add(lesson)
         added += 1
 
-    if added:
+    if added or updated:
         db.commit()
 
 
