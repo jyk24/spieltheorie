@@ -631,6 +631,11 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neu (26.10.2026) ─────────────────────────────────────────────────────
+    {"id":"nichttransitive-wuerfel","name":"Nichttransitive Würfel","icon":"🎲","beschreibung":"Vier Würfel A, B, C, D – jeder schlägt den nächsten mit 2/3 Wahrscheinlichkeit. A→B→C→D→A. Es gibt keinen besten Würfel. Buffett und Gates sollen das Spiel gespielt haben.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
+    {"id":"peter-prinzip","name":"Das Peter-Prinzip","icon":"🪜","beschreibung":"\"In jeder Hierarchie steigt jeder Mitarbeiter bis zur Stufe seiner Unfähigkeit auf.\" Laurence J. Peter (1969) formulierte ein Gesetz, das die Logik der Beförderung auf den Kopf stellt.","typ":"Organisationstheorie","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Psychologie"},
+    {"id":"ikea-effekt","name":"Der IKEA-Effekt","icon":"🪑","beschreibung":"Zwei identische Regale: Eines zusammengebaut, das andere nicht. Welches erscheint den Käufern wertvoller? Dan Ariely zeigte: Was wir selbst erschaffen, überschätzen wir systematisch.","typ":"Verhaltensökonomie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
+    {"id":"arrow-paradox","name":"Arrows Unmöglichkeitstheorem","icon":"🗳️","beschreibung":"Jede faire Wahlmethode mit mehr als zwei Optionen kann entweder Diktatur, Pfadabhängigkeit oder Irrationalität nicht ausschließen. Kenneth Arrow (1951) bewies: Perfekte Demokratie ist mathematisch unmöglich.","typ":"Social-Choice-Theorie","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Spieltheorie"},
 ]
 
 
@@ -4063,6 +4068,75 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    # ── Neu (26.10.2026) ─────────────────────────────────────────────────────
+    "nichttransitive-wuerfel": {
+        "id": "nichttransitive-wuerfel", "name": "Nichttransitive Würfel", "icon": "🎲",
+        "farbe": "violet", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Vier Würfel von Bradley Efron:<br>• <strong>A</strong>: 4, 4, 4, 4, 0, 0<br>• <strong>B</strong>: 3, 3, 3, 3, 3, 3<br>• <strong>C</strong>: 6, 6, 2, 2, 2, 2<br>• <strong>D</strong>: 5, 5, 5, 1, 1, 1<br><br>Zwei Spieler wählen je einen Würfel und würfeln gleichzeitig. Der höhere Wurf gewinnt. Dein Gegner wählt zuerst – du reagierst.",
+        "frage": "Dein Gegner wählt Würfel <strong>A</strong>. Welchen nimmst du?",
+        "optionen": [
+            {"text": "B – schlägt A im Mittel", "hinweis": "P(B > A) = P(A=0) = 2/6 = 1/3. B verliert gegen A."},
+            {"text": "C – schlägt A im Mittel", "hinweis": "C=6 (immer) oder C=2 wenn A=0. Rechne nach."},
+            {"text": "D – schlägt A im Mittel", "hinweis": "Rechne P(D>A) aus"},
+            {"text": "Egal – alle sind gleichwertig", "hinweis": "Dann wäre das Rätsel nicht hier"},
+        ],
+        "loesung_text": "D – P(D > A) = 2/3. Für jeden Würfel, den dein Gegner wählt, gibt es genau einen, der ihn mit Wahrscheinlichkeit 2/3 schlägt: A→D→C→B→A. Der Zyklus kehrt immer zurück.",
+        "erklaerung": "<p><strong>P(D > A):</strong> D=5 (3/6) schlägt A immer → 3/6. D=1 (3/6) schlägt nur A=0 (2/6) → 3/6 · 2/6 = 6/36. Summe: 18/36 + 6/36 = <strong>24/36 = 2/3</strong>.</p><p>Dieselbe Rechnung ergibt für alle vier Pfeile im Kreis: <strong>P(A>B) = P(B>C) = P(C>D) = P(D>A) = 2/3</strong>. 'Stärker als' ist hier keine transitive Relation – es gibt keinen besten Würfel.</p><p>Die Strategie: Lass den Gegner wählen, nimm dann den Würfel, der 'eins weiter' im Zyklus steht. Du gewinnst mit 66,7 % – deutlich besser als eine Münze.</p>",
+        "kontext": "<p>Entwickelt vom Statistiker <strong>Bradley Efron</strong> (Stanford, 1960er), bekannt als Erfinder des Bootstrap-Verfahrens. Legendär: Warren Buffett soll Bill Gates zu diesem Würfelspiel eingeladen haben. Gates roch den Braten, inspizierte die Würfel und bestand darauf, dass Buffett zuerst wählt. Das Prinzip taucht auch in Wahlparadoxen auf (<a href='/raetsel/arrow-paradox' class='underline'>Condorcet-Zyklen</a>) und widerlegt die Alltagsintuition: 'Wenn A stärker ist als B und B stärker als C, dann sicher auch A als C.' In Zufallsprozessen gilt diese Logik nicht.</p>",
+        "erkenntnis": "Transitivität ist keine Selbstverständlichkeit – sie ist eine mathematische Eigenschaft, die bei Mittelwerten gilt, bei paarweisen Vergleichen aber kippen kann. Wer immer die Wahl hat, nach dem Gegner zu entscheiden, hat einen oft unterschätzten Vorteil.",
+    },
+    "peter-prinzip": {
+        "id": "peter-prinzip", "name": "Das Peter-Prinzip", "icon": "🪜",
+        "farbe": "amber", "kategorie": "Psychologie",
+        "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup": "Ein hervorragender Programmierer wird zum Teamleiter befördert. Als guter Teamleiter wird er zum Abteilungsleiter. Als guter Abteilungsleiter zum Bereichsvorstand. Jede Beförderung belohnte seine Leistung – auf der vorherigen Stufe. Laurence J. Peter (1969) stellte eine ernüchternde Beobachtung an.",
+        "frage": "Was passiert laut Peter-Prinzip in jeder Hierarchie langfristig?",
+        "optionen": [
+            {"text": "Jede Position wird irgendwann von jemandem besetzt, der ihr nicht gewachsen ist", "hinweis": "Beförderung bis zum Scheitern"},
+            {"text": "Die besten Mitarbeiter werden zum CEO", "hinweis": "Zu optimistisch – was belohnt wird, ist nicht automatisch dort gefragt"},
+            {"text": "Hierarchien lösen sich mit der Zeit auf", "hinweis": "Peter sagte das Gegenteil"},
+            {"text": "Jeder Mitarbeiter wandert zur optimalen Position", "hinweis": "Peter widersprach dieser Marktlogik"},
+        ],
+        "loesung_text": "Jeder Mitarbeiter steigt auf, bis er eine Stelle erreicht, der er nicht gewachsen ist – und bleibt dort. Mit der Zeit sind viele Positionen von inkompetenten Personen besetzt.",
+        "erklaerung": "<p>Die Logik: Beförderung belohnt Kompetenz <em>auf der aktuellen Stufe</em>. Die neue Stufe erfordert aber oft völlig andere Fähigkeiten. Wer auf einer Stufe scheitert, wird nicht weiter befördert – und bleibt dort. Über Zeit füllen sich Hierarchien mit Menschen auf Positionen, denen sie nicht mehr gewachsen sind. Peters zynische Konsequenz: 'Die eigentliche Arbeit wird von jenen Mitarbeitern geleistet, die ihre Stufe der Unfähigkeit noch nicht erreicht haben.'</p>",
+        "kontext": "<p>Laurence J. Peter formulierte das Prinzip 1969 als Satire – wurde aber empirisch bestätigt. Eine Studie von Benson, Li & Shue (NBER 2018) verfolgte 53.000 US-Vertriebsmitarbeiter: Beförderte Top-Verkäufer waren als Manager <em>signifikant schlechter</em> als Kollegen mit mittlerer Verkaufsleistung. Lösungsansätze: Doppelte Karrierepfade (Fach- vs. Führungskarriere), Beförderung nach <em>Potenzial</em> statt <em>Leistung</em>, oder temporäre Beförderungen auf Probe. Google's Projekt Oxygen (2008) zeigte, welche Fähigkeiten gute Manager wirklich brauchen – kaum eine davon korrelierte mit technischer Expertise.</p>",
+        "erkenntnis": "Was dich auf einer Stufe erfolgreich macht, qualifiziert dich nicht automatisch für die nächste. Vor jeder Beförderung lohnt die Frage: Welche Fähigkeiten erfordert die neue Rolle – und besitze ich sie wirklich?",
+    },
+    "ikea-effekt": {
+        "id": "ikea-effekt", "name": "Der IKEA-Effekt", "icon": "🪑",
+        "farbe": "cyan", "kategorie": "Kognition",
+        "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup": "Experiment von Norton, Mochon & Ariely (2012): Probanden bauten eine schlichte IKEA-Aufbewahrungsbox selbst zusammen. Anschließend sollten sie – und eine Kontrollgruppe, die nur fertige Boxen sah – angeben, wieviel Geld sie dafür zahlen würden.",
+        "frage": "Was zeigte das Experiment?",
+        "optionen": [
+            {"text": "Die Selbstbauer boten ca. 63 % mehr – obwohl die Box identisch war", "hinweis": "Eigenleistung erhöht wahrgenommenen Wert"},
+            {"text": "Die Selbstbauer boten weniger (sie kannten die Mängel)", "hinweis": "Studien zeigen das Gegenteil"},
+            {"text": "Beide Gruppen boten etwa gleich viel", "hinweis": "Es gab einen klaren Unterschied"},
+            {"text": "Nur Männer überschätzten den Wert", "hinweis": "Effekt war geschlechtsunabhängig"},
+        ],
+        "loesung_text": "Selbstbauer zahlten ~63 % mehr – obwohl das Produkt objektiv identisch war.",
+        "erklaerung": "<p>Der Effekt tritt nur bei <em>erfolgreichem</em> Abschluss auf. Wer die Box nicht fertig bauen konnte, zeigte keine Aufwertung – oft sogar das Gegenteil. Mechanismen: 1) <strong>Investierte Arbeit</strong> wird in der Bewertung mit eingepreist. 2) <strong>Besitzerstolz</strong> – Selbstgebautes wird zum Teil der Identität. 3) <strong>Rechtfertigung</strong> – wer Zeit investiert, kann nicht zugeben, dass es sich nicht lohnt (Sunk-Cost + Dissonanzreduktion).</p>",
+        "kontext": "<p>Benannt nach dem schwedischen Möbelhändler, dessen Geschäftsmodell darauf aufbaut: Kunden kaufen nicht nur Möbel, sondern <em>bauen</em> ihr Heim. Verwandte Phänomene: <strong>Not-Invented-Here-Syndrom</strong> (Firmen bevorzugen Eigenentwicklungen gegenüber zugekauften Lösungen), <strong>Endowment-Effekt</strong> (bereits besessene Objekte werden höher bewertet), <strong>Egocentric Bias</strong> (eigene Beiträge wirken wichtiger als sie sind). In Verhandlungen: Lass die Gegenseite den Vertrag mitformulieren – wer formuliert, verteidigt stärker.</p>",
+        "erkenntnis": "Was wir mit eigenen Händen erschaffen, bewerten wir überhöht. Vor jedem Verkauf, jeder Preisforderung und jedem 'das muss sich doch lohnen' – ein kurzer Realitätscheck: Was würde ein Fremder dafür zahlen, der die Arbeit nicht gesehen hat?",
+    },
+    "arrow-paradox": {
+        "id": "arrow-paradox", "name": "Arrows Unmöglichkeitstheorem", "icon": "🗳️",
+        "farbe": "rose", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": "Drei Wähler, drei Kandidaten A, B, C. Jeder Wähler hat eine klare Rangfolge:<br>• Wähler 1: A &gt; B &gt; C<br>• Wähler 2: B &gt; C &gt; A<br>• Wähler 3: C &gt; A &gt; B<br><br>Paarvergleiche nach Mehrheit:<br>• A vs. B: Wähler 1 &amp; 3 bevorzugen A → <strong>A &gt; B</strong><br>• B vs. C: Wähler 1 &amp; 2 bevorzugen B → <strong>B &gt; C</strong><br>• C vs. A: Wähler 2 &amp; 3 bevorzugen C → <strong>C &gt; A</strong>",
+        "frage": "Was zeigt dieses Beispiel (Condorcet-Paradoxon) über demokratische Wahlen?",
+        "optionen": [
+            {"text": "Mehrheitsentscheidungen können zyklisch werden – es gibt keinen eindeutigen Sieger", "hinweis": "A>B>C>A – kein stabiler Rang"},
+            {"text": "Es gibt einen Fehler in den Daten", "hinweis": "Die Daten sind konsistent"},
+            {"text": "Wähler 1 ist der 'Diktator' des Ergebnisses", "hinweis": "Keiner ist allein entscheidend"},
+            {"text": "Die Reihenfolge der Abstimmungen beeinflusst das Resultat nicht", "hinweis": "Falsch – die Reihenfolge bestimmt den Gewinner"},
+        ],
+        "loesung_text": "Die Mehrheit bevorzugt A gegenüber B, B gegenüber C und C gegenüber A – ein Zirkelschluss ohne eindeutigen Sieger.",
+        "erklaerung": "<p>Kenneth Arrow (1951) bewies in seinem Unmöglichkeitstheorem: Keine Wahlmethode kann gleichzeitig alle fünf 'vernünftigen' Eigenschaften erfüllen – <strong>Universalität</strong> (jede Präferenzordnung erlaubt), <strong>Pareto-Prinzip</strong> (wenn alle A > B, dann auch das Ergebnis), <strong>Unabhängigkeit von irrelevanten Alternativen</strong> (ein dritter Kandidat C ändert nichts am Verhältnis A/B), <strong>Nicht-Diktatur</strong> (kein Wähler bestimmt allein) und <strong>Transitivität</strong> des Ergebnisses. Mindestens eine Eigenschaft muss immer brechen.</p>",
+        "kontext": "<p>Das Theorem erschütterte die Grundlagen demokratischer Theorie. Konsequenzen: Jede Wahlmethode (Mehrheitswahl, Stichwahl, Rangwahl, Approval Voting) hat spezifische Schwächen. In Deutschland verlor die FDP 2013 wegen des 5%-Hürden-Mechanismus 2,4 Mio Stimmen fast ohne Vertretung – ein Beispiel für die Grenzen eines Systems. Arrow bekam 1972 den Wirtschaftsnobelpreis. Verwandte Resultate: <strong>Gibbard-Satterthwaite</strong> (jede nicht-diktatorische Wahlmethode ist manipulierbar), <strong>Mays Theorem</strong> (für zwei Optionen ist die einfache Mehrheit die einzig faire Methode).</p>",
+        "erkenntnis": "Perfekte Fairness in Gruppenentscheidungen ist mathematisch unmöglich, sobald mehr als zwei Optionen zur Wahl stehen. Jede Demokratie entscheidet sich – oft unbewusst – für einen Kompromiss zwischen Fairness-Prinzipien. Wer eine Wahlmethode kritisiert, sollte die Alternative und ihren eigenen Preis kennen.",
     },
 }
 
