@@ -631,6 +631,7 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"zwei-kinder","name":"Das Zwei-Kinder-Problem","icon":"👧","beschreibung":"Eine Familie hat zwei Kinder. Mindestens eines ist ein Junge. Wie wahrscheinlich sind beide Jungen? Die intuitive Antwort ist falsch – und die 'Dienstag-Variante' bricht die Intuition noch einmal.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
 ]
 
 
@@ -4063,6 +4064,24 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "zwei-kinder": {
+        "id": "zwei-kinder", "name": "Das Zwei-Kinder-Problem", "icon": "👧",
+        "farbe": "rose", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Die Situation:",
+        "setup": "Eine Nachbarin erzählt dir: <em>„Ich habe zwei Kinder. Mindestens eines davon ist ein Junge.\"</em><br><br>Nimm an, Jungen und Mädchen sind gleich wahrscheinlich und die Geschlechter der Kinder sind unabhängig voneinander. Die Reihenfolge der Geburt ist unbekannt.",
+        "frage": "Wie wahrscheinlich ist es, dass <strong>beide Kinder Jungen</strong> sind?",
+        "optionen": [
+            {"text": "1/2 (50 %)", "hinweis": "Das klingt natürlich – aber ignoriert, dass du jetzt mehr weißt als vorher"},
+            {"text": "1/3 (≈ 33 %)", "hinweis": "Zähle die Fälle, die mit „mindestens ein Junge\" kompatibel sind"},
+            {"text": "1/4 (25 %)", "hinweis": "Das wäre die A-priori-Wahrscheinlichkeit – vor jeder Information"},
+            {"text": "2/3 (≈ 67 %)", "hinweis": "Zu hoch – da war ein Umkehrschluss zu viel"},
+        ],
+        "loesung_text": "Die Wahrscheinlichkeit ist 1/3.",
+        "erklaerung": "<p>Für zwei Kinder gibt es vier gleich wahrscheinliche Reihenfolgen (ältere/jüngere): <strong>JJ, JM, MJ, MM</strong> – jede mit Wahrscheinlichkeit ¼.</p><p>Die Information <em>„mindestens ein Junge\"</em> schließt nur <strong>MM</strong> aus. Es bleiben drei gleich wahrscheinliche Fälle: <strong>JJ, JM, MJ</strong>.</p><p>In nur <strong>einem</strong> dieser drei Fälle sind beide Jungen. Also: P(2 Jungen | mind. 1 Junge) = <strong>1/3</strong>, nicht ½.</p><p>Zum Vergleich – <em>andere</em> Formulierung: „Das <strong>ältere</strong> Kind ist ein Junge.\" Dann bleiben nur JJ und JM, und die Antwort ist ½. Welche Information man wie bekommt, verändert die Wahrscheinlichkeit radikal.</p>",
+        "kontext": "<p><strong>Martin Gardner</strong> stellte das Rätsel 1959 im <em>Scientific American</em>. Es wird bis heute kontrovers diskutiert, weil die Antwort empfindlich davon abhängt, <strong>wie</strong> man an die Information gelangt (die „Protokoll\"-Frage).</p><p><strong>Die Tuesday-Boy-Variante</strong> (Gary Foshee, 2010): <em>„Ich habe zwei Kinder. Eines davon ist ein an einem Dienstag geborener Junge.\"</em> Jetzt lautet die Antwort <strong>≈ 13/27 ≈ 48 %</strong> – unangenehm nahe an ½, aber überraschend verschoben, obwohl der Wochentag scheinbar irrelevant ist.</p><p>Warum? Von den 14 × 14 = 196 Kombinationen (Geschlecht × Wochentag für zwei Kinder) sind 27 mit „mind. ein Dienstags-Junge\" vereinbar. Davon sind 13 „beide Jungen\".</p><p>Dieses Rätsel steht in direkter Linie mit <a href=\"/raetsel/monty-hall\" class=\"underline\">Monty Hall</a> und <a href=\"/raetsel/schlafendes-maedchen\" class=\"underline\">Sleeping Beauty</a>: Bedingte Wahrscheinlichkeiten sind kontraintuitiv.</p>",
+        "erkenntnis": "In bedingten Wahrscheinlichkeiten zählt nicht nur die Information selbst, sondern die Art, wie sie entsteht. „Mindestens einer\" ist nicht dasselbe wie „der zuerst Genannte\" – und ein scheinbar belangloses Detail (der Wochentag) kann die Antwort verschieben.",
     },
 }
 
