@@ -631,6 +631,8 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"zwei-kinder-problem","name":"Das Zwei-Kinder-Problem","icon":"👶","beschreibung":"Herr Müller hat zwei Kinder. Mindestens eines ist ein Junge. Wie wahrscheinlich ist es, dass auch das andere ein Junge ist? Die intuitive Antwort täuscht – wie fast immer bei bedingten Wahrscheinlichkeiten.","typ":"Bayes-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Mathematik"},
+    {"id":"klavierstimmer-chicago","name":"Klavierstimmer in Chicago","icon":"🎹","beschreibung":"Wie viele Klavierstimmer arbeiten in Chicago? Enrico Fermi stellte diese Frage, um seinen Studenten beizubringen, aus wenig Wissen vernünftige Schätzungen abzuleiten – ganz ohne Nachschlagen.","typ":"Fermi-Schätzung","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Kognition"},
 ]
 
 
@@ -4063,6 +4065,40 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "zwei-kinder-problem": {
+        "id": "zwei-kinder-problem", "name": "Das Zwei-Kinder-Problem", "icon": "👶",
+        "farbe": "pink", "kategorie": "Mathematik", "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Die Situation:",
+        "setup": "Herr Müller hat <strong>zwei Kinder</strong>. Du erfährst zuverlässig: <em>Mindestens eines seiner Kinder ist ein Junge.</em><br><br>Weitere Infos hast du nicht – kein Vorname, kein Alter, keine Reihenfolge. Jedes Kind ist unabhängig und zu 50 % ein Junge.",
+        "frage": "Wie wahrscheinlich ist es, dass auch das andere Kind ein Junge ist?",
+        "optionen": [
+            {"text": "1/2", "hinweis": "Das intuitive Bauchgefühl: Geschlechter sind unabhängig"},
+            {"text": "1/3", "hinweis": "Richtig bedingte Wahrscheinlichkeit über alle 4 Fälle"},
+            {"text": "1/4", "hinweis": "Das wäre P(zwei Jungen) ohne Zusatzinfo"},
+            {"text": "2/3", "hinweis": "Umgekehrt gedacht – P(mindestens ein Mädchen)"},
+        ],
+        "loesung_text": "Die Wahrscheinlichkeit ist 1/3 – nicht 1/2.",
+        "erklaerung": "<p>Betrachte alle gleichwahrscheinlichen Kombinationen zweier Kinder (ältestes zuerst):</p><ul class=\"list-disc ml-5 mt-2 space-y-1\"><li>JJ, JM, MJ, MM – je 1/4</li></ul><p>Die Information „mindestens ein Junge\" schließt nur <strong>MM</strong> aus. Drei Fälle bleiben: JJ, JM, MJ. Zwei Jungen hat Herr Müller nur in <strong>einem</strong> davon.</p><p>→ P(zwei Jungen | mindestens ein Junge) = 1/3.</p><p>Der Trugschluss entsteht, weil wir unbewusst auf <em>ein bestimmtes</em> Kind schließen (z. B. das ältere). Die Information bezieht sich aber auf <em>die Menge</em> beider Kinder – nicht auf ein ausgewähltes.</p>",
+        "kontext": "<p><strong>Boy-or-Girl-Paradox</strong> – Martin Gardner, <em>Scientific American</em> 1959.</p><p>Gardner selbst musste die Aufgabe mehrfach präzisieren: Es macht nämlich einen Unterschied, <em>wie</em> die Information „mindestens ein Junge\" entstanden ist. Trifft man zufällig den Vater mit seinem Sohn (nicht: mit beiden), ändert sich das Modell und man landet bei 1/2. Das Paradox zeigt: Bayes-Rechnung hängt empfindlich vom Beobachtungsprozess ab.</p><p>Verwandt ist das <em>Monty-Hall-Problem</em> – auch dort täuscht die Intuition über bedingte Wahrscheinlichkeiten.</p>",
+        "erkenntnis": "Bei bedingten Wahrscheinlichkeiten reicht gesunder Menschenverstand selten. Zähle immer alle gleichwahrscheinlichen Grundfälle auf und streiche gezielt die aus, die mit der Information unvereinbar sind.",
+    },
+    "klavierstimmer-chicago": {
+        "id": "klavierstimmer-chicago", "name": "Klavierstimmer in Chicago", "icon": "🎹",
+        "farbe": "amber", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup_label": "Fermis Frage:",
+        "setup": "„Wie viele Klavierstimmer arbeiten in Chicago?\" Niemand weiß die exakte Zahl aus dem Kopf – aber jeder kann sie sinnvoll <strong>schätzen</strong>, wenn er die Frage in Teilfragen zerlegt.<br><br>Nimm diese Grobannahmen:<br>• Chicago hat rund <strong>3 Millionen</strong> Einwohner.<br>• Ein Haushalt zählt im Schnitt <strong>2 Personen</strong>.<br>• Etwa <strong>1 von 10 Haushalten</strong> hat ein Klavier.<br>• Jedes Klavier wird <strong>einmal pro Jahr</strong> gestimmt.<br>• Ein Klavierstimmer schafft rund <strong>4 Klaviere pro Tag</strong> und arbeitet <strong>250 Tage im Jahr</strong>.",
+        "frage": "Welche Größenordnung ergibt Fermis Zerlegung?",
+        "optionen": [
+            {"text": "Etwa 10 Klavierstimmer", "hinweis": "Zu wenig – rechne nach."},
+            {"text": "Etwa 150 Klavierstimmer", "hinweis": "Fermis klassische Grobschätzung"},
+            {"text": "Etwa 5.000 Klavierstimmer", "hinweis": "Zu viel – wäre jeder 600. Einwohner Stimmer"},
+            {"text": "Lässt sich nicht abschätzen", "hinweis": "Doch – genau das ist die Pointe"},
+        ],
+        "loesung_text": "Rund 150 Klavierstimmer – Größenordnung sauber getroffen.",
+        "erklaerung": "<p>Rechne Schritt für Schritt:</p><ul class=\"list-disc ml-5 mt-2 space-y-1\"><li>3.000.000 Einwohner ÷ 2 pro Haushalt → <strong>1,5 Mio Haushalte</strong></li><li>1,5 Mio × 1/10 → <strong>150.000 Klaviere</strong></li><li>150.000 Stimmungen pro Jahr</li><li>Ein Stimmer schafft 4 × 250 = <strong>1.000 Klaviere/Jahr</strong></li><li>150.000 ÷ 1.000 ≈ <strong>150 Klavierstimmer</strong></li></ul><p>Mit anderen Annahmen landest du zwischen 50 und 300 – alles innerhalb einer Größenordnung. Volkszählungsdaten nennen für Chicago historisch rund 100 – 180 hauptberufliche Klavierstimmer. Die Pointe: Die <em>Größenordnung</em> stimmt – und darum geht es Fermi.</p>",
+        "kontext": "<p><strong>Enrico Fermi</strong> (1901 – 1954), Physik-Nobelpreisträger, forderte seine Studenten in Chicago und Los Alamos regelmäßig zu solchen Schätzungen auf. Seine berühmteste Demonstration: Beim Trinity-Atomtest 1945 warf er Papierschnipsel in die Luft, maß ihren Weg nach der Druckwelle – und schätzte die Sprengkraft auf 10 Kilotonnen. Später zeigten aufwendige Messungen: 21 Kilotonnen. Die Größenordnung war richtig.</p><p>Fermi-Schätzungen folgen immer demselben Muster:</p><ul class=\"list-disc ml-5 mt-2 space-y-1\"><li>Zerlege das Problem in <strong>multiplikative Teilfragen</strong></li><li>Schätze jede Teilfrage grob auf eine Größenordnung</li><li>Vertraue auf <strong>Fehlerausgleich</strong>: Über- und Unterschätzungen heben sich oft auf</li></ul><p>Heute sind Fermi-Fragen fester Bestandteil von Vorstellungsgesprächen bei McKinsey, Google und BCG – weil sie zeigen, ob jemand aus wenig Faktenwissen ein tragfähiges Modell baut.</p>",
+        "erkenntnis": "Du musst nicht wissen – du musst zerlegen. Große Zahlen entmystifizieren sich, sobald du sie in 3 – 5 Teilschritte aufspaltest, die jeder grob abschätzen kann.",
     },
 }
 
