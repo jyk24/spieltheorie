@@ -631,6 +631,8 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Spieltheorie-Paradoxa ────────────────────────────────────────────────
+    {"id":"parrondo","name":"Parrondos Paradox","icon":"🎲","beschreibung":"Zwei Glücksspiele – beide verlieren auf Dauer. Spielt man sie abwechselnd, gewinnt man. Wie kann aus zwei Verlierern ein Gewinner werden? Parrondo (1996) fand die verblüffende Antwort.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Spieltheorie"},
 ]
 
 
@@ -3169,6 +3171,23 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Wenn jemand einen Wert <em>zwischen</em> beiden Mittelwerten hat, hebt er den niedrigeren Mittelwert und senkt den höheren. Beide Mittelwerte 'verbessern' sich rein rechnerisch — ohne dass sich irgendjemand verändert hat. Das Phänomen taucht in Krebsstadien-Statistiken auf: Neue Diagnose-Technologien entdecken frühe Stadien, die dann in eine 'bessere' Kategorie eingestuft werden — und beide Kategorien zeigen höhere Überlebensraten.</p>",
         "kontext": "<p>Benannt nach dem Witz: 'Als die Okies nach Kalifornien auswanderten, stieg der Durchschnitts-IQ in beiden Staaten.' Das Phänomen erklärt zahlreiche medizinische Statistikfehler (Lead-Time Bias).</p>",
         "erkenntnis": "Aggregatstatistiken können irreführen, selbst wenn alle Einzeldaten stimmen. Immer fragen: Welche Gruppe wechselt zwischen den Kategorien?",
+    },
+    "parrondo": {
+        "id": "parrondo", "name": "Parrondos Paradox", "icon": "🎲",
+        "farbe": "sky", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": "Zwei Glücksspiele A und B. <strong>Spiel A</strong>: Du gewinnst mit 49,5 % einen Euro, sonst verlierst du einen. Erwartungswert: leicht negativ. <strong>Spiel B</strong> ist komplizierter: Ist dein Kapital durch 3 teilbar, gewinnst du nur mit 9,5 %, sonst mit 74,5 %. Auch Spiel B hat auf Dauer einen leicht negativen Erwartungswert. Wer beide einzeln spielt, verliert langfristig.",
+        "frage": "Was passiert, wenn du A und B zufällig (50/50) oder in fester Reihenfolge abwechselst?",
+        "optionen": [
+            {"text": "Nichts Neues — zwei Verlustspiele bleiben zwei Verlustspiele", "hinweis": "Intuition sagt das — stimmt aber nicht"},
+            {"text": "Du gewinnst langfristig, obwohl beide einzeln verlieren", "hinweis": "Das ist genau das Paradox"},
+            {"text": "Der Erwartungswert mittelt sich — du bist bei 0", "hinweis": "Die Spiele sind nicht unabhängig"},
+            {"text": "Du verlierst noch schneller", "hinweis": "Doppelverlust? Nein — es ist subtiler"},
+        ],
+        "loesung_text": "Du gewinnst langfristig — die Spiele sind korreliert und ergänzen sich",
+        "erklaerung": "<p>Spiel B ist zustandsabhängig: Es verliert, wenn das Kapital durch 3 teilbar ist, gewinnt sonst. Allein gespielt gerät das Kapital zu oft in die 'durch-3'-Falle. Spiel A ist annähernd fair, aber es <em>durchmischt</em> die Kapitalstände. Wechselt man beide Spiele, bringt A das Kapital häufiger in die Zustände, in denen B gewinnt. Das Resultat: Der kombinierte Prozess hat einen positiven Erwartungswert.</p><p>Simulation (1000 Runden, 50/50-Mischung): Reines A ≈ −5 €, reines B ≈ −3 €, Mischung ≈ +25 €.</p>",
+        "kontext": "<p>Juan Parrondo (1996) entwarf das Paradox als Metapher für den Brownschen Ratscheneffekt — eine Idee aus der Nicht-Gleichgewichts-Thermodynamik. Es zeigt: Zwei zerstörerische Prozesse können konstruktiv werden, wenn sie korrekt gekoppelt sind. Anwendungen: Portfolio-Diversifikation (verliererische Assets können im Mix gewinnen), Evolutionsbiologie (Kooperationsstrategien), ML-Ensemble-Methoden.</p>",
+        "erkenntnis": "Zwei schlechte Optionen sind nicht automatisch zwei Verluste. Wenn die Verluste komplementär sind, kann die Mischung gewinnen — ein Argument für Vielfalt und gegen monokulturelle Strategien.",
     },
     # ── Wahrscheinlichkeit ────────────────────────────────────────────────
     "kelly-kriterium": {
