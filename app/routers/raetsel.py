@@ -124,6 +124,16 @@ RAETSEL_META = [
         "kategorie": "Statistik",
     },
     {
+        "id": "benford",
+        "name": "Benfordsches Gesetz",
+        "icon": "1️⃣",
+        "beschreibung": "Rechnungssummen, Flusslängen, Aktienkurse, Bevölkerungszahlen – die erste Ziffer ist nicht gleichverteilt. 'Eins' kommt dreimal häufiger vor als 'Neun'. Forensiker nutzen das, um Steuerbetrug und manipulierte Bilanzen zu enttarnen.",
+        "typ": "Statistik-Paradox",
+        "schwierigkeit": "Mittel",
+        "dauer": "4 min",
+        "kategorie": "Statistik",
+    },
+    {
         "id": "anker-experiment",
         "name": "Der Anker-Effekt",
         "icon": "⚓",
@@ -4113,6 +4123,49 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         request,
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
+    )
+
+
+# ---------------------------------------------------------------------------
+# Benfordsches Gesetz
+# ---------------------------------------------------------------------------
+import math as _math
+
+_BENFORD = [
+    {"digit": d, "prob": round(_math.log10(1 + 1 / d) * 100, 1)}
+    for d in range(1, 10)
+]
+
+
+@router.get("/benford", response_class=HTMLResponse)
+def benford_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "raetsel/benford.html",
+        {"active_page": "raetsel", "benford": _BENFORD, **_nav_context("benford")},
+    )
+
+
+@router.post("/benford/result", response_class=HTMLResponse)
+def benford_result(request: Request, choice: str = Form(...)):
+    # correct answer: "30"
+    try:
+        guess = int(choice)
+    except ValueError:
+        guess = -1
+    correct_pct = 30
+    off_by = abs(guess - correct_pct) if guess >= 0 else 100
+    correct = off_by <= 3
+    return templates.TemplateResponse(
+        request,
+        "partials/benford_result.html",
+        {
+            "choice": choice,
+            "guess": guess,
+            "correct": correct,
+            "off_by": off_by,
+            "benford": _BENFORD,
+        },
     )
 
 

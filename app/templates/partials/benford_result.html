@@ -1,0 +1,128 @@
+<div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+
+    <!-- Auflösung -->
+    {% if correct %}
+    <div class="mb-5 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300">
+        <h3 class="text-xl font-bold text-emerald-800 mb-1">Treffer! Deine Schätzung: {{ guess }} %</h3>
+        <p class="text-sm text-emerald-700">
+            Die korrekte Antwort nach dem Benfordschen Gesetz:
+            <strong>30,1 %</strong> aller Zahlen beginnen mit der Ziffer 1.
+            Das ist fast dreimal so viel wie die intuitive Gleichverteilung von 11,1 %.
+        </p>
+    </div>
+    {% else %}
+    <div class="mb-5 p-4 rounded-xl bg-slate-50 border-2 border-slate-300">
+        <h3 class="text-xl font-bold text-slate-800 mb-1">Nicht ganz – deine Schätzung: {{ guess }} %</h3>
+        <p class="text-sm text-slate-600">
+            Die korrekte Antwort: <strong>30,1 %</strong>.
+            {% if guess == 11 %}
+            Die naheliegende Gleichverteilung (1/9 ≈ 11,1 %) ist falsch – echte Daten sind erstaunlich schief.
+            {% elif guess == 50 %}
+            So extrem ist es nicht – aber viel schiefer als 11 %. Die 1 dominiert mit knapp einem Drittel.
+            {% else %}
+            Dein Gefühl war richtig: Die 1 ist überproportional häufig – nur um einiges mehr, als man denkt.
+            {% endif %}
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Die Verteilung -->
+    <div class="mb-5">
+        <h4 class="font-bold text-slate-800 mb-3">Die Benford-Verteilung</h4>
+        <p class="text-xs text-slate-500 mb-4">
+            P(erste Ziffer = d) = log<sub>10</sub>(1 + 1/d)
+        </p>
+        <div class="space-y-2">
+            {% for row in benford %}
+            <div class="flex items-center gap-3">
+                <div class="w-6 text-right font-mono font-bold text-slate-700">{{ row.digit }}</div>
+                <div class="flex-1 bg-slate-100 rounded-full h-6 overflow-hidden relative">
+                    <div class="h-full rounded-full {% if row.digit == 1 %}bg-indigo-500{% elif row.digit <= 3 %}bg-indigo-400{% else %}bg-indigo-300{% endif %}"
+                         style="width: {{ (row.prob / 30.1 * 100)|round(1) }}%"></div>
+                </div>
+                <div class="w-14 text-right font-mono text-sm text-slate-700">{{ row.prob }} %</div>
+            </div>
+            {% endfor %}
+        </div>
+        <p class="text-xs text-slate-400 mt-3">
+            Zum Vergleich: Gleichverteilung wäre für jede Ziffer 11,1 %.
+            Die 1 kommt fast siebenmal häufiger vor als die 9.
+        </p>
+    </div>
+
+    <!-- Geschichte -->
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-800">
+        <p class="font-semibold mb-2">Zufällig entdeckt – zweimal</p>
+        <p class="mb-2">
+            Der Astronom <strong>Simon Newcomb</strong> bemerkte 1881, dass die ersten
+            Seiten eines Logarithmentafels in Bibliotheken deutlich abgegriffener waren
+            als die hinteren. Offenbar schlugen Forscher häufiger Zahlen nach, die mit 1
+            oder 2 beginnen.
+        </p>
+        <p>
+            Der Physiker <strong>Frank Benford</strong> rediscoverte das Muster 1938,
+            prüfte es an 20.000 Zahlen aus 20 unterschiedlichen Quellen –
+            Flusslängen, Einwohnerzahlen, Atomgewichte, Zeitschriftenartikel – und fand
+            überall die gleiche Verteilung.
+        </p>
+    </div>
+
+    <!-- Warum -->
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 text-sm text-indigo-800">
+        <p class="font-semibold mb-2">Warum passiert das?</p>
+        <p class="mb-2">
+            <strong>Skaleninvarianz.</strong> Wenn ein Datensatz dem Benford-Gesetz folgt,
+            dann folgt er ihm auch, wenn du jede Zahl in eine andere Einheit umrechnest
+            (Dollar → Euro, Meter → Fuß). Diese Eigenschaft erzwingt mathematisch die
+            logarithmische Verteilung – es gibt keine andere, die skaleninvariant ist.
+        </p>
+        <p>
+            <strong>Multiplikative Prozesse.</strong> Daten, die durch Multiplikation
+            entstehen – Zinseszins, Wachstum von Städten, Preisschwankungen –
+            verbringen auf einer Log-Skala gleich viel Zeit in jedem Intervall.
+            Auf der linearen Skala übersetzt sich das in die Benford-Verteilung.
+        </p>
+    </div>
+
+    <!-- Anwendung Forensik -->
+    <div class="bg-rose-50 border border-rose-200 rounded-xl p-4 mb-4 text-sm text-rose-800">
+        <p class="font-semibold mb-2">🔍 Betrugserkennung in der Praxis</p>
+        <p class="mb-2">
+            Menschen, die Zahlen erfinden, verteilen die ersten Ziffern viel zu
+            gleichmäßig – unser Gehirn mag keine „auffällige" Konzentration bei der 1.
+            Forensiker wie <strong>Mark Nigrini</strong> nutzen das:
+        </p>
+        <ul class="list-disc list-inside space-y-1 text-xs">
+            <li><strong>Enron (2001):</strong> Erste Ziffern der Kennzahlen wichen
+                signifikant von Benford ab – lange bevor der Skandal öffentlich wurde.</li>
+            <li><strong>Griechische Haushaltsdaten (2010):</strong> Studie von
+                Rauch et al. zeigte, dass Griechenland in der Eurozone die größte
+                Benford-Abweichung aller Länder hatte.</li>
+            <li><strong>Iran-Wahl 2009:</strong> Letzte Ziffern der Stimmauszählung
+                waren statistisch unmöglich glatt verteilt.</li>
+            <li><strong>US-Steuerprüfungen:</strong> Finanzämter in mehreren Bundesstaaten
+                nutzen Benford als Vorfilter für Steuererklärungen.</li>
+        </ul>
+    </div>
+
+    <!-- Grenzen -->
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-5 text-sm text-slate-700">
+        <p class="font-semibold mb-2">Wo das Gesetz <em>nicht</em> gilt</p>
+        <p class="text-xs">
+            Benford braucht Daten, die mehrere Größenordnungen überspannen.
+            Nicht geeignet: Körpergrößen von Erwachsenen (alle 1,xx m), Telefonnummern
+            (festes Format), Postleitzahlen, Lottozahlen. Faustregel: Je mehr
+            Dekaden die Daten überspannen, desto besser passt Benford.
+        </p>
+    </div>
+
+    <!-- Navigation -->
+    <div class="flex gap-3">
+        <a href="/raetsel/benford" class="bg-indigo-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700">
+            Nochmal
+        </a>
+        <a href="/raetsel" class="border border-slate-200 text-slate-600 px-5 py-2 rounded-lg text-sm font-medium hover:bg-slate-50">
+            Andere Rätsel
+        </a>
+    </div>
+</div>
