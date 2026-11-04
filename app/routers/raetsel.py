@@ -631,6 +631,9 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neue Mathematik-Rätsel ───────────────────────────────────────────────
+    {"id":"zwei-kinder","name":"Das Zwei-Kinder-Problem","icon":"👧","beschreibung":"Herr Müller hat zwei Kinder. Mindestens eines ist ein Junge. Wie wahrscheinlich ist es, dass auch das zweite ein Junge ist? Martin Gardner (1959) – und eine Falle für die Intuition.","typ":"Bedingte Wahrscheinlichkeit","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Mathematik"},
+    {"id":"fermi-klavierstimmer","name":"Fermi-Schätzung: Klavierstimmer","icon":"🎹","beschreibung":"Wie viele Klavierstimmer arbeiten in Chicago? Enrico Fermi ließ seine Studenten das in zwei Minuten schätzen – ohne Nachschlagewerk. Die Kunst der Größenordnung.","typ":"Schätzungsrätsel","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Mathematik"},
 ]
 
 
@@ -4063,6 +4066,42 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "zwei-kinder": {
+        "id": "zwei-kinder", "name": "Das Zwei-Kinder-Problem", "icon": "👧",
+        "farbe": "indigo", "kategorie": "Mathematik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Das Szenario:",
+        "setup": "Du triffst Herrn Müller auf einer Party. Er erzählt beiläufig:<br><br><em>„Ich habe zwei Kinder. Mindestens eines davon ist ein Junge.\"</em><br><br>Annahme: Jungen und Mädchen sind gleich wahrscheinlich, die Geschlechter sind unabhängig voneinander.",
+        "frage": "Wie wahrscheinlich ist es, dass <strong>beide</strong> Kinder Jungen sind?",
+        "optionen": [
+            {"text": "1/2 (50 %)", "hinweis": "Die intuitive Antwort – prüfe sie"},
+            {"text": "1/3 (ca. 33 %)", "hinweis": "Zähle die Fälle sorgfältig"},
+            {"text": "1/4 (25 %)", "hinweis": "Ohne jede Vorinformation"},
+            {"text": "2/3 (ca. 67 %)", "hinweis": "Mehr als die Hälfte? Zu viel"},
+        ],
+        "loesung_text": "Die Antwort ist 1/3 – nicht 1/2.",
+        "erklaerung": "<p>Vor jeder Information gibt es 4 gleich wahrscheinliche Paare (nach Geburtsreihenfolge):</p><p><strong>JJ, JM, MJ, MM</strong> – jeweils mit Wahrscheinlichkeit 1/4.</p><p>Die Aussage <em>„mindestens ein Junge\"</em> schließt nur <strong>MM</strong> aus. Übrig bleiben <strong>JJ, JM, MJ</strong> – drei gleich wahrscheinliche Fälle. In nur einem davon (JJ) sind beide Jungen.</p><p>→ Wahrscheinlichkeit = <strong>1/3</strong></p>",
+        "kontext": "<p><strong>Martin Gardner (1959)</strong> stellte dieses Rätsel in seiner Scientific-American-Kolumne. Es ist ein Lehrbeispiel für <strong>bedingte Wahrscheinlichkeit</strong> und zeigt, wie Intuition in Bayes-Situationen täuscht.</p><p><strong>Wichtige Feinheit:</strong> Die Antwort hängt davon ab, <em>wie</em> die Information zustande kam. Wenn man Herrn Müller gezielt gefragt hätte <em>„Haben Sie mindestens einen Jungen?\"</em> und er ja sagte, ist die Antwort 1/3. Hätte er aber zufällig von einem seiner Kinder gesprochen (<em>„Mein Sohn hat heute Fußball gespielt\"</em>), wäre die Antwort 1/2.</p><p>Diese Feinheit wurde 2010 berühmt durch das <em>„Tuesday-Boy\"-Problem</em>: <em>„Ich habe zwei Kinder, einer ist ein Junge, geboren an einem Dienstag.\"</em> – überraschende Antwort: 13/27. Die scheinbar nutzlose Zusatzinformation ändert die Wahrscheinlichkeit messbar.</p>",
+        "erkenntnis": "Bedingte Wahrscheinlichkeiten hängen nicht nur von den Fakten ab, sondern vom Beobachtungsprozess – also davon, <em>wie</em> man die Fakten erfahren hat. Deshalb liefern Bauchgefühl und Formel bei Bayes oft verschiedene Antworten.",
+    },
+    "fermi-klavierstimmer": {
+        "id": "fermi-klavierstimmer", "name": "Fermi-Schätzung: Klavierstimmer", "icon": "🎹",
+        "farbe": "orange", "kategorie": "Mathematik",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup_label": "Die Aufgabe:",
+        "setup": "Chicago hat rund <strong>3 Millionen Einwohner</strong>. Nimm an: In ungefähr jedem <strong>fünfzigsten Haushalt</strong> (ca. 2 Personen pro Haushalt) steht ein Klavier, das <strong>einmal pro Jahr</strong> gestimmt wird. Ein Klavierstimmer schafft etwa <strong>4 Klaviere pro Tag</strong> und arbeitet <strong>250 Tage im Jahr</strong>.<br><br>Keine Google-Suche. Keine genaue Zahl nötig. Nur die richtige <em>Größenordnung</em>.",
+        "frage": "Wie viele Klavierstimmer arbeiten vermutlich in Chicago?",
+        "optionen": [
+            {"text": "ca. 3 (einstellig)", "hinweis": "zu wenig für eine Großstadt"},
+            {"text": "ca. 30 (zweistellig)", "hinweis": "die richtige Größenordnung"},
+            {"text": "ca. 300 (dreistellig)", "hinweis": "zu viele"},
+            {"text": "ca. 3.000 (vierstellig)", "hinweis": "weit zu viele"},
+        ],
+        "loesung_text": "Rund 30 – eine zweistellige Zahl.",
+        "erklaerung": "<p>Rechne Schritt für Schritt:</p><ul class=\"list-disc ml-5 space-y-1\"><li>3 Mio. Einwohner ÷ 2 Personen/Haushalt = <strong>1,5 Mio. Haushalte</strong></li><li>1,5 Mio. ÷ 50 = <strong>30.000 Klaviere</strong></li><li>30.000 Klaviere × 1 Stimmung/Jahr = <strong>30.000 Stimmungen/Jahr</strong></li><li>4 Stimmungen/Tag × 250 Tage = <strong>1.000 Stimmungen pro Stimmer/Jahr</strong></li><li>30.000 ÷ 1.000 = <strong>30 Klavierstimmer</strong></li></ul><p>Tatsächliche Schätzungen (Branchendaten): zwischen <strong>20 und 50</strong>. Trotz grober Einzelannahmen landet die Rechnung in der richtigen Größenordnung.</p>",
+        "kontext": "<p><strong>Enrico Fermi</strong> (1901–1954), Physik-Nobelpreisträger, war berüchtigt für solche Aufgaben in seinen Vorlesungen an der Universität Chicago. Sein Argument: Bei einer Rechnung mit 5 oder mehr Faktoren kompensieren sich Über- und Unterschätzungen tendenziell – wenn die Fehler <em>unabhängig</em> sind. Nach dem Gesetz der großen Zahlen liegt das Produkt oft nur um Faktor 2–3 daneben.</p><p>Fermi-Schätzungen sind Pflicht in Einstellungsgesprächen bei McKinsey, Google oder Jane Street. Die Antwort zählt weniger als die <strong>Struktur</strong> des Denkens: Annahmen explizit machen, in Faktoren zerlegen, Größenordnungen vergleichen.</p><p>Fermi selbst schätzte 1945 beim Trinity-Atomtest die Sprengkraft, indem er Papierschnipsel in die Druckwelle warf – und kam auf 10 Kilotonnen. Der exakte Messwert lag bei 18 – gleiche Größenordnung, ohne jede Instrumentierung.</p>",
+        "erkenntnis": "Oft brauchst du keine exakte Zahl – nur die richtige Zehnerpotenz. Zerlege das Problem in 4–6 Faktoren, schätze jeden auf eine Zehnerpotenz genau, multipliziere. Das liefert bessere Entscheidungen als „keine Ahnung\" oder „ich google es später\".",
     },
 }
 
