@@ -977,6 +977,31 @@ GLOSSAR = [
         "kategorie": "Psychologie",
         "link": "/raetsel/verfuegbarkeitsheuristik",
     },
+    {
+        "id": "nim-summe",
+        "titel": "Nim-Summe",
+        "definition": (
+            "Die XOR-Verknuepfung aller Haufengroessen in einem Nim-Spiel. "
+            "Charles Bouton bewies 1901: Ist die Nim-Summe = 0 am Zug eines Spielers, "
+            "verliert dieser bei perfektem Gegenspiel. Ist sie != 0, gibt es stets einen Gewinnzug: "
+            "Reduziere einen Haufen p auf p XOR Nim-Summe. Zum Beispiel [3,4,5] hat Nim-Summe 3 XOR 4 XOR 5 = 2 "
+            "- der Startspieler gewinnt, wenn er 2 Steine aus Haufen 1 nimmt."
+        ),
+        "kategorie": "Spieltheorie",
+        "link": "/spiele/nim",
+    },
+    {
+        "id": "sprague-grundy",
+        "titel": "Sprague-Grundy-Theorem",
+        "definition": (
+            "Fundamentalsatz der kombinatorischen Spieltheorie: Jedes unparteiische Spiel (impartial game) "
+            "mit perfekter Information unter Normal-Play-Regel ist aequivalent zu einem einzigen Nim-Haufen "
+            "mit berechenbarer Grundy-Zahl. Unabhaengig bewiesen von Roland Sprague (1935) und Patrick M. Grundy (1939). "
+            "Ermoeglicht, jedes solche Spiel auf Nim zurueckzufuehren."
+        ),
+        "kategorie": "Spieltheorie",
+        "link": "/spiele/nim",
+    },
 ]
 
 GLOSSAR.sort(key=lambda x: x["titel"].lower())

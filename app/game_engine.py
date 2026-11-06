@@ -1828,3 +1828,132 @@ def knopf_final_result(history: list[dict]) -> dict:
         "efficiency": efficiency,
         "total_rounds": len(history),
     }
+
+
+# =============================================================================
+# Nim – klassisches Kombinatorik-Spiel (Sprague-Grundy)
+# =============================================================================
+
+NIM_INITIAL_PILES = [3, 4, 5]
+
+
+def nim_sum(piles: list[int]) -> int:
+    """XOR aller Haufengroessen – entscheidet die Gewinnposition (Bouton 1901)."""
+    s = 0
+    for p in piles:
+        s ^= p
+    return s
+
+
+def nim_valid_move(piles: list[int], pile_idx: int, take: int) -> bool:
+    if not isinstance(pile_idx, int) or not isinstance(take, int):
+        return False
+    if pile_idx < 0 or pile_idx >= len(piles):
+        return False
+    if take < 1 or take > piles[pile_idx]:
+        return False
+    return True
+
+
+def nim_ai_move(strategy: str, piles: list[int]) -> tuple[int, int]:
+    """Gibt (pile_index, anzahl_steine) zurueck. Erwartet nicht-leere piles."""
+    non_empty = [(i, p) for i, p in enumerate(piles) if p > 0]
+    if not non_empty:
+        return (-1, 0)
+
+    if strategy == "optimal":
+        xs = nim_sum(piles)
+        if xs != 0:
+            # Finde Haufen, bei dem pile XOR xsum < pile ist, und reduziere ihn
+            for i, p in enumerate(piles):
+                target = p ^ xs
+                if target < p:
+                    return (i, p - target)
+        # Verlustposition – nimm 1 aus groesstem Haufen, in der Hoffnung auf Spielerfehler
+        i = max(range(len(piles)), key=lambda j: piles[j])
+        return (i, 1)
+
+    if strategy == "greedy":
+        i, p = max(non_empty, key=lambda x: x[1])
+        return (i, p)
+
+    if strategy == "cautious":
+        # Nimmt stets nur einen Stein aus dem groessten Haufen
+        i, _ = max(non_empty, key=lambda x: x[1])
+        return (i, 1)
+
+    if strategy == "learner":
+        # Zufaellig, solange noch viele Steine liegen; sonst optimal
+        remaining = sum(piles)
+        if remaining > sum(NIM_INITIAL_PILES) // 2:
+            i, p = random.choice(non_empty)
+            return (i, random.randint(1, p))
+        return nim_ai_move("optimal", piles)
+
+    # Fallback: zufaelliger Zug
+    i, p = random.choice(non_empty)
+    return (i, random.randint(1, p))
+
+
+def nim_play_round(
+    piles: list[int], player_pile: int, player_take: int, strategy: str
+) -> dict:
+    """Spielzug: Spieler + ggf. KI-Antwort. Normal-Play – wer den letzten Stein nimmt, gewinnt."""
+    piles = list(piles)
+    if not nim_valid_move(piles, player_pile, player_take):
+        return {"error": "Ungueltiger Zug.", "piles_before": piles, "piles_after_ai": piles}
+
+    nim_before = nim_sum(piles)
+    piles_before = list(piles)
+    piles[player_pile] -= player_take
+    piles_after_player = list(piles)
+    player_won = sum(piles) == 0
+
+    ai_pile, ai_take = -1, 0
+    if not player_won:
+        ai_pile, ai_take = nim_ai_move(strategy, piles)
+        if ai_pile >= 0 and ai_take > 0:
+            piles[ai_pile] -= ai_take
+
+    piles_after_ai = list(piles)
+    ai_won = (not player_won) and sum(piles) == 0
+
+    return {
+        "piles_before": piles_before,
+        "piles_after_player": piles_after_player,
+        "piles_after_ai": piles_after_ai,
+        "player_pile": player_pile,
+        "player_take": player_take,
+        "ai_pile": ai_pile,
+        "ai_take": ai_take,
+        "nim_before": nim_before,
+        "nim_after_player": nim_sum(piles_after_player),
+        "nim_after_ai": nim_sum(piles_after_ai),
+        "player_won": player_won,
+        "ai_won": ai_won,
+        "game_over": player_won or ai_won,
+    }
+
+
+def nim_final_result(history: list[dict], player_won: bool) -> dict:
+    """Spielzusammenfassung."""
+    perfect_moves = 0
+    costly_moves = 0
+    for turn in history:
+        # Perfekt: Spieler liess Nim-Summe=0 beim Gegner (sofern moeglich)
+        if turn.get("nim_before", 0) != 0 and turn.get("nim_after_player", -1) == 0:
+            perfect_moves += 1
+        elif turn.get("nim_before", -1) != 0 and turn.get("nim_after_player", 0) != 0:
+            costly_moves += 1
+    total_turns = len(history)
+    accuracy = round(perfect_moves / total_turns * 100) if total_turns else 0
+    return {
+        "result": "win" if player_won else "loss",
+        "player_won": player_won,
+        "total_turns": total_turns,
+        "perfect_moves": perfect_moves,
+        "costly_moves": costly_moves,
+        "accuracy": accuracy,
+        "player_score": 1 if player_won else 0,
+        "ai_score": 0 if player_won else 1,
+    }

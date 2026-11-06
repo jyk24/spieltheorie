@@ -183,3 +183,112 @@ class TestVerhandlungssimulation:
         # Kein Crash, Ergebnis hat korrekte Struktur
         assert "offer" in result
         assert "deal" in result
+
+
+# ---------------------------------------------------------------------------
+# Nim – kombinatorische Spieltheorie
+# ---------------------------------------------------------------------------
+
+from app.game_engine import (
+    NIM_INITIAL_PILES,
+    nim_ai_move,
+    nim_final_result,
+    nim_play_round,
+    nim_sum,
+    nim_valid_move,
+)
+
+
+class TestNim:
+    def test_nim_sum_xor(self):
+        assert nim_sum([3, 4, 5]) == 2
+        assert nim_sum([0, 0, 0]) == 0
+        assert nim_sum([1, 1]) == 0
+        assert nim_sum([7]) == 7
+
+    def test_valid_move_rejects_out_of_range(self):
+        assert not nim_valid_move([3, 4, 5], 5, 1)
+        assert not nim_valid_move([3, 4, 5], 0, 0)
+        assert not nim_valid_move([3, 4, 5], 0, 4)
+        assert nim_valid_move([3, 4, 5], 0, 3)
+        assert nim_valid_move([3, 4, 5], 2, 1)
+
+    def test_optimal_ai_closes_nim_sum_to_zero(self):
+        # XOR 3,4,5 = 2 – optimale KI muss auf 0 reduzieren
+        pile, take = nim_ai_move("optimal", [3, 4, 5])
+        piles = [3, 4, 5]
+        piles[pile] -= take
+        assert nim_sum(piles) == 0
+
+    def test_optimal_ai_never_takes_zero(self):
+        for _ in range(20):
+            pile, take = nim_ai_move("optimal", [2, 4, 6])
+            assert take >= 1
+
+    def test_greedy_takes_whole_largest_pile(self):
+        pile, take = nim_ai_move("greedy", [2, 7, 3])
+        assert pile == 1 and take == 7
+
+    def test_cautious_takes_one(self):
+        pile, take = nim_ai_move("cautious", [2, 7, 3])
+        assert take == 1
+
+    def test_play_round_removes_stones(self):
+        result = nim_play_round([3, 4, 5], 0, 2, "random")
+        assert result["piles_after_player"] == [1, 4, 5]
+        # KI muss auch etwas genommen haben
+        assert sum(result["piles_after_ai"]) < sum(result["piles_after_player"])
+
+    def test_player_wins_when_takes_last_stone(self):
+        result = nim_play_round([0, 0, 3], 2, 3, "optimal")
+        assert result["player_won"] is True
+        assert result["game_over"] is True
+        assert result["ai_take"] == 0
+
+    def test_ai_wins_when_takes_last_stone(self):
+        # Spieler laesst 1 Stein uebrig – KI nimmt ihn
+        result = nim_play_round([0, 0, 2], 2, 1, "optimal")
+        assert result["player_won"] is False
+        assert result["ai_won"] is True
+        assert result["game_over"] is True
+
+    def test_invalid_move_returns_error(self):
+        result = nim_play_round([3, 4, 5], 0, 99, "optimal")
+        assert "error" in result
+
+    def test_optimal_ai_beats_suboptimal_player(self):
+        """Startposition [3,4,5] XOR=2. Wenn Spieler suboptimal startet (z.B. nimmt 1 aus
+        Haufen 0 → [2,4,5] XOR=3), muss optimale KI daraus Sieg machen."""
+        import random as _r
+        _r.seed(42)
+        piles = [3, 4, 5]
+        history = []
+        # Spieler macht ersten Zug: nimmt 1 aus Haufen 0 (suboptimal)
+        turn = nim_play_round(piles, 0, 1, "optimal")
+        piles = turn["piles_after_ai"]
+        history.append(turn)
+        # Optimale KI reduziert Nim-Summe auf 0
+        assert nim_sum(piles) == 0
+        # Weiter spielen – unabhaengig vom Spielerzug bleibt KI in Gewinnposition
+        while not turn.get("game_over"):
+            # Spieler nimmt 1 aus erstem nicht-leeren Haufen
+            idx = next(i for i, p in enumerate(piles) if p > 0)
+            turn = nim_play_round(piles, idx, 1, "optimal")
+            piles = turn["piles_after_ai"]
+            history.append(turn)
+        assert turn["ai_won"] is True
+
+    def test_final_result_counts_perfect_moves(self):
+        history = [
+            {"nim_before": 2, "nim_after_player": 0},
+            {"nim_before": 3, "nim_after_player": 0},
+            {"nim_before": 1, "nim_after_player": 1},  # Suboptimal
+        ]
+        final = nim_final_result(history, player_won=True)
+        assert final["perfect_moves"] == 2
+        assert final["costly_moves"] == 1
+        assert final["total_turns"] == 3
+        assert final["result"] == "win"
+
+    def test_initial_piles_constant(self):
+        assert NIM_INITIAL_PILES == [3, 4, 5]

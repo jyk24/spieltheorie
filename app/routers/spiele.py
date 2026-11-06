@@ -62,6 +62,10 @@ from ..game_engine import (
     wc_play_round,
     cournot_final_result,
     cournot_play_round,
+    NIM_INITIAL_PILES,
+    nim_final_result,
+    nim_play_round,
+    nim_sum,
 )
 from ..services import save_game_session
 
@@ -618,6 +622,15 @@ GAME_META = [
         "schwierigkeit": "Fortgeschritten",
         "runden": 6,
         "konzept": "Cournot-Gleichgewicht, Oligopol, Kollusion vs. Wettbewerb",
+    },
+    {
+        "id": "nim",
+        "name": "Nim – Steine wegnehmen",
+        "icon": "🪨",
+        "beschreibung": "Drei Haufen Steine, zwei Spieler, eine mathematische Formel entscheidet. Bouton bewies 1901: Es gibt eine perfekte Strategie – findest du sie?",
+        "schwierigkeit": "Mittel",
+        "runden": 1,
+        "konzept": "Kombinatorische Spieltheorie, Nim-Summe (XOR), Sprague-Grundy",
     },
 ]
 
@@ -2907,6 +2920,149 @@ def cournot_zug(
             "max_rounds": 6,
             "total_player": total_player,
             "total_ai": total_ai,
+            "strategy_info": strategy_info,
+            "new_achievements": new_achievements,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Nim – Kombinatorische Spieltheorie
+# ---------------------------------------------------------------------------
+
+NIM_STRATEGY_POOL = ["optimal", "greedy", "cautious", "learner", "random"]
+NIM_STRATEGY_WEIGHTS = [3, 2, 1, 2, 2]
+
+NIM_STRATEGY_INFO = {
+    "optimal": {
+        "icon": "🎯",
+        "name": "Perfekter Rechner",
+        "verhalten": "Spielt nach Boutons Satz: berechnet die Nim-Summe und reduziert bei jedem Zug auf 0. Aus einer Nullsumme-Position gibt es für dich keinen Weg zum Sieg – nur Fehler können ihn retten.",
+        "gegencheck": "Nur gewinnbar, wenn die KI eine Verlustposition erbt. Aus [3,4,5] (XOR=2) kannst du sie dort hinein manövrieren – der erste Zug entscheidet alles.",
+        "lesson_slug": "kombinatorische-spiele",
+        "lesson_title": "Kombinatorische Spieltheorie",
+    },
+    "greedy": {
+        "icon": "🦾",
+        "name": "Gierig",
+        "verhalten": "Nimmt immer den gesamten grössten Haufen in einem Zug. Reduziert das Spiel schnell auf 2 Haufen – was fast immer eine Verlustposition ist.",
+        "gegencheck": "Lass zwei Haufen gleicher Grösse übrig – dann kopierst du jeden ihrer Züge und gewinnst garantiert (Spiegelstrategie).",
+        "lesson_slug": "kombinatorische-spiele",
+        "lesson_title": "Kombinatorische Spieltheorie",
+    },
+    "cautious": {
+        "icon": "🐢",
+        "name": "Vorsichtig",
+        "verhalten": "Nimmt immer genau einen Stein, immer aus dem grössten Haufen. Verlässt sich darauf, dass du dich verrechnest.",
+        "gegencheck": "Zähl die Gesamtanzahl Steine. Ist sie gerade, wird sie gewinnen – wenn du nicht grössere Züge machst, um die Parität zu brechen.",
+        "lesson_slug": "kombinatorische-spiele",
+        "lesson_title": "Kombinatorische Spieltheorie",
+    },
+    "learner": {
+        "icon": "📚",
+        "name": "Spätzünderin",
+        "verhalten": "Zuerst zufällige Züge, ab der Spielhälfte spielt sie optimal. Nutzt ihre Rechenkraft nur im Endspiel.",
+        "gegencheck": "Nutze die zufällige Phase: Versuche, die KI früh in eine Position mit Nim-Summe=0 zu zwingen – dann verliert sie auch optimal.",
+        "lesson_slug": "kombinatorische-spiele",
+        "lesson_title": "Kombinatorische Spieltheorie",
+    },
+    "random": {
+        "icon": "🎲",
+        "name": "Würfel-Gegner",
+        "verhalten": "Wählt jeden Zug zufällig aus allen gültigen Möglichkeiten. Keine Strategie – reine Entropie.",
+        "gegencheck": "Spiele selbst optimal (Nim-Summe=0 beim Gegner). Dann gewinnst du nahezu immer – nur extremes Pech kann dich stoppen.",
+        "lesson_slug": "kombinatorische-spiele",
+        "lesson_title": "Kombinatorische Spieltheorie",
+    },
+}
+
+
+@router.get("/nim", response_class=HTMLResponse)
+def nim_page(request: Request):
+    hidden_strategy = _random.choices(NIM_STRATEGY_POOL, weights=NIM_STRATEGY_WEIGHTS)[0]
+    piles = list(NIM_INITIAL_PILES)
+    return templates.TemplateResponse(
+        request,
+        "games/nim.html",
+        {
+            "active_page": "spiele",
+            "hidden_strategy": hidden_strategy,
+            "initial_piles": piles,
+            "initial_piles_json": json.dumps(piles),
+            "initial_nim_sum": nim_sum(piles),
+        },
+    )
+
+
+@router.post("/nim/zug", response_class=HTMLResponse)
+def nim_zug(
+    request: Request,
+    pile: int = Form(...),
+    take: int = Form(...),
+    piles_json: str = Form(...),
+    strategy: str = Form(...),
+    history_json: str = Form(default="[]"),
+    db: Session = Depends(get_db),
+):
+    piles = json.loads(piles_json)
+    history = json.loads(history_json)
+    round_result = nim_play_round(piles, pile, take, strategy)
+    if "error" in round_result:
+        return templates.TemplateResponse(
+            request,
+            "partials/nim_result.html",
+            {
+                "round_result": round_result,
+                "history": history,
+                "history_json": json.dumps(history),
+                "piles_json": piles_json,
+                "strategy": strategy,
+                "is_final": False,
+                "error": True,
+            },
+        )
+
+    history.append({
+        "turn": len(history) + 1,
+        "player_pile": round_result["player_pile"],
+        "player_take": round_result["player_take"],
+        "ai_pile": round_result["ai_pile"],
+        "ai_take": round_result["ai_take"],
+        "nim_before": round_result["nim_before"],
+        "nim_after_player": round_result["nim_after_player"],
+        "nim_after_ai": round_result["nim_after_ai"],
+    })
+
+    is_final = round_result["game_over"]
+    final = nim_final_result(history, round_result["player_won"]) if is_final else None
+    strategy_info = None
+    new_achievements: list = []
+    if is_final and final:
+        _, new_achievements = save_game_session(
+            db,
+            user_id=request.state.current_user.id if request.state.current_user else None,
+            game_type="nim",
+            ai_strategy=strategy,
+            moves=history,
+            result=final["result"],
+            score=final["player_score"],
+            ai_score=final["ai_score"],
+        )
+        strategy_info = NIM_STRATEGY_INFO.get(strategy)
+
+    return templates.TemplateResponse(
+        request,
+        "partials/nim_result.html",
+        {
+            "round_result": round_result,
+            "history": history,
+            "history_json": json.dumps(history),
+            "piles_after_ai": round_result["piles_after_ai"],
+            "piles_after_ai_json": json.dumps(round_result["piles_after_ai"]),
+            "nim_after_ai": round_result["nim_after_ai"],
+            "strategy": strategy,
+            "is_final": is_final,
+            "final": final,
             "strategy_info": strategy_info,
             "new_achievements": new_achievements,
         },

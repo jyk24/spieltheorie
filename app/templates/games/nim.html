@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% block title %}Nim – VerhandlungsTrainer{% endblock %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🪨 Nim – Steine wegnehmen</h1>
+        <p class="text-slate-500 mt-1">Ein Spiel. Drei Haufen. Eine mathematische Formel, die alles entscheidet.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 text-sm text-slate-700">
+        <p class="italic text-slate-500 mb-3">"Du und die KI nehmt abwechselnd Steine weg. Wer den letzten Stein nimmt, gewinnt."</p>
+        <div class="space-y-2 text-xs">
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 font-bold mt-0.5">→</span>
+                <span><strong>Startposition:</strong> drei Haufen mit {{ initial_piles[0] }}, {{ initial_piles[1] }} und {{ initial_piles[2] }} Steinen.</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-indigo-500 font-bold mt-0.5">→</span>
+                <span><strong>Pro Zug:</strong> wähle einen Haufen und nimm beliebig viele Steine (mindestens 1).</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-amber-500 font-bold mt-0.5">→</span>
+                <span><strong>Gewinnregel:</strong> wer den letzten Stein nimmt, gewinnt (Normal-Play).</span>
+            </div>
+            <div class="flex items-start gap-2">
+                <span class="text-emerald-500 font-bold mt-0.5">→</span>
+                <span><strong>Mathematischer Trick:</strong> Charles Bouton bewies 1901 – es gibt eine perfekte Strategie. Sie heisst <em>Nim-Summe</em>.</span>
+            </div>
+        </div>
+        <p class="text-xs text-slate-400 mt-3">Die Nim-Summe ist der XOR aller Haufengrössen. Ist sie 0 am Ende deines Zuges, hat der Gegner verloren – wenn er optimal spielt, kann er das nicht mehr ändern.</p>
+    </div>
+
+    <!-- Mystery-Start -->
+    <div id="start-form" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+        <input type="hidden" id="strategy-preset" value="{{ hidden_strategy }}">
+        <input type="hidden" id="piles-preset" value='{{ initial_piles_json }}'>
+        <div class="flex items-start gap-4 mb-5">
+            <div class="text-5xl">🤖</div>
+            <div>
+                <h2 class="font-bold text-slate-800 text-lg">Unbekannte Gegnerin</h2>
+                <p class="text-slate-500 text-sm mt-1">Rechnet sie die Nim-Summe mit – oder vertraut sie ihrem Bauchgefühl? Finde es im Spiel heraus.</p>
+                <p class="text-slate-400 text-xs mt-2">Die Strategie wird im Debrief aufgedeckt.</p>
+            </div>
+        </div>
+        <button type="button" onclick="startGame()"
+                class="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+            Spiel beginnen
+        </button>
+    </div>
+
+    <!-- Spielfeld -->
+    <div id="play-area" class="hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-4">
+            <div class="flex justify-between items-center mb-5">
+                <div>
+                    <span class="text-sm text-slate-500">Zug</span>
+                    <span id="turn-display" class="text-xl font-bold text-indigo-600 ml-1">1</span>
+                </div>
+                <div class="text-right">
+                    <div class="text-xs text-slate-400">Nim-Summe (XOR)</div>
+                    <div id="nim-sum" class="text-lg font-bold text-indigo-600">{{ initial_nim_sum }}</div>
+                </div>
+            </div>
+
+            <!-- Haufen -->
+            <div id="piles-area" class="space-y-3 mb-5">
+                {% for p in initial_piles %}
+                <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200" data-pile="{{ loop.index0 }}">
+                    <div class="text-xs font-semibold text-slate-500 w-20">Haufen {{ loop.index }}</div>
+                    <div class="flex-1 flex flex-wrap gap-1" data-stones>
+                        {% for _ in range(p) %}
+                        <span class="text-2xl">🪨</span>
+                        {% endfor %}
+                    </div>
+                    <div class="text-sm font-bold text-slate-700 w-10 text-right" data-count>{{ p }}</div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Zug-Auswahl -->
+            <form id="move-form" class="bg-indigo-50 border border-indigo-100 rounded-lg p-4">
+                <input type="hidden" name="strategy" id="strategy-hidden">
+                <input type="hidden" name="piles_json" id="piles-hidden" value='{{ initial_piles_json }}'>
+                <input type="hidden" name="history_json" id="history-hidden" value="[]">
+
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <label class="text-xs font-semibold text-slate-600">
+                        Haufen
+                        <select name="pile" id="pile-select" class="mt-1 block w-full rounded-md border-slate-300 text-sm py-2 px-2 bg-white">
+                            {% for p in initial_piles %}
+                            <option value="{{ loop.index0 }}">Haufen {{ loop.index }} ({{ p }} Steine)</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <label class="text-xs font-semibold text-slate-600">
+                        Steine wegnehmen
+                        <input type="number" name="take" id="take-input" value="1" min="1" max="{{ initial_piles|max }}"
+                               class="mt-1 block w-full rounded-md border-slate-300 text-sm py-2 px-2 bg-white">
+                    </label>
+                </div>
+
+                <button type="button"
+                        hx-post="/spiele/nim/zug"
+                        hx-target="#result-area"
+                        hx-swap="innerHTML"
+                        hx-include="#move-form"
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold text-sm transition-colors">
+                    Zug ausführen
+                </button>
+            </form>
+        </div>
+
+        <div id="result-area"></div>
+    </div>
+</div>
+
+<script>
+function startGame() {
+    document.getElementById('strategy-hidden').value = document.getElementById('strategy-preset').value;
+    document.getElementById('start-form').classList.add('hidden');
+    document.getElementById('play-area').classList.remove('hidden');
+}
+
+function renderPiles(piles) {
+    const area = document.getElementById('piles-area');
+    area.innerHTML = '';
+    piles.forEach((count, idx) => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200';
+        row.setAttribute('data-pile', idx);
+        const stones = '🪨'.repeat(count).split('').map(() => '<span class="text-2xl">🪨</span>').join('');
+        row.innerHTML = `
+            <div class="text-xs font-semibold text-slate-500 w-20">Haufen ${idx + 1}</div>
+            <div class="flex-1 flex flex-wrap gap-1">${stones}</div>
+            <div class="text-sm font-bold text-slate-700 w-10 text-right">${count}</div>
+        `;
+        area.appendChild(row);
+    });
+
+    // Update pile selector options to reflect current pile sizes and skip empty piles
+    const sel = document.getElementById('pile-select');
+    sel.innerHTML = '';
+    piles.forEach((count, idx) => {
+        if (count > 0) {
+            const opt = document.createElement('option');
+            opt.value = idx;
+            opt.textContent = `Haufen ${idx + 1} (${count} Steine)`;
+            sel.appendChild(opt);
+        }
+    });
+    // Reset take input bounds
+    const takeInput = document.getElementById('take-input');
+    const max = Math.max(...piles.filter(p => p > 0), 1);
+    takeInput.max = max;
+    if (parseInt(takeInput.value) > max) takeInput.value = max;
+    if (parseInt(takeInput.value) < 1) takeInput.value = 1;
+}
+
+// Keep "take" input in range when pile selection changes
+document.addEventListener('change', (ev) => {
+    if (ev.target && ev.target.id === 'pile-select') {
+        const label = ev.target.options[ev.target.selectedIndex].textContent;
+        const match = label.match(/\((\d+)\s/);
+        if (match) {
+            const maxForPile = parseInt(match[1]);
+            const takeInput = document.getElementById('take-input');
+            takeInput.max = maxForPile;
+            if (parseInt(takeInput.value) > maxForPile) takeInput.value = maxForPile;
+        }
+    }
+});
+
+document.body.addEventListener('htmx:afterSwap', function() {
+    const h = document.getElementById('history-data');
+    const t = document.getElementById('turn-data');
+    const n = document.getElementById('nim-sum-data');
+    const p = document.getElementById('piles-data');
+    const over = document.getElementById('game-over');
+    if (h) document.getElementById('history-hidden').value = h.dataset.value;
+    if (t) document.getElementById('turn-display').textContent = t.dataset.value;
+    if (n) document.getElementById('nim-sum').textContent = n.dataset.value;
+    if (p) {
+        const piles = JSON.parse(p.dataset.value);
+        document.getElementById('piles-hidden').value = p.dataset.value;
+        renderPiles(piles);
+    }
+    if (over) {
+        document.getElementById('move-form').style.display = 'none';
+    }
+});
+</script>
+
+{% endblock %}
