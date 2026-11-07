@@ -631,6 +631,9 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Mathematik (neu) ─────────────────────────────────────────────────────
+    {"id":"benford","name":"Benfords Gesetz","icon":"📊","beschreibung":"In realen Datensätzen – Steuerbilanzen, Flusslängen, Wahlergebnissen – beginnt rund 30 % aller Zahlen mit einer 1 und nur 4,6 % mit einer 9. Warum? Und wie überführt man damit Steuerbetrüger?","typ":"Statistik-Phänomen","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Mathematik"},
+    {"id":"schubfachprinzip","name":"Das Schubfachprinzip","icon":"🗄️","beschreibung":"In Berlin leben 3,7 Mio. Menschen. Ein Mensch hat maximal ca. 150 000 Kopfhaare. Folgerung: Es gibt in Berlin mindestens zwei Menschen mit exakt gleicher Haaranzahl. Garantiert. Wie beweist man das?","typ":"Kombinatorik","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Mathematik"},
 ]
 
 
@@ -2894,6 +2897,40 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Würfel: 8−12+6 = 2. Tetraeder: 4−6+4 = 2. Ikosaeder: 12−30+20 = 2. Euler (1750): Für jeden konvexen Polyeder gilt E − K + F = 2. Die Zahl 2 ist die Euler-Charakteristik der Sphäre.</p>",
         "kontext": "<p>Die Formel versagt bei Polyedern mit Löchern (Torus: E−K+F = 0). Euler-Charakteristik ist ein topologisches Invariant — sie ändert sich nicht beim Biegen, nur beim Schneiden oder Kleben.</p>",
         "erkenntnis": "Hinter der Vielfalt der Formen steckt eine einzige Zahl. Invarianten sind das Werkzeug, mit dem Mathematik Chaos in Ordnung verwandelt.",
+    },
+    "benford": {
+        "id": "benford", "name": "Benfords Gesetz", "icon": "📊",
+        "farbe": "teal", "kategorie": "Mathematik",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Sammle 10 000 reale Zahlen — Einwohnerzahlen, Aktienkurse, physikalische Konstanten, Zeilen aus Steuerbilanzen, Flusslängen — und schaue nur auf die <em>erste</em> Ziffer jeder Zahl. Intuitiv erwartet man jede Ziffer von 1 bis 9 mit Wahrscheinlichkeit 1/9 ≈ 11,1 %.",
+        "frage": "Wie oft taucht tatsächlich die Ziffer <strong>1</strong> als Anfangsziffer auf?",
+        "optionen": [
+            {"text": "ca. 11 % — gleichverteilt wie erwartet", "hinweis": "Die intuitive Antwort"},
+            {"text": "ca. 20 % — leichter Überhang bei kleinen Ziffern", "hinweis": "Noch zu wenig"},
+            {"text": "ca. 30 % — mit Abstand am häufigsten", "hinweis": "Logarithmische Verteilung"},
+            {"text": "ca. 50 % — fast jede zweite Zahl beginnt mit 1", "hinweis": "Übertrieben"},
+        ],
+        "loesung_text": "ca. 30,1 % — Benfords Gesetz: P(d) = log₁₀(1 + 1/d)",
+        "erklaerung": "<p>Simon Newcomb (1881) und Frank Benford (1938) beobachteten: In Datensätzen, die viele Größenordnungen überspannen, ist die Wahrscheinlichkeit, dass die führende Ziffer d ist, gleich <strong>log₁₀(1 + 1/d)</strong>. Das ergibt:</p><ul class='list-disc list-inside'><li>Ziffer 1: 30,1 %</li><li>Ziffer 2: 17,6 %</li><li>Ziffer 3: 12,5 %</li><li>…</li><li>Ziffer 9: nur 4,6 %</li></ul><p>Intuition: Wenn eine Größe exponentiell wächst (z. B. Aktienwert mit 10 % pro Jahr), verbringt sie proportional mehr 'Zeit' zwischen 1 und 2 als zwischen 8 und 9. Die Verteilung ist logarithmisch gleichverteilt, nicht linear.</p>",
+        "kontext": "<p>Benfords Gesetz wird in der Forensik eingesetzt: Manipulierte Bilanzen zeigen oft eine zu gleichmäßige Ziffernverteilung, weil Menschen beim Erfinden von Zahlen intuitiv gleichverteilen. Der Enron-Skandal (2001), die griechische Haushaltskrise (2009) und mehrere Wahlbetrugs-Verdachtsfälle wurden mit Benford-Tests analysiert. Es gilt nicht für Zahlen aus einem engen Bereich (z. B. Körpergrößen), sondern für solche, die sich über mehrere Dekaden erstrecken.</p>",
+        "erkenntnis": "Der erste Blick auf 'zufällige' Daten trügt. Echte Natur ist selten gleichverteilt — und wer das weiß, erkennt gefälschte Zahlen, bevor er einen Taschenrechner anfasst.",
+    },
+    "schubfachprinzip": {
+        "id": "schubfachprinzip", "name": "Das Schubfachprinzip", "icon": "🗄️",
+        "farbe": "emerald", "kategorie": "Mathematik",
+        "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup": "Berlin hat ca. 3,7 Millionen Einwohner. Ein Mensch hat maximal etwa 150 000 Kopfhaare (bei starkem Haarwuchs; bei Glatzköpfen entsprechend weniger — die Zahl 150 000 ist eine konservative Obergrenze).",
+        "frage": "Was lässt sich daraus mit <em>Sicherheit</em> folgern — ohne einen einzigen Berliner gezählt zu haben?",
+        "optionen": [
+            {"text": "Nichts — ohne Daten keine Aussage", "hinweis": "Reines mathematisches Argument reicht"},
+            {"text": "Es gibt mindestens zwei Berliner mit exakt gleicher Haaranzahl", "hinweis": "Schubfächer und Objekte"},
+            {"text": "Die meisten Berliner haben genau 75 000 Haare", "hinweis": "Durchschnitt ≠ Verteilung"},
+            {"text": "Keine zwei Berliner haben dieselbe Haaranzahl", "hinweis": "Das wäre das Gegenteil"},
+        ],
+        "loesung_text": "Mindestens zwei Berliner haben exakt dieselbe Haaranzahl",
+        "erklaerung": "<p>Das Schubfachprinzip (Pigeonhole Principle, Dirichlet 1834): Verteilst du n+1 Objekte auf n Schubfächer, so liegen in mindestens einem Fach zwei Objekte. Hier:</p><ul class='list-disc list-inside'><li>Schubfächer: mögliche Haaranzahlen von 0 bis 150 000 → 150 001 Fächer</li><li>Objekte: 3 700 000 Berliner</li><li>3 700 000 > 150 001 → mindestens zwei landen im selben Fach</li></ul><p>Tatsächlich muss es sogar mindestens ⌈3 700 000 / 150 001⌉ = 25 Berliner mit identischer Haaranzahl geben.</p>",
+        "kontext": "<p>Das Prinzip wirkt trivial, hat aber tiefe Konsequenzen: Es beweist, dass jede verlustfreie Datenkompression für manche Eingaben länger werden muss (keine Funktion kann alle 2ⁿ Bitfolgen auf 2ⁿ⁻¹ kürzere eindeutig abbilden). Es steckt in Hash-Kollisions-Beweisen (Geburtstagsparadoxon), im Beweis, dass irrationale Zahlen 'eng' approximiert werden können (Dirichlet-Approximationssatz), und im Nachweis, dass in jeder 6-Personen-Gruppe entweder drei sich kennen oder drei einander fremd sind (Ramsey R(3,3)=6).</p>",
+        "erkenntnis": "Zählen schlägt Messen. Oft genügt ein grobes Ungleichgewicht zwischen Objekten und Kategorien, um eine harte Aussage über die Welt zu machen — ohne ein einziges Experiment.",
     },
     # ── Physik ───────────────────────────────────────────────────────────
     "schroedinger-katze": {
