@@ -124,6 +124,16 @@ RAETSEL_META = [
         "kategorie": "Statistik",
     },
     {
+        "id": "zwei-kinder-paradoxon",
+        "name": "Das Zwei-Kinder-Paradoxon",
+        "icon": "👶",
+        "beschreibung": "„Ich habe zwei Kinder. Mindestens eines ist ein Junge.“ Wie gross ist die Wahrscheinlichkeit, dass auch das andere ein Junge ist? Die Antwort ist nicht 1/2 – und die winzige Zusatzinfo „geboren an einem Dienstag“ veraendert alles.",
+        "typ": "Bedingte Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel",
+        "dauer": "5 min",
+        "kategorie": "Wahrscheinlichkeit",
+    },
+    {
         "id": "anker-experiment",
         "name": "Der Anker-Effekt",
         "icon": "⚓",
@@ -4103,6 +4113,82 @@ def _nav_context(current_id: str) -> dict:
 def pawlow_hund_page(request: Request):
     return templates.TemplateResponse(
         request, "raetsel/pawlow_hund.html", {"active_page": "raetsel"}
+    )
+
+
+# ---------------------------------------------------------------------------
+# Zwei-Kinder-Paradoxon (Boy-Girl Paradox)
+# ---------------------------------------------------------------------------
+
+@router.get("/zwei-kinder-paradoxon", response_class=HTMLResponse)
+def zwei_kinder_page(request: Request):
+    ctx = {"active_page": "raetsel", **_nav_context("zwei-kinder-paradoxon")}
+    return templates.TemplateResponse(
+        request, "raetsel/zwei_kinder_paradoxon.html", ctx
+    )
+
+
+def _simulate_two_children(variant: str, n: int = 20000) -> dict:
+    """Monte-Carlo-Simulation der drei klassischen Varianten.
+
+    variant:
+      "mindestens_junge"      — mind. eines ist ein Junge  → P = 1/3
+      "aelteres_junge"        — das ältere ist ein Junge  → P = 1/2
+      "junge_dienstag"        — mind. einer ist ein Junge, geb. an Dienstag → P ≈ 13/27
+    """
+    rng = _random.Random(42)
+    matching = 0
+    both_boys = 0
+    for _ in range(n):
+        c1 = rng.choice(["J", "M"])
+        c2 = rng.choice(["J", "M"])
+        if variant == "mindestens_junge":
+            if "J" in (c1, c2):
+                matching += 1
+                if c1 == "J" and c2 == "J":
+                    both_boys += 1
+        elif variant == "aelteres_junge":
+            if c1 == "J":
+                matching += 1
+                if c2 == "J":
+                    both_boys += 1
+        elif variant == "junge_dienstag":
+            d1 = rng.randint(1, 7)
+            d2 = rng.randint(1, 7)
+            is_tue1 = (c1 == "J" and d1 == 2)
+            is_tue2 = (c2 == "J" and d2 == 2)
+            if is_tue1 or is_tue2:
+                matching += 1
+                if c1 == "J" and c2 == "J":
+                    both_boys += 1
+    prob = (both_boys / matching) if matching else 0.0
+    return {
+        "variant": variant,
+        "n": n,
+        "matching": matching,
+        "both_boys": both_boys,
+        "prob": prob,
+        "prob_pct": round(prob * 100, 1),
+    }
+
+
+@router.post("/zwei-kinder-paradoxon/simulate", response_class=HTMLResponse)
+def zwei_kinder_simulate(request: Request, variant: str = Form(...)):
+    if variant not in {"mindestens_junge", "aelteres_junge", "junge_dienstag"}:
+        raise HTTPException(status_code=400, detail="Unbekannte Variante")
+    result = _simulate_two_children(variant)
+    theoretical = {
+        "mindestens_junge": {"bruch": "1/3", "pct": 33.3,
+            "begruendung": "Von vier gleichwahrscheinlichen Ordnungen (JJ, JM, MJ, MM) bleiben nach dem Hinweis „mindestens ein Junge“ nur drei uebrig (JJ, JM, MJ). In genau einer davon sind beide Jungen."},
+        "aelteres_junge": {"bruch": "1/2", "pct": 50.0,
+            "begruendung": "Weil wir das Geschlecht eines bestimmten Kindes kennen (des aelteren), haengt das andere Kind unabhaengig davon ab – reine 1/2-Chance."},
+        "junge_dienstag": {"bruch": "13/27", "pct": 48.1,
+            "begruendung": "Von 196 moeglichen (Geschlecht x Wochentag)²-Kombinationen passen 27 zum Hinweis „mind. ein Junge am Dienstag“, und 13 davon sind doppelte Jungen. Die Info „Dienstag“ reduziert die Faelle, in denen genau einer der zwei Jungen am Dienstag geboren wurde – und bringt uns naeher an 1/2."},
+    }[variant]
+    return templates.TemplateResponse(
+        request,
+        "partials/zwei_kinder_result.html",
+        {"result": result, "theoretical": theoretical},
     )
 
 
