@@ -631,6 +631,10 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neue Rätsel 2026-11-10 ─────────────────────────────────────────────
+    {"id":"zenon-pfeil","name":"Zenons Pfeil","icon":"🏹","beschreibung":"Ein fliegender Pfeil ist in jedem einzelnen Augenblick an genau einem Ort – also ruht er in jedem Augenblick. Wenn er in jedem Augenblick ruht, wie kann er sich bewegen? Ein 2500 Jahre altes Rätsel über Zeit, Kontinuität und Infinitesimale.","typ":"Mathematik-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Mathematik"},
+    {"id":"schubfachprinzip","name":"Das Schubfachprinzip","icon":"🗂️","beschreibung":"In jeder Großstadt gibt es mindestens zwei Menschen mit exakt gleicher Anzahl Haare. Nicht wahrscheinlich – garantiert. Das Schubfachprinzip (Dirichlet 1834) ist eines der mächtigsten Werkzeuge der Kombinatorik.","typ":"Kombinatorik","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Mathematik"},
+    {"id":"buridans-esel","name":"Buridans Esel","icon":"🫏","beschreibung":"Ein hungriger Esel steht exakt mittig zwischen zwei identischen Heuhaufen. Vollkommen rational – welchen wählt er? Das Paradox entlarvt eine Schwachstelle reiner Nutzenmaximierung.","typ":"Entscheidungs-Paradox","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
 ]
 
 
@@ -4063,6 +4067,61 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    # ── Neue Rätsel 2026-11-10 ────────────────────────────────────────────
+    "zenon-pfeil": {
+        "id": "zenon-pfeil", "name": "Zenons Pfeil", "icon": "🏹",
+        "farbe": "violet", "kategorie": "Mathematik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Das Paradoxon:",
+        "setup": "Ein Pfeil fliegt durch die Luft. Zenon von Elea (ca. 450 v. Chr.) argumentierte so:<br><br>In jedem <strong>einzelnen Augenblick</strong> ist der Pfeil an genau einem Ort – er nimmt genau den Raum ein, der seinem Volumen entspricht. Also <em>ruht</em> der Pfeil in diesem Augenblick.<br><br>Jede Zeitspanne besteht aber aus lauter solchen Augenblicken. Wenn der Pfeil in <strong>jedem</strong> Augenblick ruht, wie kann er sich dann insgesamt bewegen?",
+        "frage": "Wo liegt der Denkfehler – und was ist die moderne Auflösung?",
+        "optionen": [
+            {"text": "Der Pfeil ist zwar bewegt, aber unsere Wahrnehmung täuscht uns", "hinweis": "Metaphysik oder Mathematik?"},
+            {"text": "Es gibt keinen echten 'Augenblick' – Zeit ist nicht teilbar", "hinweis": "Widerspricht moderner Physik"},
+            {"text": "Bewegung ist eine Eigenschaft eines Zeit<em>intervalls</em>, nicht eines Zeitpunkts", "hinweis": "Infinitesimale, Grenzwert"},
+            {"text": "Zenon hat recht – Bewegung ist eine Illusion", "hinweis": "Parmenides' Position"},
+        ],
+        "loesung_text": "Bewegung ist eine Eigenschaft eines Zeitintervalls, nicht eines einzelnen Zeitpunkts.",
+        "erklaerung": "<p>Zenon unterstellt, dass <em>Ruhe = an einem Ort sein</em>. Das ist der Trick. Ruhe und Bewegung sind aber Eigenschaften <strong>zeitlicher Intervalle</strong>, nicht einzelner Punkte.</p><p>Die moderne Mathematik formalisiert das als Grenzwert: Die <strong>Momentangeschwindigkeit</strong> v(t) = lim<sub>Δt→0</sub> Δx/Δt. In einem einzelnen Punkt t ist der Pfeil weder in Ruhe noch in Bewegung – er <em>hat eine Geschwindigkeit</em>, die 0 oder von 0 verschieden sein kann. Erst das Zusammenspiel <em>vieler</em> Punkte ergibt eine Trajektorie.</p><p>Die Differentialrechnung (Newton, Leibniz, ca. 1680) löste damit ein über 2000 Jahre offenes Problem – indem sie die Frage umformulierte.</p>",
+        "kontext": "<p>Zenon war Schüler von Parmenides und wollte mit seinen vier Paradoxien zeigen, dass Vielheit und Veränderung logisch unmöglich seien. Aristoteles diskutierte das Pfeil-Paradoxon ausführlich, kam aber nicht zur sauberen Auflösung – weil der Begriff des Grenzwerts noch fehlte.</p><p>Erst mit Cauchy (1821) und Weierstraß (1860er) wurde der ε-δ-Grenzwertbegriff präzise. Zenon hatte also unbeabsichtigt einen der tiefsten Begriffe der Mathematik freigelegt: dass das Unendliche nur durch präzise Annäherung zu bändigen ist.</p>",
+        "erkenntnis": "Wenn ein Paradox jahrhundertelang widersteht, liegt es oft nicht an einem Denkfehler – sondern an einem fehlenden Begriff. Fortschritt kommt nicht durch bessere Antworten, sondern durch bessere Fragen.",
+    },
+    "schubfachprinzip": {
+        "id": "schubfachprinzip", "name": "Das Schubfachprinzip", "icon": "🗂️",
+        "farbe": "emerald", "kategorie": "Mathematik",
+        "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup_label": "Die Behauptung:",
+        "setup": "In Berlin (ca. 3,8 Mio. Einwohner) gibt es mindestens zwei Menschen mit <strong>exakt derselben Anzahl Kopfhaare</strong>.<br><br>Diese Aussage ist nicht wahrscheinlich – sie ist <strong>mathematisch garantiert</strong>. Niemand muss jemals die Haare zählen.<br><br>Zusatzfakt: Ein durchschnittlicher Mensch hat ca. 100.000 Kopfhaare. Niemand hat mehr als ca. 200.000.",
+        "frage": "Welche Argumentation beweist die Behauptung?",
+        "optionen": [
+            {"text": "Statistische Normalverteilung der Haaranzahl", "hinweis": "Reicht Statistik für 'garantiert'?"},
+            {"text": "Es gibt mehr Menschen (3,8 Mio.) als mögliche Haaranzahlen (max. 200.000)", "hinweis": "Taubenschlag – klassische Variante"},
+            {"text": "Jeder Mensch hat eine einzigartige Haaranzahl, also garantiert Duplikate", "hinweis": "Widerspricht sich selbst"},
+            {"text": "Die Behauptung ist nur wahrscheinlich, nicht sicher", "hinweis": "Zu schwach – es gilt ein striktes Prinzip"},
+        ],
+        "loesung_text": "Mehr Menschen als mögliche Haaranzahlen → mindestens zwei müssen übereinstimmen.",
+        "erklaerung": "<p>Das <strong>Schubfachprinzip</strong> (auch Taubenschlag- oder Dirichlet-Prinzip): Verteilt man <em>n+1</em> Objekte auf <em>n</em> Schubfächer, dann liegen in mindestens einem Schubfach zwei oder mehr Objekte.</p><p>Hier: 3.800.000 Menschen (Objekte) → nur 200.001 mögliche Haaranzahlen von 0 bis 200.000 (Schubfächer). Nach Dirichlet müssen sich mindestens ⌈3.800.000 / 200.001⌉ = 19 Menschen die gleiche Anzahl teilen.</p><p>Das ist kein statistisches, sondern ein <strong>logisch zwingendes</strong> Ergebnis – unabhängig davon, <em>wie</em> die Haare verteilt sind.</p>",
+        "kontext": "<p>Peter Gustav Lejeune Dirichlet formulierte das Prinzip 1834 für einen zahlentheoretischen Beweis. Heute ist es ein Standardwerkzeug in Kombinatorik, Zahlentheorie und Informatik.</p><p>Anwendungen: In jeder Gruppe von 13 Menschen haben zwei im selben Monat Geburtstag. In jedem Schachturnier mit <em>n</em> Spielern haben mindestens zwei dieselbe Punktzahl (wenn die Punktzahlen 0..n−1 oder gleich sind). Beim Hashing garantiert das Prinzip Kollisionen, sobald mehr Schlüssel als Buckets eingefügt werden.</p>",
+        "erkenntnis": "Manche Beweise brauchen keine Rechnung, nur Zählen. Wer lernt, Objekte in Schubfächer einzuteilen, hat ein Werkzeug, das in Mathematik, Informatik und sogar der Logik der Überraschung immer wieder greift.",
+    },
+    "buridans-esel": {
+        "id": "buridans-esel", "name": "Buridans Esel", "icon": "🫏",
+        "farbe": "amber", "kategorie": "Kognition",
+        "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup_label": "Die Situation:",
+        "setup": "Ein hungriger, vollkommen <em>rationaler</em> Esel steht genau in der Mitte zwischen zwei <strong>identischen</strong> Heuhaufen. Beide sind gleich groß, gleich frisch, gleich weit entfernt. Es gibt keinen rationalen Grund, einen dem anderen vorzuziehen.<br><br>Das Paradoxon (Jean Buridan, 14. Jh.): Nach strikter Nutzenmaximierung müsste der Esel zwischen zwei gleichwertigen Optionen unentscheidbar sein – und <strong>verhungern</strong>.",
+        "frage": "Was lehrt uns dieses Gedankenexperiment wirklich?",
+        "optionen": [
+            {"text": "Rationale Agenten sind in Praxis unmöglich", "hinweis": "Zu starke Schlussfolgerung"},
+            {"text": "Perfekte Indifferenz ist ein Modellartefakt – reale Entscheider brauchen 'Tie-Breaker'", "hinweis": "Mechanismus statt Lähmung"},
+            {"text": "Freiheit des Willens widerlegt reine Nutzenmaximierung", "hinweis": "Philosophische, keine ökonomische Antwort"},
+            {"text": "Der Esel wählt immer den linken Haufen", "hinweis": "Wo ist 'links' bei Symmetrie definiert?"},
+        ],
+        "loesung_text": "Perfekte Indifferenz ist ein Modellartefakt – reale Entscheider brauchen Tie-Breaker.",
+        "erklaerung": "<p>In formalen Entscheidungsmodellen (von Neumann & Morgenstern 1944) gibt es die Annahme <strong>vollständiger Präferenzen</strong>: Für je zwei Alternativen gilt A≻B, B≻A oder A∼B (Indifferenz). Bei Indifferenz ist jede Wahl 'optimal' – das Modell schreibt keine Entscheidung vor, aber auch kein Verhungern.</p><p>Der Esel verhungert also nur, wenn man zusätzlich annimmt, dass Indifferenz <em>Handlungsunfähigkeit</em> bedeutet. Das ist eine künstliche Ergänzung. Reale Agenten brechen Symmetrien durch:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Zufall</strong> (Münzwurf, neuronales Rauschen)</li><li><strong>Default-Regeln</strong> ('nimm den linken, wenn gleich')</li><li><strong>Satisficing</strong> (Herbert Simon 1956: 'gut genug' statt 'optimal')</li></ul>",
+        "kontext": "<p>Spinoza (1677) wies das Paradox zurück: Wenn der Esel wirklich rational ist, wählt er zufällig. Leibniz nutzte es, um gegen den <em>Satz vom zureichenden Grund</em> zu argumentieren – es müsse immer einen minimalen Unterschied geben.</p><p>In der modernen KI taucht das Problem konkret auf: Deterministische Algorithmen mit Symmetrie können in Endlosschleifen landen. Lösung: <em>Tie-breaking rules</em> oder stochastische Policies. In Reinforcement Learning ist epsilon-greedy ein Buridan-Breaker.</p>",
+        "erkenntnis": "Reine Nutzenmaximierung ohne Mechanismus für Gleichstand ist unvollständig. Gute Entscheider haben nicht nur Präferenzen – sie haben auch Regeln, wie sie weitermachen, wenn Präferenzen schweigen.",
     },
 }
 
