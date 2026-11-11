@@ -631,6 +631,9 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"peak-end","name":"Die Peak-End-Regel","icon":"🎢","beschreibung":"Kahneman tauchte Hände in Eiswasser: 60 Sek. bei 14°C – oder 60 Sek. bei 14°C plus 30 Sek. bei 15°C. Welche Phase wählten die Teilnehmer, wenn sie wiederholen mussten? Das Ergebnis widersprach aller Logik.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Kognition"},
+    {"id":"ikea-effekt","name":"Der IKEA-Effekt","icon":"🔨","beschreibung":"Zwei identische Billy-Regale: Eines gekauft, eines selbst zusammengebaut. Testpersonen boten für das selbstgebaute 63 % mehr – obwohl es handwerklich schlechter war. Norton, Mochon & Ariely (2012).","typ":"Verhaltensökonomie","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
+    {"id":"endowment-effekt","name":"Der Endowment-Effekt","icon":"🎁","beschreibung":"Eine Hälfte der Studenten bekommt eine Tasse geschenkt und darf sie verkaufen, die andere Hälfte darf sie kaufen. Was war der mittlere Verkaufspreis – und der mittlere Kaufpreis? Kahneman, Knetsch & Thaler (1990).","typ":"Verhaltensökonomie","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Kognition"},
 ]
 
 
@@ -4063,6 +4066,54 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "peak-end": {
+        "id": "peak-end", "name": "Die Peak-End-Regel", "icon": "🎢",
+        "farbe": "rose", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup": "Daniel Kahneman führte 1993 ein klassisches Experiment zum Schmerzgedächtnis durch. Jede Versuchsperson durchlebte <strong>zwei Phasen</strong>, die Reihenfolge wurde zufällig variiert.<br><br><strong>Phase A:</strong> 60 Sekunden Hand in 14 °C kaltes Wasser.<br><strong>Phase B:</strong> Die exakt gleichen 60 Sekunden bei 14 °C – anschließend <em>zusätzliche</em> 30 Sekunden, in denen das Wasser heimlich auf 15 °C erwärmt wurde (immer noch unangenehm, aber spürbar weniger).<br><br>Danach wurden die Teilnehmer gefragt: <em>Welche Phase würden Sie wiederholen, wenn Sie müssten?</em>",
+        "frage": "Was war Kahnemans überraschendes Ergebnis?",
+        "optionen": [
+            {"text": "Fast alle wählten Phase A – die kürzere, mit weniger Gesamtschmerz", "hinweis": "Das wäre rational – passierte aber nicht"},
+            {"text": "Rund 80 % wählten Phase B – die längere, mit mehr Gesamtschmerz", "hinweis": "Der Peak-End-Effekt überstimmt die Gesamtdauer"},
+            {"text": "Beide Phasen wurden gleich häufig gewählt – keine klare Verzerrung", "hinweis": "Das Ergebnis war eindeutig verzerrt"},
+            {"text": "Die Wahl hing stark von Alter und Geschlecht ab", "hinweis": "Der Effekt trat quer durch alle Gruppen auf"},
+        ],
+        "loesung_text": "Rund 80 % wählten Phase B – die Phase mit mehr Gesamtschmerz.",
+        "erklaerung": "<p>Das Gedächtnis bewertet Erlebnisse nicht nach ihrer Gesamtsumme, sondern nach zwei Punkten: dem <strong>Peak</strong> (dem intensivsten Moment) und dem <strong>End</strong> (dem Ausklang). Die Dauer selbst – Kahneman nennt es <em>duration neglect</em> – spielt kaum eine Rolle.</p><p>Phase B hatte zwar <strong>mehr</strong> Gesamtschmerz, aber ein <strong>weniger schlimmes Ende</strong>. Das erinnernde Ich rundete das Gesamterlebnis nach oben.</p>",
+        "kontext": "<p>Der Effekt wurde 1996 bei echten Koloskopien bestätigt (Redelmeier & Kahneman): Patienten bewerteten einen kürzeren Eingriff mit schmerzhaftem Ende als unangenehmer als einen längeren mit sanftem Ausklang. Konsequenz: Manche Ärzte verlängern die Prozedur bewusst um Minuten mit mildem Druck – nicht aus medizinischen Gründen, sondern damit die Erinnerung erträglicher bleibt.</p><p>Kahneman beschreibt in <em>Thinking, Fast and Slow</em> zwei Ichs: Das <strong>erfahrende Ich</strong> lebt im Moment. Das <strong>erinnernde Ich</strong> bewertet rückblickend und entscheidet, was man wiederholt. Was wir planen, posten und weitererzählen, stammt vom erinnernden Ich – nicht vom tatsächlichen Erleben.</p>",
+        "erkenntnis": "Erlebnisse werden nicht nach ihrem Durchschnitt erinnert, sondern nach Peak + Ende. Für Verhandlungen, Produkte, Meetings und Urlaube heißt das: Das Ende gestalten lohnt mehr als die Mitte zu optimieren.",
+    },
+    "ikea-effekt": {
+        "id": "ikea-effekt", "name": "Der IKEA-Effekt", "icon": "🔨",
+        "farbe": "amber", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup": "Norton, Mochon & Ariely (2012): Zwei Gruppen erhielten <strong>identische IKEA-Möbel-Bausätze</strong>. Gruppe A baute das Regal selbst zusammen. Gruppe B bekam ein bereits fertig montiertes Regal – von denselben Bauteilen, aber professionell aufgebaut.<br><br>Anschließend sollten beide Gruppen angeben, wie viel Geld sie für ihr Regal verlangen würden, wenn sie es verkaufen müssten.",
+        "frage": "Was zeigte das Experiment?",
+        "optionen": [
+            {"text": "Beide Gruppen nannten ähnliche Preise – der Kontext änderte den Wert kaum", "hinweis": "Die Zahlen lagen auffällig weit auseinander"},
+            {"text": "Die Selbstbau-Gruppe verlangte im Schnitt 63 % mehr für ihr (handwerklich schlechteres) Regal", "hinweis": "Der IKEA-Effekt – Eigenleistung steigert den subjektiven Wert"},
+            {"text": "Die Fertig-Gruppe verlangte mehr, weil das Regal objektiv solider war", "hinweis": "Die Qualität wog weniger als der Aufwand"},
+            {"text": "Nur erfahrene Heimwerker zeigten einen Effekt – Laien nicht", "hinweis": "Der Effekt trat quer durch Vorerfahrung auf"},
+        ],
+        "loesung_text": "Die Selbstbau-Gruppe verlangte im Schnitt 63 % mehr – obwohl das Regal objektiv wackliger war.",
+        "erklaerung": "<p>Der <strong>IKEA-Effekt</strong> (Norton, Mochon & Ariely 2012) beschreibt: Wir überschätzen den Wert von Dingen, in die wir selbst Arbeit gesteckt haben. Das Phänomen wurde später auch bei Origami-Fröschen und Lego-Autos repliziert – Teilnehmer boten für ihre eigenen Werke fast fünfmal so viel wie neutrale Beobachter.</p><p>Ursachen: <strong>Kognitive Dissonanz</strong> (wer sich anstrengt, braucht einen Grund), <strong>Besitzeffekt</strong> (was mir gehört, ist wertvoller) und <strong>mental ownership</strong> (die Arbeit erzeugt Identifikation).</p>",
+        "kontext": "<p>Praxis: Der Effekt funktioniert nur, wenn man die Aufgabe <strong>erfolgreich abschließt</strong>. Wer das Regal halb aufgebaut aufgibt, zeigt den gegenteiligen Effekt (Devaluation).</p><p>In der Produktgestaltung nutzt ihn Build-a-Bear-Workshop (den Teddy selbst stopfen), Blue Apron (Fertiggericht, aber selbst kochen) und IKEA selbst – und in Teams steigert verteilte Arbeit die emotionale Bindung an eine Idee, selbst wenn das Ergebnis schlechter ist als eine zugelieferte Lösung.</p><p>Vorsicht in Verhandlungen: Verkäufer sind auf <em>ihr</em> Angebot emotional fixiert und überschätzen dessen Marktwert. Der Käufer kann genau diese Fixierung durch Anerkennung der geleisteten Arbeit entschärfen – nicht durch Abwertung.</p>",
+        "erkenntnis": "Aufwand erzeugt Wert – aber nur im Kopf des Aufwenders. Wer gesellschaftliche Wertschätzung erzeugen will, lässt Beteiligte mitarbeiten. Wer Marktpreise sucht, hört nicht den Bauenden, sondern Neutrale.",
+    },
+    "endowment-effekt": {
+        "id": "endowment-effekt", "name": "Der Endowment-Effekt", "icon": "🎁",
+        "farbe": "emerald", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup": "Kahneman, Knetsch & Thaler (1990): Eine Studierenden-Gruppe wurde zufällig halbiert. Hälfte A bekam eine Cornell-Kaffeetasse <em>geschenkt</em> und sollte angeben, zu welchem Mindestpreis sie die Tasse <strong>verkaufen</strong> würde. Hälfte B bekam nichts und sollte angeben, wieviel sie maximal bezahlen würde, um die gleiche Tasse zu <strong>kaufen</strong>.<br><br>Beide Gruppen bestanden aus zufällig zugewiesenen Studierenden desselben Kurses. Rational sollten Verkaufs- und Kaufpreise im Schnitt sehr ähnlich sein.",
+        "frage": "Welches Verhältnis zwischen Verkaufs- und Kaufpreis maß das Experiment?",
+        "optionen": [
+            {"text": "Etwa 1 : 1 – der Besitz spielte kaum eine Rolle", "hinweis": "Die Zahlen lagen klar auseinander"},
+            {"text": "Verkaufspreis ≈ 7 $, Kaufpreis ≈ 3 $ – ein Faktor von rund 2 : 1", "hinweis": "Besitzer verlangten rund doppelt so viel, wie Käufer zu zahlen bereit waren"},
+            {"text": "Verkaufspreis ≈ 2 $, Kaufpreis ≈ 7 $ – Käufer zahlten mehr aus Begehren", "hinweis": "In diesem Experiment war es genau umgekehrt"},
+            {"text": "Beide Werte schwankten so stark, dass kein Muster erkennbar war", "hinweis": "Das Muster war über viele Replikate sehr stabil"},
+        ],
+        "loesung_text": "Verkaufspreis ≈ 7 $, Kaufpreis ≈ 3 $ – Besitzer verlangten rund das Doppelte.",
+        "erklaerung": "<p>Der <strong>Endowment-Effekt</strong>: Sobald wir etwas besitzen, bewerten wir es höher – auch wenn Besitz Minuten-alt und zufällig zugewiesen ist. Rational sollten Verkaufsangebote und Kaufgebote nahe am Marktpreis liegen. Tatsächlich entsteht ein hartnäckiger Spread.</p><p>Erklärung über <strong>Prospect Theory</strong> (Kahneman & Tversky, 1979): Das Aufgeben eines Gutes wird als Verlust kodiert, das Erwerben als Gewinn. Verluste wiegen psychologisch rund doppelt so schwer wie gleich große Gewinne – daher der etwa 2 : 1-Spread.</p>",
+        "kontext": "<p>Spätere Studien zeigen: Der Effekt verschwindet bei <strong>Händlern</strong>, die Güter routiniert tauschen, und bei <strong>Gütern ohne Identitätsbezug</strong> (z. B. Spielchips). Er ist am stärksten bei persönlich bedeutsamen Objekten (Erinnerungsstücke, Instrumente).</p><p>Anwendung: In Verhandlungen überschätzen wir systematisch, was wir mitbringen. Die Gegenseite sieht nur den Marktwert. Wer verkauft, sollte gegen den Endowment-Effekt bewusst gegensteuern – oder die Gegenseite ihn lassen, um Konzessionen zu erleichtern (durch aufrichtige Anerkennung dessen, was man aufgibt).</p>",
+        "erkenntnis": "Besitz verändert den Preis, nicht den Wert. Das gilt für Tassen, Firmen und Positionen in Verhandlungen. Wer den Spread erkennt, verhandelt klarer.",
     },
 }
 
