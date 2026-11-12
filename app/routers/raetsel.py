@@ -574,6 +574,7 @@ RAETSEL_META = [
     {"id":"infinite-monkey","name":"Infinite Monkey Theorem","icon":"🐒","beschreibung":"Ein Affe tippt zufällig. Bei unendlich viel Zeit – tippt er Hamlet? Die Antwort ist theoretisch ja. Aber wie unendlich lang ist \"unendlich\"?","typ":"Unendlichkeit","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
     {"id":"drunkards-walk","name":"Der Drunkard's Walk","icon":"🚶","beschreibung":"Ein Betrunkener macht zufällig einen Schritt vor oder zurück. Wie weit ist er nach 100 Schritten vom Start entfernt? Die Antwort ist √100 = 10.","typ":"Zufallspfade","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
     {"id":"littlewoods-law","name":"Littlewoods Gesetz der Wunder","icon":"✨","beschreibung":"Littlewood: Ein \"Wunder\" ist ein Ereignis mit Wahrscheinlichkeit 1 zu einer Million. Wie oft erleben wir solche Wunder – und warum sind sie gar nicht überraschend?","typ":"Koinzidenz","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Wahrscheinlichkeit"},
+    {"id":"zwei-kinder","name":"Das Zwei-Kinder-Paradox","icon":"👫","beschreibung":"Frau Schmidt hat zwei Kinder. Mindestens eines ist ein Junge. Wie wahrscheinlich sind beide Jungen? Die intuitive Antwort ½ ist falsch – und sie ändert sich, wenn man die Frage anders stellt. Martin Gardner (1959).","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Wahrscheinlichkeit"},
     # ── Kommunikation (neu) ──────────────────────────────────────────────────
     {"id":"johari-fenster","name":"Das Johari-Fenster","icon":"🪟","beschreibung":"Vier Felder beschreiben, was dir und anderen über dich bekannt ist. Welches Feld nennt man den \"Blinden Fleck\" – und wie verkleinert man ihn?","typ":"Selbstreflexion","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Kommunikation"},
     {"id":"vier-ohren-modell","name":"Das Vier-Ohren-Modell","icon":"👂","beschreibung":"\"Das Essen ist fertig\" – vier Botschaften in einem Satz. Schulz von Thun zeigt: Sprecher und Hörer verwenden selten dieselbe Ebene.","typ":"Kommunikationsmodell","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Kommunikation"},
@@ -3255,6 +3256,45 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>8 Stunden × 3600 Sekunden × 30 Tage ≈ 864.000 ≈ 10⁶. Bei 10⁶ Ereignissen pro Monat und 'Wunder'-Wahrscheinlichkeit 1/10⁶ erwartet man im Schnitt <em>ein Wunder pro Monat</em>. Das Staunen über Koinzidenzen ist also fehlplatziert — wir sollten mehr überrascht sein, wenn keine auftreten.</p>",
         "kontext": "<p>Littlewood erklärt damit Erscheinungen wie 'Ich habe gerade an jemanden gedacht und er ruft an' oder 'Ich sah dasselbe Auto dreimal heute'. Diese Ereignisse erscheinen bedeutsam — sind aber statistisch erwartbar.</p>",
         "erkenntnis": "Was selten erscheint, passiert sicher — wenn man nur genug Gelegenheiten betrachtet. Wunder sind nicht Beweis für Übernatürliches, sondern für die Stärke großer Zahlen.",
+    },
+    "zwei-kinder": {
+        "id": "zwei-kinder", "name": "Das Zwei-Kinder-Paradox", "icon": "👫",
+        "farbe": "sky", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Frau Schmidt hat genau zwei Kinder. Du erfährst: <strong>Mindestens eines der beiden Kinder ist ein Junge.</strong> Annahme: Jungen und Mädchen sind gleich wahrscheinlich, die Geschlechter der beiden Kinder sind unabhängig voneinander.",
+        "frage": "Wie groß ist die Wahrscheinlichkeit, dass <em>beide</em> Kinder Jungen sind?",
+        "optionen": [
+            {"text": "½ – das andere Kind ist 50/50 Junge oder Mädchen", "hinweis": "Intuitiv, aber ignoriert welche Konstellationen möglich waren"},
+            {"text": "⅓ – von den möglichen Fällen JJ, JM, MJ ist nur einer 'beide Jungen'", "hinweis": "Bedingte Wahrscheinlichkeit"},
+            {"text": "¼ – a priori ist 'beide Jungen' einer von vier Fällen", "hinweis": "Unbedingte Wahrscheinlichkeit, Information wurde ignoriert"},
+            {"text": "½ – nur wenn das Älteste ein Junge ist", "hinweis": "Richtig! Aber diese Version der Frage wurde nicht gestellt"},
+        ],
+        "loesung_text": "⅓ – unter der Bedingung 'mindestens ein Junge' sind nur 3 Konstellationen möglich, davon ist 1 'beide Jungen'",
+        "erklaerung": (
+            "<p>Vier gleich wahrscheinliche Geschlechtskonstellationen (älteres/jüngeres Kind): "
+            "<strong>JJ, JM, MJ, MM</strong> – jeweils mit Wahrscheinlichkeit ¼.</p>"
+            "<p>Die Information 'mindestens ein Junge' schließt nur <strong>MM</strong> aus. "
+            "Es bleiben JJ, JM, MJ – alle noch gleich wahrscheinlich. "
+            "Von diesen 3 Fällen ist nur <strong>JJ</strong> 'beide Jungen'.</p>"
+            "<p>Also: P(beide Jungen | mindestens ein Junge) = <strong>1/3</strong> ≈ 33,3 %.</p>"
+            "<p class='mt-3'>👉 <strong>Verblüffend:</strong> Wenn die Frage stattdessen lautet "
+            "'Das älteste Kind ist ein Junge' – ist die Antwort plötzlich <strong>½</strong>. "
+            "Die Konstellationen JM und MJ sind dann nicht mehr beide zulässig, nur JM "
+            "(älter = Junge, jünger = Mädchen) und JJ. Von diesen 2 Fällen ist JJ einer: ½.</p>"
+        ),
+        "kontext": (
+            "<p>Martin Gardner stellte dieses Problem 1959 in seiner <em>Scientific American</em>-Kolumne. "
+            "Die Reaktionen waren so heftig, dass er später einräumte: Die Frage ist zweideutig – "
+            "das Ergebnis hängt davon ab, <em>wie</em> die Information 'mindestens ein Junge' gewonnen wurde.</p>"
+            "<p>2010 verschärfte Gary Foshee das Paradox: 'Ich habe zwei Kinder. Eines ist ein Junge, "
+            "geboren an einem Dienstag. Wie hoch ist die Wahrscheinlichkeit, dass beide Jungen sind?' "
+            "Die Antwort: <strong>13/27 ≈ 48 %</strong> – nicht 1/3 und nicht 1/2. "
+            "Jede zusätzliche Information über 'den Jungen' verschiebt das Ergebnis Richtung ½.</p>"
+            "<p>Der Kern: <strong>Bedingte Wahrscheinlichkeiten hängen am Erhebungsprozess</strong>, "
+            "nicht nur am beobachteten Fakt. Was wir <em>beobachten</em>, und was wir daraus "
+            "<em>folgern</em>, trennt sich an der Frage: Wie kam diese Info zu uns?</p>"
+        ),
+        "erkenntnis": "Zwei Formulierungen, die scheinbar dasselbe sagen, ergeben verschiedene Wahrscheinlichkeiten. Wer bedingte Wahrscheinlichkeit falsch behandelt, irrt systematisch – in der Medizin, vor Gericht und bei Investitionen.",
     },
     # ── Kommunikation ─────────────────────────────────────────────────────
     "johari-fenster": {
