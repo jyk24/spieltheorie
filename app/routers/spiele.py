@@ -619,6 +619,15 @@ GAME_META = [
         "runden": 6,
         "konzept": "Cournot-Gleichgewicht, Oligopol, Kollusion vs. Wettbewerb",
     },
+    {
+        "id": "nim",
+        "name": "Nim",
+        "icon": "🪨",
+        "beschreibung": "Das klassisch gelöste Zwei-Personen-Spiel mit perfekter Information. Nimm aus einer Reihe – wer den letzten Stein nimmt, gewinnt. Die XOR-Strategie macht einen Spieler unschlagbar.",
+        "schwierigkeit": "Fortgeschritten",
+        "runden": "variabel",
+        "konzept": "Sprague-Grundy, Nim-Summe, perfekte Information",
+    },
 ]
 
 
@@ -2910,4 +2919,17 @@ def cournot_zug(
             "strategy_info": strategy_info,
             "new_achievements": new_achievements,
         },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Nim – klassisch gelöstes Spiel mit perfekter Information
+# ---------------------------------------------------------------------------
+
+@router.get("/nim", response_class=HTMLResponse)
+def nim_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "games/nim.html",
+        {"active_page": "spiele"},
     )

@@ -258,6 +258,16 @@ GAMES: list[dict] = [
         "lesson_slug": "gemischte-strategien",
         "level": 6,
     },
+    {
+        "game_type": "nim",
+        "slug": "nim",
+        "name": "Nim",
+        "icon": "🪨",
+        "mechanic": "Sprague-Grundy / Nim-Summe",
+        "literature": "Bouton (1901), Sprague (1935), Grundy (1939)",
+        "lesson_slug": "dominante-strategien",
+        "level": 6,
+    },
 ]
 
 # ── Lookup helpers ────────────────────────────────────────────────────────────

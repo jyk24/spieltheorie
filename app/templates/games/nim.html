@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+{% block title %}Nim – Das gelöste Spiel · VerhandlungsTrainer{% endblock %}
+{% block meta_description %}<meta name="description" content="Nim – ein klassisch gelöstes Spiel mit perfekter Information. Spiele gegen die XOR-Strategie und lerne die Sprague-Grundy-Theorie.">{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🪨 Nim</h1>
+        <p class="text-slate-500 mt-1">Bouton (1901), Sprague (1935), Grundy (1939) · Das erste mathematisch vollständig gelöste kombinatorische Spiel.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5 text-sm text-slate-700">
+        <p class="font-semibold mb-2">Die Regeln</p>
+        <ul class="list-disc pl-5 space-y-1 text-slate-600">
+            <li>Es gibt mehrere Reihen von Steinen.</li>
+            <li>Du und die KI entfernen abwechselnd Steine – pro Zug <strong>beliebig viele aus genau einer Reihe</strong> (mindestens 1).</li>
+            <li>Wer den <strong>letzten Stein</strong> nimmt, <strong>gewinnt</strong> (Normal-Nim).</li>
+        </ul>
+        <div class="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs">
+            <p class="font-semibold text-amber-800 mb-1">Spieltheoretisch interessant</p>
+            <p class="text-amber-700">Nim ist ein Nullsummenspiel mit perfekter Information – und seit 1901 vollständig <strong>gelöst</strong>. Ein Spieler kann theoretisch immer gewinnen. Die Antwort heißt <strong>Nim-Summe</strong>: die XOR-Verknüpfung aller Reihengrößen.</p>
+        </div>
+    </div>
+
+    <!-- Konfiguration -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-5" id="setup-area">
+        <p class="font-semibold text-slate-800 mb-3">Starteinstellungen</p>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <div>
+                <label class="block text-xs text-slate-500 mb-1">Startkonfiguration</label>
+                <select id="preset-select" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm">
+                    <option value="1,3,5,7">Klassisches Nim (1-3-5-7)</option>
+                    <option value="3,4,5">Marienbad (3-4-5)</option>
+                    <option value="3,5,7" selected>Standard (3-5-7)</option>
+                    <option value="2,2,3">Kurzspiel (2-2-3)</option>
+                    <option value="4,5,6,7">Großes Nim (4-5-6-7)</option>
+                    <option value="random">Zufällig (3 Reihen)</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs text-slate-500 mb-1">Wer beginnt?</label>
+                <select id="first-select" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm">
+                    <option value="player" selected>Du</option>
+                    <option value="ai">KI</option>
+                </select>
+            </div>
+        </div>
+        <div class="mb-4">
+            <label class="block text-xs text-slate-500 mb-1">KI-Schwierigkeit</label>
+            <div class="grid grid-cols-3 gap-2 text-xs">
+                <label class="flex items-center gap-2 border border-slate-200 rounded-lg px-3 py-2 cursor-pointer hover:border-emerald-300"><input type="radio" name="level" value="easy" class="accent-emerald-600"> Einfach</label>
+                <label class="flex items-center gap-2 border border-slate-200 rounded-lg px-3 py-2 cursor-pointer hover:border-amber-300"><input type="radio" name="level" value="medium" class="accent-amber-600"> Mittel</label>
+                <label class="flex items-center gap-2 border border-slate-200 rounded-lg px-3 py-2 cursor-pointer hover:border-red-300"><input type="radio" name="level" value="hard" checked class="accent-red-600"> Perfekt</label>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">Die perfekte KI nutzt die XOR-Strategie – gegen sie zu gewinnen ist nur möglich, wenn sie bereits eine verlorene Stellung hat.</p>
+        </div>
+        <button id="start-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors">Spiel starten</button>
+    </div>
+
+    <!-- Spielbrett -->
+    <div class="hidden bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5" id="board-area">
+        <div class="flex items-center justify-between mb-4">
+            <span class="text-sm text-slate-500">Am Zug: <strong id="turn-label" class="text-indigo-700">Du</strong></span>
+            <button id="new-btn" class="text-xs text-slate-400 hover:text-indigo-600">Neues Spiel</button>
+        </div>
+        <div id="heaps" class="space-y-3"></div>
+        <div id="action-bar" class="mt-5 pt-4 border-t border-slate-100 hidden">
+            <p class="text-sm text-slate-600 mb-3">Entferne aus Reihe <strong id="selected-row">–</strong>:</p>
+            <div id="count-buttons" class="flex flex-wrap gap-2 mb-3"></div>
+            <button id="confirm-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors disabled:opacity-40" disabled>Zug ausführen</button>
+        </div>
+        <div id="log" class="mt-5 pt-4 border-t border-slate-100 text-xs text-slate-500 space-y-1 max-h-40 overflow-y-auto"></div>
+    </div>
+
+    <!-- Endergebnis -->
+    <div class="hidden bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-5" id="result-area">
+        <div id="result-content"></div>
+        <button id="restart-btn" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors">Nochmal spielen</button>
+    </div>
+
+    <!-- Theorie-Panel (aufklappbar) -->
+    <details class="bg-indigo-50 border border-indigo-200 rounded-xl p-5 text-sm">
+        <summary class="font-semibold text-indigo-900 cursor-pointer">🧮 Die XOR-Strategie – warum Nim gelöst ist</summary>
+        <div class="mt-3 text-slate-700 space-y-3">
+            <p>Charles Bouton bewies 1901: Ein Spieler verliert genau dann, wenn er an einer Stellung mit <strong>Nim-Summe 0</strong> am Zug ist (bei optimalem Spiel).</p>
+            <p>Die <strong>Nim-Summe</strong> ist die bitweise XOR-Verknüpfung aller Reihengrößen:</p>
+            <pre class="bg-slate-800 text-slate-100 text-xs rounded-lg p-3 overflow-x-auto"><code>Reihen = [3, 5, 7]
+3 = 011
+5 = 101
+7 = 111
+         ───
+XOR    = 001   ≠ 0  → Gewinnstellung</code></pre>
+            <p><strong>Die Strategie:</strong> Hat deine Stellung Nim-Summe ≠ 0, existiert ein Zug, der sie auf 0 bringt – deinem Gegner übergibst du eine verlorene Stellung. Hat sie bereits Nim-Summe 0, hilft dir nichts – jeder Zug macht sie wieder ≠ 0.</p>
+            <p>Das Ergebnis verallgemeinert sich: Der <strong>Satz von Sprague-Grundy</strong> (1935/1939) ordnet jedem unparteiischen Spiel einen „Nim-Wert" zu und reduziert alle solchen Spiele auf Nim.</p>
+            <p class="text-xs text-slate-500">Verwandte Konzepte: <a href="/lektionen/dominante-strategien" class="text-indigo-600 hover:underline">dominante Strategien</a>, <a href="/lernpfade/spieltheorie-einstieg" class="text-indigo-600 hover:underline">Lernpfad Spieltheorie</a>, Zermelos Theorem.</p>
+        </div>
+    </details>
+</div>
+
+<script>
+(function() {
+    "use strict";
+
+    // DOM
+    const $setup = document.getElementById("setup-area");
+    const $board = document.getElementById("board-area");
+    const $result = document.getElementById("result-area");
+    const $heaps = document.getElementById("heaps");
+    const $turn = document.getElementById("turn-label");
+    const $actionBar = document.getElementById("action-bar");
+    const $selectedRow = document.getElementById("selected-row");
+    const $countButtons = document.getElementById("count-buttons");
+    const $confirm = document.getElementById("confirm-btn");
+    const $log = document.getElementById("log");
+    const $resultContent = document.getElementById("result-content");
+
+    // State
+    let heaps = [];
+    let playerTurn = true;
+    let aiLevel = "hard";
+    let selectedHeap = null;
+    let selectedCount = 0;
+    let locked = false;
+
+    function nimSum(hs) {
+        let s = 0;
+        for (const h of hs) s ^= h;
+        return s;
+    }
+
+    function allValidMoves(hs) {
+        const moves = [];
+        for (let i = 0; i < hs.length; i++) {
+            for (let c = 1; c <= hs[i]; c++) moves.push([i, c]);
+        }
+        return moves;
+    }
+
+    function perfectMove(hs) {
+        const s = nimSum(hs);
+        if (s === 0) return null; // lost position
+        for (let i = 0; i < hs.length; i++) {
+            const target = hs[i] ^ s;
+            if (target < hs[i]) return [i, hs[i] - target];
+        }
+        return null;
+    }
+
+    function pickAiMove(hs) {
+        const moves = allValidMoves(hs);
+        if (moves.length === 0) return null;
+        if (aiLevel === "easy") {
+            return moves[Math.floor(Math.random() * moves.length)];
+        }
+        if (aiLevel === "medium") {
+            // 60% perfect, 40% random
+            if (Math.random() < 0.6) {
+                const m = perfectMove(hs);
+                if (m) return m;
+            }
+            return moves[Math.floor(Math.random() * moves.length)];
+        }
+        // hard
+        const m = perfectMove(hs);
+        if (m) return m;
+        return moves[Math.floor(Math.random() * moves.length)];
+    }
+
+    function renderHeaps() {
+        $heaps.innerHTML = "";
+        heaps.forEach((count, idx) => {
+            const row = document.createElement("div");
+            row.className = "flex items-center gap-2 flex-wrap p-2 rounded-lg border-2 border-transparent";
+            row.dataset.idx = idx;
+            if (selectedHeap === idx) row.classList.add("border-indigo-400", "bg-indigo-50");
+
+            const label = document.createElement("span");
+            label.className = "text-xs font-mono text-slate-400 w-16 shrink-0";
+            label.textContent = `Reihe ${idx + 1}`;
+            row.appendChild(label);
+
+            const stonesWrap = document.createElement("div");
+            stonesWrap.className = "flex gap-1 flex-wrap flex-1";
+            for (let i = 0; i < count; i++) {
+                const s = document.createElement("span");
+                s.className = "inline-block w-6 h-6 rounded-full bg-gradient-to-br from-slate-400 to-slate-600 shadow-sm";
+                stonesWrap.appendChild(s);
+            }
+            if (count === 0) {
+                const e = document.createElement("span");
+                e.className = "text-xs text-slate-300 italic";
+                e.textContent = "leer";
+                stonesWrap.appendChild(e);
+            }
+            row.appendChild(stonesWrap);
+
+            const num = document.createElement("span");
+            num.className = "text-sm font-semibold text-slate-600 w-6 text-right";
+            num.textContent = count;
+            row.appendChild(num);
+
+            if (playerTurn && !locked && count > 0) {
+                row.classList.add("cursor-pointer", "hover:bg-indigo-50");
+                row.addEventListener("click", () => selectHeap(idx));
+            }
+            $heaps.appendChild(row);
+        });
+    }
+
+    function selectHeap(idx) {
+        if (!playerTurn || locked || heaps[idx] === 0) return;
+        selectedHeap = idx;
+        selectedCount = 0;
+        $actionBar.classList.remove("hidden");
+        $selectedRow.textContent = idx + 1;
+        $countButtons.innerHTML = "";
+        for (let c = 1; c <= heaps[idx]; c++) {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "px-3 py-1.5 rounded-lg border border-slate-200 text-sm hover:border-indigo-400 hover:bg-indigo-50";
+            btn.textContent = c;
+            btn.addEventListener("click", () => {
+                selectedCount = c;
+                Array.from($countButtons.children).forEach(ch => {
+                    ch.classList.remove("bg-indigo-600", "text-white", "border-indigo-600");
+                });
+                btn.classList.add("bg-indigo-600", "text-white", "border-indigo-600");
+                $confirm.disabled = false;
+            });
+            $countButtons.appendChild(btn);
+        }
+        $confirm.disabled = true;
+        renderHeaps();
+    }
+
+    function logMove(who, idx, count) {
+        const line = document.createElement("div");
+        const prefix = who === "player" ? "🧑 Du" : "🤖 KI";
+        const color = who === "player" ? "text-indigo-700" : "text-rose-700";
+        line.innerHTML = `<span class="${color} font-semibold">${prefix}</span>: Reihe ${idx + 1}, ${count} Stein${count === 1 ? "" : "e"}`;
+        $log.appendChild(line);
+        $log.scrollTop = $log.scrollHeight;
+    }
+
+    function finish(winnerIsPlayer) {
+        locked = true;
+        $actionBar.classList.add("hidden");
+        $board.classList.add("hidden");
+        $result.classList.remove("hidden");
+
+        const initialNimSum = nimSum(initialHeaps);
+        const theoryNote = initialNimSum === 0
+            ? "Beachte: Die Startstellung hatte bereits Nim-Summe 0 – der Zweite am Zug hat einen Gewinnplan."
+            : "Beachte: Die Startstellung hatte Nim-Summe ≠ 0 – der Erste am Zug hat einen Gewinnplan.";
+        const perfect = (aiLevel === "hard");
+        const titleIcon = winnerIsPlayer ? "🏆" : "🤖";
+        const titleText = winnerIsPlayer ? "Du hast gewonnen!" : "Die KI gewinnt.";
+        const titleClr = winnerIsPlayer ? "text-emerald-700" : "text-rose-700";
+
+        let insight = "";
+        if (perfect) {
+            if (winnerIsPlayer) {
+                insight = "Gegen die perfekte KI zu gewinnen ist nur möglich, wenn die Startstellung bereits Nim-Summe 0 hat und die KI zuerst zieht – sie muss dir dann unweigerlich eine Gewinnstellung übergeben.";
+            } else {
+                insight = "Die KI folgt der XOR-Strategie: Nach jedem ihrer Züge hat die Stellung Nim-Summe 0. Jeder deiner Züge zerstört diese Null – und die KI kann sie sofort wiederherstellen.";
+            }
+        } else if (aiLevel === "medium") {
+            insight = "Die mittlere KI spielt zu 60% perfekt. Suche ihre Fehler – jeder Zug, der die Nim-Summe nicht auf 0 bringt, ist eine Chance für dich.";
+        } else {
+            insight = "Die einfache KI zieht zufällig. Konzentriere dich darauf, die Nim-Summe nach deinem Zug auf 0 zu bringen – dann gewinnst du zuverlässig.";
+        }
+
+        $resultContent.innerHTML = `
+            <div class="text-center mb-4">
+                <div class="text-6xl mb-2">${titleIcon}</div>
+                <div class="text-2xl font-bold ${titleClr}">${titleText}</div>
+                <div class="text-xs text-slate-400 mt-1">Startstellung: ${initialHeaps.join(" · ")} · Nim-Summe = ${initialNimSum}</div>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm text-slate-700 mb-3">${insight}</div>
+            <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-3 text-xs text-indigo-800">${theoryNote}</div>
+        `;
+    }
+
+    function aiMove() {
+        setTimeout(() => {
+            const move = pickAiMove(heaps);
+            if (!move) return;
+            const [idx, count] = move;
+            heaps[idx] -= count;
+            logMove("ai", idx, count);
+            renderHeaps();
+            if (heaps.every(h => h === 0)) {
+                // AI took last stone → AI wins
+                finish(false);
+                return;
+            }
+            playerTurn = true;
+            $turn.textContent = "Du";
+            $turn.className = "text-indigo-700";
+            renderHeaps();
+        }, 600);
+    }
+
+    function executeMove() {
+        if (selectedHeap === null || selectedCount <= 0) return;
+        heaps[selectedHeap] -= selectedCount;
+        logMove("player", selectedHeap, selectedCount);
+        selectedHeap = null;
+        selectedCount = 0;
+        $actionBar.classList.add("hidden");
+        renderHeaps();
+        if (heaps.every(h => h === 0)) {
+            finish(true);
+            return;
+        }
+        playerTurn = false;
+        $turn.textContent = "KI";
+        $turn.className = "text-rose-700";
+        aiMove();
+    }
+
+    document.getElementById("confirm-btn").addEventListener("click", executeMove);
+    document.getElementById("new-btn").addEventListener("click", () => resetToSetup());
+    document.getElementById("restart-btn").addEventListener("click", () => resetToSetup());
+
+    function resetToSetup() {
+        $result.classList.add("hidden");
+        $board.classList.add("hidden");
+        $setup.classList.remove("hidden");
+        $log.innerHTML = "";
+    }
+
+    let initialHeaps = [];
+
+    document.getElementById("start-btn").addEventListener("click", () => {
+        const preset = document.getElementById("preset-select").value;
+        if (preset === "random") {
+            heaps = [];
+            for (let i = 0; i < 3; i++) heaps.push(2 + Math.floor(Math.random() * 7));
+        } else {
+            heaps = preset.split(",").map(n => parseInt(n, 10));
+        }
+        initialHeaps = heaps.slice();
+        const first = document.getElementById("first-select").value;
+        playerTurn = (first === "player");
+        aiLevel = document.querySelector('input[name="level"]:checked').value;
+        selectedHeap = null;
+        selectedCount = 0;
+        locked = false;
+
+        $setup.classList.add("hidden");
+        $board.classList.remove("hidden");
+        $actionBar.classList.add("hidden");
+        $log.innerHTML = "";
+        $turn.textContent = playerTurn ? "Du" : "KI";
+        $turn.className = playerTurn ? "text-indigo-700" : "text-rose-700";
+        renderHeaps();
+        if (!playerTurn) aiMove();
+    });
+})();
+</script>
+{% endblock %}
