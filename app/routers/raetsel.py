@@ -631,6 +631,11 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neue klassische Wahrscheinlichkeits- und Entscheidungsrätsel ─────────
+    {"id":"zwei-kinder-problem","name":"Das Zwei-Kinder-Problem","icon":"👧","beschreibung":"Eine Familie hat zwei Kinder. Mindestens eins ist ein Junge. Wie wahrscheinlich ist es, dass beide Jungen sind? Intuition sagt 1/2. Die Mathematik sagt etwas anderes.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
+    {"id":"buridans-esel","name":"Buridans Esel","icon":"🫏","beschreibung":"Ein Esel steht genau zwischen zwei identischen Heuhaufen. Da er keinen Grund hat, den einen dem anderen vorzuziehen, verhungert er. Was sagt diese Parabel über rationale Entscheidungen?","typ":"Entscheidungsparadox","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
+    {"id":"kartoffel-paradox","name":"Das Kartoffel-Paradox","icon":"🥔","beschreibung":"Du kaufst 100 kg Kartoffeln, die zu 99% aus Wasser bestehen. Nach dem Trocknen sind es 98% Wasser. Wie viel wiegen sie jetzt? Die Antwort ist völlig unintuitiv.","typ":"Mathe-Paradox","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Mathematik"},
+    {"id":"gefangene-schalter","name":"100 Gefangene und ein Schalter","icon":"💡","beschreibung":"100 Gefangene, ein einziger Raum mit einem Lichtschalter. Zufällig ausgewählt gehen sie hinein. Wann dürfen sie behaupten: 'Alle waren drin'? Ein Juwel der Informatik.","typ":"Informations-Rätsel","schwierigkeit":"Fortgeschritten","dauer":"6 min","kategorie":"Spieltheorie"},
 ]
 
 
@@ -4064,6 +4069,74 @@ GENERIC_PUZZLES: dict = {
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
     },
+    "zwei-kinder-problem": {
+        "id": "zwei-kinder-problem", "name": "Das Zwei-Kinder-Problem", "icon": "👧",
+        "farbe": "violet", "kategorie": "Wahrscheinlichkeit", "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup_label": "Das Rätsel:",
+        "setup": "Ein Nachbar erzählt dir: „Ich habe zwei Kinder. Mindestens eines davon ist ein Junge.\"<br><br>Angenommen, Geburten von Jungen und Mädchen sind gleich wahrscheinlich und unabhängig voneinander.",
+        "frage": "Wie wahrscheinlich ist es, dass beide Kinder Jungen sind?",
+        "optionen": [
+            {"text": "1/4 – 25%", "hinweis": "Ein Viertel"},
+            {"text": "1/3 – 33%", "hinweis": "Ein Drittel"},
+            {"text": "1/2 – 50%", "hinweis": "Die Hälfte"},
+            {"text": "2/3 – 67%", "hinweis": "Zwei Drittel"},
+        ],
+        "loesung_text": "Die Antwort ist 1/3 – nicht 1/2.",
+        "erklaerung": "<p>Vor der Information über den Jungen gibt es vier gleich wahrscheinliche Fälle für zwei Kinder:<br><strong>(J,J), (J,M), (M,J), (M,M)</strong> – jeweils mit Wahrscheinlichkeit 1/4.</p><p>Die Information „mindestens ein Junge\" schließt (M,M) aus. Drei Fälle bleiben übrig, alle gleich wahrscheinlich:<br><strong>(J,J), (J,M), (M,J)</strong></p><p>Nur in einem dieser drei Fälle sind beide Jungen → <strong>P = 1/3 ≈ 33%</strong>.</p><p>Die Intuition sagt 1/2, weil wir unbewusst annehmen, es gehe um ein konkretes Kind. Aber die Aussage bezieht sich auf die Familie als Ganzes – und die Reihenfolge der Geschwister trägt Information.</p>",
+        "kontext": "<p><strong>Martin Gardner</strong> stellte dieses Rätsel 1959 in seiner Kolumne „Mathematical Games\" im <em>Scientific American</em> und löste damit einen jahrzehntelangen Streit aus. Die Formulierung ist entscheidend – schon eine kleine Umformulierung ändert die Antwort auf 1/2:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>„Ich habe zwei Kinder. Mindestens eines ist ein Junge.\" → <strong>1/3</strong></li><li>„Ich habe zwei Kinder. Das älteste ist ein Junge.\" → <strong>1/2</strong></li><li>„Hier ist mein Sohn, ich habe zwei Kinder.\" → Je nachdem wie das Kind ausgewählt wurde, 1/2 oder 1/3.</li></ul><p>Der Unterschied: Im zweiten Fall wird ein konkretes Kind identifiziert, der Zustand des anderen ist unabhängig davon. Das Rätsel zeigt, wie empfindlich Wahrscheinlichkeiten auf die genaue Datenstruktur reagieren – ein Kernproblem in der <strong>Bayes'schen Statistik</strong>.</p>",
+        "erkenntnis": "Bedingte Wahrscheinlichkeiten sind empfindlich gegenüber dem, was genau beobachtet wurde. „Mindestens einer\" ist nicht dasselbe wie „ein bestimmter\" – ein Unterschied, der in Gerichten, Medizin und KI-Entscheidungen Leben kostet.",
+    },
+    "buridans-esel": {
+        "id": "buridans-esel", "name": "Buridans Esel", "icon": "🫏",
+        "farbe": "amber", "kategorie": "Kognition", "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup_label": "Die Parabel:",
+        "setup": "Ein hungriger und durstiger Esel steht exakt in der Mitte zwischen zwei identischen Heuhaufen – gleicher Abstand, gleiche Größe, gleiche Qualität.<br><br>Da ein rationaler Agent immer die beste Option wählt und <em>keiner</em> der Haufen besser ist als der andere, hat er keinen Grund, den einen oder den anderen zu wählen.",
+        "frage": "Was passiert mit dem Esel – und was zeigt das über rationale Entscheidungen?",
+        "optionen": [
+            {"text": "Er verhungert – pure Rationalität führt bei perfekter Symmetrie ins Nichts.", "hinweis": "Das klassische Paradox"},
+            {"text": "Er wählt zufällig – und beide Optionen sind gleich gut.", "hinweis": "Zufall als Ausweg"},
+            {"text": "Die Situation existiert nicht – echte Symmetrie ist unmöglich.", "hinweis": "Pragmatischer Einwand"},
+            {"text": "Er vergleicht nicht nur Nutzen, sondern auch Kosten des Nicht-Entscheidens.", "hinweis": "Meta-Rationalität"},
+        ],
+        "loesung_text": "Alle vier Antworten enthalten einen wahren Kern – und zusammen ergeben sie die moderne Entscheidungstheorie.",
+        "erklaerung": "<p>Die Parabel wird meist <strong>Jean Buridan</strong> (14. Jh.) zugeschrieben, obwohl sie schon bei Aristoteles anklingt. Sie ist kein echtes Rätsel, sondern eine <em>reductio ad absurdum</em>: Wenn reine Rationalität in der Symmetrie zum Stillstand führt, dann muss „Rationalität\" mehr beinhalten als bloßes Nutzenmaximieren.</p><p>Moderne Antworten:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Zufall ist optimal</strong>: In spieltheoretischen Modellen (z. B. Matching Pennies) ist eine gemischte Strategie die einzige Nash-Gleichgewichtslösung – gleich gute Optionen sollen zufällig gewählt werden.</li><li><strong>Satisficing</strong> (Herbert Simon, 1956): Menschen maximieren nicht, sie wählen „gut genug\". Der Esel hätte längst irgendeinen Haufen gefressen.</li><li><strong>Opportunitätskosten der Deliberation</strong>: Jede Sekunde Nachdenken kostet Energie. Rationale Agenten rechnen das ein – perfekte Vergleiche lohnen sich selten.</li></ul>",
+        "kontext": "<p><strong>Warum das Rätsel heute wichtig ist</strong></p><p>Buridans Esel ist zum Namensgeber für ein reales Problem in der Informatik und KI geworden: <strong>Decision paralysis</strong>. KI-Systeme, die bei Gleichstand nicht zufallsbasiert entscheiden, hängen sich auf – ein echter Bug in autonomen Fahrzeugen und Handelsalgorithmen.</p><p>Im menschlichen Alltag:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Analysis paralysis</strong>: Zu viele gleichwertige Optionen (30 Marmeladen im Regal) senken die Kaufwahrscheinlichkeit dramatisch (Iyengar & Lepper 2000).</li><li><strong>FOMO & Dating-Apps</strong>: Zu viele Optionen verhindern Bindung.</li><li><strong>Perfektionismus</strong>: Wer die beste Lösung sucht, verliert Zeit, die eine „gute genug\" Lösung längst produktiv genutzt hätte.</li></ul><p>Der <strong>moderne Weg aus dem Dilemma</strong>: Setze eine Deadline, würfle bei Gleichstand, und akzeptiere, dass die Qualität einer Entscheidung oft wichtiger ist als ihre scheinbare Optimalität.</p>",
+        "erkenntnis": "Perfekte Rationalität ist eine Falle. Wenn zwei Optionen wirklich gleich gut sind, ist jede Wahl richtig – nur das Nicht-Entscheiden ist falsch. Entscheidungen sind auch Handlungen.",
+    },
+    "kartoffel-paradox": {
+        "id": "kartoffel-paradox", "name": "Das Kartoffel-Paradox", "icon": "🥔",
+        "farbe": "orange", "kategorie": "Mathematik", "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup_label": "Das Rätsel:",
+        "setup": "Du kaufst <strong>100 kg frische Kartoffeln</strong>. Sie bestehen zu <strong>99% aus Wasser</strong>.<br><br>Du lässt sie an der Luft liegen. Nach einiger Zeit sind sie etwas eingetrocknet – jetzt bestehen sie nur noch zu <strong>98% aus Wasser</strong>.",
+        "frage": "Wie viel wiegen die Kartoffeln jetzt?",
+        "optionen": [
+            {"text": "99 kg", "hinweis": "Fast unverändert"},
+            {"text": "98 kg", "hinweis": "Ein Kilo weniger"},
+            {"text": "50 kg", "hinweis": "Die Hälfte"},
+            {"text": "1 kg weniger – je nach Startmenge", "hinweis": "Klingt plausibel"},
+        ],
+        "loesung_text": "Die Kartoffeln wiegen nur noch 50 kg – halb so viel!",
+        "erklaerung": "<p>Die Intuition versagt, weil wir uns an der kleinen Prozentänderung orientieren (99% → 98%). Aber entscheidend ist der <strong>Trockensubstanz-Anteil</strong>, der nicht verdunstet.</p><p><strong>Vorher (100 kg):</strong><br>• Wasser: 99 kg (99%)<br>• Trockensubstanz: <strong>1 kg (1%)</strong></p><p><strong>Nachher (unbekannt, nenne es M):</strong><br>• Wasser: 98% von M<br>• Trockensubstanz: 2% von M = <strong>immer noch 1 kg</strong> (Trockensubstanz verdunstet nicht)</p><p>Also: 2% × M = 1 kg → <strong>M = 50 kg</strong>.</p><p>Von den 99 kg Wasser sind 49 kg verdunstet. Das Gewicht hat sich halbiert, obwohl der Wasseranteil nur um einen Prozentpunkt gesunken ist.</p>",
+        "kontext": "<p>Dieses Paradox wird oft als Beispiel für die <strong>Täuschung relativer Zahlen</strong> verwendet. Prozentangaben verschleiern die zugrundeliegenden Mengen.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Schlankheitsformeln</strong>: „Nur 5% Fett\" klingt nach wenig – aber in einem schweren Produkt können das viele Gramm sein.</li><li><strong>Impfquote vs. ungeimpfte Fälle</strong>: Bei 95% Impfquote in einer Bevölkerung von 100 Mio. sind 5 Mio. ungeimpft – mehr als manche Länder Einwohner haben.</li><li><strong>Risikokommunikation</strong>: „50% höheres Risiko\" ist bedeutungslos ohne das <em>absolute</em> Ausgangsrisiko.</li></ul><p>Das Kartoffel-Paradox ist eng verwandt mit <strong>Simpsons Paradox</strong> und dem <strong>Will-Rogers-Phänomen</strong>: Statistische Illusionen entstehen, wenn Menschen mit Prozenten rechnen, ohne die Basismenge mitzudenken.</p>",
+        "erkenntnis": "Prozente lügen nicht – aber unsere Intuition liest sie falsch. Frag immer: „Prozent wovon?\" Die absolute Menge entscheidet, nicht der Anteil.",
+    },
+    "gefangene-schalter": {
+        "id": "gefangene-schalter", "name": "100 Gefangene und ein Schalter", "icon": "💡",
+        "farbe": "teal", "kategorie": "Spieltheorie", "schwierigkeit": "Fortgeschritten", "dauer": "6 min",
+        "setup_label": "Die Situation:",
+        "setup": "Ein Gefängnisdirektor versammelt <strong>100 Gefangene</strong>. Er erklärt: <br><br>„In meinem Büro gibt es einen Lichtschalter – zu Beginn ist er aus. Ab morgen rufe ich täglich einen von euch zufällig in mein Büro. Jeder kann beliebig oft dran sein. Die einzige Aktion: den Schalter umlegen – oder nicht.<br><br>Wenn irgendwann einer von euch behauptet: <em>'Jeder von uns war schon mindestens einmal hier'</em> – und es stimmt, seid ihr alle frei. Stimmt es nicht, sterbt ihr alle.\"<br><br>Die Gefangenen dürfen <strong>vor Beginn</strong> einmal zusammen eine Strategie absprechen, danach nie wieder kommunizieren.",
+        "frage": "Welche Strategie garantiert die Freiheit – auch wenn es Jahre dauert?",
+        "optionen": [
+            {"text": "Einer wird zum „Zähler\" ernannt, alle anderen zu „Meldern\".", "hinweis": "Zentraler Beobachter"},
+            {"text": "Jeder legt den Schalter so oft er kann um.", "hinweis": "Dezentral"},
+            {"text": "Sie zählen Besuche über den Schalterzustand als Binärcode.", "hinweis": "Informationskodierung"},
+            {"text": "Es gibt keine garantierte Strategie – nur Wahrscheinlichkeiten.", "hinweis": "Unmöglich?"},
+        ],
+        "loesung_text": "Der „Zähler\" löst es – nach durchschnittlich ~10.000 Tagen (ca. 27 Jahren).",
+        "erklaerung": "<p>Die Gefangenen wählen <strong>einen Zähler</strong>. Die anderen 99 sind „Melder\".</p><p><strong>Regeln:</strong></p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Ein <strong>Melder</strong> legt den Schalter nur dann einmal auf AN, wenn er ihn auf AUS vorfindet <em>und es sein allererstes Mal in seinem Leben ist, dass er AN schaltet</em>. Danach nie wieder.</li><li>Der <strong>Zähler</strong> legt den Schalter jedes Mal auf AUS, wenn er ihn auf AN vorfindet – und zählt dabei um 1 hoch.</li><li>Wenn der Zähler bis <strong>99</strong> gezählt hat, kann er sicher sagen: Alle 99 Melder waren mindestens einmal hier. Zusammen mit ihm selbst: alle 100.</li></ul><p>Jeder Melder fügt genau <strong>eine</strong> Zähl-Einheit hinzu. Da jeder Melder einzigartig ist, erreicht der Zähler die 99 nur, wenn wirklich alle da waren.</p><p><strong>Erwartete Dauer</strong>: Da der Direktor zufällig wählt, muss jeder Melder irgendwann drankommen UND den Schalter auf AUS vorfinden. Die Analyse (Coupon-Collector mit Blockierungen) ergibt <strong>~10.000 Tage</strong>. Nicht praktikabel – aber mathematisch bombensicher.</p>",
+        "kontext": "<p>Dieses Rätsel ist ein Klassiker der <strong>verteilten Berechnung</strong> und wurde popularisiert durch William Wu (Stanford, 2002). Es tauchte bald in Google-Einstellungsinterviews auf.</p><p>Es illustriert Kernprobleme der Informatik:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Informationsaggregation mit 1 Bit Speicher</strong>: Ein einziges Bit (AN/AUS) reicht, um 100 Agenten koordiniert zu zählen – wenn die Rollen asymmetrisch sind.</li><li><strong>Konsens-Protokolle</strong>: In verteilten Systemen (Blockchain, Datenbanken) ist genau das die Herausforderung.</li><li><strong>Anonymität vs. Identifizierbarkeit</strong>: Ohne den Zähler scheitert jede Strategie – vollständig dezentrale Protokolle ohne Rollen sind unmöglich.</li></ul><p>Varianten: Was, wenn der Anfangszustand unbekannt ist? → Jeder Melder schaltet zweimal, Zähler zählt bis 198. Was, wenn N Gefangene variabel sind? → Protokoll skaliert.</p>",
+        "erkenntnis": "Ein einziges Bit kann unendlich viel Information tragen – wenn alle Beteiligten dieselbe Deutung teilen. Koordination entsteht nicht durch Kommunikation, sondern durch geteilte Regeln.",
+    },
 }
 
 
@@ -4108,7 +4181,7 @@ def pawlow_hund_page(request: Request):
 
 @router.post("/pawlow-hund/antwort", response_class=HTMLResponse)
 def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
-    correct = antwort in ["glocke", "unkonditioniert_stimulus", "klassisch", "konditionierter_reiz"]
+    correct = antwort == "konditionierter_reiz"
     return templates.TemplateResponse(
         request,
         "partials/pawlow_hund_result.html",
