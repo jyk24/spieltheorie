@@ -631,6 +631,8 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"zwei-kinder","name":"Das Zwei-Kinder-Problem","icon":"👧👦","beschreibung":"Herr Meier hat zwei Kinder. Mindestens eines ist ein Junge. Wie wahrscheinlich ist es, dass beide Jungen sind? Fast jeder sagt ½. Martin Gardner (1959) zeigte: Die Antwort ist ⅓ – und die Formulierung der Frage entscheidet alles.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Wahrscheinlichkeit"},
+    {"id":"kartoffel-paradox","name":"Das Kartoffel-Paradox","icon":"🥔","beschreibung":"100 kg Kartoffeln bestehen zu 99% aus Wasser. Nach einem Tag an der Sonne sind es nur noch 98% Wasser. Wie viel wiegen die Kartoffeln jetzt? Die Intuition sagt: fast gleich viel. Die Mathematik sagt: 50 kg.","typ":"Mathematik-Paradox","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Mathematik"},
 ]
 
 
@@ -4063,6 +4065,42 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    # ─────────────────────────────────────────────────────────────────────────
+    "zwei-kinder": {
+        "id": "zwei-kinder", "name": "Das Zwei-Kinder-Problem", "icon": "👧👦",
+        "farbe": "sky", "kategorie": "Wahrscheinlichkeit",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Herr Meier hat genau <strong>zwei Kinder</strong>. Du erfährst zusätzlich: <strong>Mindestens eines der beiden Kinder ist ein Junge.</strong><br><br>Angenommen, die Wahrscheinlichkeit für Jungen und Mädchen ist jeweils genau ½ und voneinander unabhängig.",
+        "frage": "Wie wahrscheinlich ist es, dass <em>beide</em> Kinder Jungen sind?",
+        "optionen": [
+            {"text": "½ (50 %)", "hinweis": "Ein Kind ist Junge – das zweite ist zu ½ auch Junge"},
+            {"text": "⅓ (ca. 33 %)", "hinweis": "Überraschend: Die Information ändert die Rechnung"},
+            {"text": "¼ (25 %)", "hinweis": "Beides unabhängig: ½ · ½"},
+            {"text": "⅔ (ca. 67 %)", "hinweis": "Zu optimistisch"},
+        ],
+        "loesung_text": "⅓ – nicht ½. Die Information „mindestens ein Junge\" schließt genau einen von vier gleich wahrscheinlichen Fällen aus.",
+        "erklaerung": "<p>Ohne jede Information gibt es für zwei Kinder (in Geburtsreihenfolge) <strong>vier gleich wahrscheinliche Fälle</strong>: MM, MJ, JM, JJ – jeder mit Wahrscheinlichkeit ¼.</p><p>Die Information „mindestens ein Junge\" schließt nur den Fall <strong>MM</strong> aus. Übrig bleiben drei gleich wahrscheinliche Fälle: MJ, JM, JJ.</p><p>Nur in <strong>einem</strong> dieser drei Fälle sind <strong>beide</strong> Kinder Jungen. Also: P(JJ | mindestens ein Junge) = 1 / 3.</p><p>Formell mit dem Satz von Bayes:<br>P(JJ | B≥1) = P(B≥1 | JJ) · P(JJ) / P(B≥1) = 1 · ¼ / ¾ = <strong>⅓</strong>.</p>",
+        "kontext": "<p><strong>Martin Gardner</strong> stellte dieses Rätsel 1959 in seiner <em>Scientific American</em>-Kolumne vor. Es löste hitzige Debatten aus – und Gardner selbst musste später eine Korrektur veröffentlichen, weil die Antwort massiv davon abhängt, <em>wie</em> man die Information „ein Junge\" erhält.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Variante A – Beobachtung der Familie:</strong> „Mindestens eines ist ein Junge\" → Antwort ⅓</li><li><strong>Variante B – Zufälliges Kind:</strong> „Das ältere Kind ist ein Junge\" → Antwort ½, weil nun ein <em>bestimmtes</em> Kind identifiziert ist</li><li><strong>Tuesday-Variante (2010):</strong> „Mindestens ein Junge, geboren an einem Dienstag.\" → Antwort rutscht auf ca. 13/27 ≈ 0,48</li></ul><p>Die Lektion: Bedingte Wahrscheinlichkeiten hängen vom <strong>Informationsmechanismus</strong> ab – nicht nur vom Inhalt der Aussage. Das ist dieselbe Falle, die beim Monty-Hall-Problem zuschlägt.</p>",
+        "erkenntnis": "Zwei Aussagen mit identischem Wortlaut können unterschiedliche Wahrscheinlichkeiten erzeugen – je nachdem, wie du zur Information gelangt bist. Bei bedingten Wahrscheinlichkeiten musst du immer fragen: Welche Fälle hätten diese Aussage ebenfalls hervorgebracht?",
+    },
+    # ─────────────────────────────────────────────────────────────────────────
+    "kartoffel-paradox": {
+        "id": "kartoffel-paradox", "name": "Das Kartoffel-Paradox", "icon": "🥔",
+        "farbe": "amber", "kategorie": "Mathematik",
+        "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup": "Du hast <strong>100 kg frische Kartoffeln</strong>. Sie bestehen zu <strong>99 % aus Wasser</strong> und zu 1 % aus Trockenmasse.<br><br>Du legst sie einen Tag in die Sonne. Danach beträgt der Wasseranteil nur noch <strong>98 %</strong>. Die Trockenmasse hat sich nicht verändert – nur Wasser ist verdunstet.",
+        "frage": "Wie viel wiegen die Kartoffeln jetzt?",
+        "optionen": [
+            {"text": "Ca. 99 kg", "hinweis": "Intuitiv: nur 1 % Unterschied – also kaum Veränderung"},
+            {"text": "Ca. 98 kg", "hinweis": "Scheint logisch – ist aber falsch"},
+            {"text": "Genau 50 kg", "hinweis": "Die Trockenmasse bleibt – aber ihr Anteil verdoppelt sich"},
+            {"text": "Ca. 2 kg", "hinweis": "Zu wenig – Trockenmasse bleibt ja erhalten"},
+        ],
+        "loesung_text": "50 kg – die Kartoffeln haben die Hälfte ihres Gewichts verloren.",
+        "erklaerung": "<p>Ausgangslage: 100 kg · 1 % = <strong>1 kg Trockenmasse</strong>. Diese 1 kg bleibt konstant – nur Wasser verdunstet.</p><p>Nachher soll die Trockenmasse 2 % des neuen Gesamtgewichts ausmachen (denn 100 % − 98 % = 2 %). Also:</p><p><strong>1 kg = 2 % von x</strong> → x = 1 / 0,02 = <strong>50 kg</strong>.</p><p>Von den ursprünglichen 99 kg Wasser sind 49 kg verdunstet – also fast die Hälfte, obwohl der prozentuale Wasseranteil nur um einen Prozentpunkt gesunken ist.</p>",
+        "kontext": "<p>Das Paradox stammt aus der <strong>Rekreationsmathematik</strong> und ist ein Klassiker für den Unterschied zwischen <strong>Prozentpunkten</strong> und <strong>Prozent</strong>: Ein scheinbar kleiner Wechsel von 99 % auf 98 % bedeutet relativ gesehen eine <strong>Verdopplung</strong> des Trockenmasse-Anteils (von 1 % auf 2 %).</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Gesundheit:</strong> Ein Risiko sinkt von 0,2 % auf 0,1 % – klingt winzig, ist aber eine <strong>Halbierung</strong></li><li><strong>Fehlerraten:</strong> Von 99,99 % auf 99,999 % Verfügbarkeit heißt: 10× weniger Ausfallzeit</li><li><strong>Impfwirkung:</strong> Wirksamkeit von 95 % auf 90 % → doppelt so viele Erkrankungen</li></ul><p>Bei kleinen Prozentsätzen oder Werten nahe 100 % lügt die lineare Intuition. Rechne stattdessen mit <strong>Verhältnissen</strong> oder <strong>Odds</strong> (Chancen-Verhältnissen).</p>",
+        "erkenntnis": "Prozent ist nicht gleich Prozent. Bei extremen Werten (nahe 0 % oder 100 %) ist der <em>relative</em> Unterschied oft gewaltig, obwohl die Zahl kaum zu rutschen scheint. Statistiker schauen deshalb auf Verhältnisse, nicht auf Prozentpunkt-Differenzen.",
     },
 }
 
