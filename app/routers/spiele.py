@@ -619,6 +619,15 @@ GAME_META = [
         "runden": 6,
         "konzept": "Cournot-Gleichgewicht, Oligopol, Kollusion vs. Wettbewerb",
     },
+    {
+        "id": "nim",
+        "name": "Nim",
+        "icon": "🪨",
+        "beschreibung": "Nimm Steine aus Haufen, wer den letzten nimmt gewinnt. Das Ur-Spiel der kombinatorischen Spieltheorie – Bouton (1901) löste es mit einer einzigen XOR-Operation.",
+        "schwierigkeit": "Fortgeschritten",
+        "runden": "variabel",
+        "konzept": "Nim-Summe, Sprague-Grundy, Perfektes Spiel",
+    },
 ]
 
 
@@ -2910,4 +2919,21 @@ def cournot_zug(
             "strategy_info": strategy_info,
             "new_achievements": new_achievements,
         },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Nim – Klassisches kombinatorisches Spiel (Bouton 1901)
+# Client-seitig vollständig in JavaScript gespielt; der Server liefert nur
+# die Seite aus. Die optimale Strategie basiert auf der Nim-Summe (XOR aller
+# Haufengrößen): Position mit XOR = 0 ist verloren, XOR != 0 ist gewonnen.
+# ---------------------------------------------------------------------------
+
+
+@router.get("/nim", response_class=HTMLResponse)
+def nim_page(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "games/nim.html",
+        {"active_page": "spiele"},
     )

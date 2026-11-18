@@ -1,0 +1,347 @@
+{% extends "base.html" %}
+{% block title %}Nim – Das gelöste Ur-Spiel der Spieltheorie{% endblock %}
+{% block meta_description %}<meta name="description" content="Nim – spiele das klassische Strategie-Spiel gegen eine perfekt spielende KI und lerne die Nim-Summe, mit der Bouton (1901) das Spiel vollständig löste.">{% endblock %}
+{% block og_title %}Nim – gewinne mit XOR | VerhandlungsTrainer{% endblock %}
+{% block og_description %}Nimm Steine aus Haufen, der letzte gewinnt. Eine einzige XOR-Operation entscheidet jede Position – das erste vollständig gelöste Spiel der Spieltheorie.{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="/spiele" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Spiele</a>
+        <h1 class="text-3xl font-bold text-slate-800 mt-2">🪨 Nim</h1>
+        <p class="text-slate-500 mt-1">Charles Bouton (1901) · Das Ur-Spiel der kombinatorischen Spieltheorie – vollständig gelöst durch eine XOR-Operation.</p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5 text-sm text-slate-700">
+        <p class="font-semibold mb-2">Die Regeln:</p>
+        <ul class="list-disc list-inside space-y-1 mb-3">
+            <li>Es gibt drei Haufen mit Steinen.</li>
+            <li>Ihr seid abwechselnd dran – du und die KI.</li>
+            <li>Pro Zug darfst du aus <strong>einem</strong> Haufen <strong>beliebig viele</strong> Steine nehmen (mindestens 1).</li>
+            <li>Wer den <strong>letzten Stein</strong> nimmt, <strong>gewinnt</strong>.</li>
+        </ul>
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs">
+            <p class="font-semibold text-amber-800 mb-1">Der Clou:</p>
+            <p class="text-amber-700">Dieses Spiel ist vollständig <em>gelöst</em>. Für jede Position gibt es einen eindeutigen besten Zug – oder der Zug-Spieler ist schon verloren. Die KI kennt die Lösung. Findest du sie durch Spielen?</p>
+        </div>
+    </div>
+
+    <div id="game-area" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+        <!-- gefüllt via JS -->
+    </div>
+
+    <div id="debrief" class="hidden mt-6 bg-indigo-50 border border-indigo-200 rounded-xl p-5 text-sm">
+        <h2 class="font-bold text-indigo-900 mb-2">🧠 Die Nim-Summe – Boutons Lösung (1901)</h2>
+        <p class="text-indigo-800 mb-3">Bilde die <strong>XOR-Summe</strong> aller Haufengrößen (binär, bitweise). Diese Zahl heißt <em>Nim-Summe</em>.</p>
+        <div class="bg-white rounded-lg p-3 font-mono text-xs text-slate-700 mb-3">
+            <div>Haufen: 3, 4, 5</div>
+            <div class="text-slate-400 mt-1">3 = 011</div>
+            <div class="text-slate-400">4 = 100</div>
+            <div class="text-slate-400">5 = 101</div>
+            <div class="mt-1 border-t border-slate-200 pt-1">XOR = 010 = <strong class="text-indigo-700">2</strong></div>
+        </div>
+        <ul class="list-disc list-inside space-y-1 text-indigo-800">
+            <li><strong>Nim-Summe = 0</strong> → der Zug-Spieler verliert bei perfektem Gegenspiel (<em>P-Position</em>).</li>
+            <li><strong>Nim-Summe ≠ 0</strong> → es gibt immer einen Zug, der sie auf 0 drückt (<em>N-Position</em>).</li>
+        </ul>
+        <p class="text-indigo-800 mt-3 text-xs">Der Gewinner-Zug: finde einen Haufen mit Größe <code>h</code>, sodass <code>h XOR Nim-Summe &lt; h</code>. Reduziere ihn auf <code>h XOR Nim-Summe</code>. Danach ist die Nim-Summe 0 – der Gegner steckt fest.</p>
+        <p class="text-slate-500 mt-3 text-xs">👉 Nim ist der Ausgangspunkt der <strong>Sprague-Grundy-Theorie</strong>: jedes unparteiische Spiel ist äquivalent zu einem Nim-Haufen. Die XOR-Summe gilt für ganze Spielfamilien.</p>
+    </div>
+
+    <div class="mt-6 text-xs text-slate-500 space-y-1">
+        <p>📚 <strong>Weiterführend:</strong>
+            <a href="/konzepte" class="text-indigo-600 hover:underline">Konzepte</a> ·
+            <a href="/lektionen/rueckwaertsinduktion" class="text-indigo-600 hover:underline">Rückwärtsinduktion</a> ·
+            <a href="/glossar" class="text-indigo-600 hover:underline">Glossar</a>
+        </p>
+    </div>
+</div>
+
+<script>
+(function () {
+  // Startkonfigurationen – klassisches Nim beginnt häufig mit (3,4,5) oder (1,3,5,7).
+  const PRESETS = {
+    "easy":      { piles: [1, 2, 3],       label: "Leicht (1, 2, 3)" },
+    "classic":   { piles: [3, 4, 5],       label: "Klassisch (3, 4, 5)" },
+    "marienbad": { piles: [1, 3, 5, 7],    label: "Marienbad (1, 3, 5, 7)" }
+  };
+
+  let state = {
+    piles: [],
+    playerTurn: true,
+    aiMisplayed: false,   // ob die KI in dieser Partie je einen Fehler machen musste
+    moveLog: [],          // Liste von {by, pile, took, before, after, nimSumBefore, nimSumAfter}
+    finished: false,
+    preset: "classic",
+    firstMove: "player"
+  };
+
+  const area = document.getElementById("game-area");
+  const debrief = document.getElementById("debrief");
+
+  function nimSum(piles) {
+    return piles.reduce((acc, v) => acc ^ v, 0);
+  }
+
+  function winningMove(piles) {
+    // Liefert {pile, newSize} oder null, falls Position verloren ist (XOR = 0).
+    const s = nimSum(piles);
+    if (s === 0) return null;
+    for (let i = 0; i < piles.length; i++) {
+      const target = piles[i] ^ s;
+      if (target < piles[i]) return { pile: i, newSize: target };
+    }
+    return null;
+  }
+
+  function aiMove(piles) {
+    // Perfekter Zug, wenn möglich; sonst minimaler Zug (1 Stein aus größtem Haufen).
+    const wm = winningMove(piles);
+    if (wm) return { ...wm, perfect: true };
+    // Fallback: KI ist in einer P-Position – egal was sie zieht, bei perfektem
+    // Gegenspiel verliert sie. Wir zögern die Niederlage hinaus, indem wir
+    // genau einen Stein aus dem größten Haufen nehmen.
+    let maxIdx = 0;
+    for (let i = 1; i < piles.length; i++) {
+      if (piles[i] > piles[maxIdx]) maxIdx = i;
+    }
+    return { pile: maxIdx, newSize: piles[maxIdx] - 1, perfect: false };
+  }
+
+  function totalStones(piles) {
+    return piles.reduce((a, b) => a + b, 0);
+  }
+
+  function render() {
+    if (state.finished) {
+      renderFinal();
+      return;
+    }
+
+    const s = nimSum(state.piles);
+    const hint = state.playerTurn
+      ? (s === 0
+          ? "Nim-Summe = 0 → bei perfektem Gegenspiel verlierst du. Hoffe auf einen KI-Fehler."
+          : "Nim-Summe = " + s + " → es gibt einen Gewinner-Zug. Findest du ihn?")
+      : "Die KI überlegt …";
+
+    let html = "";
+    html += '<div class="flex items-center justify-between mb-5">';
+    html += '  <span class="text-sm font-semibold ' + (state.playerTurn ? "text-indigo-700" : "text-slate-400") + '">' +
+            (state.playerTurn ? "👤 Du bist dran" : "🤖 KI am Zug") + '</span>';
+    html += '  <span class="text-xs text-slate-400">Steine gesamt: <strong>' + totalStones(state.piles) + '</strong></span>';
+    html += '</div>';
+
+    html += '<div class="space-y-5 mb-6">';
+    state.piles.forEach((count, idx) => {
+      html += '<div class="rounded-lg border border-slate-200 p-3">';
+      html += '  <div class="flex items-center justify-between mb-2">';
+      html += '    <span class="text-xs font-semibold text-slate-500">Haufen ' + (idx + 1) + ' · ' + count + ' Stein' + (count === 1 ? "" : "e") + '</span>';
+      html += '    <span class="text-[11px] font-mono text-slate-400">' + count.toString(2).padStart(4, "0") + '</span>';
+      html += '  </div>';
+      html += '  <div class="flex flex-wrap gap-1 mb-3 min-h-[1.5rem]">';
+      for (let j = 0; j < count; j++) html += '<span class="w-5 h-5 rounded-full bg-slate-700"></span>';
+      if (count === 0) html += '<span class="text-xs text-slate-300 italic">leer</span>';
+      html += '  </div>';
+
+      if (state.playerTurn && count > 0) {
+        html += '  <div class="flex flex-wrap gap-1">';
+        for (let k = 1; k <= count; k++) {
+          html += '<button type="button" data-pile="' + idx + '" data-take="' + k + '" class="nim-take px-2.5 py-1 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-600 hover:text-white transition">−' + k + '</button>';
+        }
+        html += '  </div>';
+      }
+      html += '</div>';
+    });
+    html += '</div>';
+
+    html += '<p class="text-xs text-center text-slate-500 mb-4">' + hint + '</p>';
+
+    html += '<div class="flex items-center justify-between gap-3 flex-wrap">';
+    html += '  <div class="flex items-center gap-2 text-xs">';
+    html += '    <label class="text-slate-500">Startposition:</label>';
+    html += '    <select id="preset-sel" class="text-xs border border-slate-200 rounded px-2 py-1 bg-white">';
+    Object.keys(PRESETS).forEach(k => {
+      html += '<option value="' + k + '"' + (k === state.preset ? " selected" : "") + '>' + PRESETS[k].label + '</option>';
+    });
+    html += '    </select>';
+    html += '  </div>';
+    html += '  <div class="flex items-center gap-2 text-xs">';
+    html += '    <label class="text-slate-500">Erster Zug:</label>';
+    html += '    <select id="first-sel" class="text-xs border border-slate-200 rounded px-2 py-1 bg-white">';
+    html += '      <option value="player"' + (state.firstMove === "player" ? " selected" : "") + '>Ich (einfacher)</option>';
+    html += '      <option value="ai"' + (state.firstMove === "ai" ? " selected" : "") + '>KI (schwieriger)</option>';
+    html += '    </select>';
+    html += '  </div>';
+    html += '  <button id="reset-btn" type="button" class="text-xs px-3 py-1.5 rounded border border-slate-200 text-slate-600 hover:bg-slate-50">↻ Neu starten</button>';
+    html += '</div>';
+
+    area.innerHTML = html;
+
+    area.querySelectorAll(".nim-take").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const pile = parseInt(btn.dataset.pile, 10);
+        const take = parseInt(btn.dataset.take, 10);
+        doPlayerMove(pile, take);
+      });
+    });
+
+    document.getElementById("preset-sel").addEventListener("change", (e) => {
+      state.preset = e.target.value;
+      resetGame();
+    });
+    document.getElementById("first-sel").addEventListener("change", (e) => {
+      state.firstMove = e.target.value;
+      resetGame();
+    });
+    document.getElementById("reset-btn").addEventListener("click", resetGame);
+
+    if (!state.playerTurn) {
+      // Kleine Pause für Lesbarkeit.
+      setTimeout(doAiMove, 650);
+    }
+  }
+
+  function doPlayerMove(pileIdx, take) {
+    if (!state.playerTurn || state.finished) return;
+    if (take < 1 || take > state.piles[pileIdx]) return;
+    const before = state.piles.slice();
+    const sBefore = nimSum(before);
+    state.piles[pileIdx] -= take;
+    state.moveLog.push({
+      by: "player",
+      pile: pileIdx,
+      took: take,
+      before: before,
+      after: state.piles.slice(),
+      nimSumBefore: sBefore,
+      nimSumAfter: nimSum(state.piles)
+    });
+    if (totalStones(state.piles) === 0) {
+      state.finished = true;
+      state.winner = "player";
+      render();
+      return;
+    }
+    state.playerTurn = false;
+    render();
+  }
+
+  function doAiMove() {
+    if (state.playerTurn || state.finished) return;
+    const before = state.piles.slice();
+    const sBefore = nimSum(before);
+    const mv = aiMove(state.piles);
+    if (!mv.perfect) state.aiMisplayed = true;
+    const took = state.piles[mv.pile] - mv.newSize;
+    state.piles[mv.pile] = mv.newSize;
+    state.moveLog.push({
+      by: "ai",
+      pile: mv.pile,
+      took: took,
+      before: before,
+      after: state.piles.slice(),
+      nimSumBefore: sBefore,
+      nimSumAfter: nimSum(state.piles),
+      perfect: mv.perfect
+    });
+    if (totalStones(state.piles) === 0) {
+      state.finished = true;
+      state.winner = "ai";
+      render();
+      return;
+    }
+    state.playerTurn = true;
+    render();
+  }
+
+  function renderFinal() {
+    const youWon = state.winner === "player";
+    const playerMoves = state.moveLog.filter(m => m.by === "player");
+    // Optimale Spieler-Züge: nach dem Zug muss die Nim-Summe 0 sein,
+    // sofern sie vorher != 0 war. War sie vorher 0, war die Niederlage
+    // bereits unvermeidbar; wir zählen den Zug als "ok".
+    let optimal = 0;
+    playerMoves.forEach(m => {
+      if (m.nimSumBefore === 0 || m.nimSumAfter === 0) optimal++;
+    });
+
+    let html = "";
+    html += '<div class="text-center mb-5">';
+    html += '  <div class="text-5xl mb-2">' + (youWon ? "🏆" : "🤖") + '</div>';
+    html += '  <div class="text-xl font-bold ' + (youWon ? "text-emerald-700" : "text-slate-700") + '">' +
+            (youWon ? "Du hast gewonnen!" : "Die KI hat gewonnen.") + '</div>';
+    if (youWon && state.aiMisplayed && state.firstMove === "ai") {
+      html += '  <div class="text-xs text-slate-500 mt-1">Fairness-Check: Die KI startete in einer N-Position (gewinnbar), aber du hast sie gezwungen, einen „Notzug" zu spielen – und ihn genutzt.</div>';
+    } else if (youWon && state.firstMove === "player") {
+      html += '  <div class="text-xs text-slate-500 mt-1">Du hattest den ersten Zug und die Startposition (' + PRESETS[state.preset].piles.join(", ") + ') hat Nim-Summe ' + nimSum(PRESETS[state.preset].piles) + ' ≠ 0 – also ist der Anziehende theoretisch im Vorteil.</div>';
+    } else if (!youWon && state.firstMove === "player") {
+      html += '  <div class="text-xs text-slate-500 mt-1">Du hattest den ersten Zug – die Startposition war gewinnbar. Siehe unten: an welchem Zug ist die Nim-Summe gekippt?</div>';
+    }
+    html += '</div>';
+
+    // Zug-Protokoll
+    html += '<div class="mb-5">';
+    html += '  <h3 class="text-sm font-bold text-slate-700 mb-2">Zug-Protokoll</h3>';
+    html += '  <div class="overflow-x-auto"><table class="w-full text-xs"><thead class="text-slate-500 border-b border-slate-200">';
+    html += '    <tr><th class="text-left py-1 pr-2">#</th><th class="text-left pr-2">Zug</th><th class="text-left pr-2">Haufen</th><th class="text-right pr-2">Nim-Summe</th><th class="text-left pr-2">Bewertung</th></tr>';
+    html += '  </thead><tbody>';
+    state.moveLog.forEach((m, i) => {
+      const good = m.by === "player" && (m.nimSumBefore === 0 || m.nimSumAfter === 0);
+      const bad  = m.by === "player" && m.nimSumBefore !== 0 && m.nimSumAfter !== 0;
+      const cls = good ? "text-emerald-700" : (bad ? "text-rose-600" : "text-slate-600");
+      const verdict = m.by === "player"
+        ? (m.nimSumBefore === 0
+            ? "schon verloren"
+            : (m.nimSumAfter === 0 ? "perfekt – Nim-Summe auf 0 gedrückt" : "suboptimal – XOR bleibt ≠ 0"))
+        : (m.perfect === false ? "KI in P-Position (Notzug)" : "KI perfekt");
+      html += '<tr class="border-b border-slate-100">';
+      html += '<td class="py-1 pr-2 text-slate-400">' + (i + 1) + '</td>';
+      html += '<td class="pr-2 ' + cls + '">' + (m.by === "player" ? "👤" : "🤖") + ' Haufen ' + (m.pile + 1) + ', −' + m.took + '</td>';
+      html += '<td class="pr-2 font-mono text-slate-500">[' + m.after.join(", ") + ']</td>';
+      html += '<td class="pr-2 text-right font-mono text-slate-500">' + m.nimSumBefore + ' → ' + m.nimSumAfter + '</td>';
+      html += '<td class="pr-2 text-slate-500">' + verdict + '</td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    html += '</div>';
+
+    // Statistik
+    html += '<div class="grid grid-cols-2 gap-3 mb-5 text-center">';
+    html += '  <div class="bg-slate-50 rounded-lg p-3">';
+    html += '    <div class="text-xl font-bold text-slate-800">' + optimal + ' / ' + playerMoves.length + '</div>';
+    html += '    <div class="text-xs text-slate-500">deine optimalen Züge</div>';
+    html += '  </div>';
+    html += '  <div class="bg-slate-50 rounded-lg p-3">';
+    html += '    <div class="text-xl font-bold text-slate-800">' + state.moveLog.length + '</div>';
+    html += '    <div class="text-xs text-slate-500">Züge insgesamt</div>';
+    html += '  </div>';
+    html += '</div>';
+
+    html += '<div class="flex gap-2">';
+    html += '  <button id="again-btn" type="button" class="flex-1 py-2.5 rounded-lg bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">↻ Nochmal spielen</button>';
+    html += '  <button id="debrief-btn" type="button" class="flex-1 py-2.5 rounded-lg border border-indigo-200 text-indigo-700 text-sm font-semibold hover:bg-indigo-50">🧠 Strategie anzeigen</button>';
+    html += '</div>';
+
+    area.innerHTML = html;
+    document.getElementById("again-btn").addEventListener("click", resetGame);
+    document.getElementById("debrief-btn").addEventListener("click", () => {
+      debrief.classList.remove("hidden");
+      debrief.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  function resetGame() {
+    state.piles = PRESETS[state.preset].piles.slice();
+    state.playerTurn = state.firstMove === "player";
+    state.aiMisplayed = false;
+    state.moveLog = [];
+    state.finished = false;
+    state.winner = null;
+    debrief.classList.add("hidden");
+    render();
+  }
+
+  resetGame();
+})();
+</script>
+{% endblock %}
