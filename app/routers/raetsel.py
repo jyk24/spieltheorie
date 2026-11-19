@@ -631,6 +631,10 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neu: nichttransitive Würfel, Parrondo, Kartoffeln ───────────────────
+    {"id":"efron-wuerfel","name":"Efrons nichttransitive Würfel","icon":"🎲","beschreibung":"Vier Würfel in einem Kreis: A schlägt B, B schlägt C, C schlägt D – und D schlägt wieder A. Wie kann eine Siegeskette keinen Anfang und kein Ende haben? Bradley Efron (1970).","typ":"Spieltheorie-Paradox","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Spieltheorie"},
+    {"id":"parrondo-paradoxon","name":"Das Parrondo-Paradoxon","icon":"🎰","beschreibung":"Zwei Glücksspiele, die auf lange Sicht beide Geld vernichten. Mischt man sie zufällig ab – plötzlich macht man systematisch Gewinn. Juan Parrondo (1996) zeigte: Verlust + Verlust kann Gewinn ergeben.","typ":"Wahrscheinlichkeits-Paradox","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Spieltheorie"},
+    {"id":"kartoffel-paradoxon","name":"Das Kartoffel-Paradoxon","icon":"🥔","beschreibung":"100 kg Kartoffeln bestehen zu 99 % aus Wasser. Sie trocknen in der Sonne, bis der Wassergehalt nur noch 98 % beträgt. Wie viel wiegen sie dann? Die mathematisch korrekte Antwort schockiert jeden.","typ":"Mathematik-Paradox","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Mathematik"},
 ]
 
 
@@ -4063,6 +4067,57 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "efron-wuerfel": {
+        "id": "efron-wuerfel", "name": "Efrons nichttransitive Würfel", "icon": "🎲",
+        "farbe": "violet", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Mittel", "dauer": "5 min",
+        "setup": "Vier besondere Würfel liegen auf dem Tisch:<br><br>• <strong>A</strong> = (4, 4, 4, 4, 0, 0)<br>• <strong>B</strong> = (3, 3, 3, 3, 3, 3)<br>• <strong>C</strong> = (6, 6, 2, 2, 2, 2)<br>• <strong>D</strong> = (5, 5, 5, 1, 1, 1)<br><br>Dein Gegner darf einen Würfel wählen, du nimmst danach einen anderen. Ihr würfelt – der höhere Wert gewinnt.",
+        "frage": "Wer hat den Vorteil, wenn er <em>zweiter</em> wählen darf – und mit welcher Gewinnwahrscheinlichkeit?",
+        "optionen": [
+            {"text": "Der Zweitwählende – er findet immer einen Würfel, der mit 2/3 gewinnt", "hinweis": "A→B→C→D→A ist ein Zyklus"},
+            {"text": "Der Erstwählende – er hat die freie Auswahl", "hinweis": "Das wäre transitiv"},
+            {"text": "Keiner – alle Würfel sind im Schnitt gleich stark", "hinweis": "Die Erwartungswerte täuschen hier"},
+            {"text": "Der Zweitwählende, aber nur mit Würfel B", "hinweis": "Jeder Würfel wird geschlagen"},
+        ],
+        "loesung_text": "Der Zweitwählende gewinnt – immer mit P = 2/3.",
+        "erklaerung": "<p>Für jedes Paar ergibt sich dieselbe Gewinnquote:</p><ul class=\"list-disc ml-5 space-y-1\"><li><strong>A schlägt B:</strong> A zeigt 4 mit P = 4/6, dann gewinnt A sicher. Also P(A&gt;B) = 2/3.</li><li><strong>B schlägt C:</strong> B zeigt immer 3. C zeigt 2 mit P = 4/6 und verliert. P(B&gt;C) = 2/3.</li><li><strong>C schlägt D:</strong> C=6 gewinnt immer (2/6). C=2 verliert gegen D=5 (3/6), schlägt aber D=1 (3/6). P(C&gt;D) = 2/6·1 + 4/6·3/6 = 2/3.</li><li><strong>D schlägt A:</strong> A=0 verliert immer (2/6). A=4 schlägt D=1 (3/6), verliert gegen D=5 (3/6). P(D&gt;A) = 2/6·1 + 4/6·3/6 = 2/3.</li></ul><p class=\"mt-2\">Der Zweitwählende sieht die Wahl des Gegners und hat immer eine Antwort mit 2/3 Gewinnchance.</p>",
+        "kontext": "<p><strong>Bradley Efron</strong>, Statistiker an der Stanford University, präsentierte diese Würfel 1970 Martin Gardner. Warren Buffett lud Bill Gates damit zu einem Spiel ein – Gates studierte die Würfel, lehnte die erste Auswahl ab und bestand darauf, als Zweiter zu wählen.</p><p>Das Paradox zeigt: <em>Mehrheitspräferenzen können zyklisch sein</em>. Dieselbe Struktur steckt im Condorcet-Paradox (A gewinnt gegen B, B gegen C, C gegen A bei Mehrheitsabstimmungen) und in Rock-Paper-Scissors-ähnlichen Gleichgewichten.</p><p>In der Spieltheorie heißt eine Strategie, die immer eine bessere Antwort hat, <em>nicht dominant</em>. Nichttransitive Würfel sind ein lebendiges Gegenbeispiel zur Intuition „irgendein Spieler muss insgesamt der stärkste sein“.</p>",
+        "erkenntnis": "„Besser als“ ist nicht immer eine Ordnung. Wer die Reihenfolge der Züge kontrollieren kann, gewinnt oft mehr als wer die freie Auswahl hat. In Verhandlungen bedeutet das: Reaktionsmacht schlägt Initiativmacht – wenn die Optionen im Kreis angeordnet sind.",
+    },
+    "parrondo-paradoxon": {
+        "id": "parrondo-paradoxon", "name": "Das Parrondo-Paradoxon", "icon": "🎰",
+        "farbe": "rose", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": "Zwei Glücksspiele:<br><br>• <strong>Spiel A:</strong> Münzwurf mit P(Gewinn) = 0,495, pro Runde ±1 €.<br>• <strong>Spiel B:</strong> Wenn dein Kapital durch 3 teilbar ist, Münzwurf mit P = 0,095. Sonst mit P = 0,745.<br><br>Beide Spiele <em>verlieren</em> auf lange Sicht – egal wie oft du spielst.",
+        "frage": "Was passiert, wenn du <em>zufällig</em> zwischen A und B wechselst (etwa 50:50)?",
+        "optionen": [
+            {"text": "Auch das Mischspiel verliert – zwei Verlustspiele bleiben Verlust", "hinweis": "Die intuitive Antwort"},
+            {"text": "Das Mischspiel ist neutral – Verluste heben sich auf", "hinweis": "Zu einfach"},
+            {"text": "Das Mischspiel gewinnt systematisch Geld", "hinweis": "Juan Parrondo, 1996"},
+            {"text": "Nur wenn man die Reihenfolge ABAB wählt – zufällig nicht", "hinweis": "Beides funktioniert"},
+        ],
+        "loesung_text": "Das Mischspiel gewinnt – obwohl beide Einzelspiele verlieren.",
+        "erklaerung": "<p>Simulationen (und analytische Berechnung über Markov-Ketten) zeigen: Die Kapitalkurve des Mischspiels steigt monoton an, obwohl die beiden Einzelspiele streng verlieren.</p><p>Der Trick steckt in der <strong>Zustandsabhängigkeit</strong> von Spiel B: Es verliert fast sicher, wenn das Kapital gerade durch 3 teilbar ist – und gewinnt stark in allen anderen Fällen. Allein gespielt pendelt das Kapital immer wieder in die „schlechte“ Resonanz, weil Spiel B selbst diese Reste erzeugt.</p><p>Wird zwischendurch Spiel A eingestreut, zerstört es diese Resonanz – das Kapital verlässt die schlechten Zustände, bevor sich B wieder darin festfrisst. Das Resultat: positive Erwartungsrendite aus der <em>Kombination</em> zweier negativer Prozesse.</p>",
+        "kontext": "<p><strong>Juan M. R. Parrondo</strong>, Physiker in Madrid, entdeckte das Paradox 1996 beim Studium sogenannter <em>Brownian Ratchets</em> – molekulare Motoren, die scheinbar aus zufälliger Bewegung gerichtete Arbeit gewinnen. Der zweite Hauptsatz der Thermodynamik verbietet das normalerweise, aber die zeitabhängige Schaltung zwischen zwei Potentialen umgeht das Verbot.</p><p>Anwendungen tauchen überall dort auf, wo <em>Kopplung</em> und <em>Zustand</em> zählen:</p><ul class=\"list-disc ml-5 space-y-1\"><li><strong>Finanzen:</strong> Zwei verlustträchtige Anlagestrategien können, kombiniert, positives Alpha erzeugen.</li><li><strong>Evolutionsbiologie:</strong> Allele, die einzeln unterlegen sind, können im Wechsel von Umweltbedingungen überleben.</li><li><strong>Populationsdynamik:</strong> Zwei Habitate, in denen Arten aussterben würden, erhalten zusammen eine stabile Population.</li></ul><p>Das Paradox ist nicht magisch: Keine Energie entsteht aus dem Nichts. Die „Arbeit“ wird aus der <em>Korrelation</em> zwischen Spielregel und Zustand gezogen.</p>",
+        "erkenntnis": "Verlust + Verlust ≠ 2·Verlust. Wenn Spielregeln vom Zustand abhängen, kann das Mischen scheinbar schlechter Strategien eine gewinnende Dynamik erzeugen. In Diversifikation, Zeitmanagement und Portfoliotheorie steckt dasselbe Prinzip: Die Reihenfolge und Kopplung sind oft wichtiger als die Einzelrendite.",
+    },
+    "kartoffel-paradoxon": {
+        "id": "kartoffel-paradoxon", "name": "Das Kartoffel-Paradoxon", "icon": "🥔",
+        "farbe": "amber", "kategorie": "Mathematik",
+        "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup": "Du hast <strong>100 kg frische Kartoffeln</strong>. Sie bestehen zu <strong>99 % aus Wasser</strong> (1 % Trockenmasse = 1 kg).<br><br>Die Kartoffeln liegen einen Tag in der Sonne. Nur Wasser verdunstet, die Trockenmasse bleibt unverändert. Nach dem Trocknen sind die Kartoffeln noch zu <strong>98 % Wasser</strong>.",
+        "frage": "Wie viel wiegen die Kartoffeln jetzt insgesamt?",
+        "optionen": [
+            {"text": "99 kg – es verdunstet ja nur 1 Prozent", "hinweis": "Die naive Antwort"},
+            {"text": "98 kg – ein Prozentpunkt weniger Wasser"},
+            {"text": "50 kg – die Hälfte", "hinweis": "Überraschend, aber richtig"},
+            {"text": "1 kg – nur die Trockenmasse bleibt", "hinweis": "Zu viel Verdunstung"},
+        ],
+        "loesung_text": "Die Kartoffeln wiegen nur noch 50 kg.",
+        "erklaerung": "<p>Die <strong>Trockenmasse bleibt konstant</strong> bei 1 kg. Nach dem Trocknen macht diese Trockenmasse <strong>2 %</strong> des Gesamtgewichts aus (weil der Wasseranteil von 99 % auf 98 % fiel).</p><p>Daraus folgt:</p><p class=\"font-mono text-center\">1 kg Trockenmasse = 2 % · Gesamtgewicht<br>→ Gesamtgewicht = 1 kg / 0,02 = <strong>50 kg</strong></p><p>Von den ursprünglichen 99 kg Wasser sind also 50 kg − 1 kg = 49 kg Wasser verdunstet. Ein einziger Prozentpunkt Unterschied im Wasseranteil halbiert das Gewicht.</p>",
+        "kontext": "<p>Das Paradox stammt vermutlich aus der sowjetischen Mathematikolympiade-Tradition und wurde in deutschsprachigen Lehrbüchern spätestens in den 1960ern populär. Es illustriert eine Falle, die man auch <em>Base Rate Neglect bei Verhältnissen</em> nennt: Man denkt in absoluten Differenzen (99 % → 98 % „nur 1 %“), obwohl die <em>relative</em> Veränderung des Komplements riesig ist (1 % → 2 % = Verdopplung).</p><p>Dieselbe Struktur erklärt zum Beispiel, warum</p><ul class=\"list-disc ml-5 space-y-1\"><li>die Senkung einer Impfquote von 95 % auf 90 % die Zahl der Ungeimpften <em>verdoppelt</em>,</li><li>eine Erfolgsrate von 99,9 % bei 1 Mio. Transaktionen immer noch 1 000 Fehler erzeugt,</li><li>eine Verringerung der Fehlerrate von 2 % auf 1 % die Qualität <em>verdoppelt</em>, nicht nur „etwas verbessert“.</li></ul><p>Journalisten und Marketingfachleute nutzen diese Asymmetrie bewusst: „nur 1 % weniger Zucker“ klingt harmlos, verschiebt aber die Trockenmasse-Proportion drastisch.</p>",
+        "erkenntnis": "Prozente lügen, wenn man nur den direkten Wert liest. Entscheidend ist immer, was in Relation wozu wächst. Wer in Verhandlungen oder Statistiken einen kleinen Prozent-Shift sieht, sollte zuerst fragen: Wie stark ändert sich die <em>komplementäre</em> Größe?",
     },
 }
 
