@@ -1,0 +1,397 @@
+{% extends "base.html" %}
+{% block title %}Schellings Segregationsmodell – Mikromotive erzeugen Makrostrukturen{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto">
+
+  <!-- Breadcrumb -->
+  <div class="mb-6">
+    <a href="/raetsel" class="text-sm text-slate-400 hover:text-indigo-600">← Alle Rätsel</a>
+    <h1 class="text-3xl font-bold text-slate-800 mt-2">🏘️ Schellings Segregationsmodell</h1>
+    <div class="flex items-center gap-3 mt-1.5 flex-wrap">
+      <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium">Spieltheorie</span>
+      <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium">Mittel</span>
+      <span class="text-xs text-slate-400">⏱ ~6 min</span>
+      <span class="text-xs text-slate-400">· Thomas Schelling, 1971</span>
+    </div>
+  </div>
+
+  <!-- Setup -->
+  <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6">
+    <p class="font-semibold text-slate-800 mb-3">Die Ausgangsfrage</p>
+    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-5 text-slate-700 leading-relaxed">
+      <p>Angenommen, <strong>niemand</strong> in einer Stadt ist bewusst rassistisch, segregationistisch oder ausgrenzend. Jeder möchte einfach nur, dass <em>ein kleiner Anteil</em> der direkten Nachbarn dieselbe Gruppe teilt – Vorliebe für etwas Vertrautes in der Umgebung, nicht mehr.</p>
+      <p class="mt-3">Wie sieht die Stadt nach ein paar Umzügen aus?</p>
+      <p class="mt-3 font-semibold text-indigo-800">Antwort: vollständig getrennt. Auch wenn jeder mit 70 % anderen Nachbarn glücklich wäre.</p>
+    </div>
+  </div>
+
+  <!-- Simulation -->
+  <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 mb-6">
+    <p class="font-semibold text-slate-800 mb-1">Probiere es selbst</p>
+    <p class="text-sm text-slate-500 mb-4">Stell den Regler auf 30 % – also „ich bleibe, wenn mindestens 3 von 10 Nachbarn wie ich sind“ – und drücke auf <em>Simulation starten</em>.</p>
+
+    <div class="flex justify-center mb-4">
+      <canvas id="schelling-canvas" width="400" height="400"
+              class="rounded-lg border border-slate-200 bg-slate-50"
+              style="image-rendering: pixelated; max-width: 100%;"></canvas>
+    </div>
+
+    <!-- Legende -->
+    <div class="flex items-center justify-center gap-6 text-sm text-slate-600 mb-5">
+      <span class="flex items-center gap-2"><span class="inline-block w-4 h-4 rounded-sm" style="background:#f97316"></span>Gruppe A</span>
+      <span class="flex items-center gap-2"><span class="inline-block w-4 h-4 rounded-sm" style="background:#0d9488"></span>Gruppe B</span>
+      <span class="flex items-center gap-2"><span class="inline-block w-4 h-4 rounded-sm border border-slate-200" style="background:#f8fafc"></span>frei</span>
+    </div>
+
+    <!-- Threshold slider -->
+    <div class="mb-4">
+      <label class="flex items-center justify-between text-sm font-semibold text-slate-700">
+        <span>Toleranzschwelle</span>
+        <span id="threshold-value" class="text-indigo-600 font-mono">30 %</span>
+      </label>
+      <input type="range" id="threshold" min="0" max="100" value="30" step="5"
+             class="w-full accent-indigo-600 mt-1">
+      <p class="text-xs text-slate-500 mt-1">Agent bleibt, wenn <strong>mindestens</strong> dieser Anteil der Nachbarn zur eigenen Gruppe gehört. Sonst zieht er um.</p>
+    </div>
+
+    <!-- Density slider -->
+    <div class="mb-4">
+      <label class="flex items-center justify-between text-sm font-semibold text-slate-700">
+        <span>Leere Felder</span>
+        <span id="empty-value" class="text-indigo-600 font-mono">12 %</span>
+      </label>
+      <input type="range" id="empty" min="4" max="40" value="12" step="2"
+             class="w-full accent-indigo-600 mt-1">
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-3 gap-3 mb-4">
+      <div class="bg-slate-50 rounded-lg p-3 text-center">
+        <p class="text-xs text-slate-500 uppercase tracking-wide">Runde</p>
+        <p id="stat-round" class="text-xl font-bold text-slate-800">0</p>
+      </div>
+      <div class="bg-emerald-50 rounded-lg p-3 text-center">
+        <p class="text-xs text-emerald-600 uppercase tracking-wide">Zufrieden</p>
+        <p id="stat-happy" class="text-xl font-bold text-emerald-700">–</p>
+      </div>
+      <div class="bg-amber-50 rounded-lg p-3 text-center">
+        <p class="text-xs text-amber-600 uppercase tracking-wide" title="Mittlerer Anteil gleicher Nachbarn: 0.5 = perfekt gemischt, 1.0 = komplett getrennt">Segregation</p>
+        <p id="stat-segregation" class="text-xl font-bold text-amber-700">–</p>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex flex-wrap gap-2">
+      <button id="btn-run" class="flex-1 min-w-[120px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg transition-colors">
+        ▶ Simulation starten
+      </button>
+      <button id="btn-step" class="flex-1 min-w-[80px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-lg transition-colors">
+        Schritt
+      </button>
+      <button id="btn-reset" class="flex-1 min-w-[80px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-lg transition-colors">
+        Neu
+      </button>
+    </div>
+  </div>
+
+  <!-- Erkenntnis -->
+  <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-6">
+    <p class="font-semibold text-amber-800 mb-2">💡 Was Schelling gezeigt hat</p>
+    <p class="text-sm text-amber-700 leading-relaxed">
+      Selbst bei einer Toleranzschwelle von <strong>30 %</strong> – jeder wäre bereits mit 7 von 10 anderen
+      Nachbarn zufrieden – entsteht nach wenigen Runden <strong>nahezu vollständige Segregation</strong>.
+      Niemand wollte das. Aber jede einzelne Umzugsentscheidung war völlig rational,
+      und die Summe dieser Entscheidungen erzeugt ein Muster, das keiner der Beteiligten geplant hat.
+    </p>
+    <p class="text-sm text-amber-700 leading-relaxed mt-3">
+      Das ist die Grundidee der <strong>Emergenz</strong>: Makrostrukturen (getrennte Viertel) folgen nicht aus Makromotiven (Rassismus),
+      sondern aus harmlos wirkenden Mikromotiven (Vorliebe für etwas Vertrautheit).
+    </p>
+  </div>
+
+  <!-- Tiefer eintauchen -->
+  <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden mb-6">
+    <button onclick="toggleKontext()"
+            class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-slate-50 transition-colors">
+      <span class="font-semibold text-slate-700 text-sm">📚 Tiefer eintauchen</span>
+      <span id="kontext-arrow" class="text-slate-400 text-sm transition-transform">▼</span>
+    </button>
+    <div id="kontext-body" class="hidden px-5 pb-5 text-sm text-slate-700 leading-relaxed space-y-3 border-t border-slate-100 pt-4">
+      <p>
+        Thomas Schelling veröffentlichte das Modell 1971 im <em>Journal of Mathematical Sociology</em>
+        („Dynamic Models of Segregation“). Ursprünglich arbeitete er mit zwei Münzsorten auf einem Schachbrett –
+        keine Computer, nur Papier und Finger. Die Pointe war pädagogisch radikal: Soziologen hatten
+        Segregation in US-Städten meist als Resultat <em>feindlicher</em> Haltungen erklärt. Schelling zeigte:
+        schon leichte Präferenzen reichen.
+      </p>
+      <p>
+        1978 entfaltete er die Idee in <em>Micromotives and Macrobehavior</em> zu einer allgemeinen Theorie:
+        Einzelentscheidungen und Gruppenergebnisse hängen auf komplizierte Weise zusammen; vieles,
+        was wie ein kollektives Ziel aussieht, ist nur die Ablagerung vieler ungekoordinierter Einzelakte.
+        2005 erhielt Schelling – gemeinsam mit Robert Aumann – den Wirtschaftsnobelpreis,
+        unter anderem für diese Arbeit.
+      </p>
+      <p>
+        Das Modell taucht heute weit über Wohnviertel hinaus auf:
+      </p>
+      <ul class="list-disc ml-5 space-y-1">
+        <li><strong>Social-Media-Filterblasen:</strong> Nutzer entfolgen „unbequeme“ Stimmen – mit niedriger Schwelle, im Aggregat polarisierte Feeds.</li>
+        <li><strong>Schulen & Kurswahl:</strong> Mädchen in MINT-Kursen wählen seltener, wenn sie allein wären – sich selbst verstärkende Trennung.</li>
+        <li><strong>Berufsnetzwerke:</strong> Selbst bei 70 % Toleranz entstehen stabile, fast nur männliche Chefetagen.</li>
+        <li><strong>Online-Communities:</strong> Subreddits und Discords trennen sich entlang kleinster Vorlieben – nach demselben Mechanismus.</li>
+      </ul>
+      <p class="pt-2">
+        Die wichtigste Lehre: Wer Segregation zurückdrehen will, kann nicht einfach „mehr Toleranz verlangen“ –
+        auch bei hoher Toleranz entsteht Trennung. Nötig sind strukturelle Eingriffe,
+        die den Mechanismus selbst verändern (z. B. Mindestdurchmischung in Wohnbau, Algorithmen,
+        die nicht nach Ähnlichkeit sortieren).
+      </p>
+    </div>
+  </div>
+
+  <!-- TED (dynamic) -->
+  {% if ted_links %}
+  <div class="bg-red-50 border border-red-100 rounded-xl p-4 mb-6">
+    <p class="text-xs font-semibold text-red-400 uppercase tracking-wide mb-3">🎤 Passende TED Talks</p>
+    <div class="space-y-2">
+      {% for t in ted_links %}
+      <a href="{{ t.ted_url }}" target="_blank" rel="noopener"
+         class="flex items-center gap-3 p-2.5 bg-white border border-red-100 rounded-lg hover:border-red-300 hover:shadow-sm transition-all">
+        <span class="text-lg">▶️</span>
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-slate-800 text-sm truncate">{{ t.sprecher }}: {{ t.titel_de }}</p>
+          <p class="text-xs text-slate-400">TED {{ t.jahr }}</p>
+        </div>
+        <span class="text-xs text-red-400 shrink-0">↗</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Navigation -->
+  <div class="flex gap-3 mb-6">
+    <a href="/raetsel"
+       class="flex-1 text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-medium transition-colors text-sm">
+      ← Alle Rätsel
+    </a>
+    {% if next_puzzle %}
+    <a href="/raetsel/{{ next_puzzle.id }}"
+       class="flex-1 text-center bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium transition-colors text-sm">
+      {{ next_puzzle.icon }} {{ next_puzzle.name }} →
+    </a>
+    {% endif %}
+  </div>
+
+  <!-- Related -->
+  {% if related_puzzles %}
+  <div class="mb-10">
+    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Ähnliche Rätsel</p>
+    <div class="space-y-2">
+      {% for r in related_puzzles %}
+      <a href="/raetsel/{{ r.id }}"
+         class="flex items-start gap-3 p-3 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 hover:shadow-sm transition-all">
+        <span class="text-xl">{{ r.icon }}</span>
+        <div>
+          <p class="font-semibold text-slate-800 text-sm">{{ r.name }}</p>
+          {% if r.beschreibung %}
+          <p class="text-xs text-slate-500 mt-0.5 line-clamp-2">{{ r.beschreibung }}</p>
+          {% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const GRID = 40;
+  const canvas = document.getElementById("schelling-canvas");
+  const ctx = canvas.getContext("2d");
+  const CELL = canvas.width / GRID;
+
+  const COLORS = { 0: "#f8fafc", 1: "#f97316", 2: "#0d9488" };
+
+  const thresholdInput = document.getElementById("threshold");
+  const thresholdLabel = document.getElementById("threshold-value");
+  const emptyInput = document.getElementById("empty");
+  const emptyLabel = document.getElementById("empty-value");
+  const btnRun = document.getElementById("btn-run");
+  const btnStep = document.getElementById("btn-step");
+  const btnReset = document.getElementById("btn-reset");
+  const statRound = document.getElementById("stat-round");
+  const statHappy = document.getElementById("stat-happy");
+  const statSeg = document.getElementById("stat-segregation");
+
+  let grid = [];
+  let round = 0;
+  let running = false;
+  let timer = null;
+
+  function init() {
+    grid = new Array(GRID * GRID);
+    const emptyFrac = parseInt(emptyInput.value, 10) / 100;
+    for (let i = 0; i < grid.length; i++) {
+      if (Math.random() < emptyFrac) grid[i] = 0;
+      else grid[i] = Math.random() < 0.5 ? 1 : 2;
+    }
+    round = 0;
+    draw();
+    updateStats();
+  }
+
+  function idx(r, c) { return r * GRID + c; }
+
+  function draw() {
+    for (let r = 0; r < GRID; r++) {
+      for (let c = 0; c < GRID; c++) {
+        const v = grid[idx(r, c)];
+        ctx.fillStyle = COLORS[v];
+        ctx.fillRect(c * CELL, r * CELL, CELL, CELL);
+      }
+    }
+  }
+
+  function neighborsOf(r, c) {
+    const out = [];
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        if (dr === 0 && dc === 0) continue;
+        const rr = r + dr, cc = c + dc;
+        if (rr < 0 || rr >= GRID || cc < 0 || cc >= GRID) continue;
+        out.push(grid[idx(rr, cc)]);
+      }
+    }
+    return out;
+  }
+
+  function isHappy(r, c, threshold) {
+    const me = grid[idx(r, c)];
+    if (me === 0) return true;
+    let same = 0, nonEmpty = 0;
+    const ns = neighborsOf(r, c);
+    for (const n of ns) {
+      if (n === 0) continue;
+      nonEmpty++;
+      if (n === me) same++;
+    }
+    if (nonEmpty === 0) return true;
+    return (same / nonEmpty) >= threshold;
+  }
+
+  function step() {
+    const threshold = parseInt(thresholdInput.value, 10) / 100;
+    const unhappy = [];
+    const emptyCells = [];
+    for (let r = 0; r < GRID; r++) {
+      for (let c = 0; c < GRID; c++) {
+        const v = grid[idx(r, c)];
+        if (v === 0) {
+          emptyCells.push([r, c]);
+        } else if (!isHappy(r, c, threshold)) {
+          unhappy.push([r, c]);
+        }
+      }
+    }
+    if (unhappy.length === 0 || emptyCells.length === 0) {
+      stopRun();
+      return false;
+    }
+    shuffle(unhappy);
+    shuffle(emptyCells);
+    const moves = Math.min(unhappy.length, emptyCells.length);
+    for (let k = 0; k < moves; k++) {
+      const [r1, c1] = unhappy[k];
+      const [r2, c2] = emptyCells[k];
+      grid[idx(r2, c2)] = grid[idx(r1, c1)];
+      grid[idx(r1, c1)] = 0;
+    }
+    round++;
+    draw();
+    updateStats();
+    return true;
+  }
+
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  }
+
+  function updateStats() {
+    const threshold = parseInt(thresholdInput.value, 10) / 100;
+    let happy = 0, total = 0, segSum = 0, segCount = 0;
+    for (let r = 0; r < GRID; r++) {
+      for (let c = 0; c < GRID; c++) {
+        const me = grid[idx(r, c)];
+        if (me === 0) continue;
+        total++;
+        const ns = neighborsOf(r, c);
+        let same = 0, nonEmpty = 0;
+        for (const n of ns) {
+          if (n === 0) continue;
+          nonEmpty++;
+          if (n === me) same++;
+        }
+        if (nonEmpty === 0 || (same / nonEmpty) >= threshold) happy++;
+        if (nonEmpty > 0) {
+          segSum += same / nonEmpty;
+          segCount++;
+        }
+      }
+    }
+    statRound.textContent = round;
+    statHappy.textContent = total === 0 ? "–" : Math.round(100 * happy / total) + " %";
+    statSeg.textContent = segCount === 0 ? "–" : (segSum / segCount).toFixed(2);
+  }
+
+  function startRun() {
+    if (running) return;
+    running = true;
+    btnRun.textContent = "⏸ Pause";
+    btnRun.classList.remove("bg-indigo-600", "hover:bg-indigo-700");
+    btnRun.classList.add("bg-amber-500", "hover:bg-amber-600");
+    timer = setInterval(() => {
+      const moved = step();
+      if (!moved) stopRun();
+    }, 180);
+  }
+
+  function stopRun() {
+    running = false;
+    btnRun.textContent = "▶ Simulation starten";
+    btnRun.classList.add("bg-indigo-600", "hover:bg-indigo-700");
+    btnRun.classList.remove("bg-amber-500", "hover:bg-amber-600");
+    if (timer) { clearInterval(timer); timer = null; }
+  }
+
+  thresholdInput.addEventListener("input", () => {
+    thresholdLabel.textContent = thresholdInput.value + " %";
+    updateStats();
+  });
+  emptyInput.addEventListener("input", () => {
+    emptyLabel.textContent = emptyInput.value + " %";
+  });
+  btnRun.addEventListener("click", () => { running ? stopRun() : startRun(); });
+  btnStep.addEventListener("click", () => { if (!running) step(); });
+  btnReset.addEventListener("click", () => { stopRun(); init(); });
+
+  init();
+})();
+
+function toggleKontext() {
+  const body = document.getElementById("kontext-body");
+  const arrow = document.getElementById("kontext-arrow");
+  const open = !body.classList.contains("hidden");
+  body.classList.toggle("hidden", open);
+  arrow.style.transform = open ? "" : "rotate(180deg)";
+}
+</script>
+
+{% endblock %}

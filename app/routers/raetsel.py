@@ -631,6 +631,7 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    {"id":"schelling-segregation","name":"Schellings Segregationsmodell","icon":"🏘️","beschreibung":"Zieh an einem einzigen Regler – und beobachte, wie aus moderaten Vorlieben vollständige Trennung entsteht. Thomas Schelling (1971): Mikromotive erzeugen Makrostrukturen, die niemand bewusst wollte.","typ":"Emergenz-Simulation","schwierigkeit":"Mittel","dauer":"6 min","kategorie":"Spieltheorie"},
 ]
 
 
@@ -4114,6 +4115,12 @@ def pawlow_hund_antwort(request: Request, antwort: str = Form(...)):
         "partials/pawlow_hund_result.html",
         {"antwort": antwort, "correct": correct},
     )
+
+
+@router.get("/schelling-segregation", response_class=HTMLResponse)
+def schelling_segregation_page(request: Request):
+    ctx = {"active_page": "raetsel", **_nav_context("schelling-segregation")}
+    return templates.TemplateResponse(request, "raetsel/schelling_segregation.html", ctx)
 
 
 @router.get("/{puzzle_id}", response_class=HTMLResponse)
