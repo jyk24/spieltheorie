@@ -58,13 +58,20 @@
     <div class="space-y-3">
       {% for opt in p.optionen %}
       {% set pal = opt_paletten[loop.index0 % 4] %}
-      <button onclick="reveal({{ loop.index0 }})"
-              class="w-full text-left p-4 rounded-xl border-2 {{ pal[0] }} transition-all">
+      <button data-idx="{{ loop.index0 }}" onclick="reveal({{ loop.index0 }})"
+              class="opt-btn w-full text-left p-4 rounded-xl border-2 {{ pal[0] }} transition-all">
         <div class="font-bold {{ pal[1] }} mb-0.5">{{ opt.text }}</div>
         {% if opt.hinweis %}<div class="text-sm {{ pal[2] }}">{{ opt.hinweis }}</div>{% endif %}
       </button>
       {% endfor %}
     </div>
+    {% if p.correct_index is defined %}
+    <div id="feedback-banner" class="hidden mt-5 rounded-xl p-3 text-center font-semibold text-sm"></div>
+    <button id="show-solution" onclick="showSolution()"
+            class="hidden mt-3 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium text-sm transition-colors">
+      Lösung & Erklärung ansehen →
+    </button>
+    {% endif %}
   </div>
 
   <!-- Lösung (hidden) -->
@@ -156,11 +163,45 @@
 </div>
 
 <script>
-function reveal(i) {
+const CORRECT_INDEX = {% if p.correct_index is defined %}{{ p.correct_index }}{% else %}null{% endif %};
+
+function showSolution() {
   document.getElementById('question-area').classList.add('hidden');
   document.getElementById('solution').classList.remove('hidden');
   document.getElementById('solution').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+function reveal(i) {
+  if (CORRECT_INDEX === null) {
+    showSolution();
+    return;
+  }
+  const buttons = document.querySelectorAll('.opt-btn');
+  buttons.forEach(btn => {
+    btn.disabled = true;
+    btn.classList.add('cursor-default');
+    btn.onclick = null;
+    const idx = parseInt(btn.dataset.idx, 10);
+    if (idx === CORRECT_INDEX) {
+      btn.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-50');
+    } else if (idx === i) {
+      btn.classList.add('ring-2', 'ring-rose-400', 'opacity-60');
+    } else {
+      btn.classList.add('opacity-50');
+    }
+  });
+  const banner = document.getElementById('feedback-banner');
+  if (banner) {
+    const right = i === CORRECT_INDEX;
+    banner.textContent = right ? '✓ Richtig!' : '✗ Knapp daneben – die richtige Antwort ist grün markiert.';
+    banner.className = 'mt-5 rounded-xl p-3 text-center font-semibold text-sm ' +
+      (right ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
+             : 'bg-rose-50 border border-rose-200 text-rose-800');
+  }
+  const btn = document.getElementById('show-solution');
+  if (btn) btn.classList.remove('hidden');
+}
+
 function toggleKontext() {
   const body = document.getElementById('kontext-body');
   const arrow = document.getElementById('kontext-arrow');
