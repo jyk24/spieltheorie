@@ -16,25 +16,40 @@ def seed_lessons(db: Session) -> None:
     with open(DATA_DIR / "lektionen.json", encoding="utf-8") as f:
         lessons = json.load(f)
 
-    existing_slugs = {slug for (slug,) in db.query(Lesson.slug).all()}
-    added = 0
+    existing = {l.slug: l for l in db.query(Lesson).all()}
+    changed = 0
     for item in lessons:
-        if item["slug"] in existing_slugs:
+        sources_json = json.dumps(item["sources"], ensure_ascii=False)
+        lesson = existing.get(item["slug"])
+        if lesson is None:
+            db.add(Lesson(
+                slug=item["slug"],
+                title=item["title"],
+                category=item["category"],
+                difficulty=item["difficulty"],
+                content_md=item["content_md"],
+                sources_json=sources_json,
+                related_game=item.get("related_game"),
+                order_index=item["order_index"],
+            ))
+            changed += 1
             continue
-        lesson = Lesson(
-            slug=item["slug"],
-            title=item["title"],
-            category=item["category"],
-            difficulty=item["difficulty"],
-            content_md=item["content_md"],
-            sources_json=json.dumps(item["sources"], ensure_ascii=False),
-            related_game=item.get("related_game"),
-            order_index=item["order_index"],
-        )
-        db.add(lesson)
-        added += 1
+        # Re-sync source-of-truth fields from JSON so content updates reach existing DBs.
+        fields = {
+            "title": item["title"],
+            "category": item["category"],
+            "difficulty": item["difficulty"],
+            "content_md": item["content_md"],
+            "sources_json": sources_json,
+            "related_game": item.get("related_game"),
+            "order_index": item["order_index"],
+        }
+        for attr, value in fields.items():
+            if getattr(lesson, attr) != value:
+                setattr(lesson, attr, value)
+                changed += 1
 
-    if added:
+    if changed:
         db.commit()
 
 

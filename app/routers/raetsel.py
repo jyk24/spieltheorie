@@ -562,6 +562,8 @@ RAETSEL_META = [
     # ── Spieltheorie (neu) ───────────────────────────────────────────────────
     {"id":"matching-pennies","name":"Matching Pennies","icon":"🪙","beschreibung":"Zwei Spieler legen gleichzeitig eine Münze auf den Tisch. Einer gewinnt bei gleichen Seiten, der andere bei verschiedenen. Gibt es eine optimale Strategie?","typ":"Nullsummenspiel","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Spieltheorie"},
     {"id":"cake-cutting","name":"Cake Cutting","icon":"🎂","beschreibung":"Wie teilt man einen Kuchen zwischen zwei Personen fair auf, ohne eine Instanz als Schiedsrichter? Die Lösung ist so einfach wie elegant.","typ":"Fairness-Algorithmus","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Spieltheorie"},
+    {"id":"zwei-generaele","name":"Das Zwei-Generäle-Problem","icon":"⚔️","beschreibung":"Zwei Generäle wollen gleichzeitig angreifen. Sie können nur Boten schicken – die aber abgefangen werden können. Warum ist garantierte Koordination logisch unmöglich – selbst bei perfekter Verschlüsselung?","typ":"Koordinations-Impossibility","schwierigkeit":"Fortgeschritten","dauer":"5 min","kategorie":"Spieltheorie"},
+    {"id":"buridans-esel","name":"Buridans Esel","icon":"🫏","beschreibung":"Ein Esel steht zwischen zwei identischen Heuhaufen – gleich weit, gleich groß, gleich lecker. Verhungert er, weil ihm jedes Entscheidungskriterium fehlt? Ein 700 Jahre altes Rationalitäts-Paradoxon.","typ":"Entscheidungsparadox","schwierigkeit":"Einsteiger","dauer":"4 min","kategorie":"Kognition"},
     # ── Statistik (neu) ──────────────────────────────────────────────────────
     {"id":"berkson","name":"Das Berkson-Paradoxon","icon":"🏥","beschreibung":"Im Krankenhaus scheinen Raucher seltener Lungenkrebs zu haben. Ein scheinbarer Widerspruch – erklärt durch verzerrte Stichproben.","typ":"Statistik-Paradox","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Statistik"},
     {"id":"p-hacking","name":"P-Hacking","icon":"🎰","beschreibung":"Ein Forscher testet 20 Hypothesen und findet eine mit p < 0,05. Ist das ein echter Befund? Die gefährlichste Methode der modernen Wissenschaft.","typ":"Wissenschaftsmethodik","schwierigkeit":"Mittel","dauer":"5 min","kategorie":"Statistik"},
@@ -3084,6 +3086,23 @@ GENERIC_PUZZLES: dict = {
         "kontext": "<p>Für n &gt; 2 Personen ist envy-free Teilung algorithmisch komplex. Das Selfridge-Conway-Verfahren (1960/1993) löst es für 3 Personen endlich; für n Personen wurde erst 2016 ein endlicher Algorithmus gefunden (Aziz & Mackenzie).</p>",
         "erkenntnis": "Faire Verfahren brauchen keine Informationen über Präferenzen — sie müssen nur die richtigen Anreize setzen. Das 'Du schneidest, ich wähle'-Prinzip nutzt egoistisches Verhalten als Design-Element.",
     },
+    "zwei-generaele": {
+        "id": "zwei-generaele", "name": "Das Zwei-Generäle-Problem", "icon": "⚔️",
+        "farbe": "slate", "kategorie": "Spieltheorie",
+        "schwierigkeit": "Fortgeschritten", "dauer": "5 min",
+        "setup": "Zwei verbündete Generäle belagern eine Stadt von zwei Seiten. Nur wenn sie <em>gleichzeitig</em> angreifen, gewinnen sie – greift einer allein an, wird er vernichtet. Sie können nur über Boten kommunizieren, die durch feindliches Gebiet reiten und mit gewisser Wahrscheinlichkeit abgefangen werden.",
+        "frage": "Kann ein Protokoll (beliebig viele Boten, auch mit Bestätigungen) <strong>garantierte</strong> gleichzeitige Koordination erreichen?",
+        "optionen": [
+            {"text": "Ja – mit genug Bestätigungs-Boten (ACKs)", "hinweis": "Wann hört die Kette auf?"},
+            {"text": "Ja – wenn die Nachrichten verschlüsselt sind", "hinweis": "Verschlüsselung ≠ Zustellung"},
+            {"text": "Nein – das Problem ist nachweislich unlösbar", "hinweis": "Induktion über die Bestätigungstiefe"},
+            {"text": "Ja – wenn beide dieselbe Uhrzeit vereinbaren", "hinweis": "Woher weißt du, ob der andere die Vereinbarung erhalten hat?"},
+        ],
+        "loesung_text": "Garantierte Koordination ist logisch unmöglich – ein fundamentales Ergebnis der Verteilten Systeme",
+        "erklaerung": "<p>Beweis per Widerspruch: Angenommen, es gibt ein Protokoll mit <em>k</em> Nachrichten, das Garantie liefert. Betrachte die letzte Nachricht: Der Empfänger weiß, dass die anderen <em>k-1</em> Nachrichten eine Teillösung bilden; der Sender weiß nicht, ob seine letzte Nachricht ankam. Also hängt die Entscheidung des Empfängers von einer Nachricht ab, die vielleicht nie gesendet werden musste – Widerspruch zur Minimalität. Formal: Jede Nachricht benötigt eine Bestätigung, deren Zustellung ebenfalls bestätigt werden müsste – unendlicher Regress.</p>",
+        "kontext": "<p>Jim Gray formalisierte das Problem 1978 in <em>Notes on Database Operating Systems</em>. Es ist das Fundament für das <strong>Two-Phase Commit</strong>-Protokoll in verteilten Datenbanken: Garantierte Konsistenz über unzuverlässige Kanäle ist unmöglich – nur probabilistische Konsistenz (bei TCP: SYN/ACK/ACK-ACK) ist machbar. Das Problem ist eng verwandt mit dem FLP-Theorem (Fischer, Lynch, Paterson 1985) über Konsens in asynchronen Systemen.</p>",
+        "erkenntnis": "Perfekte Koordination über unzuverlässige Kanäle ist nicht nur schwer, sondern <strong>logisch unmöglich</strong> – egal wie viel Rechenleistung, Verschlüsselung oder Zeit man einsetzt. Reale Systeme bauen auf 'gut genug': Pragmatik schlägt Perfektion.",
+    },
     # ── Statistik ─────────────────────────────────────────────────────────
     "berkson": {
         "id": "berkson", "name": "Das Berkson-Paradoxon", "icon": "🏥",
@@ -4063,6 +4082,23 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    "buridans-esel": {
+        "id": "buridans-esel", "name": "Buridans Esel", "icon": "🫏",
+        "farbe": "amber", "kategorie": "Kognition",
+        "schwierigkeit": "Einsteiger", "dauer": "4 min",
+        "setup": "Ein hungriger Esel steht genau in der Mitte zwischen zwei Heuhaufen – <strong>identisch</strong> in Größe, Entfernung, Qualität und Attraktivität. Es gibt keinen rationalen Grund, einen Haufen dem anderen vorzuziehen.",
+        "frage": "Was passiert laut dem klassischen Gedankenexperiment eines streng rationalen Entscheiders?",
+        "optionen": [
+            {"text": "Er wählt zufällig – reine Rationalität nutzt einen Zufallsgenerator", "hinweis": "Ist Zufall rational?"},
+            {"text": "Er verhungert – jedes Entscheidungskriterium fehlt", "hinweis": "Das Paradoxon in Reinform"},
+            {"text": "Er wählt den linken Haufen – Linksbias", "hinweis": "Gibt es einen rationalen Grund dafür?"},
+            {"text": "Er teilt sich und frisst beide gleichzeitig", "hinweis": "Physikalisch unmöglich"},
+        ],
+        "loesung_text": "Der idealisierte Esel verhungert – weil reine Rationalität ohne Präferenzasymmetrie nicht entscheiden <em>kann</em>",
+        "erklaerung": "<p>Der Esel symbolisiert das <strong>Prinzip des zureichenden Grundes</strong> (Leibniz): Eine rationale Entscheidung braucht einen Grund, warum A statt B. Fehlt dieser Grund, gibt es keine rationale Wahl. Der Esel verhungert, weil er nicht 'würfeln' darf – Zufall wäre ja gerade das Eingeständnis, dass keine Rationalität möglich ist.</p><p>Spinoza und Leibniz argumentierten, dass echte vollständige Indifferenz praktisch nie existiert – es gibt immer winzige Unterschiede. Praktisch: Reale Esel verhungern nicht.</p>",
+        "kontext": "<p><strong>Jean Buridan (ca. 1340)</strong> – obwohl der Esel ihm nur zugeschrieben wird; das Bild findet sich erst später bei Spinoza und Leibniz.</p><p>Moderne Varianten:</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li><strong>Analysis Paralysis</strong>: Entscheidungsstarre bei zu vielen gleichwertigen Optionen (Barry Schwartz, <em>Paradox of Choice</em> 2004).</li><li><strong>Robotik</strong>: Reine Nutzenmaximierer blockieren bei perfekten Unentschieden – Ingenieure fügen <em>tie-breaking noise</em> hinzu.</li><li><strong>Quantenphysik</strong>: Echte Indifferenz existiert dort bei <em>Spontaner Symmetriebrechung</em> – das Universum 'entscheidet' zufällig.</li></ul>",
+        "erkenntnis": "Reine Rationalität reicht nicht – sie braucht zumindest einen <em>Tie-Breaker</em>. Zufall, Intuition oder Bauchgefühl sind keine Feinde der Vernunft, sondern ihr notwendiger Partner. Deshalb 'empfehlen' viele Entscheidungsratgeber: Münze werfen – wenn du dich enttäuscht fühlst, kennst du deine wahre Präferenz.",
     },
 }
 
