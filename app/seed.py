@@ -16,25 +16,42 @@ def seed_lessons(db: Session) -> None:
     with open(DATA_DIR / "lektionen.json", encoding="utf-8") as f:
         lessons = json.load(f)
 
-    existing_slugs = {slug for (slug,) in db.query(Lesson.slug).all()}
-    added = 0
+    existing = {l.slug: l for l in db.query(Lesson).all()}
+    changed = 0
     for item in lessons:
-        if item["slug"] in existing_slugs:
-            continue
-        lesson = Lesson(
-            slug=item["slug"],
-            title=item["title"],
-            category=item["category"],
-            difficulty=item["difficulty"],
-            content_md=item["content_md"],
-            sources_json=json.dumps(item["sources"], ensure_ascii=False),
-            related_game=item.get("related_game"),
-            order_index=item["order_index"],
-        )
-        db.add(lesson)
-        added += 1
+        slug = item["slug"]
+        src_json = json.dumps(item["sources"], ensure_ascii=False)
+        if slug in existing:
+            lesson = existing[slug]
+            dirty = False
+            for field, value in (
+                ("title", item["title"]),
+                ("category", item["category"]),
+                ("difficulty", item["difficulty"]),
+                ("content_md", item["content_md"]),
+                ("sources_json", src_json),
+                ("related_game", item.get("related_game")),
+                ("order_index", item["order_index"]),
+            ):
+                if getattr(lesson, field) != value:
+                    setattr(lesson, field, value)
+                    dirty = True
+            if dirty:
+                changed += 1
+        else:
+            db.add(Lesson(
+                slug=slug,
+                title=item["title"],
+                category=item["category"],
+                difficulty=item["difficulty"],
+                content_md=item["content_md"],
+                sources_json=src_json,
+                related_game=item.get("related_game"),
+                order_index=item["order_index"],
+            ))
+            changed += 1
 
-    if added:
+    if changed:
         db.commit()
 
 
