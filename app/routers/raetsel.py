@@ -631,6 +631,11 @@ RAETSEL_META = [
     {"id":"planungsfehlschluss","name":"Der Planungsfehlschluss","icon":"📅","beschreibung":"Studenten schätzten, wie lange ihre Abschlussarbeit dauert. Selbst der 'pessimistischste Fall' lag drastisch daneben. Kahneman & Tversky (1979): Warum wir systematisch zu optimistisch planen.","typ":"Kognitions-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Kognition"},
     {"id":"attributionsfehler","name":"Fundamentaler Attributionsfehler","icon":"🎭","beschreibung":"Versuchspersonen schrieben pro-Castro-Aufsätze – zufällig zugewiesen. Trotzdem schlossen Leser auf die wahre Meinung der Autoren. Lee Ross (1977): Wir sehen Persönlichkeit statt Situation.","typ":"Psychologie-Experiment","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Psychologie"},
     {"id":"schlaeger-ball","name":"Schläger und Ball","icon":"⚾","beschreibung":"Ein Schläger und ein Ball kosten zusammen 1,10 €. Der Schläger kostet 1 € mehr als der Ball. Wie viel kostet der Ball?","typ":"Kognitionstest","schwierigkeit":"Einsteiger","dauer":"1 min","kategorie":"Kognition"},
+    # ── Neu: Benford, Zebra, Pareto ───────────────────────────────────────────
+    {"id":"benfordsches-gesetz","name":"Benfordsches Gesetz","icon":"🔢","beschreibung":"Nimm alle Flussläufe, Aktienkurse oder Bevölkerungszahlen der Welt. Schau dir die erste Ziffer an. Die 1 erscheint 30 % der Zeit – nicht 11 %. Wie kann das sein? Und wie entlarvt dieses Gesetz Steuerbetrug?","typ":"Statistik-Paradoxon","schwierigkeit":"Mittel","dauer":"4 min","kategorie":"Statistik"},
+    {"id":"einstein-zebra","name":"Das Einstein-Zebra-Rätsel","icon":"🦓","beschreibung":"Fünf Häuser, fünf Farben, fünf Nationalitäten, fünf Getränke, fünf Zigarettenmarken, fünf Haustiere. 15 Hinweise. Wer besitzt das Zebra? Angeblich lösen das nur 2 % aller Menschen – reine Logik, kein Rechnen.","typ":"Deduktionsrätsel","schwierigkeit":"Fortgeschritten","dauer":"8 min","kategorie":"Logik"},
+    {"id":"pareto-prinzip","name":"Das Pareto-Prinzip (80/20)","icon":"📊","beschreibung":"80 % des Ertrags aus 20 % des Aufwands. 80 % des Einkommens bei 20 % der Bevölkerung. 80 % der Softwarefehler aus 20 % des Codes. Warum taucht diese Verteilung in so vielen Systemen auf – und wo ist sie ein Mythos?","typ":"Statistik-Prinzip","schwierigkeit":"Einsteiger","dauer":"3 min","kategorie":"Statistik"},
+    {"id":"birthday-angriff","name":"Birthday-Angriff auf Hashes","icon":"🔐","beschreibung":"Ein kryptographischer Hash liefert 256 Bit. Wie viele Nachrichten musst du erzeugen, bis zwei denselben Hash haben? Nicht 2²⁵⁶, nur 2¹²⁸. Das Geburtstagsparadoxon ist der Schlüssel – und bricht halbe Kryptographie.","typ":"Kryptographie","schwierigkeit":"Fortgeschritten","dauer":"4 min","kategorie":"Mathematik"},
 ]
 
 
@@ -4063,6 +4068,75 @@ GENERIC_PUZZLES: dict = {
         "erklaerung": "<p>Ball = x. Schläger = x + 1,00 €. Zusammen: x + (x + 1,00) = 1,10 €.</p><p>→ 2x = 0,10 → x = <strong>0,05 €</strong></p><p>Die meisten Menschen nennen spontan 10 Cent. Das ist falsch: Wäre der Ball 10 Cent, würde der Schläger 1,10 € kosten – und zusammen käme man auf 1,20 €, nicht auf 1,10 €.</p>",
         "kontext": "<p><strong>Der Cognitive Reflection Test (CRT)</strong> - Shane Frederick, 2005</p><p>Diese Aufgabe ist eine von drei Fragen des bekanntesten Tests zur kognitiven Reflexionsfaehigkeit. Er misst, ob jemand die schnelle, impulsive Antwort uebernimmt - oder inne haelt und nachrechnet.</p><p>Daniel Kahneman beschreibt dieses Phaenomen in <em>Thinking, Fast and Slow</em> (2011) als Konflikt zwischen <strong>System 1</strong> (schnell, automatisch, intuitiv) und <strong>System 2</strong> (langsam, bewusst, analytisch). System 1 liefert blitzschnell '10 Cent' als plausible Antwort - und System 2 uebernimmt diese oft ungeprueft.</p><ul class=\"list-disc ml-4 mt-2 space-y-1 text-sm\"><li>Nur ~20% der Probanden in Fredericks Originalstudien gaben sofort die richtige Antwort</li><li>Studierende an MIT und Harvard lagen mehrheitlich falsch</li><li>Der CRT-Score korreliert mit Ergebnissen in Wahrscheinlichkeitsaufgaben und Wirtschaftsspielen</li><li>Wer sich mehr Zeit nimmt, liegt haeufiger richtig - unabhaengig von Intelligenz</li></ul>",
         "erkenntnis": "Die erste plausible Antwort ist nicht immer die richtige. Intuitionen sollten bei konkreten Rechenaufgaben kurz gegengeprüft werden – ein einziger Satz Algebra hätte gereicht.",
+    },
+    # ── Statistik / Mathematik: neu ───────────────────────────────────────────
+    "benfordsches-gesetz": {
+        "id": "benfordsches-gesetz", "name": "Benfordsches Gesetz", "icon": "🔢",
+        "farbe": "amber", "kategorie": "Statistik",
+        "schwierigkeit": "Mittel", "dauer": "4 min",
+        "setup": "Schnapp dir eine beliebige Datenquelle: Flusslängen weltweit, Einwohnerzahlen aller Städte, physikalische Konstanten, Aktienkurse, Posten in Buchhaltungsbelegen. Schau dir für jede Zahl nur die <strong>erste Ziffer</strong> an (z. B. bei 4 721 die 4). Zähle die Häufigkeit der Ziffern 1 bis 9.",
+        "frage": "Wie oft (ungefähr) erscheint die <strong>1</strong> als führende Ziffer in solchen natürlichen Datensätzen?",
+        "optionen": [
+            {"text": "Etwa 11,1 % – gleichverteilt wie 1 bis 9", "hinweis": "Die intuitive Vermutung"},
+            {"text": "Etwa 20 %", "hinweis": "Ein Mittelweg"},
+            {"text": "Etwa 30 %", "hinweis": "Überraschend hoch"},
+            {"text": "Etwa 50 %", "hinweis": "Zu dominant"},
+        ],
+        "loesung_text": "Die 1 erscheint in rund 30,1 % der Fälle als führende Ziffer.",
+        "erklaerung": "<p>Nach dem Benfordschen Gesetz tritt die Ziffer <em>d</em> (1 bis 9) als erste Stelle mit Wahrscheinlichkeit <strong>log₁₀(1 + 1/d)</strong> auf:</p><ul class=\"list-disc ml-5 mt-2 space-y-1 text-sm\"><li>1 → 30,1 %</li><li>2 → 17,6 %</li><li>3 → 12,5 %</li><li>…</li><li>9 → 4,6 %</li></ul><p>Der Grund: Natürliche Daten erstrecken sich oft über viele Größenordnungen. Auf einer logarithmischen Skala ist der Abschnitt zwischen 1 und 2 der breiteste – dort landen die meisten Werte. Die Verteilung ist invariant unter Einheitenwechsel: Flusslängen in Metern, Kilometern oder Meilen folgen alle derselben Benford-Kurve.</p>",
+        "kontext": "<p><strong>Entdeckung & Anwendung.</strong> Der Astronom Simon Newcomb bemerkte 1881, dass die ersten Seiten von Logarithmentafeln in Bibliotheken deutlich stärker abgenutzt waren. Frank Benford dokumentierte den Effekt 1938 für 20 229 Zahlen aus Zeitungen, Molekülgewichten, Baseball-Statistiken und Einwohnerzahlen.</p><p>Heute ist Benford ein Standardwerkzeug der <strong>forensischen Buchhaltung</strong>: Steuerbehörden (IRS, deutsche Finanzämter) prüfen Belege auf Benford-Konformität. Erfundene Zahlen sind meist uniform verteilt – die Abweichung ist signifikant. Enron, Bernie Madoff und manipulierte Wahlen (Iran 2009) wurden so auffällig.</p><p><strong>Grenzen:</strong> Das Gesetz gilt nur für Daten, die mehrere Größenordnungen überspannen. Körpergrößen (alle im 1–2 m-Bereich), Postleitzahlen oder eng begrenzte Werte folgen nicht Benford.</p>",
+        "erkenntnis": "Zufall ist nicht gleich Gleichverteilung. Viele vermeintlich 'natürliche' Muster entstehen aus logarithmischer Skalierung – und wer sie kennt, erkennt gefälschte Daten mit erschreckender Zuverlässigkeit.",
+    },
+    "einstein-zebra": {
+        "id": "einstein-zebra", "name": "Das Einstein-Zebra-Rätsel", "icon": "🦓",
+        "farbe": "emerald", "kategorie": "Logik",
+        "schwierigkeit": "Fortgeschritten", "dauer": "8 min",
+        "setup": "In einer Reihe stehen fünf Häuser, von links nach rechts durchnummeriert 1–5. In jedem Haus wohnt eine Person einer anderen Nationalität, mit einer anderen Lieblingsgetränk, einem anderen Haustier, einer anderen Zigarettenmarke und das Haus hat eine andere Farbe. Es gilt (Auszug aus 15 klassischen Hinweisen):<br><br>• Der Brite wohnt im roten Haus.<br>• Der Schwede hält einen Hund.<br>• Der Däne trinkt Tee.<br>• Das grüne Haus steht links vom weißen.<br>• Der Besitzer des grünen Hauses trinkt Kaffee.<br>• Der Pall-Mall-Raucher hält Vögel.<br>• Der Bewohner des gelben Hauses raucht Dunhill.<br>• Der Bewohner des mittleren Hauses trinkt Milch.<br>• Der Norweger wohnt im ersten Haus.<br>• Der Blend-Raucher wohnt neben dem mit der Katze.<br>• Der mit dem Pferd wohnt neben dem Dunhill-Raucher.<br>• Der Blue-Master-Raucher trinkt Bier.<br>• Der Deutsche raucht Prince.<br>• Der Norweger wohnt neben dem blauen Haus.<br>• Der Blend-Raucher wohnt neben dem, der Wasser trinkt.",
+        "frage": "Wer besitzt das Zebra?",
+        "optionen": [
+            {"text": "Der Brite", "hinweis": "Haus 2 (rot)"},
+            {"text": "Der Schwede", "hinweis": "Haus 5 (hält Hund)"},
+            {"text": "Der Däne", "hinweis": "Haus 2 (Tee)"},
+            {"text": "Der Deutsche", "hinweis": "Haus 4 (grün, Kaffee)"},
+        ],
+        "loesung_text": "Der Deutsche – Haus 4, grün, Kaffee, Prince, Zebra.",
+        "erklaerung": "<p>Systematische Deduktion führt zur eindeutigen Lösung:</p><ol class=\"list-decimal ml-5 mt-2 space-y-1 text-sm\"><li>Norweger in Haus 1 (Hinweis 9), neben Haus 2 steht das blaue (Hinweis 14) → Haus 2 blau.</li><li>Milch in Haus 3 (Hinweis 8). Grün steht links von weiß und ist Kaffee-Haus (Hinweise 4, 5) → grün = 4, weiß = 5.</li><li>Haus 1 kann nicht rot (Brite, Hinweis 1), nicht blau/grün/weiß → gelb. Dunhill in gelb (Hinweis 7) → Norweger raucht Dunhill. Haus 2 rot ist für Briten.</li><li>Pferd neben Dunhill (Hinweis 11) → Pferd in Haus 2.</li><li>Haus 4 grün → Kaffee. Haus 2 trinkt Tee → Däne (Hinweis 3). Also Brite in Haus 3? Nein: Haus 3 trinkt Milch, Brite im roten → aber rot ist Haus 2 (Däne). Widerspruch auflösen: Brite in rot = Haus 2 widerspricht Däne. Also ist die Hausreihe anders.</li><li>Korrigiert: rot = 3 (Brite), grün = 4, weiß = 5, gelb = 1, blau = 2. Der Norweger in 1 raucht Dunhill. Pferd in Haus 2.</li><li>Blue Master → Bier, Deutscher → Prince. Blend neben Wasser und neben Katze. Konsistente Belegung: Haus 1 Norweger/gelb/Dunhill/Wasser/Katze; Haus 2 Däne/blau/Blend/Tee/Pferd; Haus 3 Brite/rot/Pall Mall/Milch/Vögel; Haus 4 Deutscher/grün/Prince/Kaffee/<strong>Zebra</strong>; Haus 5 Schwede/weiß/Blue Master/Bier/Hund.</li></ol><p>Der <strong>Deutsche</strong> besitzt das Zebra. Die Lösung ist eindeutig – alle 15 Hinweise sind nötig und hinreichend.</p>",
+        "kontext": "<p><strong>Mythos Einstein.</strong> Dieses Rätsel wird oft Einstein zugeschrieben – angeblich habe er es erfunden und behauptet, nur 2 % der Menschheit könnten es lösen. Für diese Legende existiert kein Beleg; die früheste bekannte Fassung erschien 1962 in <em>Life International</em>.</p><p>Das Rätsel ist ein klassisches <strong>Constraint-Satisfaction-Problem</strong> (CSP). SAT-Solver, Prolog und die meisten KI-Planungssysteme lösen es in Millisekunden. Für Menschen ist es Training in:</p><ul class=\"list-disc ml-5 mt-2 space-y-1 text-sm\"><li>Hypothesen aufstellen und systematisch verwerfen</li><li>Fallunterscheidung ohne Backtracking-Chaos</li><li>Information aus negativen Aussagen ziehen ('nicht rot' schließt Fälle aus)</li></ul>",
+        "erkenntnis": "Komplexe Deduktion ist keine Frage von Genie, sondern von Methode. Wer Constraint-Propagation beherrscht, löst Sudoku, Terminplanung und sogar Schachendspiele mit derselben Technik.",
+    },
+    "pareto-prinzip": {
+        "id": "pareto-prinzip", "name": "Das Pareto-Prinzip (80/20)", "icon": "📊",
+        "farbe": "orange", "kategorie": "Statistik",
+        "schwierigkeit": "Einsteiger", "dauer": "3 min",
+        "setup": "Der italienische Ökonom Vilfredo Pareto bemerkte 1896: 80 % des Landes in Italien gehörten 20 % der Bevölkerung. Später tauchte dasselbe Verhältnis in überraschend vielen Domänen auf: 80 % des Umsatzes von 20 % der Kunden, 80 % der Beschwerden von 20 % der Produkte, 80 % der Bugs in 20 % des Codes.",
+        "frage": "Was ist die mathematische Grundlage des Pareto-Prinzips?",
+        "optionen": [
+            {"text": "Eine Normalverteilung mit Schiefe", "hinweis": "Glockenkurve, aber verschoben"},
+            {"text": "Eine Potenzverteilung (Pareto-Verteilung)", "hinweis": "P(X > x) ∝ x⁻ᵅ"},
+            {"text": "Eine Exponentialverteilung", "hinweis": "P(X > x) ∝ e⁻ᵏˣ"},
+            {"text": "Reiner Zufall – das Verhältnis existiert nicht wirklich", "hinweis": "Nur Beobachtungsfehler?"},
+        ],
+        "loesung_text": "Eine Potenzverteilung (Pareto-Verteilung): P(X > x) ∝ x⁻ᵅ.",
+        "erklaerung": "<p>Die Pareto-Verteilung hat eine schwere rechte Flanke (fat tail). Für einen bestimmten Parameter α ≈ 1,16 ergibt sich exakt die 80/20-Regel. Für andere α-Werte verändert sich das Verhältnis:</p><ul class=\"list-disc ml-5 mt-2 space-y-1 text-sm\"><li>α = 1,16 → 80 % aus 20 %</li><li>α = 1,0 → 90 % aus 10 % (Zipf-Gesetz)</li><li>α → ∞ → die Verteilung wird gleichmäßig</li></ul><p>Entscheidend: 80 und 20 müssen <em>nicht</em> 100 ergeben. Die Zahlen beziehen sich auf zwei unterschiedliche Größen (z. B. Umsatzanteil und Kundenanteil). Es ist auch 90/10, 70/30 oder 95/5 möglich – alles sind Pareto-artige Verteilungen, nur andere α.</p>",
+        "kontext": "<p><strong>Wo Pareto gilt – und wo nicht.</strong></p><p>Gilt gut: Einkommensverteilung, Dateigrößen auf Festplatten, Erdbebenstärken, Wortlängen in Texten (Zipf), Netzwerke von Webseiten, Städtegrößen, Vermögen von Unternehmen.</p><p>Gilt <strong>nicht</strong>: Körpergrößen, IQ, Tagestemperaturen, physische Normprozesse. Diese folgen der Normalverteilung.</p><p><strong>Praxis-Anwendung:</strong> Im Zeitmanagement priorisiert man die 20 % der Aufgaben mit 80 % des Nutzens. Im Qualitätsmanagement (Joseph Juran) konzentriert man sich auf die wenigen Fehlerursachen mit dem größten Impact. Im Verkauf pflegt man die 20 % Schlüsselkunden besonders.</p><p><strong>Missbrauch:</strong> 'Das ist eben Pareto' wird oft als Rechtfertigung für Ungleichheit benutzt. Richtig ist: das Prinzip <em>beschreibt</em>, es rechtfertigt nicht. Und viele behauptete 80/20-Verhältnisse sind in Wahrheit 60/40 oder 95/5 – gemessen wird selten.</p>",
+        "erkenntnis": "Nicht alles verteilt sich gleichmäßig oder glockenförmig. Dort, wo Rückkopplungen und Netzwerkeffekte wirken (Erfolg zieht Erfolg nach sich), entstehen Potenzverteilungen – und die Welt wird extrem ungleich.",
+    },
+    "birthday-angriff": {
+        "id": "birthday-angriff", "name": "Birthday-Angriff auf Hashes", "icon": "🔐",
+        "farbe": "rose", "kategorie": "Mathematik",
+        "schwierigkeit": "Fortgeschritten", "dauer": "4 min",
+        "setup": "Ein kryptographischer Hash (z. B. SHA-256) bildet beliebige Nachrichten auf 256-Bit-Werte ab. Ein naiver Brute-Force-Angriff auf eine konkrete Zielhash-Preimage bräuchte 2²⁵⁶ Versuche. Doch Angreifer suchen oft nur <strong>eine Kollision</strong>: zwei verschiedene Nachrichten mit identischem Hash.",
+        "frage": "Wie viele Nachrichten braucht man im Erwartungswert, bis zwei denselben 256-Bit-Hash haben?",
+        "optionen": [
+            {"text": "Etwa 2²⁵⁶ Nachrichten", "hinweis": "Naiver Preimage-Angriff"},
+            {"text": "Etwa 2¹²⁸ Nachrichten", "hinweis": "Quadratwurzel des Suchraums"},
+            {"text": "Etwa 2⁶⁴ Nachrichten", "hinweis": "Zu optimistisch"},
+            {"text": "Etwa 256² = 65 536 Nachrichten", "hinweis": "Unabhängig von der Bitlänge?"},
+        ],
+        "loesung_text": "Etwa 2¹²⁸ Nachrichten – die Quadratwurzel des Hash-Raums.",
+        "erklaerung": "<p>Das <strong>Geburtstagsparadoxon</strong> besagt: In einer Gruppe von n Personen ist die Wahrscheinlichkeit, dass zwei denselben Geburtstag haben, überraschend hoch. Schon bei n = 23 übersteigt sie 50 %.</p><p>Verallgemeinert: Für einen Suchraum der Größe N wird die erwartete Anzahl an Zufallsstichproben bis zur ersten Kollision proportional zu <strong>√N</strong>.</p><p>Für 256-Bit-Hashes:</p><ul class=\"list-disc ml-5 mt-2 space-y-1 text-sm\"><li>Preimage-Resistenz: 2²⁵⁶ Operationen (eine bestimmte Nachricht finden)</li><li>Kollisionsresistenz: ~2¹²⁸ Operationen (irgendwelche zwei Nachrichten mit gleichem Hash)</li></ul><p>Deshalb halbiert jeder Hash <em>effektiv</em> seine Bit-Sicherheit, wenn Kollisionen reichen: MD5 (128 Bit) bietet nur 64 Bit Kollisionssicherheit – 2⁶⁴ Hashes sind heute in Stunden berechenbar.</p>",
+        "kontext": "<p><strong>Reale Angriffe:</strong></p><ul class=\"list-disc ml-5 mt-2 space-y-1 text-sm\"><li><strong>2004:</strong> Wang Xiaoyun findet MD5-Kollisionen in Minuten.</li><li><strong>2008:</strong> Flame-Malware fälscht Microsoft-Zertifikate mithilfe einer MD5-Kollision.</li><li><strong>2017:</strong> Google veröffentlicht die erste praktische SHA-1-Kollision (SHAttered-Angriff, ~2⁶³ Rechenoperationen).</li></ul><p>Deshalb wurde SHA-1 für Signaturen aufgegeben. Moderne Systeme nutzen SHA-256 oder SHA-3 – und bei Sicherheit gegen Kollisionen rechnet man immer mit <em>halber</em> Bitlänge.</p><p><strong>Geburtstag konkret:</strong> Wahrscheinlichkeit mindestens einer Kollision bei n Stichproben aus N Werten ≈ 1 − e^(−n²/(2N)). Setzt man die auf 50 %, folgt n ≈ 1,177·√N – bei 365 Tagen genau die berühmten 23 Personen.</p>",
+        "erkenntnis": "Zufällige Kollisionen sind viel wahrscheinlicher als gezielte Treffer. In Kryptographie, Datenbanken und verteilten Systemen muss man den Suchraum <em>quadrieren</em>, um Kollisionen praktisch unmöglich zu machen.",
     },
 }
 
