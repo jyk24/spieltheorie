@@ -134,7 +134,7 @@ GLOSSAR = [
             "Das ist keine Frage der Technologie - es ist ein fundamentales Prinzip der Quantenwelt."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "bounded-rationality",
@@ -534,7 +534,7 @@ GLOSSAR = [
             "Grundlage fuer Laser, Transistoren, MRT und Quantencomputer."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "regression-zur-mitte",
@@ -667,7 +667,7 @@ GLOSSAR = [
             "wenn dieses Prinzip auf makroskopische Objekte zutreffen wuerde."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "survivorship-bias",
@@ -763,7 +763,7 @@ GLOSSAR = [
             "Bei einer Messung 'kollabiert' die Wellenfunktion auf einen einzigen Wert."
         ),
         "kategorie": "Physik",
-        "link": "/raetsel/schroedinger",
+        "link": "/raetsel/schroedinger-katze",
     },
     {
         "id": "winner-fluch",
@@ -976,6 +976,47 @@ GLOSSAR = [
         ),
         "kategorie": "Psychologie",
         "link": "/raetsel/verfuegbarkeitsheuristik",
+    },
+    {
+        "id": "trolley-problem",
+        "titel": "Trolley-Problem",
+        "definition": (
+            "Gedankenexperiment der Moralphilosophie (Philippa Foot 1967, Judith Thomson 1985). "
+            "Eine Strassenbahn steuert auf fuenf Personen zu; durch Umlegen einer Weiche "
+            "koennte man sie auf ein Nebengleis mit nur einer Person umlenken. In einer Variante "
+            "muesste man eine schwere Person von einer Bruecke stossen, um dasselbe Ziel zu erreichen. "
+            "Trotz identischer Mathematik (1 fuer 5) urteilen Menschen in den beiden Faellen "
+            "fundamental verschieden - ein Testfall fuer Utilitarismus vs. Deontologie."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/trolley-problem",
+    },
+    {
+        "id": "peak-end-regel",
+        "titel": "Peak-End-Regel",
+        "definition": (
+            "Kahneman & Redelmeier (1996): Unsere Erinnerung an eine Erfahrung speichert nicht "
+            "den Mittelwert oder die Summe, sondern den intensivsten Moment (Peak) und das Ende. "
+            "Die Dauer selbst spielt kaum eine Rolle (Duration Neglect). Folge: Eine "
+            "laengere, aber mild endende Prozedur wird als weniger unangenehm erinnert als "
+            "eine kuerzere mit scharfem Abschluss. Design-Konsequenz: Das Ende einer "
+            "Erfahrung bewusst gestalten."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/peak-end-regel",
+    },
+    {
+        "id": "ikea-effekt",
+        "titel": "IKEA-Effekt",
+        "definition": (
+            "Norton, Mochon & Ariely (2012): Menschen bewerten Objekte, an deren Entstehung "
+            "sie selbst gearbeitet haben, deutlich hoeher - oft wie professionell hergestellte. "
+            "Wirkt nur bei abgeschlossener Eigenleistung; halbfertige Arbeit wird nicht "
+            "ueberbewertet. Erklaert, warum Kochboxen, Bausaetze und Selbstgestaltungs-Apps "
+            "funktionieren: nicht trotz, sondern wegen der Muehe."
+        ),
+        "kategorie": "Psychologie",
+        "link": "/raetsel/ikea-effekt",
     },
 ]
 
