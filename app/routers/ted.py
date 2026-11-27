@@ -97,7 +97,7 @@ TED_TALKS = [
         "schluessel_erkenntnis": "Was wir erinnern, ist nicht was wir erlebt haben - der Peak und das Ende praegenunser Urteil.",
         "anwendung": "Verhandlungen sollten mit einem starken positiven Abschluss enden - das ist es, was die andere Seite im Gedaechtnis behalten wird.",
         "ted_url": "https://www.ted.com/talks/daniel_kahneman_the_riddle_of_experience_vs_memory",
-        "verwandte_raetsel": ["kognitive-dissonanz", "dunning-kruger", "framing"],
+        "verwandte_raetsel": ["kognitive-dissonanz", "dunning-kruger", "framing", "schoenheitswettbewerb"],
         "quiz": [
             {
                 "frage": "Was unterscheidet das 'erlebende Selbst' vom 'erinnernden Selbst'?",
@@ -1165,7 +1165,7 @@ TED_TALKS = [
         "schluessel_erkenntnis": "Die schwierigste Verhandlung ist die mit dir selbst - wer sein inneres Ja kennt, verhandelt staerker.",
         "anwendung": "Vor jeder Verhandlung: Zum Balkon gehen (innehalten, Distanz gewinnen) und das eigene Warum klaeren - nicht nur das Was.",
         "ted_url": "https://www.ted.com/talks/william_ury_the_walk_from_no_to_yes",
-        "verwandte_raetsel": ["batna"],
+        "verwandte_raetsel": ["batna", "ultimatum-spiel", "feiglingsspiel"],
         "quiz": [
             {
                 "frage": "Was bedeutet es laut Ury, 'auf den Balkon zu gehen'?",
@@ -1380,7 +1380,7 @@ TED_TALKS = [
         "schluessel_erkenntnis": "Nicht schlechte Menschen tun boese Dinge – schlechte Situationen bringen normale Menschen dazu. Das System traegt Verantwortung.",
         "anwendung": "In Fuehrung und Teams: Systemdesign ist Verhaltensdesign. Schlechte Ergebnisse nicht auf Individuen, sondern auf Situationen und Strukturen zurueckfuehren.",
         "ted_url": "https://www.ted.com/talks/philip_zimbardo_on_the_psychology_of_evil",
-        "verwandte_raetsel": ["milgram-gehorsam", "bystander-effekt", "attributionsfehler"],
+        "verwandte_raetsel": ["milgram-gehorsam", "bystander-effekt", "attributionsfehler", "trolley-problem"],
         "quiz": [
             {
                 "frage": "Was ist der 'Luzifer-Effekt' nach Zimbardo?",
